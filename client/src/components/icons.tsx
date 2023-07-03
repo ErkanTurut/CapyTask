@@ -1,5 +1,5 @@
 import { LucideProps } from "lucide-react";
-
+import { PersonIcon } from "@radix-ui/react-icons";
 type logoProps = {
   color: "light" | "dark";
   size: "s" | "m" | "l" | "xl";
@@ -26,6 +26,7 @@ const sizes = {
 };
 
 export const Icons = {
+  user: PersonIcon,
   logo: (props: LucideProps & logoProps) => {
     const { color, size, className } = props;
     const { width, height } = sizes[size];
