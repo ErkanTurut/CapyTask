@@ -1,8 +1,13 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-
+import { isClerkAPIResponseError } from "@clerk/nextjs";
 import { formatDistanceToNowStrict } from "date-fns";
 import locale from "date-fns/locale/en-US";
+
+import dayjs from "dayjs";
+
+// import { useToast } from "@/hooks/use-toast";
+// const { toast } = useToast();
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -54,4 +59,23 @@ export function formatTimeToNow(date: Date): string {
       formatDistance,
     },
   });
+}
+
+export function formatDate(date: Date | string) {
+  return dayjs(date).format("MMMM D, YYYY");
+}
+
+export function catchClerkError(err: unknown) {
+  const unknownErr = "Something went wrong, please try again later.";
+  // if (isClerkAPIResponseError(err)) {
+  //   toast({
+  //     title: err.errors[0]?.longMessage ?? unknownErr,
+  //     variant: "destructive",
+  //   });
+  // } else {
+  //   toast({
+  //     title: unknownErr,
+  //     variant: "destructive",
+  //   });
+  // }
 }
