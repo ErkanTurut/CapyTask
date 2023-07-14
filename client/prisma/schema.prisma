@@ -1,41 +1,96 @@
-
-
 generator client {
   provider = "prisma-client-js"
 }
 
 model User {
-  id String @id @default(cuid())
-  externalId String @unique
+  id         String    @id @default(cuid())
+  externalId String    @unique
   attributes Json
+  Task       Task[]
+  Comment    Comment[]
+}
+
+model Organization {
+  id             String   @id @default(cuid())
+  externalId     String   @unique
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  name           String
+  slug           String
+  logoUrl        String?
+  imageUrl       String?
+  object         String
+  publicMetadata Json
+  createdById    String
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
 model Repository {
-    id        String  @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    name      String
-    url       String
-    organizationId String?
-    tasks     Task[]
+  id             String   @id @default(cuid())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  name           String
+  url            String
+  organizationId String?
+  tasks          Task[]
 }
 
+model TaskGroupe {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  tasks     Task[]
+}
 
 model Task {
-    id        String  @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    title     String
-    content   Json?
-    done      Boolean @default(false)
-    repository Repository? @relation(fields: [repositoryId], references: [id])
-    repositoryId String?
+  id           String      @id @default(cuid())
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  title        String
+  content      Json?
+  done         Boolean     @default(false)
+  repository   Repository? @relation(fields: [repositoryId], references: [id])
+  repositoryId String?
 
-    @@index([repositoryId])
+  createdBy   User   @relation(fields: [createdById], references: [id])
+  createdById String
+
+  comments     Comment[]
+  
+  TaskGroupe   TaskGroupe? @relation(fields: [taskGroupeId], references: [id])
+  taskGroupeId String?
+
+  @@index([repositoryId])
+  @@index([taskGroupeId])
+  @@index([createdById])
+}
+
+enum TaskStatus {
+  SUCCESS
+  FAILURE
+}
+
+model Comment {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  content     Json?
+  task        Task     @relation(fields: [taskId], references: [id])
+  taskId      String
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdById String
+
+  replyToId String?
+  replyTo   Comment?  @relation("CommentToComment", fields: [replyToId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  replies   Comment[] @relation("CommentToComment")
+
+  @@index([taskId])
+  @@index([createdById])
+  @@index([replyToId])
 }
