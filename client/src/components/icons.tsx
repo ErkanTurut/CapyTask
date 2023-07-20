@@ -1,5 +1,6 @@
 import { LucideProps } from "lucide-react";
-import { PersonIcon } from "@radix-ui/react-icons";
+import { PersonIcon, EyeOpenIcon, EyeClosedIcon } from "@radix-ui/react-icons";
+import { Loader2 } from "lucide-react";
 type logoProps = {
   color: "light" | "dark";
   size: "s" | "m" | "l" | "xl";
@@ -27,7 +28,9 @@ const sizes = {
 
 export const Icons = {
   user: PersonIcon,
-
+  spinner: Loader2,
+  view: EyeOpenIcon,
+  hide: EyeClosedIcon,
   logo: (props: LucideProps & logoProps) => {
     const { color, size, className } = props;
     const { width, height } = sizes[size];
