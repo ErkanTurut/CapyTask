@@ -1,12 +1,15 @@
 import NavBar from "@/components/navbar";
 import { Toaster } from "@/components/ui/toaster";
+
 import { cn } from "@/lib/utils";
 import "@/styles/globals.css";
 import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
-const inter = Inter({ subsets: ["latin"] });
+import { TailwindIndicator } from "@/components/tailwindIndicator";
 
+const inter = Inter({ subsets: ["latin"] });
+import { ThemeProvider } from "@/components/themeProvider";
 export default function RootLayout({
   children,
 }: {
@@ -16,17 +19,26 @@ export default function RootLayout({
     <ClerkProvider>
       <html
         lang="en"
+        suppressHydrationWarning
         className={cn(
           "bg-white text-slate-900 antialiased light",
           inter.className
         )}
       >
-        <body className={"min-h-screen pt-12 bg-slate-50 antialiased"}>
-          <NavBar />
-          <div className="container max-w7xl mx-auto h-full pt-12">
+        <body
+          className={cn(
+            "min-h-screen bg-background font-sans antialiased",
+            inter.className
+          )}
+        >
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            {/* <NavBar /> */}
+
             {children}
-          </div>
-          <Toaster />
+            <TailwindIndicator />
+
+            <Toaster />
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>
