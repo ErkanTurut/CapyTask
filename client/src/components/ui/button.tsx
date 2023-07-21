@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
-import { ReloadIcon } from "@radix-ui/react-icons";
+import { Icons } from "@/components/icons";
 
 import { cn } from "@/lib/utils";
 
@@ -64,7 +64,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       >
         {isLoading ? (
-          <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
         ) : null}
         {children}
       </Comp>
