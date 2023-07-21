@@ -3,11 +3,10 @@ import { twMerge } from "tailwind-merge";
 import { isClerkAPIResponseError } from "@clerk/nextjs";
 import { formatDistanceToNowStrict } from "date-fns";
 import locale from "date-fns/locale/en-US";
-
+import * as z from "zod";
 import dayjs from "dayjs";
 
-// import { useToast } from "@/hooks/use-toast";
-// const { toast } = useToast();
+import { toast } from "sonner";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -65,17 +64,30 @@ export function formatDate(date: Date | string) {
   return dayjs(date).format("MMMM D, YYYY");
 }
 
+export function catchError(err: unknown) {
+  if (err instanceof z.ZodError) {
+    const errors = err.issues.map((issue) => {
+      return issue.message;
+    });
+    return toast(errors.join("\n"));
+  } else if (err instanceof Error) {
+    return toast(err.message);
+  } else {
+    return toast("Something went wrong, please try again later.");
+  }
+}
+
 export function catchClerkError(err: unknown) {
   const unknownErr = "Something went wrong, please try again later.";
-  // if (isClerkAPIResponseError(err)) {
-  //   toast({
-  //     title: err.errors[0]?.longMessage ?? unknownErr,
-  //     variant: "destructive",
-  //   });
-  // } else {
-  //   toast({
-  //     title: unknownErr,
-  //     variant: "destructive",
-  //   });
-  // }
+
+  if (err instanceof z.ZodError) {
+    const errors = err.issues.map((issue) => {
+      return issue.message;
+    });
+    return toast(errors.join("\n"));
+  } else if (isClerkAPIResponseError(err)) {
+    return toast.error(err.errors[0]?.longMessage ?? unknownErr);
+  } else {
+    return toast.error(unknownErr);
+  }
 }
