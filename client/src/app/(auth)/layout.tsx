@@ -26,7 +26,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
           href="/"
           className="absolute left-8 top-6 z-20 flex items-center text-lg font-bold tracking-tight"
         >
-          <Icons.logo color="light" size="m" />
+          <Icons.logo className="mr-2" aria-hidden="true" size="m" />
           <span>{siteConfig.name}</span>
         </Link>
         <div className="absolute bottom-6 left-8 z-20 line-clamp-1 text-base">
