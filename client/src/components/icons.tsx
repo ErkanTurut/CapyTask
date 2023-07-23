@@ -1,5 +1,13 @@
 import { LucideProps } from "lucide-react";
-import { PersonIcon, EyeOpenIcon, EyeClosedIcon } from "@radix-ui/react-icons";
+import {
+  PersonIcon,
+  EyeOpenIcon,
+  EyeClosedIcon,
+  MixIcon,
+  MixerVerticalIcon,
+  ExitIcon,
+  MagnifyingGlassIcon,
+} from "@radix-ui/react-icons";
 import { Loader2 } from "lucide-react";
 
 type logoProps = {
@@ -32,6 +40,10 @@ export const Icons = {
   spinner: Loader2,
   view: EyeOpenIcon,
   hide: EyeClosedIcon,
+  mix: MixIcon,
+  mixerVertical: MixerVerticalIcon,
+  logout: ExitIcon,
+  search: MagnifyingGlassIcon,
   logo: (props: LucideProps & logoProps) => {
     const { size, className } = props;
     const { width, height } = sizes[size];
