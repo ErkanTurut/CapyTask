@@ -7,6 +7,8 @@ import {
   MixerVerticalIcon,
   ExitIcon,
   MagnifyingGlassIcon,
+  MoonIcon,
+  SunIcon,
 } from "@radix-ui/react-icons";
 import { Loader2 } from "lucide-react";
 
@@ -44,6 +46,8 @@ export const Icons = {
   mixerVertical: MixerVerticalIcon,
   logout: ExitIcon,
   search: MagnifyingGlassIcon,
+  moon: MoonIcon,
+  sun: SunIcon,
   logo: (props: LucideProps & logoProps) => {
     const { size, className } = props;
     const { width, height } = sizes[size];

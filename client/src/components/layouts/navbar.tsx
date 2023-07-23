@@ -21,6 +21,7 @@ import {
 import { SearchBar } from "@/components/searchBar";
 import { Icons } from "@/components/icons";
 import { MainNav } from "@/components/layouts/mainNav";
+import ThemeToggle from "./themeToggle";
 // import { MobileNav } from "@/components/layouts/mobile-nav"
 
 interface NavbarProps {
@@ -126,7 +127,7 @@ const NavBar: FC<NavbarProps> = ({ user }) => {
               <Link href="/signin">
                 <div
                   className={buttonVariants({
-                    size: "sm",
+                    size: "default",
                   })}
                 >
                   Sign In
@@ -134,6 +135,7 @@ const NavBar: FC<NavbarProps> = ({ user }) => {
                 </div>
               </Link>
             )}
+            <ThemeToggle />
           </nav>
         </div>
       </div>
