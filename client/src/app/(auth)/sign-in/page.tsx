@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/card";
 import { OAuthSignIn } from "@/components/auth/oauthSignIn";
 // import { SignInForm } from "@/components/forms/signin-form";
+import { MagicLinkSignInForm } from "@/components/forms/magicLinkSignIn";
 import { Shell } from "@/components/shells/shell";
 
 // export const metadata: Metadata = {
@@ -47,7 +48,7 @@ export default async function SignInPage() {
               </span>
             </div>
           </div>
-          {/* <SignInForm /> */}
+          <MagicLinkSignInForm />
         </CardContent>
         <CardFooter className="flex flex-wrap items-center justify-between gap-2">
           <div className="text-sm text-muted-foreground">
