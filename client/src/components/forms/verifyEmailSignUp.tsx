@@ -6,9 +6,9 @@ import { useSignUp } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
-import { toast } from "sonner";
+
 import { catchClerkError } from "@/lib/utils";
-import { checkEmailSchema } from "@/lib/validations/auth";
+import { verfifyEmailSchema } from "@/lib/validations/auth";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -20,20 +20,19 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Icons } from "@/components/icons";
-import { PasswordInput } from "@/components/passwordInput";
 
-type Inputs = z.infer<typeof checkEmailSchema>;
+type Inputs = z.infer<typeof verfifyEmailSchema>;
 
-export function MagicLinkSignUpForm() {
+export function VerifyEmailSignUp() {
   const router = useRouter();
-  const { signUp, isLoaded, setSession } = useSignUp();
+  const { isLoaded, signUp, setActive } = useSignUp();
   const [isPending, startTransition] = React.useTransition();
 
   // react-hook-form
   const form = useForm<Inputs>({
-    resolver: zodResolver(checkEmailSchema),
+    resolver: zodResolver(verfifyEmailSchema),
     defaultValues: {
-      email: "",
+      code: "",
     },
   });
 
@@ -42,20 +41,21 @@ export function MagicLinkSignUpForm() {
 
     startTransition(async () => {
       try {
-        await signUp.create({
-          emailAddress: data.email,
+        const completeSignUp = await signUp.attemptEmailAddressVerification({
+          code: data.code,
         });
-        // Send email verification code
-        await signUp.prepareEmailAddressVerification({
-          strategy: "email_code",
-        });
+        if (completeSignUp.status !== "complete") {
+          /*  investigate the response, to see if there was an error
+             or if the user needs to complete more steps.*/
+          console.log(JSON.stringify(completeSignUp, null, 2));
+        }
+        if (completeSignUp.status === "complete") {
+          console.log("Account created successfully");
+          await setActive({ session: completeSignUp.createdSessionId });
 
-        router.push("/sign-up/verify-email");
-        toast.message("Check your email", {
-          description: "We sent you a 6-digit verification code.",
-        });
+          router.push(`${window.location.origin}/`);
+        }
       } catch (err) {
-        console.log(err);
         catchClerkError(err);
       }
     });
@@ -69,26 +69,27 @@ export function MagicLinkSignUpForm() {
       >
         <FormField
           control={form.control}
-          name="email"
+          name="code"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Verification Code</FormLabel>
               <FormControl>
-                <Input placeholder="capybaraKing@gmail.com" {...field} />
+                <Input
+                  placeholder="169420"
+                  {...field}
+                  onChange={(e) => {
+                    e.target.value = e.target.value.trim();
+                    field.onChange(e);
+                  }}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button disabled={isPending}>
-          {isPending && (
-            <Icons.spinner
-              className="mr-2 h-4 w-4 animate-spin"
-              aria-hidden="true"
-            />
-          )}
-          Continue
-          <span className="sr-only">Continue to email verification page</span>
+        <Button disabled={isPending} isLoading={isPending}>
+          Create account
+          <span className="sr-only">Create account</span>
         </Button>
       </form>
     </Form>
