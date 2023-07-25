@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { VerifyEmailSignUp } from "@/components/forms/verifyEmailSignUp";
+import { VerifyEmailSignIn } from "@/components/forms/verifyEmailSignIn";
 import { Shell } from "@/components/shells/shell";
 
 export const metadata: Metadata = {
@@ -28,7 +28,7 @@ export default function VerifyEmailPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
-          <VerifyEmailSignUp />
+          <VerifyEmailSignIn />
         </CardContent>
       </Card>
     </Shell>
