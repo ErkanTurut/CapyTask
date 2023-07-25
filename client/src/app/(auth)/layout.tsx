@@ -14,7 +14,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
     <div className="grid min-h-screen grid-cols-1 overflow-hidden md:grid-cols-3 lg:grid-cols-2">
       <AspectRatio ratio={16 / 9}>
         <Image
-          src="https://img.freepik.com/vecteurs-libre/illustration-vectorielle-paysage-montagne_1441-72.jpg?w=740&t=st=1689938937~exp=1689939537~hmac=99c12097243bb35dfd39f6d9aa3010a496341a6842525cc5c1374a3e16411c05"
+          src="/images/auth-light-bg.jpg"
           alt="A skateboarder doing a high drop"
           fill
           className="absolute inset-0 object-cover"
