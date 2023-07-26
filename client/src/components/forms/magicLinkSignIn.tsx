@@ -60,7 +60,7 @@ export function MagicLinkSignInForm() {
           emailAddressId: emailAddressId,
         });
 
-        router.push("/sign-in/verify-email");
+        router.push("/signin/verify-email");
         toast.message("Check your email", {
           description: "We sent you a 6-digit verification code.",
         });
@@ -68,7 +68,6 @@ export function MagicLinkSignInForm() {
           description: "We sent you a 6-digit verification code.",
         });
       } catch (err) {
-        console.log(err);
         catchClerkError(err);
       }
     });

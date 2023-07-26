@@ -46,7 +46,7 @@ const NavBar: FC<NavbarProps> = ({ user }) => {
             /> */}
         <div className="flex flex-1 items-center justify-end space-x-4">
           <nav className="flex items-center space-x-2">
-            <SearchBar />
+            {/* <SearchBar /> */}
             {/* <CartSheet /> */}
             {user ? (
               //if user is logged in, show dropdown menu

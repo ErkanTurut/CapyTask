@@ -50,7 +50,7 @@ export function MagicLinkSignUpForm() {
           strategy: "email_code",
         });
 
-        router.push("/sign-up/verify-email");
+        router.push("/signup/verify-email");
         toast.message("Check your email", {
           description: "We sent you a 6-digit verification code.",
         });

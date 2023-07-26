@@ -1,4 +1,3 @@
-import NavBar from "@/components/navbar";
 import { Toaster } from "@/components/ui/toaster";
 
 import { cn } from "@/lib/utils";
@@ -32,8 +31,6 @@ export default function RootLayout({
           )}
         >
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            {/* <NavBar /> */}
-
             {children}
             <TailwindIndicator />
 
