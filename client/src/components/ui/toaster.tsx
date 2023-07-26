@@ -6,6 +6,8 @@ export function Toaster() {
   return (
     <RadToaster
       position="bottom-right"
+      closeButton
+      richColors
       toastOptions={{
         style: {
           background: "hsl(var(--background))",
