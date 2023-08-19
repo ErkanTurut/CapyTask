@@ -1,27 +1,7 @@
+///Setup Prisma
+
 generator client {
   provider = "prisma-client-js"
-}
-
-model User {
-  id         String    @id @default(cuid())
-  externalId String    @unique
-  attributes Json
-  Task       Task[]
-  Comment    Comment[]
-}
-
-model Organization {
-  id             String   @id @default(cuid())
-  externalId     String   @unique
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  name           String
-  slug           String
-  logoUrl        String?
-  imageUrl       String?
-  object         String
-  publicMetadata Json
-  createdById    String
 }
 
 datasource db {
@@ -30,67 +10,112 @@ datasource db {
   relationMode = "prisma"
 }
 
-model Repository {
-  id             String   @id @default(cuid())
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  name           String
-  url            String
-  organizationId String?
-  tasks          Task[]
+///Schema 
+
+model User {
+  id              String             @id @default(cuid())
+  externalId      String             @unique
+  attributes      Json
+  tasks           Task[]
+  userOrgRoles    UserOrganization[]
+  userFolderRoles UserFolder[]
 }
 
-model TaskGroupe {
-  id        String   @id @default(cuid())
+model Organization {
+  id         String @id @default(cuid())
+  externalId String @unique
+  name       String
+
+  folders Folder[]
+  users   UserOrganization[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  name      String
-  tasks     Task[]
 }
 
+model Role {
+  id              String             @id @default(uuid())
+  name            String             @unique
+  description     String
+  permissions     String             @default([])
+  userOrgRoles    UserOrganization[]
+  userFolderRoles UserFolder[]
+}
+
+// Task Folder, each folder belongs to an organization, and can have multiple tasks 
+model Folder {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+  tasks       Task[]
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  UserFolderRole UserFolder[]
+
+  @@index([organizationId])
+}
+
+// Task into Folder and SubTasks, each task belongs to a folder and can have subtasks and a parent task (if it is a subtask)
 model Task {
-  id           String      @id @default(cuid())
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  title        String
-  content      Json?
-  done         Boolean     @default(false)
-  repository   Repository? @relation(fields: [repositoryId], references: [id])
-  repositoryId String?
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+  status      Status
 
-  createdBy   User   @relation(fields: [createdById], references: [id])
-  createdById String
+  folderId     String
+  folder       Folder  @relation(fields: [folderId], references: [id])
+  parentTaskId String?
+  parentTask   Task?   @relation("TaskSubTasks", fields: [parentTaskId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  subTasks     Task[]  @relation("TaskSubTasks")
 
-  comments     Comment[]
-  
-  TaskGroupe   TaskGroupe? @relation(fields: [taskGroupeId], references: [id])
-  taskGroupeId String?
+  createdById String?
+  createdBy   User?   @relation(fields: [createdById], references: [id])
 
-  @@index([repositoryId])
-  @@index([taskGroupeId])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([folderId])
+  @@index([parentTaskId])
   @@index([createdById])
 }
 
-enum TaskStatus {
-  SUCCESS
-  FAILURE
+// User Organization link, each user can be part of multiple organizations, with different roles for each organization but only one role per organization
+model UserOrganization {
+  userId       String
+  orgId        String
+  roleId       String
+  user         User         @relation(fields: [userId], references: [id])
+  organization Organization @relation(fields: [orgId], references: [id])
+  role         Role         @relation(fields: [roleId], references: [id])
+
+  @@id([userId, orgId, roleId])
+  @@index([orgId])
+  @@index([roleId])
+  @@index([userId])
 }
 
-model Comment {
-  id          String   @id @default(cuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  content     Json?
-  task        Task     @relation(fields: [taskId], references: [id])
-  taskId      String
-  createdBy   User     @relation(fields: [createdById], references: [id])
-  createdById String
+// User Folder link, each user can be part of multiple folders, with different roles for each folder but only one role per folder
+model UserFolder {
+  userId   String
+  folderId String
+  roleId   String
+  user     User   @relation(fields: [userId], references: [id])
+  folder   Folder @relation(fields: [folderId], references: [id])
+  role     Role   @relation(fields: [roleId], references: [id])
 
-  replyToId String?
-  replyTo   Comment?  @relation("CommentToComment", fields: [replyToId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  replies   Comment[] @relation("CommentToComment")
+  @@id([userId, folderId, roleId])
+  @@index([userId])
+  @@index([folderId])
+  @@index([roleId])
+}
 
-  @@index([taskId])
-  @@index([createdById])
-  @@index([replyToId])
+enum Status {
+  NOTSTARTED
+  INPROGRESS
+  COMPLETED_SUCCESS
+  COMPLETED_FAIL
 }
