@@ -5,9 +5,8 @@ generator client {
 }
 
 datasource db {
-  provider     = "mysql"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 ///Schema 
@@ -34,10 +33,10 @@ model Organization {
 }
 
 model Role {
-  id              String             @id @default(uuid())
+  id              String             @id @default(cuid())
   name            String             @unique
   description     String
-  permissions     String             @default([])
+  permissions     String[]
   userOrgRoles    UserOrganization[]
   userFolderRoles UserFolder[]
 }

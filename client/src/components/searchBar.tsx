@@ -55,6 +55,11 @@ export function SearchBar() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  const handleSddelect = React.useCallback((callback: () => unknown) => {
+    setIsOpen(false);
+    callback();
+  }, []);
+
   const handleSelect = React.useCallback((callback: () => unknown) => {
     setIsOpen(false);
     callback();
