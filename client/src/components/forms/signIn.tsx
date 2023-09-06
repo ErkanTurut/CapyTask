@@ -6,9 +6,8 @@ import { useSignIn } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
-import { toast } from "sonner";
 import { catchClerkError } from "@/lib/utils";
-import { checkEmailSchema } from "@/lib/validations/auth";
+import { signUpSchema } from "@/lib/validations/auth";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -21,53 +20,32 @@ import {
 import { Input } from "@/components/ui/input";
 import { Icons } from "@/components/icons";
 import { PasswordInput } from "@/components/passwordInput";
-import { start } from "repl";
 
-type Inputs = z.infer<typeof checkEmailSchema>;
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import type { Database } from "@/types/supabase.types";
 
-export function MagicLinkSignInForm() {
+type Inputs = z.infer<typeof signUpSchema>;
+
+export function SignInForm() {
   const router = useRouter();
-  const { isLoaded, signIn, setActive } = useSignIn();
+  const supabase = createClientComponentClient<Database>();
   const [isPending, startTransition] = React.useTransition();
 
   // react-hook-form
   const form = useForm<Inputs>({
-    resolver: zodResolver(checkEmailSchema),
+    resolver: zodResolver(signUpSchema),
     defaultValues: {
       email: "",
+      password: "",
     },
   });
 
   function onSubmit(data: Inputs) {
-    if (!isLoaded) return;
-
     startTransition(async () => {
-      const { startMagicLinkFlow, cancelMagicLinkFlow } =
-        await signIn.createMagicLinkFlow();
-      try {
-        const { supportedFirstFactors } = await signIn.create({
-          identifier: data.email,
-        });
-
-        const firstEmailFactor = supportedFirstFactors.find((factor) => {
-          return factor.strategy === "email_code";
-        });
-        // @ts-ignore
-        const { emailAddressId } = firstEmailFactor ?? {};
-
-        await signIn.prepareFirstFactor({
-          strategy: "email_code",
-          emailAddressId: emailAddressId,
-        });
-
-        router.push("/signin/verify-email");
-
-        toast.message("Check your email", {
-          description: "We sent you a 6-digit verification code.",
-        });
-      } catch (err) {
-        catchClerkError(err);
-      }
+      const result = await supabase.auth.signInWithPassword({
+        email: data.email,
+        password: data.password,
+      });
     });
   }
 
@@ -84,12 +62,26 @@ export function MagicLinkSignInForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="capybaraKing@gmail.com" {...field} />
+                <Input placeholder="rodneymullen180@gmail.com" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <PasswordInput placeholder="**********" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <Button disabled={isPending}>
           {isPending && (
             <Icons.spinner
@@ -97,8 +89,8 @@ export function MagicLinkSignInForm() {
               aria-hidden="true"
             />
           )}
-          Continue
-          <span className="sr-only">Continue to email verification page</span>
+          Sign in
+          <span className="sr-only">Sign in</span>
         </Button>
       </form>
     </Form>
