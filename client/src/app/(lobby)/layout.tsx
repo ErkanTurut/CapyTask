@@ -6,7 +6,7 @@ interface LobbyLayoutProps {
 }
 
 export default async function LobbyLayout({ children }: LobbyLayoutProps) {
-  const user = await currentUser();
+  const user = null;
 
   return (
     <div className="relative flex min-h-screen flex-col">

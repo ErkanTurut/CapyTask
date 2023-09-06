@@ -5,25 +5,26 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 ///Schema 
 
 model User {
-  id              String             @id @default(cuid())
-  externalId      String             @unique
-  attributes      Json
+  id              String             @id @default(uuid())
+  imageUri        String?
   tasks           Task[]
   userOrgRoles    UserOrganization[]
   userFolderRoles UserFolder[]
 }
 
 model Organization {
-  id         String @id @default(cuid())
-  externalId String @unique
-  name       String
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+  imageUri    String?
 
   folders Folder[]
   users   UserOrganization[]
@@ -49,7 +50,7 @@ model Folder {
   tasks       Task[]
 
   organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
@@ -66,9 +67,9 @@ model Task {
   status      Status
 
   folderId     String
-  folder       Folder  @relation(fields: [folderId], references: [id])
+  folder       Folder  @relation(fields: [folderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   parentTaskId String?
-  parentTask   Task?   @relation("TaskSubTasks", fields: [parentTaskId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  parentTask   Task?   @relation("TaskSubTasks", fields: [parentTaskId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   subTasks     Task[]  @relation("TaskSubTasks")
 
   createdById String?

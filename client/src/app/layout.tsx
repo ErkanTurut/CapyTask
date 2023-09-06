@@ -15,29 +15,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
-      <html
-        lang="en"
-        suppressHydrationWarning
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={cn(
+        "bg-white text-slate-900 antialiased light",
+        inter.className
+      )}
+    >
+      <body
         className={cn(
-          "bg-white text-slate-900 antialiased light",
+          "min-h-screen bg-background font-sans antialiased",
           inter.className
         )}
       >
-        <body
-          className={cn(
-            "min-h-screen bg-background font-sans antialiased",
-            inter.className
-          )}
-        >
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            {children}
-            <TailwindIndicator />
-
-            <Toaster />
-          </ThemeProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {children}
+          <TailwindIndicator />
+          <Toaster />
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }

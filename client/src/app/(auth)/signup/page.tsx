@@ -12,8 +12,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { OAuthSignIn } from "@/components/auth/oauthSignIn";
-import { MagicLinkSignUpForm } from "@/components/forms/magicLinkSignUp";
+// import { OAuthSignIn } from "@/components/auth/oauthSignIn";
+
+import { SignUpForm } from "@/components/forms/signUp";
 import { Shell } from "@/components/shells/shell";
 
 export const metadata: Metadata = {
@@ -23,9 +24,6 @@ export const metadata: Metadata = {
 };
 
 export default async function SignUpPage() {
-  const user = await currentUser();
-  if (user) redirect("/");
-
   return (
     <Shell className="max-w-lg">
       <Card>
@@ -36,7 +34,7 @@ export default async function SignUpPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
-          <OAuthSignIn />
+          {/* <OAuthSignIn /> */}
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t" />
@@ -47,7 +45,8 @@ export default async function SignUpPage() {
               </span>
             </div>
           </div>
-          <MagicLinkSignUpForm />
+          <SignUpForm />
+          {/* <MagicLinkSignUpForm /> */}
         </CardContent>
         <CardFooter>
           <div className="text-sm text-muted-foreground">

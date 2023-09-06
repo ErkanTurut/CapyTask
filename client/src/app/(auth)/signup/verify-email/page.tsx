@@ -1,5 +1,4 @@
 import { type Metadata } from "next";
-// import { env } from "@/env.mjs";
 
 import {
   Card,
@@ -8,14 +7,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { VerifyEmailSignUp } from "@/components/forms/verifyEmailSignUp";
+import { OtpVerify } from "@/components/forms/otpVerify";
 import { Shell } from "@/components/shells/shell";
-
-export const metadata: Metadata = {
-  //   metadataBase: new URL(env.NEXT_PUBLIC_APP_URL),
-  title: "Verify Email",
-  description: "Verify your email address to continue with your sign up",
-};
 
 export default function VerifyEmailPage() {
   return (
@@ -28,7 +21,7 @@ export default function VerifyEmailPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
-          <VerifyEmailSignUp />
+          <OtpVerify />
         </CardContent>
       </Card>
     </Shell>
