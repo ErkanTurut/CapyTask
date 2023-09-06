@@ -65,15 +65,17 @@ export function formatDate(date: Date | string) {
 }
 
 export function catchError(err: unknown) {
+  console.log(err);
   if (err instanceof z.ZodError) {
+    console.log("ok");
     const errors = err.issues.map((issue) => {
       return issue.message;
     });
-    return toast(errors.join("\n"));
+    return toast.error(errors.join("\n"));
   } else if (err instanceof Error) {
-    return toast(err.message);
+    return toast.error(err.message);
   } else {
-    return toast("Something went wrong, please try again later.");
+    return toast.error("Something went wrong, please try again later.");
   }
 }
 

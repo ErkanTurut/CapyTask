@@ -1,4 +1,4 @@
-import type { FooterItem, MainNavItem } from "@/types";
+import type { FooterItem, MainNavItem } from "@/types/index.types";
 
 // import { productCategories } from "@/config/products"
 // import { slugify } from "@/lib/utils"
