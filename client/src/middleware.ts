@@ -1,60 +1,31 @@
+import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
 import { NextResponse } from "next/server";
-// import { type UserRole } from "@/types"
-import { clerkClient } from "@clerk/nextjs";
-import { authMiddleware } from "@clerk/nextjs/server";
 
-export default authMiddleware({
-  // Public routes are routes that don't require authentication
-  publicRoutes: [
-    "/",
-    "/signin(.*)",
-    "/signup(.*)",
-    "/sso-callback(.*)",
-    "/categories(.*)",
-    "/products(.*)",
-    "/product(.*)",
-    "/build-a-board(.*)",
-    "/email-preferences(.*)",
-    "/blog(.*)",
-    "/about(.*)",
-    "/contact(.*)",
-    "/terms(.*)",
-    "/privacy(.*)",
-    "/api(.*)",
-  ],
-  async afterAuth(auth, req) {
-    if (auth.isPublicRoute) {
-      //  For public routes, we don't need to do anything
-      return NextResponse.next();
-    }
+import type { NextRequest } from "next/server";
 
-    const url = new URL(req.nextUrl.origin);
+export async function middleware(req: NextRequest) {
+  const res = NextResponse.next();
+  const supabase = createMiddlewareClient({ req, res });
 
-    if (!auth.userId) {
-      //  If user tries to access a private route without being authenticated,
-      //  redirect them to the sign in page
-      url.pathname = "/signin";
-      return NextResponse.redirect(url);
-    }
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-    // // Set the user's role to user if it doesn't exist
-    // const user = await clerkClient.users.getUser(auth.userId)
+  // if (
+  //   (user && req.nextUrl.pathname.startsWith("/signup")) ||
+  //   req.nextUrl.pathname.startsWith("/signin")
+  // ) {
+  //   return NextResponse.redirect(new URL("/", req.url));
+  // }
 
-    // if (!user) {
-    //   throw new Error("User not found.")
-    // }
+  // // if user is not signed in and the current path is not / redirect the user to /
+  // if (!user && req.nextUrl.pathname !== "/") {
+  //   return NextResponse.redirect(new URL("/", req.url));
+  // }
 
-    // // If the user doesn't have a role, set it to user
-    // if (!user.privateMetadata.role) {
-    //   await clerkClient.users.updateUserMetadata(auth.userId, {
-    //     privateMetadata: {
-    //       role: "user" satisfies UserRole,
-    //     },
-    //   })
-    // }
-  },
-});
+  return res;
+}
 
 export const config = {
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api)(.*)"],
+  matcher: ["/", "/account", "/signup", "/signin"],
 };
