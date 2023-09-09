@@ -30,7 +30,7 @@ export const signUpSchema = z
     path: ["confirmPassword"],
   });
 
-export const verfifyEmailSchema = z.object({
+export const otpCodeSchema = z.object({
   code: z
     .string()
     .min(6, {
@@ -47,7 +47,7 @@ export const resetPasswordSchema = z
   .object({
     password: authSchema.shape.password,
     confirmPassword: authSchema.shape.password,
-    code: verfifyEmailSchema.shape.code,
+    code: otpCodeSchema.shape.code,
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
