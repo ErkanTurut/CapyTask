@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import type { z } from "zod";
 
 import { catchError } from "@/lib/utils";
-import { verfifyEmailSchema } from "@/lib/validations/auth";
+import { otpCodeSchema } from "@/lib/validations/auth";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -19,36 +19,41 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Icons } from "@/components/icons";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-type Inputs = z.infer<typeof verfifyEmailSchema>;
+import { toast } from "sonner";
+import router from "next/router";
+type Inputs = z.infer<typeof otpCodeSchema>;
 
-export async function OtpVerify() {
-  const router = useRouter();
+export function OtpVerify() {
   const [isPending, startTransition] = React.useTransition();
-  const supabase = createClientComponentClient();
 
   // react-hook-form
   const form = useForm<Inputs>({
-    resolver: zodResolver(verfifyEmailSchema),
+    resolver: zodResolver(otpCodeSchema),
     defaultValues: {
       code: "",
     },
   });
-
+  console.log("a");
   function onSubmit(data: Inputs) {
+    console.log(data);
     try {
       startTransition(async () => {
-        console.log(await supabase.auth.getUser());
-        // const res = await fetch("/auth/callback", {
-        //   method: "GET",
-        //   headers: { "Content-Type": "application/json" },
-        // });
-        // if (res.status === 400) {
-        //   const json = await res.json();
-        //   catchError(json);
-        // }
+        const res = await fetch("/auth/callback", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+        console.log(await res.json());
+        if (!res.ok) {
+          catchError(await res.json());
+        }
+        if (res.redirected && res.status === 200) {
+          toast.message("You have been connected");
+          router.push(res.url);
+        }
       });
     } catch (err) {
+      console.log(err);
       catchError(err);
     }
   }
@@ -72,6 +77,7 @@ export async function OtpVerify() {
                   onChange={(e) => {
                     e.target.value = e.target.value.trim();
                     field.onChange(e);
+                    console.log(e);
                   }}
                 />
               </FormControl>
@@ -79,7 +85,13 @@ export async function OtpVerify() {
             </FormItem>
           )}
         />
-        <Button disabled={isPending} isLoading={isPending}>
+        <Button disabled={isPending}>
+          {isPending && (
+            <Icons.spinner
+              className="mr-2 h-4 w-4 animate-spin"
+              aria-hidden="true"
+            />
+          )}
           Create account
           <span className="sr-only">Create account</span>
         </Button>

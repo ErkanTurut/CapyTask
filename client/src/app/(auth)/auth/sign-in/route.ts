@@ -1,60 +1,84 @@
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
-import { authSchema } from "@/lib/validations/auth";
+import { authSchema, signUpSchema } from "@/lib/validations/auth";
+import { AuthError } from "@supabase/supabase-js";
 type Inputs = z.infer<typeof authSchema>;
 
 export const dynamic = "force-dynamic";
 
-export async function POST(request: Request) {
-  const requestUrl = new URL(request.url);
-  const formData = await request.formData();
-  const form = authSchema.parse(Object.fromEntries(formData.entries()));
-  const supabase = createRouteHandlerClient({ cookies });
-
-  const { error } = await supabase.auth.signInWithPassword({
-    email: form.email,
-    password: form.password,
-  });
-
-  if (error) {
-    return NextResponse.redirect(
-      `${requestUrl.origin}/login?error=Could not authenticate user`,
-      {
-        // a 301 status is required to redirect from a POST to a GET route
-        status: 301,
-      }
-    );
+export async function POST(request: NextRequest) {
+  try {
+    const { email, password } = signUpSchema.parse(await request.json());
+    const supabase = createRouteHandlerClient({ cookies });
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    console.log(data);
+    if (error) {
+      throw error;
+    }
+    return NextResponse.redirect(`${request.nextUrl.origin}`, {
+      status: 301,
+    });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(error, {
+        status: 400,
+      });
+    }
+    if (error instanceof AuthError) {
+      return NextResponse.json(error, {
+        status: error.status,
+      });
+    }
+    return NextResponse.json(error, {
+      status: 500,
+    });
   }
-
-  return NextResponse.redirect(requestUrl.origin, {
-    // a 301 status is required to redirect from a POST to a GET route
-    status: 301,
-  });
 }
 
-// type Inputs = z.infer<typeof authSchema>;
+// return NextResponse.redirect(requestUrl.origin, {
+//   // a 301 status is required to redirect from a POST to a GET route
+//   status: 301,
+// });
 
-// export function SignInForm() {
-//   const router = useRouter();
-//   const supabase = createClientComponentClient<Database>();
-//   const [isPending, startTransition] = React.useTransition();
-
-//   // react-hook-form
-//   const form = useForm<Inputs>({
-//     resolver: zodResolver(authSchema),
-//     defaultValues: {
-//       email: "",
-//       password: "",
-//     },
-//   });
-
-//   function onSubmit(data: Inputs) {
-//     startTransition(async () => {
-//       const result = await supabase.auth.signInWithPassword({
-//         email: data.email,
-//         password: data.password,
-//       });
+// export async function POST(request: NextRequest) {
+//   try {
+//     const { email, password } = signUpSchema.parse(await request.json());
+//     const supabase = createRouteHandlerClient({ cookies });
+//     const { data, error } = await supabase.auth.signUp({
+//       email,
+//       password,
+//       options: {
+//         emailRedirectTo: `${request.nextUrl.origin}/auth/callback`,
+//       },
 //     });
+//     if (error) {
+//       throw error;
+//     }
+//     return NextResponse.redirect(
+//       `${request.nextUrl.origin}/signup/verify-email`,
+//       {
+//         status: 301,
+//       }
+//     );
+//   } catch (error) {
+//     if (error instanceof z.ZodError) {
+//       return NextResponse.json(error, {
+//         status: 400,
+//       });
+//     }
+//     if (error instanceof AuthError) {
+//       return NextResponse.json(error, {
+//         status: error.status,
+//       });
+//     }
+//     return NextResponse.json(error, {
+//       status: 500,
+//     });
+//   }
+// }

@@ -6,7 +6,7 @@ import { useSignIn } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
-import { catchClerkError } from "@/lib/utils";
+import { catchClerkError, catchError } from "@/lib/utils";
 import { signUpSchema } from "@/lib/validations/auth";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,6 +23,7 @@ import { PasswordInput } from "@/components/passwordInput";
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import type { Database } from "@/types/supabase.types";
+import { toast } from "sonner";
 
 type Inputs = z.infer<typeof signUpSchema>;
 
@@ -41,12 +42,25 @@ export function SignInForm() {
   });
 
   function onSubmit(data: Inputs) {
-    startTransition(async () => {
-      const result = await supabase.auth.signInWithPassword({
-        email: data.email,
-        password: data.password,
+    try {
+      startTransition(async () => {
+        const res = await fetch("/auth/sign-in", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+        console.log(res);
+        if (!res.ok) {
+          catchError(await res.json());
+        }
+        if (res.redirected && res.status === 200) {
+          toast.message("You have been connected");
+          router.push(res.url);
+        }
       });
-    });
+    } catch (err) {
+      catchError(err);
+    }
   }
 
   return (

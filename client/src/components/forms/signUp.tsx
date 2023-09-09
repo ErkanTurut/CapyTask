@@ -48,9 +48,8 @@ export function SignUpForm() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
         });
-        if (res.status === 400) {
-          const json = await res.json();
-          catchError(json);
+        if (!res.ok) {
+          catchError(await res.json());
         }
         if (res.redirected && res.status === 200) {
           toast.message("Check your email", {
