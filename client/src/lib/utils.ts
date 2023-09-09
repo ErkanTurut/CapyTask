@@ -4,7 +4,10 @@ import { isClerkAPIResponseError } from "@clerk/nextjs";
 import { formatDistanceToNowStrict } from "date-fns";
 import locale from "date-fns/locale/en-US";
 import * as z from "zod";
+import type { ZodError } from "zod";
 import dayjs from "dayjs";
+import { AuthError } from "@supabase/supabase-js";
+import { PostgrestError } from "@supabase/supabase-js";
 
 import { toast } from "sonner";
 
@@ -65,14 +68,14 @@ export function formatDate(date: Date | string) {
 }
 
 export function catchError(err: unknown) {
-  console.log(err);
   if (err instanceof z.ZodError) {
-    console.log("ok");
     const errors = err.issues.map((issue) => {
       return issue.message;
     });
     return toast.error(errors.join("\n"));
   } else if (err instanceof Error) {
+    return toast.error(err.message);
+  } else if (err instanceof AuthError) {
     return toast.error(err.message);
   } else {
     return toast.error("Something went wrong, please try again later.");
