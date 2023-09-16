@@ -13,7 +13,7 @@ datasource db {
 ///Schema 
 
 model User {
-  id        String  @id @default(uuid())
+  id        String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   imageUri  String?
   email     String  @unique
   firstName String?
@@ -28,7 +28,7 @@ model User {
 }
 
 model Organization {
-  id          String  @id @default(cuid())
+  id          String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name        String
   description String?
   imageUri    String?
@@ -41,7 +41,7 @@ model Organization {
 }
 
 model Role {
-  id              String             @id @default(cuid())
+  id              String             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name            String             @unique
   description     String
   permissions     String[]
@@ -51,12 +51,12 @@ model Role {
 
 // Task Folder, each folder belongs to an organization, and can have multiple tasks 
 model Folder {
-  id          String  @id @default(cuid())
+  id          String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name        String
   description String?
   tasks       Task[]
 
-  organizationId String
+  organizationId String       @db.Uuid
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   createdAt      DateTime     @default(now())
@@ -68,18 +68,18 @@ model Folder {
 
 // Task into Folder and SubTasks, each task belongs to a folder and can have subtasks and a parent task (if it is a subtask)
 model Task {
-  id          String  @id @default(cuid())
+  id          String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name        String
   description String?
   status      Status
 
-  folderId     String
+  folderId     String  @db.Uuid
   folder       Folder  @relation(fields: [folderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  parentTaskId String?
+  parentTaskId String? @db.Uuid
   parentTask   Task?   @relation("TaskSubTasks", fields: [parentTaskId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   subTasks     Task[]  @relation("TaskSubTasks")
 
-  createdById String?
+  createdById String? @db.Uuid
   createdBy   User?   @relation(fields: [createdById], references: [id])
 
   createdAt DateTime @default(now())
@@ -92,9 +92,9 @@ model Task {
 
 // User Organization link, each user can be part of multiple organizations, with different roles for each organization but only one role per organization
 model UserOrganization {
-  userId       String
-  orgId        String
-  roleId       String
+  userId       String       @db.Uuid
+  orgId        String       @db.Uuid
+  roleId       String       @db.Uuid
   user         User         @relation(fields: [userId], references: [id])
   organization Organization @relation(fields: [orgId], references: [id])
   role         Role         @relation(fields: [roleId], references: [id])
@@ -107,9 +107,9 @@ model UserOrganization {
 
 // User Folder link, each user can be part of multiple folders, with different roles for each folder but only one role per folder
 model UserFolder {
-  userId   String
-  folderId String
-  roleId   String
+  userId   String @db.Uuid
+  folderId String @db.Uuid
+  roleId   String @db.Uuid
   user     User   @relation(fields: [userId], references: [id])
   folder   Folder @relation(fields: [folderId], references: [id])
   role     Role   @relation(fields: [roleId], references: [id])
