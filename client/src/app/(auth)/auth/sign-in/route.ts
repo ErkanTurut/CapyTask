@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
       email,
       password,
     });
-    console.log(data);
+
     if (error) {
       throw error;
     }
