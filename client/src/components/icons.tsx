@@ -9,6 +9,8 @@ import {
   MagnifyingGlassIcon,
   MoonIcon,
   SunIcon,
+  ChevronLeftIcon,
+  HamburgerMenuIcon,
 } from "@radix-ui/react-icons";
 import { Loader2 } from "lucide-react";
 
@@ -47,7 +49,9 @@ export const Icons = {
   logout: ExitIcon,
   search: MagnifyingGlassIcon,
   moon: MoonIcon,
+  menu: HamburgerMenuIcon,
   sun: SunIcon,
+  chevronLeft: ChevronLeftIcon,
   logo: (props: LucideProps & logoProps) => {
     const { size, className } = props;
     const { width, height } = sizes[size];
