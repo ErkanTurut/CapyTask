@@ -9,7 +9,9 @@ export async function middleware(req: NextRequest) {
   const supabase = createMiddlewareClient({ req, res });
   await supabase.auth.getSession();
   if (req.nextUrl.pathname === "/dashboard") {
-    return NextResponse.redirect(new URL("/dashboard/account", req.url));
+    return NextResponse.redirect(
+      new URL("/dashboard/account/settings", req.url)
+    );
   }
 
   return res;
