@@ -11,8 +11,11 @@ import {
   SunIcon,
   ChevronLeftIcon,
   HamburgerMenuIcon,
+  HomeIcon,
+  BackpackIcon,
 } from "@radix-ui/react-icons";
-import { Loader2 } from "lucide-react";
+import { Loader2, Banknote } from "lucide-react";
+import Home from "@/app/(lobby)/page";
 
 type logoProps = {
   // color: "light" | "dark";
@@ -51,7 +54,10 @@ export const Icons = {
   moon: MoonIcon,
   menu: HamburgerMenuIcon,
   sun: SunIcon,
+  home: HomeIcon,
   chevronLeft: ChevronLeftIcon,
+  backpack: BackpackIcon,
+  banknote: Banknote,
   logo: (props: LucideProps & logoProps) => {
     const { size, className } = props;
     const { width, height } = sizes[size];
