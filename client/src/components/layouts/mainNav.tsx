@@ -2,9 +2,9 @@
 
 import * as React from "react";
 import Link from "next/link";
-import type { MainNavItem } from "@/types/index.types";
+import type { MainNavItem } from "@/types";
 
-import { siteConfig } from "@/config/site";
+import { siteConfig } from "@/config/site.config";
 import { cn } from "@/lib/utils";
 import {
   NavigationMenu,

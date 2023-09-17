@@ -1,8 +1,8 @@
-import { FC } from "react";
 import Link from "next/link";
+
 import { dashboardConfig } from "@/config/dashboard.config";
 import { siteConfig } from "@/config/site.config";
-
+// import { getUserEmail } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -15,39 +15,44 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-// import { CartSheet } from "@/components/cart/cart-sheet";
-import { SearchBar } from "@/components/searchBar";
+// import { CartSheet } from "@/components/checkout/cart-sheet";
+import { Combobox } from "@/components/combobox";
 import { Icons } from "@/components/icons";
 import { MainNav } from "@/components/layouts/mainNav";
+import { MobileNav } from "@/components/layouts/mobileNav";
 import ThemeToggle from "./themeToggle";
-import { MobileNav } from "./mobileNav";
-// import { MobileNav } from "@/components/layouts/mobile-nav"
-
 import type { User } from "@prisma/client";
+import { SearchBar } from "../searchBar";
 
-interface NavbarProps {
+interface AppNav {
   user: User | null;
 }
 
-const NavBar: FC<NavbarProps> = ({ user }) => {
-  const initials = `${user?.firstName?.charAt(0) ?? ""} ${
-    user?.lastName?.charAt(0) ?? ""
-  }`;
+export function AppNav({ user }: AppNav) {
+  const initials = user?.id;
   const email = user?.email;
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background">
-      <div className="px-6 flex h-16 items-center">
-        <MainNav items={siteConfig.mainNav} />
+    <header className="sticky top-0 z-50 w-full border-b bg-background">
+      <div className=" px-6 flex h-16 items-center">
+        <Link
+          aria-label="Home"
+          href="/"
+          className="hidden items-center space-x-2 lg:flex"
+        >
+          <Icons.logo size="m" aria-hidden="true" />
+          <span className="hidden font-bold lg:inline-block">
+            {siteConfig.name}
+          </span>
+        </Link>
+        {/* <MainNav items={siteConfig.mainNav} />
         <MobileNav
           mainNavItems={siteConfig.mainNav}
           sidebarNavItems={dashboardConfig.sidebarNav}
-        />
+        /> */}
         <div className="flex flex-1 items-center justify-end space-x-4">
           <nav className="flex items-center space-x-2">
             <SearchBar />
-            {/* <CartSheet /> */}
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -78,17 +83,17 @@ const NavBar: FC<NavbarProps> = ({ user }) => {
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
                     <DropdownMenuItem asChild>
-                      <Link href="/dashboard/account/settings">
-                        <Icons.user
+                      <Link href="/">
+                        <Icons.chevronLeft
                           className="mr-2 h-4 w-4"
                           aria-hidden="true"
                         />
-                        Account
+                        Back to site
                         <DropdownMenuShortcut>⇧⌘A</DropdownMenuShortcut>
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link href="/dashboard">
+                      <Link href="/dashboard/stores">
                         <Icons.mix
                           className="mr-2 h-4 w-4"
                           aria-hidden="true"
@@ -97,8 +102,8 @@ const NavBar: FC<NavbarProps> = ({ user }) => {
                         <DropdownMenuShortcut>⌘D</DropdownMenuShortcut>
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/dashboard/account/settings">
+                    <DropdownMenuItem asChild disabled>
+                      <Link href="/dashboard/settings">
                         <Icons.mixerVertical
                           className="mr-2 h-4 w-4"
                           aria-hidden="true"
@@ -138,6 +143,4 @@ const NavBar: FC<NavbarProps> = ({ user }) => {
       </div>
     </header>
   );
-};
-
-export default NavBar;
+}
