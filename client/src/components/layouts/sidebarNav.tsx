@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
 import type { SidebarNavItem } from "@/types";
 import { usePathname } from "next/navigation";
-
+import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { Icons } from "@/components/icons";
 import { buttonVariants } from "../ui/button";
@@ -26,19 +26,50 @@ export function SidebarNav({ items, className, ...props }: SidebarNavProps) {
     >
       {items.map((item, index) => {
         const Icon = Icons[item.icon ?? "chevronLeft"];
-
-        return item.href ? (
+        return item.items.length > 0 ? (
+          <>
+            <h2
+              key={index}
+              className="flex w-full items-center py-3 text-sm font-semibold text-muted-foreground"
+            >
+              <Icon className="mr-2 h-4 w-4" aria-hidden="true" size={"s"} />
+              {item.title}
+            </h2>
+            {item.items.map((subitem, index) => {
+              return (
+                <Link
+                  aria-label={subitem.title}
+                  key={subitem.title}
+                  href={subitem.href ? subitem.href : "#"}
+                  target={subitem.external ? "_blank" : ""}
+                  rel={subitem.external ? "noreferrer" : ""}
+                  className={cn(
+                    buttonVariants({ variant: "ghost" }),
+                    pathname === subitem.href
+                      ? "bg-muted hover:bg-muted"
+                      : "hover:bg-muted hover:underline",
+                    "justify-start",
+                    subitem.disabled && "pointer-events-none opacity-60"
+                  )}
+                >
+                  <span>{subitem.title}</span>
+                </Link>
+              );
+            })}
+            <Separator />
+          </>
+        ) : (
           <Link
             aria-label={item.title}
             key={index}
-            href={item.href}
+            href={item.href ? item.href : "#"}
             target={item.external ? "_blank" : ""}
             rel={item.external ? "noreferrer" : ""}
             className={cn(
               buttonVariants({ variant: "ghost" }),
               pathname === item.href
                 ? "bg-muted hover:bg-muted"
-                : "hover:bg-transparent hover:underline",
+                : "hover:bg-muted hover:underline ",
               "justify-start",
               item.disabled && "pointer-events-none opacity-60"
             )}
@@ -46,10 +77,6 @@ export function SidebarNav({ items, className, ...props }: SidebarNavProps) {
             <Icon className="mr-2 h-4 w-4" aria-hidden="true" size={"s"} />
             <span>{item.title}</span>
           </Link>
-        ) : (
-          <Label key={index} className="flex w-full py-4 underline">
-            {item.title}
-          </Label>
         );
       })}
     </nav>
