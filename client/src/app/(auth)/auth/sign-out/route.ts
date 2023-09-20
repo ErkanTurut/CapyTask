@@ -10,8 +10,7 @@ export async function POST(request: Request) {
 
   await supabase.auth.signOut();
 
-  return NextResponse.redirect(`${requestUrl.origin}/login`, {
-    // a 301 status is required to redirect from a POST to a GET route
+  return NextResponse.redirect(`${requestUrl.origin}/signin`, {
     status: 301,
   });
 }
