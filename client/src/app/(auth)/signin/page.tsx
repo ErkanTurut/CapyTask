@@ -2,8 +2,6 @@ import { type Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { currentUser } from "@clerk/nextjs";
-
 import {
   Card,
   CardContent,
@@ -62,7 +60,7 @@ export default async function SignInPage() {
           </div>
           <Link
             aria-label="Reset password"
-            href="/signin/reset-password"
+            href="/reset-password"
             className="text-sm text-primary underline-offset-4 transition-colors hover:underline"
           >
             Reset password

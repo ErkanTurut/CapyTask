@@ -2,12 +2,12 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { useSignIn } from "@clerk/nextjs";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
-import { catchClerkError, catchError } from "@/lib/utils";
-import { signUpSchema } from "@/lib/validations/auth";
+
+import { authSchema } from "@/lib/validations/auth";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -24,8 +24,9 @@ import { PasswordInput } from "@/components/passwordInput";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import type { Database } from "@/types/supabase.types";
 import { toast } from "sonner";
+import { catchError } from "@/lib/utils";
 
-type Inputs = z.infer<typeof signUpSchema>;
+type Inputs = z.infer<typeof authSchema>;
 
 export function SignInForm() {
   const router = useRouter();
@@ -34,14 +35,14 @@ export function SignInForm() {
 
   // react-hook-form
   const form = useForm<Inputs>({
-    resolver: zodResolver(signUpSchema),
+    resolver: zodResolver(authSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  function onSubmit(data: Inputs) {
+  async function onSubmit(data: Inputs) {
     try {
       startTransition(async () => {
         const res = await fetch("/auth/sign-in", {
@@ -55,7 +56,7 @@ export function SignInForm() {
         }
         if (res.redirected && res.status === 200) {
           toast.message("You have been connected");
-          router.push(res.url);
+          // router.push(res.url);
         }
       });
     } catch (err) {
@@ -96,7 +97,7 @@ export function SignInForm() {
           )}
         />
 
-        <Button disabled={isPending}>
+        <Button type="submit" disabled={isPending}>
           {isPending && (
             <Icons.spinner
               className="mr-2 h-4 w-4 animate-spin"
