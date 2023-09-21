@@ -21,7 +21,8 @@ export function LogOutButtons() {
           method: "POST",
         }).then((res) => {
           if (res.ok) {
-            router.push(res.url);
+            router.refresh();
+            return router.push(res.url);
           }
         }),
         {
