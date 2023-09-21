@@ -48,8 +48,9 @@ export function SignUpForm() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
         });
+
         if (!res.ok) {
-          catchError(await res.json());
+          catchError(new Error(await res.json()));
         }
         if (res.redirected && res.status === 200) {
           toast.message("Check your email", {
@@ -108,7 +109,7 @@ export function SignUpForm() {
             </FormItem>
           )}
         />
-        <Button disabled={isPending}>
+        <Button type="submit" disabled={isPending}>
           {isPending && (
             <Icons.spinner
               className="mr-2 h-4 w-4 animate-spin"

@@ -50,13 +50,12 @@ export function SignInForm() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
         });
-        console.log(res);
         if (!res.ok) {
-          catchError(await res.json());
+          catchError(new Error(await res.json()));
         }
         if (res.redirected && res.status === 200) {
           toast.message("You have been connected");
-          // router.push(res.url);
+          router.push(res.url);
         }
       });
     } catch (err) {
