@@ -24,18 +24,17 @@ export async function POST(request: NextRequest) {
     return NextResponse.redirect(`${request.nextUrl.origin}/signup/verify`, {
       status: 301,
     });
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(error, {
+  } catch (error: Error | unknown) {
+    if (
+      error instanceof Error ||
+      error instanceof AuthError ||
+      error instanceof z.ZodError
+    ) {
+      return NextResponse.json(error.message, {
         status: 400,
       });
     }
-    if (error instanceof AuthError) {
-      return NextResponse.json(error, {
-        status: error.status,
-      });
-    }
-    return NextResponse.json(error, {
+    return NextResponse.json("An unknown error occurred", {
       status: 500,
     });
   }

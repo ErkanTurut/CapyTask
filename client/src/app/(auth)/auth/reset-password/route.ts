@@ -11,30 +11,27 @@ export const dynamic = "force-dynamic";
 export async function POST(request: NextRequest) {
   try {
     const { email } = checkEmailSchema.parse(await request.json());
-    console.log("s");
     const supabase = createRouteHandlerClient({ cookies });
     const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${request.nextUrl.origin}/auth/callback?next=http://localhost:3000/products`,
     });
-    console.log(data, error);
     if (error) {
       throw error;
     }
     return NextResponse.redirect(`${request.nextUrl.origin}`, {
       status: 301,
     });
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(error, {
+  } catch (error: Error | unknown) {
+    if (
+      error instanceof Error ||
+      error instanceof AuthError ||
+      error instanceof z.ZodError
+    ) {
+      return NextResponse.json(error.message, {
         status: 400,
       });
     }
-    if (error instanceof AuthError) {
-      return NextResponse.json(error, {
-        status: error.status,
-      });
-    }
-    return NextResponse.json(error, {
+    return NextResponse.json("An unknown error occurred", {
       status: 500,
     });
   }
