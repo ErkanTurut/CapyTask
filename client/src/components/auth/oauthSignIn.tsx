@@ -1,40 +1,40 @@
 "use client";
-
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import * as React from "react";
-import { isClerkAPIResponseError, useSignIn } from "@clerk/nextjs";
-import { type OAuthStrategy } from "@clerk/types";
-
-import { catchClerkError } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 
+import { Provider } from "@/types/supabase.types";
+import { catchError } from "@/lib/utils";
+
 const oauthProviders = [
-  { name: "Google", strategy: "oauth_google", icon: "google" },
-  { name: "Facebook", strategy: "oauth_facebook", icon: "facebook" },
-  { name: "Discord", strategy: "oauth_discord", icon: "discord" },
+  { name: "Google", provider: "google", icon: "google" },
+  { name: "Github", provider: "github", icon: "gitHub" },
+  { name: "Discord", provider: "discord", icon: "discord" },
 ] satisfies {
   name: string;
   icon: keyof typeof Icons;
-  strategy: OAuthStrategy;
+  provider: Provider;
 }[];
 
 export function OAuthSignIn() {
-  const [isLoading, setIsLoading] = React.useState<OAuthStrategy | null>(null);
-  const { signIn, isLoaded: signInLoaded } = useSignIn();
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const supabase = createClientComponentClient();
 
-  async function oauthSignIn(provider: OAuthStrategy) {
-    if (!signInLoaded) return null;
+  async function oauthSignIn(provider: Provider) {
+    console.log(provider);
     try {
-      setIsLoading(provider);
-      await signIn.authenticateWithRedirect({
-        strategy: provider,
-        redirectUrl: "/sso-callback",
-        redirectUrlComplete: "/",
+      setIsLoading(true);
+      await supabase.auth.signInWithOAuth({
+        provider: provider,
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
       });
     } catch (error) {
-      setIsLoading(null);
-      catchClerkError(error);
+      setIsLoading(false);
+      catchError(error);
     }
   }
 
@@ -42,15 +42,14 @@ export function OAuthSignIn() {
     <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-4">
       {oauthProviders.map((provider) => {
         const Icon = Icons[provider.icon];
-
         return (
           <Button
             aria-label={`Sign in with ${provider.name}`}
-            key={provider.strategy}
+            key={provider.provider}
             variant="outline"
             className="w-full bg-background sm:w-auto"
-            onClick={() => void oauthSignIn(provider.strategy)}
-            isLoading={isLoading !== null}
+            onClick={() => void oauthSignIn(provider.provider)}
+            isLoading={isLoading}
           >
             <Icon className="mr-2 h-4 w-4" aria-hidden="true" />
             {provider.name}
