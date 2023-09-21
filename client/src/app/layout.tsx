@@ -3,13 +3,12 @@ import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 import "@/styles/globals.css";
 import { Inter } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
-import { usePathname } from "next/navigation";
+import { ThemeProvider } from "@/components/themeProvider";
 import { TailwindIndicator } from "@/components/tailwindIndicator";
 
 const inter = Inter({ subsets: ["latin"] });
-import { ThemeProvider } from "@/components/themeProvider";
-export default function RootLayout({
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
