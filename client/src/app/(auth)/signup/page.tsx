@@ -2,7 +2,6 @@ import { type Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 // import { env } from "@/env.mjs";
-import { currentUser } from "@clerk/nextjs";
 
 import {
   Card,
@@ -12,10 +11,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-// import { OAuthSignIn } from "@/components/auth/oauthSignIn";
 
 import { SignUpForm } from "@/components/forms/signUp";
 import { Shell } from "@/components/shells/shell";
+import { OAuthSignIn } from "@/components/auth/oauthSignIn";
 
 export const metadata: Metadata = {
   // metadataBase: new URL(env.NEXT_PUBLIC_APP_URL),
@@ -34,7 +33,7 @@ export default async function SignUpPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
-          {/* <OAuthSignIn /> */}
+          <OAuthSignIn />
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t" />
