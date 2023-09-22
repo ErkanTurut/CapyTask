@@ -20,6 +20,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Icons } from "@/components/icons";
 import { toast } from "sonner";
+Ò;
 import router from "next/router";
 type Inputs = z.infer<typeof otpCodeSchema>;
 
@@ -38,12 +39,10 @@ export function OtpVerify() {
     console.log(data);
     try {
       startTransition(async () => {
-        const res = await fetch("/auth/callback", {
+        const res = await fetch("/auth/verify-otp", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
         });
-        console.log(await res.json());
         if (!res.ok) {
           catchError(await res.json());
         }
