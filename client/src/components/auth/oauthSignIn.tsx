@@ -26,12 +26,16 @@ export function OAuthSignIn() {
     console.log(provider);
     try {
       setIsLoading(true);
-      await supabase.auth.signInWithOAuth({
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider: provider,
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
         },
       });
+      console.log(data, error);
+      if (error) {
+        throw error;
+      }
     } catch (error) {
       setIsLoading(false);
       catchError(error);
