@@ -20,12 +20,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { Icons } from "@/components/icons";
 import { toast } from "sonner";
-Ò;
-import router from "next/router";
+import { VerifyOtpParams } from "@supabase/gotrue-js/dist/main/lib/types";
+import { set } from "date-fns";
+import { on } from "events";
+import { start } from "repl";
+import { ca } from "date-fns/locale";
+
 type Inputs = z.infer<typeof otpCodeSchema>;
 
-export function OtpVerify() {
-  const [isPending, startTransition] = React.useTransition();
+export function OtpVerify(otpParams: VerifyOtpParams) {
+  const router = useRouter();
+
+  const [isPending, setIsPending] = React.useState(false);
 
   // react-hook-form
   const form = useForm<Inputs>({
@@ -34,26 +40,37 @@ export function OtpVerify() {
       code: "",
     },
   });
-  console.log("a");
+
   function onSubmit(data: Inputs) {
-    console.log(data);
     try {
-      startTransition(async () => {
-        const res = await fetch("/auth/verify-otp", {
+      setIsPending(true);
+      toast.promise(
+        fetch("/auth/verify-otp", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-        });
-        if (!res.ok) {
-          catchError(await res.json());
+          body: JSON.stringify({
+            code: data.code,
+            nextUrl: "/signin",
+            ...otpParams,
+          }),
+        }).then(async (res) => {
+          setIsPending(false);
+          if (res.ok) {
+            router.refresh();
+            return router.push(res.url);
+          } else {
+            catchError(new Error(await res.json()));
+            throw new Error(await res.json());
+          }
+        }),
+        {
+          loading: "Verifying...",
+          success: "You have been verified!",
+          error: "An error occurred while verifying.",
         }
-        if (res.redirected && res.status === 200) {
-          toast.message("You have been connected");
-          router.push(res.url);
-        }
-      });
-    } catch (err) {
-      console.log(err);
-      catchError(err);
+      );
+    } catch (error) {
+      catchError(error);
     }
   }
 

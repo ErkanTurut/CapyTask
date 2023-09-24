@@ -10,10 +10,14 @@ export const dynamic = "force-dynamic";
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
-
+  console.log(code);
   if (code) {
     const supabase = createRouteHandlerClient<Database>({ cookies });
-    await supabase.auth.exchangeCodeForSession(code);
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+    console.log(data, error);
+    if (error) {
+      return NextResponse.json(error.message, { status: 500 });
+    }
   }
 
   const next = requestUrl.searchParams.get("next");
