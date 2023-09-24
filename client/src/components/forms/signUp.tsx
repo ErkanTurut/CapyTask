@@ -22,13 +22,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Icons } from "@/components/icons";
 import { PasswordInput } from "@/components/passwordInput";
+import { OtpVerify } from "./otpVerify";
 
 type Inputs = z.infer<typeof signUpSchema>;
 
 export function SignUpForm() {
   const router = useRouter();
+  const [isOtpSent, setIsOtpSent] = React.useState(false);
 
-  const [isPending, startTransition] = React.useTransition();
+  const [isPending, setIsPending] = React.useState();
 
   // react-hook-form
   const form = useForm<Inputs>({
@@ -48,7 +50,6 @@ export function SignUpForm() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
         });
-
         if (!res.ok) {
           catchError(new Error(await res.json()));
         }
