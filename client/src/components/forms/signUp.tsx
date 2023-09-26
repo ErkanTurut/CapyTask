@@ -30,7 +30,7 @@ export function SignUpForm() {
   const router = useRouter();
   const [isOtpSent, setIsOtpSent] = React.useState(false);
 
-  const [isPending, setIsPending] = React.useState();
+  const [isPending, setIsPending] = React.useState(false);
 
   // react-hook-form
   const form = useForm<Inputs>({
@@ -44,28 +44,34 @@ export function SignUpForm() {
 
   async function onSubmit(data: Inputs) {
     try {
-      startTransition(async () => {
-        const res = await fetch("/auth/sign-up", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        });
-        if (!res.ok) {
-          catchError(new Error(await res.json()));
-        }
-        if (res.redirected && res.status === 200) {
-          toast.message("Check your email", {
-            description: "We sent you a 6-digit verification code.",
-          });
-          router.push(res.url);
-        }
+      setIsPending(true);
+      //use Promise to wait for the response
+      const res = await fetch("/auth/sign-up", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
       });
+      setIsPending(false);
+      if (!res.ok) {
+        catchError(new Error(await res.json()));
+      }
+      if (res.redirected && res.status === 200) {
+        toast.message("Check your email", {
+          description: "We sent you a 6-digit verification code.",
+        });
+        setIsOtpSent(true);
+      }
     } catch (err) {
       catchError(err);
     }
   }
 
-  return (
+  return isOtpSent ? (
+    <OtpVerify
+      nextUrl="/signin"
+      otpParams={{ email: form.getValues().email, type: "email", token: "" }}
+    />
+  ) : (
     <Form {...form}>
       <form
         className="grid gap-4"
