@@ -23,6 +23,7 @@ import { MainNav } from "@/components/layouts/mainNav";
 import ThemeToggle from "./themeToggle";
 import { MobileNav } from "./mobileNav";
 // import { MobileNav } from "@/components/layouts/mobile-nav"
+import { usePathname } from "next/navigation";
 
 import type { User } from "@prisma/client";
 
