@@ -21,16 +21,17 @@ import { Input } from "@/components/ui/input";
 import { Icons } from "@/components/icons";
 import { toast } from "sonner";
 import { VerifyOtpParams } from "@supabase/gotrue-js/dist/main/lib/types";
-import { set } from "date-fns";
-import { on } from "events";
-import { start } from "repl";
-import { ca } from "date-fns/locale";
 
 type Inputs = z.infer<typeof otpCodeSchema>;
 
-export function OtpVerify(otpParams: VerifyOtpParams) {
+export function OtpVerify({
+  nextUrl,
+  otpParams,
+}: {
+  nextUrl: string;
+  otpParams: VerifyOtpParams;
+}) {
   const router = useRouter();
-
   const [isPending, setIsPending] = React.useState(false);
 
   // react-hook-form
@@ -49,9 +50,9 @@ export function OtpVerify(otpParams: VerifyOtpParams) {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            code: data.code,
-            nextUrl: "/signin",
+            nextUrl,
             ...otpParams,
+            token: data.code,
           }),
         }).then(async (res) => {
           setIsPending(false);
@@ -65,7 +66,7 @@ export function OtpVerify(otpParams: VerifyOtpParams) {
         }),
         {
           loading: "Verifying...",
-          success: "You have been verified!",
+          success: "You have been verified, you can now sign in.",
           error: "An error occurred while verifying.",
         }
       );
@@ -93,7 +94,6 @@ export function OtpVerify(otpParams: VerifyOtpParams) {
                   onChange={(e) => {
                     e.target.value = e.target.value.trim();
                     field.onChange(e);
-                    console.log(e);
                   }}
                 />
               </FormControl>
