@@ -25,15 +25,15 @@ import { MobileNav } from "./mobileNav";
 // import { MobileNav } from "@/components/layouts/mobile-nav"
 import { usePathname } from "next/navigation";
 
-import type { User } from "@prisma/client";
+import type { user } from "@prisma/client";
 
 interface NavbarProps {
-  user: User | null;
+  user: user | null;
 }
 
 const NavBar: FC<NavbarProps> = ({ user }) => {
-  const initials = `${user?.firstName?.charAt(0) ?? ""} ${
-    user?.lastName?.charAt(0) ?? ""
+  const initials = `${user?.first_name?.charAt(0) ?? ""} ${
+    user?.last_name?.charAt(0) ?? ""
   }`;
   const email = user?.email;
 
@@ -58,8 +58,11 @@ const NavBar: FC<NavbarProps> = ({ user }) => {
                   >
                     <Avatar className="h-8 w-8">
                       <AvatarImage
-                        src={user.imageUri ?? ""}
-                        alt={user.firstName ?? ""}
+                        src={
+                          user.image_uri ??
+                          "https://img.freepik.com/psd-gratuit/illustration-3d-personne-lunettes-soleil_23-2149436188.jpg?w=1380&t=st=1695853412~exp=1695854012~hmac=ac1d11509e02701591f7cee0bbd7272e0cfae1cf206187e087bbf2016c60d32e"
+                        }
+                        alt={user.first_name ?? ""}
                       />
                       <AvatarFallback>{initials}</AvatarFallback>
                     </Avatar>
@@ -69,7 +72,7 @@ const NavBar: FC<NavbarProps> = ({ user }) => {
                   <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
                       <p className="text-sm font-medium leading-none">
-                        {user.firstName} {user.lastName}
+                        {user.first_name} {user.last_name}
                       </p>
                       <p className="text-xs leading-none text-muted-foreground">
                         {email}

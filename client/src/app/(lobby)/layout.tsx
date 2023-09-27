@@ -1,8 +1,9 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import type { User } from "@prisma/client";
+import type { user } from "@prisma/client";
 
 import NavBar from "@/components/layouts/siteNav";
 import { cookies } from "next/headers";
+import { PostgrestError } from "@supabase/supabase-js";
 // import { useUser } from "@/components/providers/supabaseUserProvider";
 
 interface LobbyLayoutProps {
@@ -11,10 +12,10 @@ interface LobbyLayoutProps {
 
 export default async function LobbyLayout({ children }: LobbyLayoutProps) {
   const supabase = createServerComponentClient({ cookies });
-  const { data, error } = await supabase.auth.getUser();
-  console.log(data, error);
-  // const { data: user, error } = await supabase.from("User").select().single();
-  const user = null;
+
+  const { data: user, error }: { data: user | null; error: any } =
+    await supabase.from("user").select().single();
+
   return (
     <div className="relative flex min-h-screen flex-col">
       <NavBar user={user} />
