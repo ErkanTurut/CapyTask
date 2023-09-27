@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     if (error) {
       throw error;
     }
-    return NextResponse.redirect(`${requestUrl.origin}/signin`, {
+    return NextResponse.redirect(`${requestUrl.origin}${query.nextUrl}`, {
       status: 301,
     });
   } catch (error: Error | unknown) {
