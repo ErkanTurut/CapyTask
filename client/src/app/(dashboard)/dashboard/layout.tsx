@@ -1,14 +1,11 @@
-import { redirect, usePathname } from "next/navigation";
-import { currentUser } from "@clerk/nextjs";
-
 import { dashboardConfig } from "@/config/dashboard.config";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SidebarNav } from "@/components/layouts/sidebarNav";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
-// import { SiteFooter } from "@/components/layouts/site-footer";
 import { AppNav } from "@/components/layouts/appNav";
-
+import type { user } from "@prisma/client";
+import { redirect } from "next/navigation";
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
@@ -18,7 +15,11 @@ export default async function DashboardLayout({
 }: DashboardLayoutProps) {
   const supabase = createServerComponentClient({ cookies });
 
-  const { data: user, error } = await supabase.from("User").select().single();
+  const { data: user, error }: { data: user | null; error: any } =
+    await supabase.from("user").select().single();
+
+  const { data: session } = await supabase.auth.getSession();
+  if (!session.session) redirect("/signin?origin=dashboard");
 
   return (
     <div className="flex min-h-screen flex-col">

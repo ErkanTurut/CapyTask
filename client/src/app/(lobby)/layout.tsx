@@ -16,6 +16,7 @@ export default async function LobbyLayout({ children }: LobbyLayoutProps) {
   const { data: user, error }: { data: user | null; error: any } =
     await supabase.from("user").select().single();
 
+  console.log(user);
   return (
     <div className="relative flex min-h-screen flex-col">
       <NavBar user={user} />
