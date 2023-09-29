@@ -9,7 +9,6 @@ export async function POST(request: NextRequest) {
   try {
     const requestUrl = new URL(request.url);
     const query = await request.json();
-    console.log("query", query);
 
     const supabase = createRouteHandlerClient({ cookies });
     const { data, error } = await supabase.auth.verifyOtp(query);
