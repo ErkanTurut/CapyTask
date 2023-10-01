@@ -16,9 +16,7 @@ export async function POST(request: NextRequest) {
       email,
       password,
     });
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
     return NextResponse.redirect(`${request.nextUrl.origin}`, {
       status: 301,
     });
