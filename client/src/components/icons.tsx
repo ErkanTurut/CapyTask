@@ -19,7 +19,7 @@ import Home from "@/app/(lobby)/page";
 
 type logoProps = {
   // color: "light" | "dark";
-  size: "s" | "m" | "l" | "xl";
+  size?: "s" | "m" | "l" | "xl";
 };
 
 //create a map of sizes
@@ -60,7 +60,8 @@ export const Icons = {
   banknote: Banknote,
   logo: (props: LucideProps & logoProps) => {
     const { size, className } = props;
-    const { width, height } = sizes[size];
+
+    const { width, height } = sizes[size ? size : "s"];
     // const colors = {
     //   body: color === "light" ? "#FFFFFF" : "#000814",
     //   orange: "#FB8500",
