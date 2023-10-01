@@ -45,7 +45,7 @@ export function SignInForm() {
   async function onSubmit(data: Inputs) {
     try {
       startTransition(async () => {
-        const res = await fetch("/auth/sign-in", {
+        const res = await fetch("api/auth/sign-in", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),

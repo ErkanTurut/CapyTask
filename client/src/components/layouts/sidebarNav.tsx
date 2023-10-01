@@ -15,7 +15,6 @@ export interface SidebarNavProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export function SidebarNav({ items, className, ...props }: SidebarNavProps) {
-  const segment = useSelectedLayoutSegment();
   const pathname = usePathname();
   if (!items?.length) return null;
 
@@ -27,19 +26,16 @@ export function SidebarNav({ items, className, ...props }: SidebarNavProps) {
       {items.map((item, index) => {
         const Icon = Icons[item.icon ?? "chevronLeft"];
         return item.items.length > 0 ? (
-          <>
-            <h2
-              key={index}
-              className="flex w-full items-center py-3 text-sm font-semibold text-muted-foreground"
-            >
-              <Icon className="mr-2 h-4 w-4" aria-hidden="true" size={"s"} />
+          <div className="flex flex-col space-x-0 space-y-1" key={index}>
+            <h2 className="flex w-full items-center py-3 text-sm font-semibold text-muted-foreground">
+              <Icon className="mr-2 h-4 w-4" aria-hidden="true" />
               {item.title}
             </h2>
-            {item.items.map((subitem, index) => {
+            {item.items.map((subitem, subIndex) => {
               return (
                 <Link
                   aria-label={subitem.title}
-                  key={subitem.title}
+                  key={subIndex}
                   href={subitem.href ? subitem.href : "#"}
                   target={subitem.external ? "_blank" : ""}
                   rel={subitem.external ? "noreferrer" : ""}
@@ -56,8 +52,8 @@ export function SidebarNav({ items, className, ...props }: SidebarNavProps) {
                 </Link>
               );
             })}
-            <Separator />
-          </>
+            <Separator key={`separator-${index}`} />
+          </div>
         ) : (
           <Link
             aria-label={item.title}

@@ -28,7 +28,6 @@ export const dashboardConfig: DashboardConfig = {
         },
       ],
     },
-
     {
       title: "Account",
       href: "/dashboard/account",

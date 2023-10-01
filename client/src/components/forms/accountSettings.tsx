@@ -19,11 +19,12 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Icons } from "@/components/icons";
-import { PasswordInput } from "@/components/passwordInput";
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import type { Database } from "@/types/supabase.types";
 import { toast } from "sonner";
+import { trpc } from "@/app/_trpc/client";
+import { $Enums } from "@prisma/client";
 
 type Inputs = z.infer<typeof accountSettingsSchema>;
 
@@ -37,12 +38,14 @@ export function SettingsForm() {
     resolver: zodResolver(accountSettingsSchema),
     defaultValues: {
       email: "",
-      password: "",
+      imageUri: "",
+      firstName: "",
+      lastName: "",
     },
   });
-
-  function onSubmit(data: Inputs) {
-    console.log("data", data);
+  const updateUser = trpc.updateUser.useMutation();
+  async function onSubmit(data: Inputs) {
+    updateUser.mutate(data);
   }
 
   return (
@@ -66,18 +69,43 @@ export function SettingsForm() {
         />
         <FormField
           control={form.control}
-          name="password"
+          name="firstName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>first name</FormLabel>
               <FormControl>
-                <PasswordInput placeholder="**********" {...field} />
+                <Input placeholder="rodneymullen180@gmail.com" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-
+        <FormField
+          control={form.control}
+          name="lastName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>last name</FormLabel>
+              <FormControl>
+                <Input placeholder="rodneymullen180@gmail.com" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="imageUri"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>profile picture</FormLabel>
+              <FormControl>
+                <Input placeholder="rodneymullen180@gmail.com" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <Button disabled={isPending}>
           {isPending && (
             <Icons.spinner

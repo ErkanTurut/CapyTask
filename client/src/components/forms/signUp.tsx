@@ -46,7 +46,7 @@ export function SignUpForm() {
     try {
       setIsPending(true);
       //use Promise to wait for the response
-      const res = await fetch("/auth/sign-up", {
+      const res = await fetch("api/auth/sign-up", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
