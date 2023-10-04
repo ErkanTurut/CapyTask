@@ -55,6 +55,7 @@ export function SignInForm() {
         }
         if (res.redirected && res.status === 200) {
           toast.message("You have been connected");
+          router.refresh();
           router.push(res.url);
         }
       });

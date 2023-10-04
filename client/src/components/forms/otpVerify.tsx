@@ -46,7 +46,7 @@ export function OtpVerify({
     try {
       setIsPending(true);
       toast.promise(
-        fetch("/auth/verify-otp", {
+        fetch("api/auth/verify-otp", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

@@ -59,6 +59,7 @@ export function SignUpForm() {
         toast.message("Check your email", {
           description: "We sent you a 6-digit verification code.",
         });
+        router.refresh();
         setIsOtpSent(true);
       }
     } catch (err) {
@@ -116,13 +117,7 @@ export function SignUpForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={isPending}>
-          {isPending && (
-            <Icons.spinner
-              className="mr-2 h-4 w-4 animate-spin"
-              aria-hidden="true"
-            />
-          )}
+        <Button type="submit" isLoading={isPending}>
           Continue
           <span className="sr-only">Continue to email verification page</span>
         </Button>
