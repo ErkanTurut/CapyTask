@@ -38,14 +38,11 @@ export function SettingsForm() {
     resolver: zodResolver(accountSettingsSchema),
     defaultValues: {
       email: "",
-      imageUri: "",
-      firstName: "",
-      lastName: "",
     },
   });
-  const updateUser = trpc.updateUser.useMutation();
+
   async function onSubmit(data: Inputs) {
-    updateUser.mutate(data);
+    console.log(data);
   }
 
   return (
