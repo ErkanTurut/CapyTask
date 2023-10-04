@@ -18,13 +18,10 @@ export default async function DashboardLayout({
   const { data: user, error }: { data: user | null; error: any } =
     await supabase.from("user").select().single();
 
-  const { data: session } = await supabase.auth.getSession();
-  if (!session.session) redirect("/signin?origin=dashboard");
-
   return (
     <div className="flex min-h-screen flex-col">
       <AppNav user={user} />
-      <div className="flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)]  lg:grid-cols-[240px_minmax(0,1fr)] ">
+      <div className="flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] ">
         <aside className="fixed px-4 z-30 -ml-2 hidden h-full w-full shrink-0 overflow-y-auto border-r md:sticky md:block">
           <ScrollArea className="py-2 lg:py-4">
             <SidebarNav items={dashboardConfig.sidebarNav} className="p-1" />
