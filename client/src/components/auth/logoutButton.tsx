@@ -3,21 +3,19 @@
 import * as React from "react";
 import { useRouter } from "next/navigation";
 
-import { catchError, cn } from "@/lib/utils";
-import { useIsMounted } from "@/hooks/useIsMounted";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
+import { trpc } from "@/app/_trpc/client";
 
 export function LogOutButtons() {
   const router = useRouter();
-  const mounted = useIsMounted();
   const [isPending, startTransition] = React.useTransition();
 
-  const onLogout = React.useCallback(async () => {
+  const onLogout = async () => {
     startTransition(() => {
       toast.promise(
-        fetch("/auth/sign-out", {
+        fetch("api/auth/sign-out", {
           method: "POST",
         }).then((res) => {
           if (res.ok) {
@@ -32,7 +30,7 @@ export function LogOutButtons() {
         }
       );
     });
-  }, [startTransition]);
+  };
 
   return (
     <div className="flex w-full items-center space-x-2">
