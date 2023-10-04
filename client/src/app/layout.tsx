@@ -6,6 +6,8 @@ import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/themeProvider";
 import { TailwindIndicator } from "@/components/tailwindIndicator";
 
+import Providers from "@/components/providers/providers";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export default async function RootLayout({
@@ -22,18 +24,20 @@ export default async function RootLayout({
         inter.className
       )}
     >
-      <body
-        className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          inter.className
-        )}
-      >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
-          <TailwindIndicator />
-          <Toaster />
-        </ThemeProvider>
-      </body>
+      <Providers>
+        <body
+          className={cn(
+            "min-h-screen bg-background font-sans antialiased",
+            inter.className
+          )}
+        >
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            {children}
+            <TailwindIndicator />
+            <Toaster />
+          </ThemeProvider>
+        </body>
+      </Providers>
     </html>
   );
 }
