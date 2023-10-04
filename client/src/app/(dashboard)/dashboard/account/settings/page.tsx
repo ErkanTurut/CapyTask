@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
 import { Shell } from "@/components/shells/shell";
 
-import { SettingsForm } from "@/components/forms/accountSettings";
 import {
   Card,
   CardContent,
@@ -10,24 +11,41 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-export default function AccountPage() {
+import {
+  PageHeader,
+  PageHeaderDescription,
+  PageHeaderHeading,
+} from "@/components/pageHeader";
+
+import AccountForm from "@/components/forms/settingsForms/accountSettings";
+import type { user } from "@prisma/client";
+
+export default async function AccountPage() {
+  const supabase = createServerComponentClient({ cookies });
+
+  const { data: user, error }: { data: user | null; error: any } =
+    await supabase.from("user").select().single();
+
+  if (user === null) return null;
   return (
-    <Shell variant="sidebar">
+    <Shell variant="sidebar" className="max-w-2xl">
+      <PageHeader id="account-header" aria-labelledby="account-header-heading">
+        <PageHeaderHeading size="sm">Account</PageHeaderHeading>
+        <PageHeaderDescription size="sm">
+          Manage your account settings
+        </PageHeaderDescription>
+      </PageHeader>
       <section
         id="user-account-info"
         aria-labelledby="user-account-info-heading"
       >
         <Card>
           <CardHeader>
-            <CardTitle>
-              <h2 id="user-account-info-heading">Account Info</h2>
-            </CardTitle>
-            <CardDescription>
-              <p>Update your account information.</p>
-            </CardDescription>
+            <CardTitle>Account Info</CardTitle>
+            <CardDescription>Update your account information.</CardDescription>
           </CardHeader>
           <CardContent>
-            <SettingsForm />
+            <AccountForm user={user} />
           </CardContent>
         </Card>
       </section>
