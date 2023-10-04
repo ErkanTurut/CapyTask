@@ -4,6 +4,7 @@ import type { user } from "@prisma/client";
 import NavBar from "@/components/layouts/siteNav";
 import { cookies } from "next/headers";
 import { PostgrestError } from "@supabase/supabase-js";
+import { trpc } from "../_trpc/client";
 // import { useUser } from "@/components/providers/supabaseUserProvider";
 
 interface LobbyLayoutProps {
@@ -16,7 +17,6 @@ export default async function LobbyLayout({ children }: LobbyLayoutProps) {
   const { data: user, error }: { data: user | null; error: any } =
     await supabase.from("user").select().single();
 
-  console.log(user);
   return (
     <div className="relative flex min-h-screen flex-col">
       <NavBar user={user} />
