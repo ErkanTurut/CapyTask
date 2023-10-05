@@ -21,7 +21,9 @@ export async function POST(request: NextRequest) {
       status: 301,
     });
   } catch (error: Error | unknown) {
-    if (error instanceof Error || error instanceof AuthError) {
+    if (error instanceof z.ZodError) {
+      return new Response(JSON.stringify(error.issues), { status: 422 });
+    } else if (error instanceof Error || error instanceof AuthError) {
       return NextResponse.json(error.message, {
         status: 400,
       });
