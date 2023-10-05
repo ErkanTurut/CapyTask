@@ -20,7 +20,7 @@ import {
 import AccountForm from "@/components/forms/settingsForms/accountSettings";
 import type { user } from "@prisma/client";
 
-export default async function AccountPage() {
+export default async function SettingsPage() {
   const supabase = createServerComponentClient({ cookies });
 
   const { data: user, error }: { data: user | null; error: any } =
