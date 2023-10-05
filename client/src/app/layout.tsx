@@ -6,7 +6,7 @@ import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/themeProvider";
 import { TailwindIndicator } from "@/components/tailwindIndicator";
 
-import Providers from "@/components/providers/providers";
+import Providers from "@/components/providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
