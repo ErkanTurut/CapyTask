@@ -25,6 +25,9 @@ import { toast } from "sonner";
 import type { user } from "@prisma/client";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Database } from "@/types/supabase.types";
+import { useMutation, useQuery } from "@tanstack/react-query";
+
+import { getUser, updateUser } from "@/hooks/useUser";
 
 type Inputs = z.infer<typeof accountSettingsSchema>;
 
@@ -45,16 +48,15 @@ export default function AccountForm({ user }: { user: user }) {
     },
   });
 
+  const { data, isLoading, refetch } = getUser(user.id);
+  console.log(data);
+  const { mutate } = updateUser(user.id);
+
   async function onSubmit(data: Inputs) {
-    console.log(user.id);
     try {
-      const res = await supabase
-        .from("user")
-        .update({ first_name: "yesy" })
-        .eq("id", user.id)
-        .select();
-      console.log(res);
+      mutate(data);
     } catch (error) {
+      console.log(error);
       catchError(error);
     }
   }
