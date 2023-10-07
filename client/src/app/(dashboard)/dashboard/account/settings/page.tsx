@@ -16,17 +16,14 @@ import {
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/components/pageHeader";
+import { Suspense } from "react";
 
 import AccountForm from "@/components/forms/settingsForms/accountSettings";
 import type { user } from "@prisma/client";
+import getQueryClient from "@/lib/getQueryClient";
+import { catchError } from "@/lib/utils";
 
 export default async function SettingsPage() {
-  const supabase = createServerComponentClient({ cookies });
-
-  const { data: user, error }: { data: user | null; error: any } =
-    await supabase.from("user").select().single();
-
-  if (user === null) return null;
   return (
     <Shell variant="sidebar" className="max-w-2xl">
       <PageHeader id="account-header" aria-labelledby="account-header-heading">
@@ -45,7 +42,9 @@ export default async function SettingsPage() {
             <CardDescription>Update your account information.</CardDescription>
           </CardHeader>
           <CardContent>
-            <AccountForm user={user} />
+            <Suspense fallback={<h1>Loading...</h1>}>
+              <AccountForm />
+            </Suspense>
           </CardContent>
         </Card>
       </section>
