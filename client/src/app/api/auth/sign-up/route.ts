@@ -17,7 +17,6 @@ export async function POST(request: NextRequest) {
         emailRedirectTo: `${request.nextUrl.origin}/auth/callback`,
       },
     });
-    console.log(data, error);
     if (error) {
       throw error;
     }
