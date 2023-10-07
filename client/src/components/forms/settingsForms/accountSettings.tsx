@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -22,23 +21,15 @@ import { Icons } from "@/components/icons";
 
 import { toast } from "sonner";
 
-import type { user } from "@prisma/client";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { Database } from "@/types/supabase.types";
-import { useMutation, useQuery } from "@tanstack/react-query";
-
 import { getUser, updateUser } from "@/hooks/useUser";
 
 type Inputs = z.infer<typeof accountSettingsSchema>;
 
-export default function AccountForm({ user }: { user: user }) {
-  const router = useRouter();
-  const [isPending, startTransition] = React.useTransition();
-  const supabase = createClientComponentClient<Database>();
+export default function AccountForm() {
+  const { data: user } = getUser("95d21c50-d3fa-4010-8341-93c1daec6f63");
 
   if (!user) return null;
 
-  // react-hook-form
   const form = useForm<Inputs>({
     resolver: zodResolver(accountSettingsSchema),
     defaultValues: {
@@ -48,15 +39,10 @@ export default function AccountForm({ user }: { user: user }) {
     },
   });
 
-  const { data, isLoading, refetch } = getUser(user.id);
-  console.log(data);
-  const { mutate } = updateUser(user.id);
-
   async function onSubmit(data: Inputs) {
     try {
-      mutate(data);
+      //mutate(data);
     } catch (error) {
-      console.log(error);
       catchError(error);
     }
   }
@@ -117,7 +103,7 @@ export default function AccountForm({ user }: { user: user }) {
               Cancel
               <span className="sr-only">cancel</span>
             </Button>
-            <Button isLoading={isPending}>
+            <Button isLoading={false}>
               Save
               <span className="sr-only">Save</span>
             </Button>

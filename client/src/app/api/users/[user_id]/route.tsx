@@ -19,6 +19,7 @@ export async function GET(
   context: z.infer<typeof routeContextSchema>
 ) {
   try {
+    console.log("get api used for user");
     const { params } = routeContextSchema.parse(context);
     const supabase = createRouteHandlerClient<Database>({ cookies });
 
@@ -56,7 +57,6 @@ export async function PATCH(
   try {
     const { params } = routeContextSchema.parse(context);
     const data = await request.json();
-    console.log(data);
     const supabase = createRouteHandlerClient<Database>({ cookies });
     const { error } = await supabase
       .from("user")
@@ -67,7 +67,6 @@ export async function PATCH(
     return NextResponse.next();
     if (error) throw error;
   } catch (error: Error | unknown) {
-    console.log(error);
     if (error instanceof z.ZodError) {
       return new Response(JSON.stringify(error.issues), { status: 422 });
     } else if (error instanceof Error) {

@@ -23,7 +23,6 @@ export function OAuthSignIn() {
   const supabase = createClientComponentClient();
 
   async function oauthSignIn(provider: Provider) {
-    console.log(provider);
     try {
       setIsLoading(true);
       const { data, error } = await supabase.auth.signInWithOAuth({
@@ -32,7 +31,7 @@ export function OAuthSignIn() {
           redirectTo: `${window.location.origin}/auth/callback`,
         },
       });
-      console.log(data, error);
+
       if (error) {
         throw error;
       }
