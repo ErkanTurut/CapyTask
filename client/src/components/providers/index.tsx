@@ -2,21 +2,18 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { PropsWithChildren, useState } from "react";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
 
 const Providers = ({ children }: PropsWithChildren) => {
   const [queryClient] = useState(() => new QueryClient());
-  // const [trpcClient] = useState(() =>
-  //   trpc.createClient({
-  //     links: [
-  //       httpBatchLink({
-  //         url: "http://localhost:3000/api/trpc",
-  //       }),
-  //     ],
-  //   })
-  // );
 
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <ReactQueryStreamedHydration>{children}</ReactQueryStreamedHydration>
+
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 };
 
