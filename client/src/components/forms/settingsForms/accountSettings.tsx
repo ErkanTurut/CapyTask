@@ -15,33 +15,50 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
 import { Input } from "@/components/ui/input";
 import { Icons } from "@/components/icons";
 
 import { toast } from "sonner";
 
+import { FC } from "react";
+
+import type { user } from "@prisma/client";
 import { getUser, updateUser } from "@/hooks/useUser";
+import { useQueryClient } from "@tanstack/react-query";
 
 type Inputs = z.infer<typeof accountSettingsSchema>;
 
-export default function AccountForm() {
-  const { data: user } = getUser("95d21c50-d3fa-4010-8341-93c1daec6f63");
+interface AccountFormProps {
+  user_id: string;
+}
 
-  if (!user) return null;
+const AccountForm: FC<AccountFormProps> = ({ user_id }) => {
+  const { data: user, isFetching } = getUser(user_id);
+  const { mutate } = updateUser(user_id);
+  const queryClient = useQueryClient();
 
   const form = useForm<Inputs>({
     resolver: zodResolver(accountSettingsSchema),
     defaultValues: {
-      email: user.email || "",
-      first_name: user.first_name || "",
-      last_name: user.last_name || "",
+      email: user?.email || "",
+      first_name: user?.first_name || "",
+      last_name: user?.last_name || "",
     },
   });
 
   async function onSubmit(data: Inputs) {
     try {
-      //mutate(data);
+      mutate(data, {
+        onSuccess: () => {
+          const user = queryClient.getQueryData(["user", user_id]) as user;
+          form.reset({
+            email: user?.email || "",
+            first_name: user?.first_name || "",
+            last_name: user?.last_name || "",
+          });
+          toast.success("Account settings updated successfully");
+        },
+      });
     } catch (error) {
       catchError(error);
     }
@@ -112,4 +129,6 @@ export default function AccountForm() {
       </form>
     </Form>
   );
-}
+};
+
+export default AccountForm;
