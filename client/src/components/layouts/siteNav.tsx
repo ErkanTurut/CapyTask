@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, Suspense } from "react";
 import Link from "next/link";
 import { dashboardConfig } from "@/config/dashboard.config";
 import { siteConfig } from "@/config/site.config";
@@ -28,8 +28,10 @@ import { usePathname } from "next/navigation";
 import type { user } from "@prisma/client";
 import UserAccountNav from "../userAccountNav";
 
+import type { User } from "@supabase/supabase-js";
+
 interface NavbarProps {
-  user: user | null;
+  user: User | null;
 }
 
 const NavBar: FC<NavbarProps> = ({ user }) => {
@@ -46,7 +48,9 @@ const NavBar: FC<NavbarProps> = ({ user }) => {
             <SearchBar />
             {/* <CartSheet /> */}
             {user ? (
-              <UserAccountNav user={user} />
+              <Suspense>
+                <UserAccountNav user_id={user.id} />
+              </Suspense>
             ) : (
               <Link
                 href="/signin"
