@@ -11,7 +11,6 @@ const Providers = ({ children }: PropsWithChildren) => {
   return (
     <QueryClientProvider client={queryClient}>
       <ReactQueryStreamedHydration>{children}</ReactQueryStreamedHydration>
-
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
