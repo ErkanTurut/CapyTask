@@ -19,10 +19,8 @@ export async function GET(
   context: z.infer<typeof routeContextSchema>
 ) {
   try {
-    console.log("get api used for user");
     const { params } = routeContextSchema.parse(context);
     const supabase = createRouteHandlerClient<Database>({ cookies });
-
     const {
       data: user,
       error,
@@ -33,10 +31,12 @@ export async function GET(
       .single();
 
     if (error) throw error;
+
     return NextResponse.json(user, {
       status: 200,
     });
   } catch (error: Error | unknown) {
+    console.log(error);
     if (error instanceof z.ZodError) {
       return new Response(JSON.stringify(error.issues), { status: 422 });
     } else if (error instanceof Error) {
@@ -63,9 +63,11 @@ export async function PATCH(
       .update(data)
       .eq("id", params.user_id)
       .single();
-
-    return NextResponse.next();
     if (error) throw error;
+
+    return NextResponse.json(null, {
+      status: 200,
+    });
   } catch (error: Error | unknown) {
     if (error instanceof z.ZodError) {
       return new Response(JSON.stringify(error.issues), { status: 422 });
