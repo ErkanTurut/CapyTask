@@ -1,3 +1,4 @@
+"use client";
 import { FC } from "react";
 
 import {
@@ -16,18 +17,20 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Icons } from "./icons";
 
 import type { user } from "@prisma/client";
+import { getUser } from "@/hooks/useUser";
 
 interface UserAccountNavProps {
-  user: user;
+  user_id: string;
   isDashboard?: boolean;
 }
 
-const UserAccountNav: FC<UserAccountNavProps> = ({ user, isDashboard }) => {
+const UserAccountNav: FC<UserAccountNavProps> = ({ user_id, isDashboard }) => {
+  const { data: user } = getUser(user_id);
+  if (!user) return null;
   const initials = `${user?.first_name?.charAt(0) ?? ""} ${
     user?.last_name?.charAt(0) ?? ""
   }`;
   const profilePicture = user?.image_uri ?? "";
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
