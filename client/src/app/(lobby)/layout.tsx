@@ -3,9 +3,10 @@ import type { user } from "@prisma/client";
 
 import NavBar from "@/components/layouts/siteNav";
 import { cookies } from "next/headers";
+
+import { getUser } from "@/hooks/useUser";
+import { Suspense } from "react";
 import { PostgrestError } from "@supabase/supabase-js";
-import { trpc } from "../_trpc/client";
-// import { useUser } from "@/components/providers/supabaseUserProvider";
 
 interface LobbyLayoutProps {
   children: React.ReactNode;
@@ -14,8 +15,9 @@ interface LobbyLayoutProps {
 export default async function LobbyLayout({ children }: LobbyLayoutProps) {
   const supabase = createServerComponentClient({ cookies });
 
-  const { data: user, error }: { data: user | null; error: any } =
-    await supabase.from("user").select().single();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   return (
     <div className="relative flex min-h-screen flex-col">
