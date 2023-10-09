@@ -17,7 +17,6 @@ import {
   PageHeaderHeading,
 } from "@/components/pageHeader";
 import { Suspense } from "react";
-
 import AccountForm from "@/components/forms/settingsForms/accountSettings";
 import type { user } from "@prisma/client";
 
@@ -25,6 +24,7 @@ import { PostgrestError } from "@supabase/supabase-js";
 import getQueryClient from "@/lib/getQueryClient";
 import Hydrate from "@/lib/hydrate";
 import { dehydrate } from "@tanstack/query-core";
+import { QueryClient, HydrationBoundary } from "@tanstack/react-query";
 
 export default async function SettingsPage() {
   const supabase = createServerComponentClient({ cookies });
@@ -34,7 +34,7 @@ export default async function SettingsPage() {
 
   if (!user) return null;
 
-  const queryClient = getQueryClient();
+  const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
     queryKey: ["user", user.id],
@@ -47,7 +47,7 @@ export default async function SettingsPage() {
         if (!res.ok) {
           throw new Error(await res.json());
         }
-        const data = await res.json();
+        const data = (await res.json()) as user;
 
         return data;
       } catch (err) {
@@ -75,9 +75,11 @@ export default async function SettingsPage() {
             <CardDescription>Update your account information.</CardDescription>
           </CardHeader>
           <CardContent>
-            <Suspense fallback={<h1>loading</h1>}>
-              <AccountForm user_id={user.id} />
-            </Suspense>
+            <HydrationBoundary state={dehydratedState}>
+              <Suspense fallback={<div>Loading...</div>}>
+                <AccountForm user_id={user.id} />
+              </Suspense>
+            </HydrationBoundary>
           </CardContent>
         </Card>
       </section>
