@@ -19,6 +19,7 @@ export async function GET(
   context: z.infer<typeof routeContextSchema>
 ) {
   try {
+    console.log("Get user");
     const { params } = routeContextSchema.parse(context);
     const supabase = createRouteHandlerClient<Database>({ cookies });
     const {
