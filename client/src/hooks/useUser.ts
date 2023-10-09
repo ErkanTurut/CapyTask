@@ -9,7 +9,7 @@ import type { user } from "@prisma/client";
 import { catchError } from "@/lib/utils";
 
 export const getUser = (user_id: string) => {
-  return useSuspenseQuery({
+  return useQuery({
     queryKey: ["user", user_id],
     queryFn: async () => {
       try {
