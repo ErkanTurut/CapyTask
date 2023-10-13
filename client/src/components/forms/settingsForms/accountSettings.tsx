@@ -1,11 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import type { z } from "zod";
-import { catchError } from "@/lib/utils";
-import { accountSettingsSchema } from "@/lib/validations/settings";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -16,15 +10,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Icons } from "@/components/icons";
+import { accountSettingsSchema } from "@/lib/validations/settings";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import type { z } from "zod";
 
-import { toast } from "sonner";
+import { FC, useEffect } from "react";
 
-import { FC } from "react";
-
-import type { user } from "@prisma/client";
 import { getUser, updateUser } from "@/hooks/useUser";
-import { useQueryClient } from "@tanstack/react-query";
 
 type Inputs = z.infer<typeof accountSettingsSchema>;
 
@@ -33,9 +26,8 @@ interface AccountFormProps {
 }
 
 const AccountForm: FC<AccountFormProps> = ({ user_id }) => {
-  const { data: user, isFetching } = getUser(user_id);
-  const { mutate } = updateUser(user_id);
-  const queryClient = useQueryClient();
+  const { data: user } = getUser(user_id);
+  const { mutate, isPending } = updateUser(user_id);
 
   const form = useForm<Inputs>({
     resolver: zodResolver(accountSettingsSchema),
@@ -46,24 +38,17 @@ const AccountForm: FC<AccountFormProps> = ({ user_id }) => {
     },
   });
 
-  async function onSubmit(data: Inputs) {
-    try {
-      mutate(data, {
-        onSuccess: () => {
-          const user = queryClient.getQueryData(["user", user_id]) as user;
-          form.reset({
-            email: user?.email || "",
-            first_name: user?.first_name || "",
-            last_name: user?.last_name || "",
-          });
-          toast.success("Account settings updated successfully");
-        },
-      });
-    } catch (error) {
-      catchError(error);
-    }
-  }
+  useEffect(() => {
+    form.reset({
+      email: user?.email || "",
+      first_name: user?.first_name || "",
+      last_name: user?.last_name || "",
+    });
+  }, [user]);
 
+  async function onSubmit(data: Inputs) {
+    mutate(data);
+  }
   return (
     <Form {...form}>
       <form
@@ -109,7 +94,7 @@ const AccountForm: FC<AccountFormProps> = ({ user_id }) => {
             </FormItem>
           )}
         />
-        {form.formState.isDirty && (
+        {(form.formState.isDirty || isPending) && (
           <div className="flex justify-end gap-2 transition-all ">
             <Button
               variant="secondary"
@@ -120,7 +105,7 @@ const AccountForm: FC<AccountFormProps> = ({ user_id }) => {
               Cancel
               <span className="sr-only">cancel</span>
             </Button>
-            <Button isLoading={false}>
+            <Button isLoading={isPending}>
               Save
               <span className="sr-only">Save</span>
             </Button>
