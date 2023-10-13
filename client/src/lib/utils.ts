@@ -11,6 +11,8 @@ import { PostgrestError } from "@supabase/supabase-js";
 
 import { toast } from "sonner";
 
+import { DefaultError } from "@tanstack/react-query";
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -75,8 +77,6 @@ export function catchError(err: unknown) {
     return toast.error(errors.join("\n"));
   } else if (err instanceof Error) {
     return toast.error(err.message);
-  } else if (err instanceof AuthError) {
-    return toast.error(err.message);
   } else {
     return toast.error("Something went wrong, please try again later.");
   }
@@ -86,4 +86,12 @@ export function isMacOs() {
   if (typeof window === "undefined") return false;
 
   return window.navigator.userAgent.includes("Mac");
+}
+
+export async function fetcher<T>(url: RequestInfo, options?: RequestInit) {
+  const res = await fetch(url, options);
+  if (!res.ok) {
+    throw new Error(await res.json());
+  }
+  return (await res.json()) as T;
 }
