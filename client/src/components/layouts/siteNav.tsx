@@ -1,38 +1,31 @@
-import { FC, Suspense } from "react";
-import Link from "next/link";
 import { dashboardConfig } from "@/config/dashboard.config";
 import { siteConfig } from "@/config/site.config";
+import Link from "next/link";
+import { FC, Suspense } from "react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button, buttonVariants } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { buttonVariants } from "@/components/ui/button";
 
 // import { CartSheet } from "@/components/cart/cart-sheet";
-import { SearchBar } from "@/components/searchBar";
-import { Icons } from "@/components/icons";
 import { MainNav } from "@/components/layouts/mainNav";
-import ThemeToggle from "./themeToggle";
+import { SearchBar } from "@/components/searchBar";
 import { MobileNav } from "./mobileNav";
+import ThemeToggle from "./themeToggle";
 // import { MobileNav } from "@/components/layouts/mobile-nav"
-import { usePathname } from "next/navigation";
+import { Skeleton } from "@/components/ui/skeleton";
 
-import type { user } from "@prisma/client";
 import UserAccountNav from "../userAccountNav";
 
+import { prefetchUser } from "@/hooks/useUser";
 import type { User } from "@supabase/supabase-js";
+import { HydrationBoundary } from "@tanstack/react-query";
 
 interface NavbarProps {
   user: User | null;
 }
+
+const dehydratedState = async (user_id: string) => {
+  return await prefetchUser(user_id);
+};
 
 const NavBar: FC<NavbarProps> = ({ user }) => {
   return (
@@ -46,11 +39,14 @@ const NavBar: FC<NavbarProps> = ({ user }) => {
         <div className="flex flex-1 items-center justify-end space-x-4">
           <nav className="flex items-center space-x-2">
             <SearchBar />
-            {/* <CartSheet /> */}
             {user ? (
-              <Suspense>
-                <UserAccountNav user_id={user.id} />
-              </Suspense>
+              <HydrationBoundary state={dehydratedState(user.id)}>
+                <Suspense
+                  fallback={<Skeleton className="h-8 w-8 rounded-full" />}
+                >
+                  <UserAccountNav user_id={user.id} />
+                </Suspense>
+              </HydrationBoundary>
             ) : (
               <Link
                 href="/signin"
