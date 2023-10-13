@@ -24,25 +24,25 @@ interface UserAccountNavProps {
   isDashboard?: boolean;
 }
 
-const UserAccountNav: FC<UserAccountNavProps> = ({ user_id, isDashboard }) => {
+const UserAccountNav: FC<UserAccountNavProps> = async ({
+  user_id,
+  isDashboard,
+}) => {
   const { data: user } = getUser(user_id);
   if (!user) return null;
-  const initials = `${user?.first_name?.charAt(0) ?? ""} ${
-    user?.last_name?.charAt(0) ?? ""
+  const initials = `${user.first_name?.charAt(0) ?? ""} ${
+    user.last_name?.charAt(0) ?? ""
   }`;
-  const profilePicture = user?.image_uri ?? "";
+  const profilePicture =
+    user?.image_uri ??
+    "https://img.freepik.com/psd-gratuit/illustration-3d-personne-lunettes-soleil_23-2149436188.jpg?w=1380&t=st=1695853412~exp=1695854012~hmac=ac1d11509e02701591f7cee0bbd7272e0cfae1cf206187e087bbf2016c60d32e";
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="secondary" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
-            <AvatarImage
-              src={
-                user.image_uri ??
-                "https://img.freepik.com/psd-gratuit/illustration-3d-personne-lunettes-soleil_23-2149436188.jpg?w=1380&t=st=1695853412~exp=1695854012~hmac=ac1d11509e02701591f7cee0bbd7272e0cfae1cf206187e087bbf2016c60d32e"
-              }
-              alt={user.first_name ?? ""}
-            />
+            <AvatarImage src={profilePicture} alt={user.first_name ?? ""} />
             <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
         </Button>
