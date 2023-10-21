@@ -1,11 +1,9 @@
-import { Toaster } from "@/components/ui/toaster";
-
 import { cn } from "@/lib/utils";
 import "@/styles/globals.css";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/themeProvider";
 import { TailwindIndicator } from "@/components/tailwindIndicator";
-
+import { Toaster } from "@/components/ui/toaster";
 import Providers from "@/components/providers";
 
 const inter = Inter({ subsets: ["latin"] });
