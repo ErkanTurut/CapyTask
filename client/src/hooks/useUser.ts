@@ -11,6 +11,7 @@ import getQueryClient from "@/lib/getQueryClient";
 import type { user } from "@prisma/client";
 import { catchError } from "@/lib/utils";
 import { toast } from "sonner";
+
 export const getUser = (user_id: string) => {
   return useQuery({
     queryKey: ["user", user_id],
