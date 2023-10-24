@@ -1,80 +1,47 @@
-"use client";
-
 import Link from "next/link";
-import { useSelectedLayoutSegment } from "next/navigation";
-import type { SidebarNavItem } from "@/types";
-import { usePathname } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { Icons } from "@/components/icons";
-import { buttonVariants } from "../ui/button";
-import { Label } from "@/components/ui/label";
+import { MainSideNav } from "./sidebar/mainSideNav";
+import type { User } from "@supabase/supabase-js";
+import { dashboardConfig } from "@/config/dashboard.config";
+import { siteConfig } from "@/config/site.config";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import UserAccountSideNav from "@/components/userAccountSideNav";
+import { prefetchUser } from "@/hooks/useUser";
+import { HydrationBoundary } from "@tanstack/react-query";
+import { Suspense } from "react";
+import { Skeleton } from "../ui/skeleton";
 
 export interface SidebarNavProps extends React.HTMLAttributes<HTMLDivElement> {
-  items: SidebarNavItem[];
+  user: User | null;
 }
 
-export function SidebarNav({ items, className, ...props }: SidebarNavProps) {
-  const pathname = usePathname();
-  if (!items?.length) return null;
+const dehydratedState = async (user_id: string) => {
+  return await prefetchUser(user_id);
+};
 
+export function SidebarNav({ user, className, ...props }: SidebarNavProps) {
+  if (!user) return null;
   return (
-    <nav
-      className={cn("flex flex-col space-x-0 space-y-1", className)}
-      {...props}
-    >
-      {items.map((item, index) => {
-        const Icon = Icons[item.icon ?? "chevronLeft"];
-        return item.items.length > 0 ? (
-          <div className="flex flex-col space-x-0 space-y-1" key={index}>
-            <h2 className="flex w-full items-center py-3 text-sm font-semibold text-muted-foreground">
-              <Icon className="mr-2 h-4 w-4" aria-hidden="true" />
-              {item.title}
-            </h2>
-            {item.items.map((subitem, subIndex) => {
-              return (
-                <Link
-                  aria-label={subitem.title}
-                  key={subIndex}
-                  href={subitem.href ? subitem.href : "#"}
-                  target={subitem.external ? "_blank" : ""}
-                  rel={subitem.external ? "noreferrer" : ""}
-                  className={cn(
-                    buttonVariants({ variant: "ghost" }),
-                    pathname === subitem.href
-                      ? "bg-muted hover:bg-muted"
-                      : "hover:bg-muted hover:underline",
-                    "justify-start",
-                    subitem.disabled && "pointer-events-none opacity-60"
-                  )}
-                >
-                  <span>{subitem.title}</span>
-                </Link>
-              );
-            })}
-            <Separator key={`separator-${index}`} />
-          </div>
-        ) : (
-          <Link
-            aria-label={item.title}
-            key={index}
-            href={item.href ? item.href : "#"}
-            target={item.external ? "_blank" : ""}
-            rel={item.external ? "noreferrer" : ""}
-            className={cn(
-              buttonVariants({ variant: "ghost" }),
-              pathname === item.href
-                ? "bg-muted hover:bg-muted"
-                : "hover:bg-muted hover:underline ",
-              "justify-start",
-              item.disabled && "pointer-events-none opacity-60"
-            )}
-          >
-            <Icon className="mr-2 h-4 w-4" aria-hidden="true" size={"s"} />
-            <span>{item.title}</span>
-          </Link>
-        );
-      })}
-    </nav>
+    <div className={cn("flex h-full flex-col gap-2 ", className)} {...props}>
+      <UserAccountSideNav user_id={user?.id} />
+      <div className=" h-[calc(100vh-8rem)] overflow-y-auto ">
+        <ScrollArea>
+          <MainSideNav items={dashboardConfig.sidebarNav} />
+        </ScrollArea>
+      </div>
+      <div className="flex flex-col gap-2">
+        <Separator className="flex" />
+        <Link
+          aria-label="Dashboard"
+          href="/dashboard"
+          className="items-center space-x-2 flex"
+        >
+          <Icons.logo size="m" aria-hidden="true" />
+          <span className="font-bold inline-block">{siteConfig.name}</span>
+        </Link>
+      </div>
+    </div>
   );
 }
