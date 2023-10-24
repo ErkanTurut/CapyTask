@@ -18,6 +18,8 @@ export async function GET(
   context: z.infer<typeof routeContextSchema>
 ) {
   try {
+    console.log("ok");
+
     const { params } = routeContextSchema.parse(context);
     const supabase = createRouteHandlerClient<Database>({ cookies });
     const {
@@ -29,8 +31,8 @@ export async function GET(
       .eq("id", params.user_id)
       .single();
 
+    //await new Promise((resolve) => setTimeout(resolve, 3000));
     if (error) throw new Error(error.message);
-
     return NextResponse.json(user, {
       status: 200,
     });
@@ -63,6 +65,8 @@ export async function PATCH(
       .eq("id", params.user_id)
       .single();
     if (error) throw new Error(error.message);
+
+    //await new Promise((resolve) => setTimeout(resolve, 3000));
 
     return NextResponse.json(null, {
       status: 200,
