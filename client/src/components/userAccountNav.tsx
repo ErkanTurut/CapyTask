@@ -16,7 +16,6 @@ import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Icons } from "./icons";
 
-import type { user } from "@prisma/client";
 import { getUser } from "@/hooks/useUser";
 
 interface UserAccountNavProps {
@@ -28,7 +27,7 @@ const UserAccountNav: FC<UserAccountNavProps> = async ({
   user_id,
   isDashboard,
 }) => {
-  const { data: user } = getUser(user_id);
+  const { data: user } = await getUser(user_id);
   if (!user) return null;
   const initials = `${user.first_name?.charAt(0) ?? ""} ${
     user.last_name?.charAt(0) ?? ""
@@ -47,7 +46,12 @@ const UserAccountNav: FC<UserAccountNavProps> = async ({
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end" forceMount>
+      <DropdownMenuContent
+        className="w-60"
+        align="end"
+        sideOffset={8}
+        forceMount
+      >
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">
@@ -63,7 +67,7 @@ const UserAccountNav: FC<UserAccountNavProps> = async ({
           <DropdownMenuItem asChild>
             {isDashboard ? (
               <Link href="/">
-                <Icons.chevronLeft
+                <Icons.externalLink
                   className="mr-2 h-4 w-4"
                   aria-hidden="true"
                 />
@@ -87,10 +91,7 @@ const UserAccountNav: FC<UserAccountNavProps> = async ({
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link href="/dashboard/account/settings">
-              <Icons.mixerVertical
-                className="mr-2 h-4 w-4"
-                aria-hidden="true"
-              />
+              <Icons.gear className="mr-2 h-4 w-4" aria-hidden="true" />
               Settings
               <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
             </Link>
