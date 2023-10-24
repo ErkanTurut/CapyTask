@@ -13,6 +13,10 @@ import {
   HamburgerMenuIcon,
   HomeIcon,
   BackpackIcon,
+  ExternalLinkIcon,
+  GearIcon,
+  FileIcon,
+  FileTextIcon,
 } from "@radix-ui/react-icons";
 import { Loader2, Banknote } from "lucide-react";
 import Home from "@/app/(lobby)/page";
@@ -58,6 +62,10 @@ export const Icons = {
   chevronLeft: ChevronLeftIcon,
   backpack: BackpackIcon,
   banknote: Banknote,
+  externalLink: ExternalLinkIcon,
+  gear: GearIcon,
+  file: FileIcon,
+  fileText: FileTextIcon,
   logo: (props: LucideProps & logoProps) => {
     const { size, className } = props;
 
