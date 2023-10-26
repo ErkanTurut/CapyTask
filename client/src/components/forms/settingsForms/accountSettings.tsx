@@ -19,6 +19,8 @@ import { FC, useEffect } from "react";
 
 import { getUser, updateUser } from "@/hooks/useUser";
 
+import { test } from "@/hooks/useServer";
+
 type Inputs = z.infer<typeof accountSettingsSchema>;
 
 interface AccountFormProps {
@@ -38,6 +40,11 @@ const AccountForm: FC<AccountFormProps> = ({ user_id }) => {
     },
   });
 
+  const serverAction = async () => {
+    const res = await test();
+    console.log(res);
+  };
+
   useEffect(() => {
     form.reset({
       email: user?.email || "",
@@ -49,6 +56,7 @@ const AccountForm: FC<AccountFormProps> = ({ user_id }) => {
   async function onSubmit(data: Inputs) {
     mutate(data);
   }
+
   return (
     <Form {...form}>
       <form
@@ -105,7 +113,7 @@ const AccountForm: FC<AccountFormProps> = ({ user_id }) => {
               Cancel
               <span className="sr-only">cancel</span>
             </Button>
-            <Button isLoading={isPending}>
+            <Button type="submit" isLoading={isPending}>
               Save
               <span className="sr-only">Save</span>
             </Button>
