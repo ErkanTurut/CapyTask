@@ -1,12 +1,7 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import type { user } from "@prisma/client";
 
-import NavBar from "@/components/layouts/siteNav";
+import NavBar from "@/components/layouts/navbar";
 import { cookies } from "next/headers";
-
-import { getUser } from "@/hooks/useUser";
-import { Suspense } from "react";
-import { PostgrestError } from "@supabase/supabase-js";
 
 interface LobbyLayoutProps {
   children: React.ReactNode;

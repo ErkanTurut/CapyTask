@@ -22,10 +22,6 @@ import { HydrationBoundary } from "@tanstack/react-query";
 import { redirect } from "next/navigation";
 import { prefetchUser } from "@/hooks/useUser";
 
-const dehydratedState = async (user_id: string) => {
-  return await prefetchUser(user_id);
-};
-
 export default async function SettingsPage() {
   const supabase = createServerComponentClient({ cookies });
   const {
@@ -35,31 +31,16 @@ export default async function SettingsPage() {
   if (!user) return redirect("/signin");
 
   return (
-    <Shell variant="sidebar" className="max-w-2xl">
-      <PageHeader id="account-header" aria-labelledby="account-header-heading">
-        <PageHeaderHeading size="sm">Account</PageHeaderHeading>
-        <PageHeaderDescription size="sm">
-          Manage your account settings
-        </PageHeaderDescription>
-      </PageHeader>
-      <section
-        id="user-account-info"
-        aria-labelledby="user-account-info-heading"
-      >
-        <Card>
-          <CardHeader>
-            <CardTitle>Account Info</CardTitle>
-            <CardDescription>Update your account information.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <HydrationBoundary state={dehydratedState(user.id)}>
-              <Suspense fallback={<div>Loading...</div>}>
-                <AccountForm user_id={user.id} />
-              </Suspense>
-            </HydrationBoundary>
-          </CardContent>
-        </Card>
-      </section>
-    </Shell>
+    <section id="user-account-info" aria-labelledby="user-account-info-heading">
+      <Card>
+        <CardHeader>
+          <CardTitle>Account Info</CardTitle>
+          <CardDescription>Update your account information.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <AccountForm user_id={user.id} />
+        </CardContent>
+      </Card>
+    </section>
   );
 }
