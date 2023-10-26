@@ -1,32 +1,19 @@
 import Link from "next/link";
 
-import { dashboardConfig } from "@/config/dashboard.config";
 import { siteConfig } from "@/config/site.config";
 // import { getUserEmail } from "@/lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button, buttonVariants } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { buttonVariants } from "@/components/ui/button";
 // import { CartSheet } from "@/components/checkout/cart-sheet";
-import { Combobox } from "@/components/combobox";
 import { Icons } from "@/components/icons";
-import { MainNav } from "@/components/layouts/mainNav";
-import { MobileNav } from "@/components/layouts/mobileNav";
-import ThemeToggle from "./themeToggle";
-import type { user } from "@prisma/client";
 import { SearchBar } from "../searchBar";
 import UserAccountNav from "../userAccountNav";
+import ThemeToggle from "./themeToggle";
+import type { User } from "@supabase/supabase-js";
+import { Suspense } from "react";
+import { Skeleton } from "../ui/skeleton";
 
 interface AppNav {
-  user: user | null;
+  user: User | null;
 }
 
 export function AppNav({ user }: AppNav) {
@@ -52,7 +39,11 @@ export function AppNav({ user }: AppNav) {
           <nav className="flex items-center space-x-2">
             <SearchBar />
             {user ? (
-              <UserAccountNav user={user} isDashboard={true} />
+              <Suspense
+                fallback={<Skeleton className="h-8 w-8 rounded-full" />}
+              >
+                <UserAccountNav user_id={user.id} />
+              </Suspense>
             ) : (
               <Link
                 href="/signin"
