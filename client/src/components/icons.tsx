@@ -17,6 +17,7 @@ import {
   GearIcon,
   FileIcon,
   FileTextIcon,
+  ChevronRightIcon,
 } from "@radix-ui/react-icons";
 import { Loader2, Banknote } from "lucide-react";
 import Home from "@/app/(lobby)/page";
@@ -60,6 +61,7 @@ export const Icons = {
   sun: SunIcon,
   home: HomeIcon,
   chevronLeft: ChevronLeftIcon,
+  chevronRight: ChevronRightIcon,
   backpack: BackpackIcon,
   banknote: Banknote,
   externalLink: ExternalLinkIcon,
