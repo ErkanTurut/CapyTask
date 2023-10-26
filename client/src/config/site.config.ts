@@ -6,15 +6,12 @@ import type { FooterItem, MainNavItem } from "@/types";
 export type SiteConfig = typeof siteConfig;
 
 const links = {
-  twitter: "https://twitter.com/sadmann17",
-  github: "https://github.com/sadmann7/skateshop",
-  githubAccount: "https://github.com/sadmann7",
-  discord: "https://discord.com/users/sadmann7",
-  calDotCom: "https://cal.com/sadmann7",
+  twitter: "https://twitter.com/simplyerkan",
+  githubAccount: "https://github.com/ErkanTurut",
 };
 
 export const siteConfig = {
-  name: "CapyTask",
+  name: "Gembuddy",
   description:
     "An open source e-commerce skateshop build with everything new in Next.js 13.",
   url: "https://skateshop.sadmn.com",

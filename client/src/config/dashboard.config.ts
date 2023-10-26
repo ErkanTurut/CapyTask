@@ -8,18 +8,24 @@ export const dashboardConfig: DashboardConfig = {
   sidebarNav: [
     {
       title: "Organisations",
-      icon: "home",
-      items: [
-        {
-          title: "ACME",
-          href: "/dashboard/ACME",
-          items: [],
-        },
-      ],
+      icon: "backpack",
+      href: "/dashboard/organisations",
+      items: [],
+    },
+    {
+      title: "Profile",
+      icon: "user",
+      href: "/dashboard/account/preferences",
+      items: [],
+    },
+    {
+      title: "Settings",
+      icon: "gear",
+      href: "/dashboard/account/settings",
+      items: [],
     },
     {
       title: "Projects",
-      icon: "backpack",
       items: [
         {
           title: "All Projects",
@@ -31,38 +37,17 @@ export const dashboardConfig: DashboardConfig = {
     {
       title: "Account",
       href: "/dashboard/account",
-      icon: "user",
       items: [
         {
-          title: "Preferences",
+          title: "My Profile",
+          icon: "user",
           href: "/dashboard/account/preferences",
           items: [],
         },
         {
           title: "Settings",
+          icon: "gear",
           href: "/dashboard/account/settings",
-          items: [],
-        },
-        {
-          title: "Notifications",
-          href: "/dashboard/account/notifications",
-          items: [],
-        },
-      ],
-    },
-    {
-      title: "Billing",
-      icon: "banknote",
-      disabled: true,
-      items: [
-        {
-          title: "Invoices",
-          href: "/dashboard/billing/invoices",
-          items: [],
-        },
-        {
-          title: "Payments",
-          href: "/dashboard/billing/payments",
           items: [],
         },
       ],
