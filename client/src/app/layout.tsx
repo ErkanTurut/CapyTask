@@ -1,7 +1,7 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 import "@/styles/globals.css";
 import { Inter } from "next/font/google";
-import { ThemeProvider } from "@/components/themeProvider";
+import { ThemeProvider } from "@/components/providers/themeProvider";
 import { TailwindIndicator } from "@/components/tailwindIndicator";
 import { Toaster } from "@/components/ui/toaster";
 import Providers from "@/components/providers";
@@ -22,20 +22,20 @@ export default async function RootLayout({
         inter.className
       )}
     >
-      <Providers>
-        <body
-          className={cn(
-            "min-h-screen bg-background font-sans antialiased",
-            inter.className
-          )}
-        >
+      <body
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          inter.className
+        )}
+      >
+        <Providers>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             {children}
             <TailwindIndicator />
             <Toaster />
           </ThemeProvider>
-        </body>
-      </Providers>
+        </Providers>
+      </body>
     </html>
   );
 }
