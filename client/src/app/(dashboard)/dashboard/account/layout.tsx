@@ -15,7 +15,7 @@ import {
 } from "@/components/pageHeader";
 import { Icons } from "@/components/icons";
 import { Shell } from "@/components/shells/shell";
-import { prefetchUser } from "@/hooks/useUser";
+import { prefetchUser } from "@/hooks/react-query/use-user";
 import { HydrationBoundary } from "@tanstack/react-query";
 
 interface DashboardLayoutProps {
@@ -34,12 +34,9 @@ export default async function AccountLayout({
   if (!user) {
     redirect("/signin");
   }
-  const dehydratedState = async (user_id: string) => {
-    return await prefetchUser(user_id);
-  };
 
   return (
-    <Shell variant="sidebar" className="max-w-3xl">
+    <>
       <PageHeader id="account-header" aria-labelledby="account-header-heading">
         <PageHeaderHeading size="sm">Account</PageHeaderHeading>
         <PageHeaderDescription size="sm">
@@ -48,6 +45,6 @@ export default async function AccountLayout({
       </PageHeader>
 
       {children}
-    </Shell>
+    </>
   );
 }
