@@ -33,9 +33,15 @@ export interface FooterItem {
   }[];
 }
 
+export interface NavContainerProps {
+  main: NavItemWithChildren[];
+  sidebar: NavItemWithChildren[];
+  footer?: NavItemWithChildren[];
+}
+
 export type MainNavItem = NavItemWithOptionalChildren;
 
-export type SidebarNavItem = NavItemWithChildren;
+export type SidebarNavItem = NavContainerProps;
 
 export type UserRole = z.infer<typeof userPrivateMetadataSchema.shape.role>;
 
