@@ -5,7 +5,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 
 export interface OrganizationSelectorProps
   extends React.HTMLAttributes<HTMLDivElement> {
