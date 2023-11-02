@@ -3,8 +3,8 @@
 import * as React from "react";
 import { useRouter } from "next/navigation";
 
-import { cn, isMacOs } from "@/lib/utils";
-import { useDebounce } from "@/hooks/useDebounce";
+import { cn, isMacOs } from "@/utils";
+import { useDebounce } from "@/hooks/use-debounce";
 import { Button } from "@/components/ui/button";
 import {
   CommandDialog,
