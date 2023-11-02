@@ -18,6 +18,9 @@ import {
   FileIcon,
   FileTextIcon,
   ChevronRightIcon,
+  PlusCircledIcon,
+  LightningBoltIcon,
+  CaretSortIcon,
 } from "@radix-ui/react-icons";
 import { Loader2, Banknote } from "lucide-react";
 import Home from "@/app/(lobby)/page";
@@ -68,6 +71,9 @@ export const Icons = {
   gear: GearIcon,
   file: FileIcon,
   fileText: FileTextIcon,
+  plusCircled: PlusCircledIcon,
+  lightning: LightningBoltIcon,
+  caretSort: CaretSortIcon,
   logo: (props: LucideProps & logoProps) => {
     const { size, className } = props;
 
