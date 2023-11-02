@@ -18,10 +18,11 @@ export async function GET(
   context: z.infer<typeof routeContextSchema>
 ) {
   try {
-    console.log("ok");
-
     const { params } = routeContextSchema.parse(context);
     const supabase = createRouteHandlerClient<Database>({ cookies });
+
+    // await new Promise((resolve) => setTimeout(resolve, 10000));
+
     const {
       data: user,
       error,
@@ -30,8 +31,8 @@ export async function GET(
       .select()
       .eq("id", params.user_id)
       .single();
+    console.log(user);
 
-    //await new Promise((resolve) => setTimeout(resolve, 3000));
     if (error) throw new Error(error.message);
     return NextResponse.json(user, {
       status: 200,
