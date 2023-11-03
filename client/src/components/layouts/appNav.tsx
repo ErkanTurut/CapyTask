@@ -1,13 +1,11 @@
 import Link from "next/link";
 
 import { siteConfig } from "@/config/site.config";
-// import { getUserEmail } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
-// import { CartSheet } from "@/components/checkout/cart-sheet";
 import { Icons } from "@/components/icons";
 import { SearchBar } from "../searchBar";
-import UserAccountNav from "../userAccountNav";
-import ThemeToggle from "./themeToggle";
+import UserAccountNav from "../user-account-navigation";
+import ThemeToggle from "../themeToggle";
 import type { User } from "@supabase/supabase-js";
 import { Suspense } from "react";
 import { Skeleton } from "../ui/skeleton";
