@@ -1,8 +1,6 @@
 import { SidebarNav } from "@/components/layouts/sidebarNav";
 import { Shell } from "@/components/shells/shell";
-import { prefetchUser } from "@/hooks/react-query/use-user";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { HydrationBoundary } from "@tanstack/react-query";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
