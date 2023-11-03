@@ -24,7 +24,7 @@ import { PasswordInput } from "@/components/passwordInput";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import type { Database } from "@/types/supabase.types";
 import { toast } from "sonner";
-import { catchError } from "@/lib/utils";
+import { catchError } from "@/utils";
 
 type Inputs = z.infer<typeof authSchema>;
 
