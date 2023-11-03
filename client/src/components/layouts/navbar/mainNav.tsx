@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { MainNavItem } from "@/types";
 
 import { siteConfig } from "@/config/site.config";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 import {
   NavigationMenu,
   NavigationMenuContent,
