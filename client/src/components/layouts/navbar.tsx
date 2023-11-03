@@ -9,23 +9,17 @@ import { buttonVariants } from "@/components/ui/button";
 import { MainNav } from "@/components/layouts/navbar/mainNav";
 import { SearchBar } from "@/components/searchBar";
 import { MobileNav } from "./navbar/mobileNav";
-import ThemeToggle from "./themeToggle";
+import ThemeToggle from "../themeToggle";
 // import { MobileNav } from "@/components/layouts/mobile-nav"
 import { Skeleton } from "@/components/ui/skeleton";
 
-import UserAccountNav from "../userAccountNav";
+import UserAccountNav from "../user-account-navigation";
 
-import { prefetchUser } from "@/hooks/useUser";
 import type { User } from "@supabase/supabase-js";
-import { HydrationBoundary } from "@tanstack/react-query";
 
 interface NavbarProps {
   user: User | null;
 }
-
-const dehydratedState = async (user_id: string) => {
-  return await prefetchUser(user_id);
-};
 
 const NavBar: FC<NavbarProps> = ({ user }) => {
   return (
@@ -40,20 +34,17 @@ const NavBar: FC<NavbarProps> = ({ user }) => {
           <nav className="flex items-center space-x-2">
             <SearchBar />
             {user ? (
-              <HydrationBoundary state={dehydratedState(user.id)}>
-                <Suspense
-                  fallback={<Skeleton className="h-8 w-8 rounded-full" />}
-                >
-                  <UserAccountNav user_id={user.id} />
-                </Suspense>
-              </HydrationBoundary>
+              <Suspense
+                fallback={<Skeleton className="h-8 w-8 rounded-full" />}
+              >
+                <UserAccountNav user_id={user.id} />
+              </Suspense>
             ) : (
               <Link href="/signin" className={buttonVariants()}>
                 Sign In
                 <span className="sr-only">Sign In</span>
               </Link>
             )}
-            <ThemeToggle />
           </nav>
         </div>
       </div>
