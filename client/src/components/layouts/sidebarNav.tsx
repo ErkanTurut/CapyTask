@@ -1,31 +1,32 @@
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 import { Icons } from "@/components/icons";
 import { MainSideNav } from "./sidebar/mainSideNav";
-import type { User } from "@supabase/supabase-js";
 import { dashboardConfig } from "@/config/dashboard.config";
 import { siteConfig } from "@/config/site.config";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import UserAccountSideNav from "@/components/userAccountSideNav";
-import { prefetchUser } from "@/hooks/useUser";
-import { HydrationBoundary } from "@tanstack/react-query";
-import { Suspense } from "react";
-import { Skeleton } from "../ui/skeleton";
+import UserAccountDashboard from "@/components/user-account-dashboard";
 
 export interface SidebarNavProps extends React.HTMLAttributes<HTMLDivElement> {
-  user: User | null;
+  user_id: string;
 }
 
-const dehydratedState = async (user_id: string) => {
-  return await prefetchUser(user_id);
-};
+import { getUser } from "@/lib/api/users";
+import { Suspense } from "react";
 
-export function SidebarNav({ user, className, ...props }: SidebarNavProps) {
-  if (!user) return null;
+export async function SidebarNav({
+  user_id,
+  className,
+  ...props
+}: SidebarNavProps) {
+  const user = await getUser(user_id);
+
   return (
     <div className={cn("flex h-full flex-col gap-2 ", className)} {...props}>
-      <UserAccountSideNav user_id={user?.id} />
+      <Suspense fallback="loading...">
+        <UserAccountDashboard user={user} />
+      </Suspense>
       <div className=" h-[calc(100vh-8rem)] overflow-y-auto ">
         <ScrollArea>
           <MainSideNav items={dashboardConfig.sidebarNav} />
