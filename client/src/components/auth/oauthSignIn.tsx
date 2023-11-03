@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 
 import { Provider } from "@/types/supabase.types";
-import { catchError } from "@/lib/utils";
+import { catchError } from "@/utils";
 
 const oauthProviders = [
   { name: "Google", provider: "google", icon: "google" },
