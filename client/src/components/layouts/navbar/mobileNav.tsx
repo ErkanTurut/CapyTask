@@ -6,7 +6,7 @@ import { useSelectedLayoutSegment } from "next/navigation";
 import type { MainNavItem, SidebarNavItem } from "@/types";
 
 import { siteConfig } from "@/config/site.config";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 import {
   Accordion,
   AccordionContent,
