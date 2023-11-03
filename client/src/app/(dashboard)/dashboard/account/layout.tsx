@@ -15,8 +15,6 @@ import {
 } from "@/components/pageHeader";
 import { Icons } from "@/components/icons";
 import { Shell } from "@/components/shells/shell";
-import { prefetchUser } from "@/hooks/react-query/use-user";
-import { HydrationBoundary } from "@tanstack/react-query";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
