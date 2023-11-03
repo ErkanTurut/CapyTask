@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { catchError } from "@/lib/utils";
+import { catchError } from "@/utils";
 import { signUpSchema } from "@/lib/validations/auth";
 import { Button } from "@/components/ui/button";
 import {
