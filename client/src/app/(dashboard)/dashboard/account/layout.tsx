@@ -1,9 +1,8 @@
 import { dashboardConfig } from "@/config/dashboard.config";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { SidebarNav } from "@/components/layouts/sidebarNav";
+import { SidebarNav } from "@/components/layouts/app-sidebar";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
-import { AppNav } from "@/components/layouts/appNav";
 import type { user } from "@prisma/client";
 import { redirect } from "next/navigation";
 
