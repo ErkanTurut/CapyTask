@@ -1,6 +1,6 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 
-import NavBar from "@/components/layouts/navbar";
+import NavBar from "@/components/layouts/app-navbar";
 import { cookies } from "next/headers";
 
 interface LobbyLayoutProps {
