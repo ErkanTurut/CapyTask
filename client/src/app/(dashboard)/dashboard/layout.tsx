@@ -21,13 +21,21 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <div className="flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10 ">
-        <aside className="fixed p-2 pl- z-30 -ml-2 hidden h-full w-full shrink-0  overflow-y-auto border-r md:sticky md:block bottom-0">
+    <div className=" relative mx-auto flex min-h-screen w-full flex-col items-center justify-center p-4">
+      <div className="flex w-full flex-1 gap-6 lg:gap-8">
+        <Shell
+          variant="sidebar"
+          className="hidden max-h-[calc(100vh)] w-[230px] shrink-0 lg:sticky lg:top-28 lg:block"
+          as={"aside"}
+        >
           <SidebarNav user_id={user.id} />
-        </aside>
-        <main className="flex container w-full flex-col overflow-hidden">
-          <Shell variant="sidebar" className="max-w-3xl">
+        </Shell>
+
+        <main className="z-10 flex w-full flex-1 flex-col items-start justify-center">
+          <Shell
+            variant="sidebar"
+            className="relative flex-1  overflow-x-hidden"
+          >
             {children}
           </Shell>
         </main>
