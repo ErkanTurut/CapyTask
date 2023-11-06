@@ -17,7 +17,7 @@ import type { z } from "zod";
 import { FC, useEffect } from "react";
 
 import type { user } from "@prisma/client";
-import { updateUser } from "@/lib/api/users";
+import { updateUser } from "@/lib/services/users";
 import SubmitButton from "@/components/submit-button";
 
 //@ts-ignore
@@ -55,7 +55,7 @@ const AccountForm: FC<AccountFormProps> = ({ user }) => {
     <Form {...form}>
       <form
         className="grid gap-4"
-        action={(...args) => void form.handleSubmit(onSubmit)(...args)}
+        onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
       >
         <FormField
           control={form.control}
