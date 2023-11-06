@@ -1,15 +1,15 @@
-"use client";
+// "use client";
 
-import {
-  HydrationBoundary,
-  HydrationBoundaryProps,
-  QueryClient,
-  dehydrate,
-} from "@tanstack/react-query";
+// import {
+//   HydrationBoundary,
+//   HydrationBoundaryProps,
+//   QueryClient,
+//   dehydrate,
+// } from "@tanstack/react-query";
 
-function Hydrate(props: HydrationBoundaryProps) {
-  const queryClient = new QueryClient();
-  return <HydrationBoundary state={dehydrate(queryClient)} />;
-}
+// function Hydrate(props: HydrationBoundaryProps) {
+//   const queryClient = new QueryClient();
+//   return <HydrationBoundary state={dehydrate(queryClient)} />;
+// }
 
-export default Hydrate;
+// export default Hydrate;
