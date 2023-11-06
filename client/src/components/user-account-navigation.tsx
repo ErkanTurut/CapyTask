@@ -15,7 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Icons } from "./icons";
 import ThemeToggle from "./themeToggle";
 
-import { getUser } from "@/lib/api/users";
+import { getUser } from "@/lib/services/users";
 
 interface UserAccountNavProps {
   user_id: string;
