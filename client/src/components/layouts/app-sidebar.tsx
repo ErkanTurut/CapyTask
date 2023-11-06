@@ -12,7 +12,7 @@ export interface SidebarNavProps extends React.HTMLAttributes<HTMLDivElement> {
   user_id: string;
 }
 
-import { getUser } from "@/lib/api/users";
+import { getUser } from "@/lib/services/users";
 import { Suspense } from "react";
 import MinimizeButton from "../minimize-button";
 import ThemeToggle from "../themeToggle";
@@ -25,20 +25,21 @@ export async function SidebarNav({
   const user = await getUser(user_id);
 
   return (
-    <div className={cn("flex h-full flex-col gap-2 ", className)} {...props}>
-      <span className="flex justify-between items-center">
+    <div
+      className={cn("flex h-full flex-col justify-between", className)}
+      {...props}
+    >
+      <span className="flex flex-col w-full ">
         <Suspense fallback="loading...">
           <UserAccountDashboard user={user} />
         </Suspense>
-        <MinimizeButton />
+        <div className="h-max[calc(100vh-8rem)] overflow-y-auto ">
+          <ThemeToggle toggle={true} />
+          <ScrollArea>
+            <MainSideNav items={dashboardConfig.sidebarNav} />
+          </ScrollArea>
+        </div>
       </span>
-
-      <div className=" h-[calc(100vh-8rem)] overflow-y-auto ">
-        <ThemeToggle toggle={true} />
-        <ScrollArea>
-          <MainSideNav items={dashboardConfig.sidebarNav} />
-        </ScrollArea>
-      </div>
       <div className="flex flex-col gap-2">
         <Separator className="flex" />
         <Link
