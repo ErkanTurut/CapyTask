@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { OAuthSignIn } from "@/components/auth/oauthSignIn";
-import { SignInForm } from "@/components/forms/signIn";
+import { SignInForm } from "@/components/forms/sign-in";
 import { MagicLinkSignInForm } from "@/components/forms/magicLinkSignIn";
 import { Shell } from "@/components/shells/shell";
 
