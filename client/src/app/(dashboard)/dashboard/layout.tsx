@@ -21,11 +21,11 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className=" relative mx-auto flex min-h-screen w-full flex-col items-center justify-center p-4">
-      <div className="flex w-full flex-1 gap-6 lg:gap-8">
+    <div className=" relative mx-auto flex min-h-screen w-full flex-col items-center justify-center p-2">
+      <div className="flex w-full  flex-1 gap-2 lg:gap-3">
         <Shell
           variant="sidebar"
-          className="hidden max-h-[calc(100vh)] w-[230px] shrink-0 lg:sticky lg:top-28 lg:block"
+          className=" hidden  max-h-[100vh] overflow-y-hidden w-[230px] shrink-0 lg:sticky lg:top-28 lg:block"
           as={"aside"}
         >
           <SidebarNav user_id={user.id} />
@@ -34,7 +34,7 @@ export default async function DashboardLayout({
         <main className="z-10 flex w-full flex-1 flex-col items-start justify-center">
           <Shell
             variant="sidebar"
-            className="relative flex-1  overflow-x-hidden"
+            className="relative flex-1 flex-col overflow-x-hidden ml-[230px] lg:ml-0"
           >
             {children}
           </Shell>
