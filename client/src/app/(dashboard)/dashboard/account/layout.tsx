@@ -33,15 +33,14 @@ export default async function AccountLayout({
   }
 
   return (
-    <>
+    <Shell variant="left" className="max-w-3xl">
       <PageHeader id="account-header" aria-labelledby="account-header-heading">
         <PageHeaderHeading size="sm">Account</PageHeaderHeading>
         <PageHeaderDescription size="sm">
           Manage your account settings
         </PageHeaderDescription>
       </PageHeader>
-
       {children}
-    </>
+    </Shell>
   );
 }
