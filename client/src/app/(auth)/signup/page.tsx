@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { SignUpForm } from "@/components/forms/signUp";
+import { SignUpForm } from "@/components/forms/sign-up";
 import { Shell } from "@/components/shells/shell";
 import { OAuthSignIn } from "@/components/auth/oauthSignIn";
 

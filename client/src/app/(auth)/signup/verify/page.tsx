@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { OtpVerify } from "@/components/forms/otpVerify";
+import { OtpVerify } from "@/components/forms/otp-verification";
 import { Shell } from "@/components/shells/shell";
 
 export default function VerifyEmailPage() {
