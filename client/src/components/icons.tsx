@@ -22,6 +22,8 @@ import {
   LightningBoltIcon,
   CaretSortIcon,
   DoubleArrowLeftIcon,
+  MinusCircledIcon,
+  PlusIcon,
 } from "@radix-ui/react-icons";
 import { Loader2, Banknote, PanelRightOpen } from "lucide-react";
 import Home from "@/app/(lobby)/page";
@@ -76,6 +78,8 @@ export const Icons = {
   lightning: LightningBoltIcon,
   caretSort: CaretSortIcon,
   doubleArrowLeft: DoubleArrowLeftIcon,
+  plus: PlusCircledIcon,
+  minus: MinusCircledIcon,
   logo: (props: LucideProps & logoProps) => {
     const { size, className } = props;
 
