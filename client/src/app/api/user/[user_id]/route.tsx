@@ -20,9 +20,7 @@ export async function GET(
   try {
     const { params } = routeContextSchema.parse(context);
     const supabase = createRouteHandlerClient<Database>({ cookies });
-
     // await new Promise((resolve) => setTimeout(resolve, 10000));
-
     const {
       data: user,
       error,
@@ -51,38 +49,38 @@ export async function GET(
   }
 }
 
-export async function PATCH(
-  request: NextRequest,
-  context: z.infer<typeof routeContextSchema>
-) {
-  try {
-    const { params } = routeContextSchema.parse(context);
-    const data = await request.json();
-    const supabase = createRouteHandlerClient<Database>({ cookies });
+// export async function PATCH(
+//   request: NextRequest,
+//   context: z.infer<typeof routeContextSchema>
+// ) {
+//   try {
+//     const { params } = routeContextSchema.parse(context);
+//     const data = await request.json();
+//     const supabase = createRouteHandlerClient<Database>({ cookies });
 
-    const { error } = await supabase
-      .from("user")
-      .update(data)
-      .eq("id", params.user_id)
-      .single();
-    if (error) throw new Error(error.message);
+//     const { error } = await supabase
+//       .from("user")
+//       .update(data)
+//       .eq("id", params.user_id)
+//       .single();
+//     if (error) throw new Error(error.message);
 
-    //await new Promise((resolve) => setTimeout(resolve, 3000));
+//     //await new Promise((resolve) => setTimeout(resolve, 3000));
 
-    return NextResponse.json(null, {
-      status: 200,
-    });
-  } catch (error: Error | unknown) {
-    if (error instanceof z.ZodError) {
-      return new Response(JSON.stringify(error.issues), { status: 422 });
-    }
-    if (error instanceof Error) {
-      return NextResponse.json(error.message, {
-        status: 400,
-      });
-    }
-    return NextResponse.json("Something went wrong, please try again later.", {
-      status: 500,
-    });
-  }
-}
+//     return NextResponse.json(null, {
+//       status: 200,
+//     });
+//   } catch (error: Error | unknown) {
+//     if (error instanceof z.ZodError) {
+//       return new Response(JSON.stringify(error.issues), { status: 422 });
+//     }
+//     if (error instanceof Error) {
+//       return NextResponse.json(error.message, {
+//         status: 400,
+//       });
+//     }
+//     return NextResponse.json("Something went wrong, please try again later.", {
+//       status: 500,
+//     });
+//   }
+// }
