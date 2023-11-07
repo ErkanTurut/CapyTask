@@ -14,55 +14,55 @@ model user {
   id    String @id @db.Uuid
   users users  @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
-  image_uri         String?
-  email             String              @unique
-  first_name        String?
-  last_name         String?
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @default(now()) @updatedAt
-  tasks             task[]
-  user_folder_roles user_folder[]
-  user_org_roles    user_organization[]
+  image_uri          String?
+  email              String         @unique
+  first_name         String?
+  last_name          String?
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @default(now()) @updatedAt
+  tasks              task[]
+  user_project_roles user_project[]
+  user_team_roles    user_team[]
 
   @@schema("public")
 }
 
-model organization {
-  id          String              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name        String
+model team {
+  id          String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name        Role
   description String?
   image_uri   String?
-  created_at  DateTime            @default(now())
-  updated_at  DateTime            @default(now()) @updatedAt
-  folders     folder[]
-  users       user_organization[]
+  created_at  DateTime    @default(now())
+  updated_at  DateTime    @default(now()) @updatedAt
+  projects    project[]
+  users       user_team[]
 
   @@schema("public")
 }
 
 model role {
-  id                String              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name              String              @unique
-  description       String
-  permissions       String[]
-  user_folder_roles user_folder[]
-  user_org_roles    user_organization[]
+  id                 String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name               String         @unique
+  description        String
+  permissions        String[]
+  user_project_roles user_project[]
+  user_team_roles    user_team[]
 
   @@schema("public")
 }
 
-model folder {
-  id               String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name             String
-  description      String?
-  created_at       DateTime      @default(now())
-  updated_at       DateTime      @default(now()) @updatedAt
-  organization_id  String        @db.Uuid
-  organization     organization  @relation(fields: [organization_id], references: [id], onDelete: Cascade)
-  tasks            task[]
-  user_folder_role user_folder[]
+model project {
+  id                String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name              String
+  description       String?
+  created_at        DateTime       @default(now())
+  updated_at        DateTime       @default(now()) @updatedAt
+  team_id           String         @db.Uuid
+  team              team           @relation(fields: [team_id], references: [id], onDelete: Cascade)
+  tasks             task[]
+  user_project_role user_project[]
 
-  @@index([organization_id])
+  @@index([team_id])
   @@schema("public")
 }
 
@@ -70,55 +70,54 @@ model task {
   id             String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name           String
   description    String?
-  status         Status
+  status         status
   created_at     DateTime @default(now())
   updated_at     DateTime @default(now()) @updatedAt
-  folder_id      String   @db.Uuid
+  project_id     String   @db.Uuid
   parent_task_id String?  @db.Uuid
   created_by_id  String?  @db.Uuid
   created_by     user?    @relation(fields: [created_by_id], references: [id])
-  folder         folder   @relation(fields: [folder_id], references: [id], onDelete: Cascade)
+  project        project  @relation(fields: [project_id], references: [id], onDelete: Cascade)
   parent_task    task?    @relation("task_sub_tasks", fields: [parent_task_id], references: [id], onDelete: Cascade)
   sub_tasks      task[]   @relation("task_sub_tasks")
 
-  @@index([folder_id])
+  @@index([project_id])
   @@index([parent_task_id])
   @@index([created_by_id])
   @@schema("public")
 }
 
-model user_organization {
-  user_id      String       @db.Uuid
-  org_id       String       @db.Uuid
-  role_id      String       @db.Uuid
-  organization organization @relation(fields: [org_id], references: [id])
-  role         role         @relation(fields: [role_id], references: [id])
-  user         user         @relation(fields: [user_id], references: [id])
+model user_team {
+  user_id String @db.Uuid
+  team_id String @db.Uuid
+  role_id String @db.Uuid
+  team    team   @relation(fields: [team_id], references: [id])
+  role    role   @relation(fields: [role_id], references: [id])
+  user    user   @relation(fields: [user_id], references: [id])
 
-  @@id([user_id, org_id, role_id])
-  @@index([org_id])
+  @@id([user_id, team_id, role_id])
+  @@index([team_id])
   @@index([role_id])
   @@index([user_id])
   @@schema("public")
 }
 
-model user_folder {
-  user_id   String @db.Uuid
-  folder_id String @db.Uuid
-  role_id   String @db.Uuid
-  folder    folder @relation(fields: [folder_id], references: [id])
-  role      role   @relation(fields: [role_id], references: [id])
-  user      user   @relation(fields: [user_id], references: [id])
+model user_project {
+  user_id    String  @db.Uuid
+  project_id String  @db.Uuid
+  role_id    String  @db.Uuid
+  project    project @relation(fields: [project_id], references: [id])
+  role       role    @relation(fields: [role_id], references: [id])
+  user       user    @relation(fields: [user_id], references: [id])
 
-  @@id([user_id, folder_id, role_id])
+  @@id([user_id, project_id, role_id])
   @@index([user_id])
-  @@index([folder_id])
+  @@index([project_id])
   @@index([role_id])
   @@schema("public")
 }
 
-// AUTH MODELS
-
+// This part is automatically generated based on the datamodel, do not edit manually 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model audit_log_entries {
   instance_id String?   @db.Uuid
@@ -383,11 +382,24 @@ model users {
   @@schema("auth")
 }
 
-enum Status {
+enum status {
   NOTSTARTED
   INPROGRESS
   COMPLETED_SUCCESS
   COMPLETED_FAIL
+
+  @@schema("public")
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  SUPERVISOR
+  TECHNICIAN
+  ENGINEER
+  QUALITY_INSPECTOR
+  OPERATOR
+  OTHER
 
   @@schema("public")
 }
