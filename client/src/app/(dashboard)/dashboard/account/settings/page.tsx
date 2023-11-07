@@ -2,7 +2,7 @@ import { Shell } from "@/components/shells/shell";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 
-import AccountForm from "@/components/forms/settingsForms/account-settings";
+import AccountForm from "@/components/forms/settings-forms/account-settings";
 
 import {
   Card,
