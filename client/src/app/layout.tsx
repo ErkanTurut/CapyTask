@@ -4,7 +4,7 @@ import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/themeProvider";
 import { TailwindIndicator } from "@/components/tailwindIndicator";
 import { Toaster } from "@/components/ui/toaster";
-
+import DotPattern from "@/components/magicui/dot-pattern";
 const inter = Inter({ subsets: ["latin"] });
 
 export default async function RootLayout({
@@ -13,14 +13,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className={cn(
-        "bg-white text-slate-900 antialiased light",
-        inter.className
-      )}
-    >
+    <html lang="en" suppressHydrationWarning className={cn(inter.className)}>
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
