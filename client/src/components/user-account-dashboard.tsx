@@ -38,6 +38,7 @@ import { Icons } from "./icons";
 
 import { Skeleton } from "./ui/skeleton";
 import type { user } from "@prisma/client";
+import { getTeam } from "@/lib/services/team";
 
 interface UserAccountNavProps extends React.HTMLAttributes<HTMLDivElement> {
   user: user;
@@ -61,6 +62,10 @@ const groups = [
       },
       {
         label: "Monsters Inc.",
+        value: "monsters",
+      },
+      {
+        label: "Load more",
         value: "monsters",
       },
     ],
