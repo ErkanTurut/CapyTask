@@ -4,6 +4,8 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
+import { getTeam } from "@/lib/services/team";
+
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
@@ -21,11 +23,11 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className=" relative mx-auto flex min-h-screen w-full flex-col items-center justify-center p-2">
-      <div className="flex w-full  flex-1 gap-2 lg:gap-3">
+    <div className="relative mx-auto flex min-h-screen w-full flex-col items-center justify-center p-2 ">
+      <div className="flex w-full flex-1 gap-2 lg:gap-3">
         <Shell
           variant="sidebar"
-          className=" hidden  max-h-[100vh] overflow-y-hidden w-[230px] shrink-0 lg:sticky lg:top-28 lg:block"
+          className="hidden max-h-[100vh] overflow-y-hidden w-[230px] shrink-0 lg:sticky lg:top-28 lg:block backdrop-blur-[1px]"
           as={"aside"}
         >
           <SidebarNav user_id={user.id} />
@@ -34,12 +36,13 @@ export default async function DashboardLayout({
         <main className="z-10 flex w-full flex-1 flex-col items-start justify-center">
           <Shell
             variant="sidebar"
-            className="relative flex-1 flex-col overflow-x-hidden ml-[230px] lg:ml-0"
+            className="relative flex-1 flex-col overflow-x-hidden  lg:ml-0 backdrop-blur-[1px]"
           >
             {children}
           </Shell>
         </main>
       </div>
+
       {/* <SiteFooter /> */}
     </div>
   );
