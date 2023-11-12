@@ -24,6 +24,7 @@ import {
   DoubleArrowLeftIcon,
   MinusCircledIcon,
   PlusIcon,
+  BellIcon,
 } from "@radix-ui/react-icons";
 import { Loader2, Banknote, PanelRightOpen } from "lucide-react";
 import Home from "@/app/(lobby)/page";
@@ -80,6 +81,7 @@ export const Icons = {
   doubleArrowLeft: DoubleArrowLeftIcon,
   plus: PlusCircledIcon,
   minus: MinusCircledIcon,
+  bell: BellIcon,
   logo: (props: LucideProps & logoProps) => {
     const { size, className } = props;
 
