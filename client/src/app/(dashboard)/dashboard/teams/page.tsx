@@ -4,9 +4,21 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import type { user } from "@prisma/client";
 import { Suspense } from "react";
+import { redirect } from "next/navigation";
 
-import { PostgrestError } from "@supabase/supabase-js";
-
+import { getTeam } from "@/lib/services/team";
 export default async function TeamsPage() {
-  return <h1>Projects</h1>;
+  const supabase = createServerComponentClient({ cookies });
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/signin");
+  }
+
+  const res = await getTeam(user.id);
+  console.log(res);
+  return <h1>Teams</h1>;
 }
