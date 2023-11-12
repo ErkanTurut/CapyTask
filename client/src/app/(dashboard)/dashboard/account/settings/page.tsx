@@ -14,7 +14,7 @@ import {
 
 import { redirect } from "next/navigation";
 
-import { getUser } from "@/lib/services/users";
+import { getUser } from "@/lib/services/user";
 
 import { Suspense } from "react";
 
