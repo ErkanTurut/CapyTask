@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { getTeam } from "@/lib/services/team";
+import { getUser } from "@/lib/services/user";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
