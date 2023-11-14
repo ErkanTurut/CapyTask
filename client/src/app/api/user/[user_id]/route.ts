@@ -29,8 +29,9 @@ export async function GET(
       .select()
       .eq("id", params.user_id)
       .single();
-
+    console.log(user, error);
     if (error) throw new Error(error.message);
+
     return NextResponse.json(user, {
       status: 200,
     });
