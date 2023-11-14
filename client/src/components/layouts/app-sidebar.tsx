@@ -2,17 +2,19 @@ import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/utils";
 import { Icons } from "@/components/icons";
-import { MainSideNav } from "./main-navigation/main-sidebar";
+import { MainSidebar } from "./sidebar/main-sidebar";
+import { HeaderSidebar } from "./sidebar/header-sidebar";
+import { FooterSidebar } from "./sidebar/footer-sidebar";
 import { dashboardConfig } from "@/config/dashboard.config";
-import { siteConfig } from "@/config/site.config";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import UserAccountDashboard from "@/components/user-account-dashboard";
+import ShimmerButton from "@/components/magicui/shimmer-button";
 
 export interface SidebarNavProps extends React.HTMLAttributes<HTMLDivElement> {
   user_id: string;
 }
 
-import { getUser } from "@/lib/services/users";
+import { getUser } from "@/lib/services/user";
 import { Suspense } from "react";
 import MinimizeButton from "../minimize-button";
 import ThemeToggle from "../themeToggle";
@@ -23,34 +25,34 @@ export async function SidebarNav({
   ...props
 }: SidebarNavProps) {
   const user = await getUser(user_id);
+  if (!user) return null;
 
   return (
     <div
-      className={cn("flex h-full flex-col justify-between", className)}
+      className={cn("flex w-full h-full flex-grow overflow-hidden", className)}
       {...props}
     >
-      <span className="flex flex-col w-full ">
+      <span className="flex flex-col w-full h-full gap-1">
         <Suspense fallback="loading...">
           <UserAccountDashboard user={user} />
         </Suspense>
-        <div className="h-max[calc(100vh-8rem)] overflow-y-auto ">
-          <ThemeToggle toggle={true} />
-          <ScrollArea>
-            <MainSideNav items={dashboardConfig.sidebarNav} />
-          </ScrollArea>
-        </div>
-      </span>
-      <div className="flex flex-col gap-2">
+        {/* <ThemeToggle toggle={true} /> */}
+
+        <nav className="flex w-full flex-col gap-1 flex-grow overflow-hidden">
+          <div className="flex w-full flex-col gap-1 overflow-hidden">
+            <HeaderSidebar items={dashboardConfig.sidebarNav} />
+            <Separator className="flex" />
+            <div className="flex-grow overflow-y-auto">
+              <ScrollArea>
+                <MainSidebar items={dashboardConfig.sidebarNav} />
+              </ScrollArea>
+            </div>
+          </div>
+        </nav>
+
         <Separator className="flex" />
-        <Link
-          aria-label="Dashboard"
-          href="/dashboard"
-          className="items-center space-x-2 flex"
-        >
-          <Icons.logo size="m" aria-hidden="true" />
-          <span className="font-bold inline-block">{siteConfig.name}</span>
-        </Link>
-      </div>
+        <FooterSidebar items={dashboardConfig.sidebarNav} />
+      </span>
     </div>
   );
 }
