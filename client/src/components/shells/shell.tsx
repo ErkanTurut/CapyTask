@@ -2,14 +2,14 @@ import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/utils";
 
-const shellVariants = cva("grid items-center gap-8 pb-8 pt-6 md:py-8", {
+const shellVariants = cva("grid items-start gap-8 pb-8 pt-6 md:py-2", {
   variants: {
     variant: {
       default: "container",
-      sidebar:
-        "border-border w-full rounded-lg border p-2 backdrop-blur-[2px] md:p-4",
+      sidebar: "border-border w-full rounded-lg border p-2 md:p-4",
       centered: "mx-auto mb-16 mt-20 max-w-md justify-center",
       markdown: "container max-w-3xl gap-0 py-8 md:py-10 lg:py-10",
+      left: "",
     },
   },
   defaultVariants: {
