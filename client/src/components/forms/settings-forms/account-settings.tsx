@@ -17,12 +17,11 @@ import type { z } from "zod";
 import { FC, useEffect } from "react";
 
 import type { user } from "@prisma/client";
-import { updateUser } from "@/lib/services/user";
+import { updateUser } from "@/lib/services/user/actions";
 import SubmitButton from "@/components/submit-button";
 
 //@ts-ignore
-import { experimental_useFormState as useFormState } from "react-dom";
-import { getTeam } from "@/lib/services/team";
+// import { experimental_useFormState as useFormState } from "react-dom";
 
 type Inputs = z.infer<typeof accountSettingsSchema>;
 
