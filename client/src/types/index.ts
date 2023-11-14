@@ -34,8 +34,8 @@ export interface FooterItem {
 }
 
 export interface NavContainerProps {
+  header: NavItemWithChildren[];
   main: NavItemWithChildren[];
-  sidebar: NavItemWithChildren[];
   footer?: NavItemWithChildren[];
 }
 
