@@ -18,7 +18,5 @@ export default async function TeamsPage() {
     redirect("/signin");
   }
 
-  const res = await getTeam(user.id);
-  console.log(res);
   return <h1>Teams</h1>;
 }
