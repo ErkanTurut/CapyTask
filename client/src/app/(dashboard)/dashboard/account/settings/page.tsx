@@ -20,11 +20,15 @@ import { Suspense } from "react";
 
 export default async function SettingsPage() {
   const supabase = createServerComponentClient({ cookies });
-  const { data } = await supabase.auth.getUser();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
 
-  if (!data.user) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
-  const user = await getUser(data.user.id);
+  const user = await getUser(session.user.id);
+
+  if (!user) return redirect("/signin");
 
   return (
     <section id="user-account-info" aria-labelledby="user-account-info-heading">
