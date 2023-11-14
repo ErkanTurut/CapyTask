@@ -1,47 +1,74 @@
 import { type SidebarNavItem } from "@/types";
 
 export interface DashboardConfig {
-  sidebarNav: SidebarNavItem[];
+  sidebarNav: SidebarNavItem;
 }
 
 export const dashboardConfig: DashboardConfig = {
-  sidebarNav: [
-    {
-      main: [
-        {
-          title: "Research",
-          href: "/dashboard/research",
-          icon: "search",
-          items: [],
-        },
-        {
-          title: "Settings",
-          href: "/dashboard/account/settings",
-          icon: "gear",
-          items: [],
-        },
-        {
-          title: "Back to website",
-          href: "/",
-          icon: "externalLink",
-          items: [],
-        },
-      ],
-      sidebar: [
-        {
-          title: "Projects",
-          items: [
-            {
-              title: "All Projects",
-              href: "/dashboard/projects",
-              icon: "chevronRight",
-              items: [],
-            },
-          ],
-        },
-      ],
-    },
-  ],
+  sidebarNav: {
+    header: [
+      {
+        title: "Research",
+        href: "/dashboard/research",
+        icon: "search",
+        items: [],
+      },
+      {
+        title: "Account",
+        href: "/dashboard/account/settings",
+        icon: "user",
+        items: [],
+      },
+    ],
+    main: [
+      {
+        title: "Projects",
+        items: [
+          {
+            title: "All Projects",
+            href: "/dashboard/projects",
+            items: [],
+          },
+          {
+            title: "New Project",
+            href: "/dashboard/projects/new",
+            icon: "plus",
+            items: [],
+          },
+        ],
+      },
+      {
+        title: "Teams",
+        items: [
+          {
+            title: "All Teams",
+            href: "/dashboard/teams",
+            items: [],
+          },
+          {
+            title: "New Team",
+            href: "/dashboard/teams/new",
+            icon: "plus",
+            items: [],
+          },
+        ],
+      },
+    ],
+    footer: [
+      {
+        title: "Notifications",
+        href: "/",
+        icon: "bell",
+        items: [],
+      },
+      {
+        title: "Back to website",
+        href: "/",
+        icon: "externalLink",
+        items: [],
+      },
+    ],
+  },
 };
 
 /*
