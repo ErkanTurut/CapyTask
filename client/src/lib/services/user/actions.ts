@@ -16,14 +16,12 @@ export async function updateUser(
   try {
     const supabase = createServerActionClient<Database>({ cookies });
     const data = accountSettingsSchema.parse(formData);
-    //await new Promise((resolve) => setTimeout(resolve, 4000));
-    console.log(data);
+    // await new Promise((resolve) => setTimeout(resolve, 4000));
     const { error } = await supabase
       .from("user")
       .update(data)
       .eq("id", user_id)
       .single();
-    console.log(error);
     if (error) throw new Error(error.message);
     revalidateTag("user");
   } catch (err) {
