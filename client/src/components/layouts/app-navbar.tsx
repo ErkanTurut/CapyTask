@@ -18,7 +18,7 @@ import UserAccountNav from "../user-account-navigation";
 import type { User } from "@supabase/supabase-js";
 
 interface NavbarProps {
-  user: User | null;
+  user: User | null | undefined;
 }
 
 const NavBar: FC<NavbarProps> = ({ user }) => {
