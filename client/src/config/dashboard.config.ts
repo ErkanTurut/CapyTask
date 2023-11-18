@@ -8,16 +8,21 @@ export const dashboardConfig: DashboardConfig = {
   sidebarNav: {
     header: [
       {
-        title: "Research",
-        href: "/dashboard/research",
-        icon: "search",
-        items: [],
-      },
-      {
-        title: "Account",
-        href: "/dashboard/account/settings",
-        icon: "user",
-        items: [],
+        label: "Dashboard",
+        items: [
+          {
+            title: "Research",
+            href: "/dashboard/research",
+            icon: "search",
+            items: [],
+          },
+          {
+            title: "Account",
+            href: "/dashboard/account/settings",
+            icon: "user",
+            items: [],
+          },
+        ],
       },
     ],
     main: [
