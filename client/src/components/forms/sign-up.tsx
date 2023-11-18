@@ -24,13 +24,14 @@ import { Icons } from "@/components/icons";
 import { PasswordInput } from "@/components/passwordInput";
 import { OtpVerify } from "./otp-verification";
 
+import SubmitButton from "../submit-button";
+import { signUpWithPassword } from "@/lib/auth/actions";
+
 type Inputs = z.infer<typeof signUpSchema>;
 
 export function SignUpForm() {
   const router = useRouter();
-  const [isOtpSent, setIsOtpSent] = React.useState(false);
-
-  const [isPending, setIsPending] = React.useState(false);
+  // const [isOtpSent, setIsOtpSent] = React.useState(false);
 
   // react-hook-form
   const form = useForm<Inputs>({
@@ -44,39 +45,25 @@ export function SignUpForm() {
 
   async function onSubmit(data: Inputs) {
     try {
-      setIsPending(true);
-      //use Promise to wait for the response
-      const res = await fetch("api/auth/sign-up", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+      const res = await signUpWithPassword(data);
+      if (res.error) {
+        throw new Error(res.error.message);
+      }
+      toast.message("Check your email", {
+        description: "We sent you a link to verify your email address.",
       });
-      setIsPending(false);
-      if (!res.ok) {
-        catchError(new Error(await res.json()));
-      }
-      if (res.redirected && res.status === 200) {
-        toast.message("Check your email", {
-          description: "We sent you a 6-digit verification code.",
-        });
-        router.refresh();
-        setIsOtpSent(true);
-      }
+      router.refresh();
+      // setIsOtpSent(true);
     } catch (err) {
       catchError(err);
     }
   }
 
-  return isOtpSent ? (
-    <OtpVerify
-      nextUrl="/signin"
-      otpParams={{ email: form.getValues().email, type: "email", token: "" }}
-    />
-  ) : (
+  return (
     <Form {...form}>
       <form
         className="grid gap-4"
-        onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
+        action={(...args) => void form.handleSubmit(onSubmit)(...args)}
       >
         <FormField
           control={form.control}
@@ -117,10 +104,10 @@ export function SignUpForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" isLoading={isPending}>
+        <SubmitButton>
           Continue
           <span className="sr-only">Continue to email verification page</span>
-        </Button>
+        </SubmitButton>
       </form>
     </Form>
   );
