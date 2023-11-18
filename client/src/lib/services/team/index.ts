@@ -1,3 +1,5 @@
+import "server-only";
+
 import { Database } from "@/types/supabase.types";
 import type { team } from "@prisma/client";
 
