@@ -7,8 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 
-import { authSchema } from "@/lib/validations/auth";
-import { Button } from "@/components/ui/button";
+import { signInSchema } from "@/lib/validations/auth";
 import {
   Form,
   FormControl,
@@ -21,21 +20,20 @@ import { Input } from "@/components/ui/input";
 import { Icons } from "@/components/icons";
 import { PasswordInput } from "@/components/passwordInput";
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import type { Database } from "@/types/supabase.types";
 import { toast } from "sonner";
 import { catchError } from "@/utils";
+import SubmitButton from "../submit-button";
+import { signInWithPassword } from "@/lib/auth/actions";
+import type { AuthResponse } from "@supabase/supabase-js";
 
-type Inputs = z.infer<typeof authSchema>;
+type Inputs = z.infer<typeof signInSchema>;
 
 export function SignInForm() {
   const router = useRouter();
-  const supabase = createClientComponentClient<Database>();
-  const [isPending, startTransition] = React.useTransition();
 
   // react-hook-form
   const form = useForm<Inputs>({
-    resolver: zodResolver(authSchema),
+    resolver: zodResolver(signInSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -44,21 +42,13 @@ export function SignInForm() {
 
   async function onSubmit(data: Inputs) {
     try {
-      startTransition(async () => {
-        const res = await fetch("api/auth/sign-in", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        });
-        if (!res.ok) {
-          catchError(new Error(await res.json()));
-        }
-        if (res.redirected && res.status === 200) {
-          toast.message("You have been connected");
-          router.refresh();
-          router.push(res.url);
-        }
-      });
+      const res = JSON.parse(await signInWithPassword(data)) as AuthResponse;
+      if (res.error) {
+        throw new Error(res.error.message);
+      }
+      toast.success("Signed in successfully");
+      router.refresh();
+      router.push("/dashboard");
     } catch (err) {
       catchError(err);
     }
@@ -68,7 +58,7 @@ export function SignInForm() {
     <Form {...form}>
       <form
         className="grid gap-4"
-        onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
+        action={(...args) => void form.handleSubmit(onSubmit)(...args)}
       >
         <FormField
           control={form.control}
@@ -77,7 +67,7 @@ export function SignInForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="rodneymullen180@gmail.com" {...field} />
+                <Input placeholder="example@gmail.com" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -97,16 +87,10 @@ export function SignInForm() {
           )}
         />
 
-        <Button type="submit" disabled={isPending}>
-          {isPending && (
-            <Icons.spinner
-              className="mr-2 h-4 w-4 animate-spin"
-              aria-hidden="true"
-            />
-          )}
+        <SubmitButton>
           Sign in
           <span className="sr-only">Sign in</span>
-        </Button>
+        </SubmitButton>
       </form>
     </Form>
   );
