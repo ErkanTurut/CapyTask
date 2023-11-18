@@ -55,7 +55,7 @@ const AccountForm: FC<AccountFormProps> = ({ user }) => {
     <Form {...form}>
       <form
         className="grid gap-4"
-        onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
+        action={(...args) => void form.handleSubmit(onSubmit)(...args)}
       >
         <FormField
           control={form.control}
