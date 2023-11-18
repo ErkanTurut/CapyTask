@@ -3,7 +3,11 @@
 import { ZodError, z } from "zod";
 import { signUpSchema, signInSchema } from "@/lib/validations/auth";
 import createSupabaseServerClient from "../supabase/server";
-import type { AuthResponse, AuthTokenResponse } from "@supabase/supabase-js";
+import type {
+  AuthResponse,
+  AuthTokenResponse,
+  AuthError,
+} from "@supabase/supabase-js";
 
 export async function signUpWithPassword({
   email,
@@ -36,7 +40,7 @@ export async function signInWithPassword({
 }: z.infer<typeof signInSchema>): Promise<string> {
   try {
     const validatedData = signInSchema.parse({
-      email: true,
+      email,
       password,
     });
 
@@ -48,8 +52,8 @@ export async function signInWithPassword({
     });
 
     return JSON.stringify(res);
-  } catch (err) {
-    throw JSON.stringify("An unknown error occurred");
+  } catch (error: unknown) {
+    throw JSON.stringify(error);
   }
 }
 
