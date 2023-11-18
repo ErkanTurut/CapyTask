@@ -33,8 +33,13 @@ export interface FooterItem {
   }[];
 }
 
+export interface SideNavItem {
+  label?: string;
+  items: NavItemWithChildren[];
+}
+
 export interface NavContainerProps {
-  header: NavItemWithChildren[];
+  header: SideNavItem[];
   main: NavItemWithChildren[];
   footer?: NavItemWithChildren[];
 }
@@ -118,3 +123,24 @@ export interface UserSubscriptionPlan extends SubscriptionPlan {
   isCanceled: boolean;
   isActive: boolean;
 }
+
+export type Provider =
+  | "apple"
+  | "azure"
+  | "bitbucket"
+  | "discord"
+  | "facebook"
+  | "figma"
+  | "github"
+  | "gitlab"
+  | "google"
+  | "kakao"
+  | "keycloak"
+  | "linkedin"
+  | "notion"
+  | "slack"
+  | "spotify"
+  | "twitch"
+  | "twitter"
+  | "workos"
+  | "zoom";
