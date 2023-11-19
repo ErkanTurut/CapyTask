@@ -11,16 +11,15 @@ datasource db {
 }
 
 model user {
-  id    String @id @db.Uuid
-  users users  @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-
+  id                 String         @id @db.Uuid
   image_uri          String?
   email              String         @unique
   first_name         String?
   last_name          String?
-  createdAt          DateTime       @default(now())
-  updatedAt          DateTime       @default(now()) @updatedAt
+  createdAt          DateTime       @default(now()) @db.Timestamptz(6)
+  updatedAt          DateTime       @default(now()) @updatedAt @db.Timestamptz(6)
   tasks              task[]
+  users              users          @relation(fields: [id], references: [id], onDelete: NoAction)
   user_project_roles user_project[]
   user_team_roles    user_team[]
 
@@ -32,8 +31,8 @@ model team {
   name        Role
   description String?
   image_uri   String?
-  created_at  DateTime    @default(now())
-  updated_at  DateTime    @default(now()) @updatedAt
+  created_at  DateTime    @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime    @default(now()) @updatedAt @db.Timestamptz(6)
   projects    project[]
   users       user_team[]
 
@@ -55,8 +54,8 @@ model project {
   id                String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name              String
   description       String?
-  created_at        DateTime       @default(now())
-  updated_at        DateTime       @default(now()) @updatedAt
+  created_at        DateTime       @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime       @default(now()) @updatedAt @db.Timestamptz(6)
   team_id           String         @db.Uuid
   team              team           @relation(fields: [team_id], references: [id], onDelete: Cascade)
   tasks             task[]
@@ -71,15 +70,15 @@ model task {
   name           String
   description    String?
   status         status
-  created_at     DateTime @default(now())
-  updated_at     DateTime @default(now()) @updatedAt
+  created_at     DateTime @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime @default(now()) @updatedAt @db.Timestamptz(6)
   project_id     String   @db.Uuid
   parent_task_id String?  @db.Uuid
   created_by_id  String?  @db.Uuid
   created_by     user?    @relation(fields: [created_by_id], references: [id])
-  project        project  @relation(fields: [project_id], references: [id], onDelete: Cascade)
   parent_task    task?    @relation("task_sub_tasks", fields: [parent_task_id], references: [id], onDelete: Cascade)
   sub_tasks      task[]   @relation("task_sub_tasks")
+  project        project  @relation(fields: [project_id], references: [id], onDelete: Cascade)
 
   @@index([project_id])
   @@index([parent_task_id])
@@ -91,8 +90,8 @@ model user_team {
   user_id String @db.Uuid
   team_id String @db.Uuid
   role_id String @db.Uuid
-  team    team   @relation(fields: [team_id], references: [id])
   role    role   @relation(fields: [role_id], references: [id])
+  team    team   @relation(fields: [team_id], references: [id])
   user    user   @relation(fields: [user_id], references: [id])
 
   @@id([user_id, team_id, role_id])
@@ -117,7 +116,6 @@ model user_project {
   @@schema("public")
 }
 
-// This part is automatically generated based on the datamodel, do not edit manually 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model audit_log_entries {
   instance_id String?   @db.Uuid
@@ -143,6 +141,7 @@ model flow_state {
   created_at             DateTime?             @db.Timestamptz(6)
   updated_at             DateTime?             @db.Timestamptz(6)
   authentication_method  String
+  saml_relay_states      saml_relay_states[]
 
   @@index([created_at(sort: Desc)])
   @@index([auth_code], map: "idx_auth_code")
@@ -219,6 +218,7 @@ model mfa_factors {
   users          users            @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([user_id, created_at], map: "factor_id_created_at_idx")
+  @@index([user_id])
   @@schema("auth")
 }
 
@@ -271,6 +271,8 @@ model saml_relay_states {
   from_ip_address String?       @db.Inet
   created_at      DateTime?     @db.Timestamptz(6)
   updated_at      DateTime?     @db.Timestamptz(6)
+  flow_state_id   String?       @db.Uuid
+  flow_state      flow_state?   @relation(fields: [flow_state_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   sso_providers   sso_providers @relation(fields: [sso_provider_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([created_at(sort: Desc)])
@@ -295,6 +297,9 @@ model sessions {
   factor_id      String?          @db.Uuid
   aal            aal_level?
   not_after      DateTime?        @db.Timestamptz(6)
+  refreshed_at   DateTime?        @db.Timestamp(6)
+  user_agent     String?
+  ip             String?          @db.Inet
   mfa_amr_claims mfa_amr_claims[]
   refresh_tokens refresh_tokens[]
   users          users            @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
@@ -376,7 +381,7 @@ model users {
   identities                  identities[]
   mfa_factors                 mfa_factors[]
   sessions                    sessions[]
-  User                        user[]
+  user                        user?
 
   @@index([instance_id])
   @@schema("auth")
