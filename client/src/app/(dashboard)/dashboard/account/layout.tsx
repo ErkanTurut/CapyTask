@@ -1,7 +1,6 @@
 import { dashboardConfig } from "@/config/dashboard.config";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SidebarNav } from "@/components/layouts/app-sidebar";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import type { user } from "@prisma/client";
 import { redirect } from "next/navigation";
@@ -14,6 +13,7 @@ import {
 } from "@/components/pageHeader";
 import { Icons } from "@/components/icons";
 import { Shell } from "@/components/shells/shell";
+import { getUserSession } from "@/lib/services/user";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -22,13 +22,12 @@ interface DashboardLayoutProps {
 export default async function AccountLayout({
   children,
 }: DashboardLayoutProps) {
-  const supabase = createServerComponentClient({ cookies });
-
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    data: { session },
+    error,
+  } = await getUserSession();
 
-  if (!user) {
+  if (!session?.user || error) {
     redirect("/signin");
   }
 
