@@ -40,8 +40,8 @@ export interface SideNavItem {
 
 export interface NavContainerProps {
   header: SideNavItem[];
-  main: NavItemWithChildren[];
-  footer?: NavItemWithChildren[];
+  main: SideNavItem[];
+  footer: SideNavItem[];
 }
 
 export type MainNavItem = NavItemWithOptionalChildren;
