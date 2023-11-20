@@ -8,7 +8,6 @@ export const dashboardConfig: DashboardConfig = {
   sidebarNav: {
     header: [
       {
-        label: "Dashboard",
         items: [
           {
             title: "Research",
@@ -27,7 +26,7 @@ export const dashboardConfig: DashboardConfig = {
     ],
     main: [
       {
-        title: "Projects",
+        label: "Projects",
         items: [
           {
             title: "All Projects",
@@ -43,7 +42,7 @@ export const dashboardConfig: DashboardConfig = {
         ],
       },
       {
-        title: "Teams",
+        label: "Teams",
         items: [
           {
             title: "All Teams",
@@ -61,16 +60,20 @@ export const dashboardConfig: DashboardConfig = {
     ],
     footer: [
       {
-        title: "Notifications",
-        href: "/",
-        icon: "bell",
-        items: [],
-      },
-      {
-        title: "Back to website",
-        href: "/",
-        icon: "externalLink",
-        items: [],
+        items: [
+          {
+            title: "Notifications",
+            href: "/",
+            icon: "bell",
+            items: [],
+          },
+          {
+            title: "Back to website",
+            href: "/",
+            icon: "externalLink",
+            items: [],
+          },
+        ],
       },
     ],
   },
