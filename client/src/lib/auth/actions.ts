@@ -8,6 +8,8 @@ import type {
   AuthTokenResponse,
   AuthError,
 } from "@supabase/supabase-js";
+import Router from "next/router";
+import { redirect } from "next/navigation";
 
 export async function signUpWithPassword({
   email,
@@ -23,12 +25,15 @@ export async function signUpWithPassword({
 
     const supabase = await createSupabaseServerClient();
 
-    const res = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email: validatedData.email,
       password: validatedData.password,
+      options: {
+        emailRedirectTo: "http://localhost:3000/",
+      },
     });
-
-    return JSON.stringify(res) as unknown as AuthResponse;
+    if (error) throw error;
+    return JSON.stringify(data) as unknown as AuthResponse;
   } catch (err) {
     throw JSON.stringify(new Error("An unknown error occurred"));
   }
@@ -46,12 +51,13 @@ export async function signInWithPassword({
 
     const supabase = await createSupabaseServerClient();
 
-    const res = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email: validatedData.email,
       password: validatedData.password,
     });
+    if (error) throw error;
 
-    return JSON.stringify(res);
+    return JSON.stringify(data);
   } catch (error: unknown) {
     throw JSON.stringify(error);
   }
