@@ -3,14 +3,14 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
-import { authSchema } from "@/lib/validations/auth";
+import { signInSchema } from "@/lib/validations/auth";
 import { AuthError } from "@supabase/supabase-js";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, password } = authSchema.parse(await request.json());
+    const { email, password } = signInSchema.parse(await request.json());
     const supabase = createRouteHandlerClient({ cookies });
     const { error } = await supabase.auth.signInWithPassword({
       email,
