@@ -8,6 +8,7 @@ interface submitButtonProps
 
 const SubmitButton: FC<submitButtonProps> = ({ children }) => {
   const { pending } = useFormStatus();
+
   return (
     <Button type="submit" isLoading={pending}>
       {children}
