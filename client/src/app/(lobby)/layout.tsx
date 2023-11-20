@@ -1,22 +1,16 @@
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-
 import NavBar from "@/components/layouts/app-navbar";
-import { cookies } from "next/headers";
+import { getUserSession } from "@/lib/services/user";
 
 interface LobbyLayoutProps {
   children: React.ReactNode;
 }
 
 export default async function LobbyLayout({ children }: LobbyLayoutProps) {
-  const supabase = createServerComponentClient({ cookies });
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data } = await getUserSession();
 
   return (
     <div className="relative flex min-h-screen flex-col">
-      <NavBar user={user} />
+      <NavBar user={data.session?.user} />
       <main className="flex-1">{children}</main>
     </div>
   );
