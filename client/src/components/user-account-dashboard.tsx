@@ -37,22 +37,14 @@ import {
 import { Icons } from "./icons";
 
 import type { user } from "@prisma/client";
+import type { Database } from "@/types/supabase.types";
 
 interface UserAccountNavProps extends React.HTMLAttributes<HTMLDivElement> {
-  user: user;
+  user: Pick<user, "first_name" | "last_name" | "email" | "image_uri">;
 }
 const groups = [
   {
-    label: "Personal Account",
-    teams: [
-      {
-        label: "Alicia Koch",
-        value: "personal",
-      },
-    ],
-  },
-  {
-    label: "Teams",
+    label: "Workspaces",
     teams: [
       {
         label: "Acme Inc.",
