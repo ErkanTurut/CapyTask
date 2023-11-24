@@ -53,7 +53,6 @@ export function SignUpForm() {
         description: "We sent you a link to verify your email address.",
       });
       router.refresh();
-      // setIsOtpSent(true);
     } catch (err) {
       catchError(err);
     }
