@@ -26,23 +26,7 @@ export const dashboardConfig: DashboardConfig = {
     ],
     main: [
       {
-        label: "Projects",
-        items: [
-          {
-            title: "All Projects",
-            href: "/dashboard/projects",
-            items: [],
-          },
-          {
-            title: "New Project",
-            href: "/dashboard/projects/new",
-            icon: "plus",
-            items: [],
-          },
-        ],
-      },
-      {
-        label: "Teams",
+        label: "Your teams",
         items: [
           {
             title: "All Teams",
