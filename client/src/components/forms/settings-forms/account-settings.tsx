@@ -26,7 +26,7 @@ import SubmitButton from "@/components/submit-button";
 type Inputs = z.infer<typeof accountSettingsSchema>;
 
 interface AccountFormProps {
-  user: user;
+  user: Pick<user, "first_name" | "last_name" | "email" | "image_uri" | "id">;
 }
 
 const AccountForm: FC<AccountFormProps> = ({ user }) => {
