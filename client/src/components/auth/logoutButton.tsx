@@ -3,33 +3,19 @@
 import * as React from "react";
 import { useRouter } from "next/navigation";
 
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { trpc } from "@/app/_trpc/client";
+import { signOut } from "@/lib/auth/actions";
 
 export function LogOutButtons() {
   const router = useRouter();
   const [isPending, startTransition] = React.useTransition();
 
   const onLogout = async () => {
-    startTransition(() => {
-      toast.promise(
-        fetch("api/auth/sign-out", {
-          method: "POST",
-        }).then((res) => {
-          if (res.ok) {
-            router.refresh();
-            return router.push(res.url);
-          }
-        }),
-        {
-          loading: "Logging out...",
-          success: "You have been logged out.",
-          error: "An error occurred while logging out.",
-        }
-      );
-    });
+    signOut();
+    router.refresh();
+    toast.success("You have been logged out.");
+    router.push("/signin");
   };
 
   return (
