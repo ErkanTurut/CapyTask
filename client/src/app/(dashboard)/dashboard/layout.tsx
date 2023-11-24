@@ -20,13 +20,7 @@ export default async function DashboardLayout({
   return (
     <div className="relative mx-auto flex min-h-screen w-full flex-col items-center justify-center">
       <div className="flex w-full flex-1 gap-2 lg:gap-1">
-        <Shell
-          variant="sidebar"
-          className="border-r hidden max-h-[100vh] overflow-y-hidden w-[230px] shrink-0 lg:sticky lg:top-28 lg:block backdrop-blur-[1px]"
-          as={"aside"}
-        >
-          <SidebarNav user_id={data.session.user.id} />
-        </Shell>
+        <SidebarNav user_id={data.session.user.id} />
 
         <main className="z-10 flex w-full flex-1 flex-col items-start justify-center">
           <Shell
