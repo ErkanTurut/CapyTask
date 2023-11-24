@@ -1,12 +1,12 @@
 "use client";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import * as React from "react";
 
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 
-import { Provider } from "@/types/supabase.types";
+import { Provider } from "@/types";
 import { catchError } from "@/utils";
+import createSupabaseBrowserClient from "@/lib/supabase/browser";
 
 const oauthProviders = [
   { name: "Google", provider: "google", icon: "google" },
@@ -20,7 +20,7 @@ const oauthProviders = [
 
 export function OAuthSignIn() {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const supabase = createClientComponentClient();
+  const supabase = createSupabaseBrowserClient();
 
   async function oauthSignIn(provider: Provider) {
     try {
@@ -28,7 +28,7 @@ export function OAuthSignIn() {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: provider,
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: `${location.origin}/api/auth/callback`,
         },
       });
 
