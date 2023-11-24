@@ -11,41 +11,45 @@ datasource db {
 }
 
 model user {
-  id                 String         @id @db.Uuid
+  id                 String           @id @db.Uuid
   image_uri          String?
-  email              String         @unique
+  email              String           @unique
   first_name         String?
   last_name          String?
-  createdAt          DateTime       @default(now()) @db.Timestamptz(6)
-  updatedAt          DateTime       @default(now()) @updatedAt @db.Timestamptz(6)
+  createdAt          DateTime         @default(now()) @db.Timestamptz(6)
+  updatedAt          DateTime         @default(now()) @updatedAt @db.Timestamptz(6)
   tasks              task[]
-  users              users          @relation(fields: [id], references: [id], onDelete: NoAction)
+  users              users            @relation(fields: [id], references: [id], onDelete: Cascade)
   user_project_roles user_project[]
   user_team_roles    user_team[]
+  user_workspace     user_workspace[]
 
   @@schema("public")
 }
 
 model team {
-  id          String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name        Role
-  description String?
-  image_uri   String?
-  created_at  DateTime    @default(now()) @db.Timestamptz(6)
-  updated_at  DateTime    @default(now()) @updatedAt @db.Timestamptz(6)
-  projects    project[]
-  users       user_team[]
+  id            String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name          Role
+  description   String?
+  image_uri     String?
+  created_at    DateTime    @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime    @default(now()) @updatedAt @db.Timestamptz(6)
+  workspaces_id String      @db.Uuid
+  projects      project[]
+  workspaces    workspace   @relation(fields: [workspaces_id], references: [id], onDelete: Cascade)
+  users         user_team[]
 
   @@schema("public")
 }
 
 model role {
-  id                 String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name               String         @unique
+  id                 String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name               String           @unique
   description        String
   permissions        String[]
   user_project_roles user_project[]
   user_team_roles    user_team[]
+  user_workspace     user_workspace[]
 
   @@schema("public")
 }
@@ -113,6 +117,34 @@ model user_project {
   @@index([user_id])
   @@index([project_id])
   @@index([role_id])
+  @@schema("public")
+}
+
+model user_workspace {
+  user_id      String    @db.Uuid
+  workspace_id String    @db.Uuid
+  role_id      String    @db.Uuid
+  role         role      @relation(fields: [role_id], references: [id])
+  user         user      @relation(fields: [user_id], references: [id])
+  workspace    workspace @relation(fields: [workspace_id], references: [id])
+
+  @@id([user_id, workspace_id, role_id])
+  @@index([user_id])
+  @@index([workspace_id])
+  @@index([role_id])
+  @@schema("public")
+}
+
+model workspace {
+  id             String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name           String
+  url_key        String           @unique
+  description    String?
+  created_at     DateTime         @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime         @default(now()) @updatedAt @db.Timestamptz(6)
+  team           team[]
+  user_workspace user_workspace[]
+
   @@schema("public")
 }
 
