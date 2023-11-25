@@ -1,5 +1,6 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { getWorkspace } from "./lib/services/workspace";
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
@@ -56,11 +57,17 @@ export async function middleware(request: NextRequest) {
 
   await supabase.auth.getSession();
 
-  if (request.nextUrl.pathname === "/dashboard") {
-    return NextResponse.redirect(
-      new URL("/dashboard/account/settings", request.url)
-    );
-  }
+  // if (request.nextUrl.pathname.startsWith("/dashboard")) {
+  //   const slug = request.nextUrl.pathname.split("/")[2];
+  //   const { workspace } = await getWorkspace(slug);
+  //   if (!workspace) {
+  //     return NextResponse.redirect(new URL("/join", request.url));
+  //   }
+
+  //   return NextResponse.redirect(
+  //     new URL("/dashboard/account/settings", request.url)
+  //   );
+  // }
 
   return response;
 }
