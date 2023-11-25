@@ -74,7 +74,7 @@ export interface Database {
           name: string
           parent_task_id: string | null
           project_id: string
-          status: Database["public"]["Enums"]["Status"]
+          status: Database["public"]["Enums"]["status"]
           updated_at: string
         }
         Insert: {
@@ -85,7 +85,7 @@ export interface Database {
           name: string
           parent_task_id?: string | null
           project_id: string
-          status: Database["public"]["Enums"]["Status"]
+          status: Database["public"]["Enums"]["status"]
           updated_at?: string
         }
         Update: {
@@ -96,7 +96,7 @@ export interface Database {
           name?: string
           parent_task_id?: string | null
           project_id?: string
-          status?: Database["public"]["Enums"]["Status"]
+          status?: Database["public"]["Enums"]["status"]
           updated_at?: string
         }
         Relationships: [
@@ -129,26 +129,37 @@ export interface Database {
           description: string | null
           id: string
           image_uri: string | null
-          name: string
+          name: Database["public"]["Enums"]["Role"]
           updated_at: string
+          workspaces_id: string
         }
         Insert: {
           created_at?: string
           description?: string | null
           id?: string
           image_uri?: string | null
-          name: string
+          name: Database["public"]["Enums"]["Role"]
           updated_at?: string
+          workspaces_id: string
         }
         Update: {
           created_at?: string
           description?: string | null
           id?: string
           image_uri?: string | null
-          name?: string
+          name?: Database["public"]["Enums"]["Role"]
           updated_at?: string
+          workspaces_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "team_workspaces_id_fkey"
+            columns: ["workspaces_id"]
+            isOneToOne: false
+            referencedRelation: "workspace"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       user: {
         Row: {
@@ -268,6 +279,73 @@ export interface Database {
           }
         ]
       }
+      user_workspace: {
+        Row: {
+          role_id: string
+          user_id: string
+          workspace_id: string
+        }
+        Insert: {
+          role_id: string
+          user_id: string
+          workspace_id: string
+        }
+        Update: {
+          role_id?: string
+          user_id?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_workspace_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "role"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_workspace_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_workspace_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspace"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      workspace: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          updated_at: string
+          url_key: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string
+          url_key: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string
+          url_key?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -276,7 +354,16 @@ export interface Database {
       [_ in never]: never
     }
     Enums: {
-      Status:
+      Role:
+        | "ADMIN"
+        | "MANAGER"
+        | "SUPERVISOR"
+        | "TECHNICIAN"
+        | "ENGINEER"
+        | "QUALITY_INSPECTOR"
+        | "OPERATOR"
+        | "OTHER"
+      status:
         | "NOTSTARTED"
         | "INPROGRESS"
         | "COMPLETED_SUCCESS"
