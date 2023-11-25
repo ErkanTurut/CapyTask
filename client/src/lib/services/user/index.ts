@@ -24,8 +24,6 @@ export const getUser = cache(
       .eq("id", user_id)
       .single();
 
-    console.log("ok");
-
     if (error) {
       throw new Error(error.message);
     }
