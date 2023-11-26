@@ -1,30 +1,27 @@
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/utils";
-import { Icons } from "@/components/icons";
 import { MainSidebar } from "./sidebar/main-sidebar";
 import { HeaderSidebar } from "./sidebar/header-sidebar";
 import { FooterSidebar } from "./sidebar/footer-sidebar";
 import { dashboardConfig } from "@/config/dashboard.config";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import UserAccountDashboard from "@/components/user-account-dashboard";
+import WorkspaceNav from "@/components/workspace-navigation";
 
 export interface SidebarNavProps extends React.HTMLAttributes<HTMLDivElement> {
-  user_id: string;
+  props: {
+    user_id: string;
+    url_key: string;
+  };
 }
 
-import { getUser } from "@/lib/services/user";
 import { Suspense } from "react";
-import { Shell } from "../shells/shell";
 import ResizeZone from "./resize-zone";
+import { getWorkspaces } from "@/lib/services/workspace";
+import UserAccountNav from "../user-account-navigation";
 
-export async function SidebarNav({
-  user_id,
-  className,
-  ...props
-}: SidebarNavProps) {
-  const user = await getUser(user_id);
-  if (!user) return null;
+export async function SidebarNav({ className, props }: SidebarNavProps) {
+  const { data: workspaces } = await getWorkspaces();
 
   return (
     <ResizeZone>
@@ -35,10 +32,19 @@ export async function SidebarNav({
         )}
         {...props}
       >
-        <span className="flex flex-col w-full h-full gap-1">
+        <div className="flex flex-col w-full h-full gap-1">
           <Suspense fallback="loading...">
-            <UserAccountDashboard user={user} />
+            <WorkspaceNav url_key={props.url_key} workspaces={workspaces} />
           </Suspense>
+          {/* <div className="flex items-center justify-between gap-1">
+            <Suspense fallback="loading...">
+              <WorkspaceNav workspaces={workspaces} />
+            </Suspense>
+            <Suspense fallback="loading...">
+              <UserAccountNav className="h-7 w-7" user_id={props.user_id} />
+            </Suspense>
+          </div> */}
+
           {/* <ThemeToggle toggle={true} /> */}
 
           <nav className="flex w-full flex-col gap-1 flex-grow overflow-hidden">
@@ -53,7 +59,7 @@ export async function SidebarNav({
             </div>
           </nav>
           <FooterSidebar items={dashboardConfig.sidebarNav} />
-        </span>
+        </div>
       </div>
     </ResizeZone>
   );
