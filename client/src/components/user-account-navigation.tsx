@@ -16,16 +16,18 @@ import { Icons } from "./icons";
 import ThemeToggle from "./themeToggle";
 
 import { getUser } from "@/lib/services/user";
+import { cn } from "@/utils";
 
-interface UserAccountNavProps {
+interface UserAccountNavProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   user_id: string;
   isDashboard?: boolean;
 }
 
 const UserAccountNav: FC<UserAccountNavProps> = async ({
   user_id,
-
   isDashboard,
+  className,
 }) => {
   const user = await getUser(user_id);
 
@@ -40,19 +42,17 @@ const UserAccountNav: FC<UserAccountNavProps> = async ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="secondary" className="relative h-8 w-8 rounded-full">
-          <Avatar className="h-8 w-8">
+        <Button
+          variant="ghost"
+          className={cn("h-8 w-8 rounded-full", className)}
+        >
+          <Avatar className={cn("h-8 w-8", className)}>
             <AvatarImage src={profilePicture} alt={user.first_name ?? ""} />
             <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className="w-60"
-        align="end"
-        sideOffset={8}
-        forceMount
-      >
+      <DropdownMenuContent className="w-60" sideOffset={8} forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">
