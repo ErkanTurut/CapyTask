@@ -25,6 +25,8 @@ import {
   MinusCircledIcon,
   PlusIcon,
   BellIcon,
+  CheckCircledIcon,
+  CheckIcon,
 } from "@radix-ui/react-icons";
 import { Loader2, Banknote, PanelRightOpen } from "lucide-react";
 import Home from "@/app/(lobby)/page";
@@ -82,6 +84,8 @@ export const Icons = {
   plus: PlusCircledIcon,
   minus: MinusCircledIcon,
   bell: BellIcon,
+  checkCircled: CheckCircledIcon,
+  check: CheckIcon,
   logo: (props: LucideProps & logoProps) => {
     const { size, className } = props;
 
