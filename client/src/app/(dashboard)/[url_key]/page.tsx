@@ -17,16 +17,17 @@ interface DashboardLayoutProps {
 }
 
 export default async function DashboardPage({ params }: DashboardLayoutProps) {
-  const { data } = await getUserSession();
+  const {
+    data: { session },
+  } = await getUserSession();
 
-  if (!data.session) {
+  if (!session) {
     redirect("/signin");
   }
 
-  const { workspace } = await getWorkspace(params.url_key);
-  if (workspace) {
+  const { data } = await getWorkspace(params.url_key);
+  if (data?.length) {
     redirect(`/${params.url_key}/team`);
   }
-
   return null;
 }
