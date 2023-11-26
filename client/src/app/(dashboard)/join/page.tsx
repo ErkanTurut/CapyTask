@@ -18,7 +18,7 @@ export default async function JoinPage() {
   }
 
   return (
-    <Shell variant="centered" className="max-w-xs">
+    <Shell variant="centered" className="max-w-xl">
       <PageHeader
         id="sign-out-page-header"
         aria-labelledby="sign-out-page-header-heading"
