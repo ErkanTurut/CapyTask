@@ -1,9 +1,9 @@
 import { Shell } from "@/components/shells/shell";
 
-export default function Home() {
+export default async function Home() {
   return (
     <Shell as="div" className="gap-12">
-      <section>Home</section>
+      <section>Home </section>
     </Shell>
   );
 }
