@@ -4,7 +4,7 @@ import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/themeProvider";
 import { TailwindIndicator } from "@/components/tailwindIndicator";
 import { Toaster } from "@/components/ui/toaster";
-import DotPattern from "@/components/magicui/dot-pattern";
+import Providers from "@/components/providers";
 const inter = Inter({ subsets: ["latin"] });
 
 export default async function RootLayout({
@@ -20,11 +20,13 @@ export default async function RootLayout({
           inter.className
         )}
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
-          <TailwindIndicator />
-          <Toaster />
-        </ThemeProvider>
+        <Providers>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            {children}
+            <TailwindIndicator />
+            <Toaster />
+          </ThemeProvider>
+        </Providers>
       </body>
     </html>
   );
