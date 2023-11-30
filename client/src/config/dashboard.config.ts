@@ -11,13 +11,13 @@ export const dashboardConfig: DashboardConfig = {
         items: [
           {
             title: "Research",
-            href: "/dashboard/research",
+            href: "/research",
             icon: "search",
             items: [],
           },
           {
             title: "Account",
-            href: "/dashboard/account/settings",
+            href: "/account/settings",
             icon: "user",
             items: [],
           },
