@@ -38,18 +38,24 @@ import { Icons } from "./icons";
 
 import type { workspace } from "@prisma/client";
 import { useRouter } from "next/navigation";
+import { serverClient } from "@/trpc/serverClient";
 
 interface WorkspaceNavProps extends React.HTMLAttributes<HTMLDivElement> {
-  // user: Pick<user, "first_name" | "last_name" | "email" | "image_uri">;
-  workspaces: Pick<workspace, "name" | "description" | "url_key">[] | null;
+  initialData: {
+    workspaces: Awaited<
+      ReturnType<(typeof serverClient)["workspace"]["getWorkspaces"]>
+    >;
+  };
   url_key: string;
 }
 
 const WorkspaceNav: FC<WorkspaceNavProps> = ({
-  workspaces,
+  initialData,
   url_key,
   className,
 }) => {
+  const { workspaces } = initialData;
+
   const groups = [
     {
       label: "Workspaces",
@@ -59,10 +65,10 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({
 
   const [open, setOpen] = useState(false);
   const [showNewTeamDialog, setShowNewTeamDialog] = useState(false);
-  const selectedWorkspace =
-    workspaces?.find((workspace) => workspace.url_key === url_key) ??
-    workspaces?.[0];
 
+  const selectedWorkspace =
+    workspaces.find((workspace) => workspace?.url_key === url_key) ??
+    workspaces?.[0];
   const router = useRouter();
 
   if (!selectedWorkspace) return null;
