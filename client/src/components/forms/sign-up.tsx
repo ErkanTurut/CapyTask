@@ -1,15 +1,12 @@
 "use client";
 
-import * as React from "react";
 import { useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
 
-import { catchError } from "@/utils";
-import { signUpSchema } from "@/lib/validations/auth";
+import { PasswordInput } from "@/components/passwordInput";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -20,21 +17,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Icons } from "@/components/icons";
-import { PasswordInput } from "@/components/passwordInput";
-import { OtpVerify } from "./otp-verification";
+import { TSignUpSchema, signUpSchema } from "@/lib/validations/auth";
+import { catchError } from "@/utils";
 
-import SubmitButton from "../submit-button";
-import { signUpWithPassword } from "@/lib/auth/actions";
-
-type Inputs = z.infer<typeof signUpSchema>;
+import { trpc } from "@/trpc/client";
 
 export function SignUpForm() {
   const router = useRouter();
-  // const [isOtpSent, setIsOtpSent] = React.useState(false);
 
   // react-hook-form
-  const form = useForm<Inputs>({
+  const form = useForm<TSignUpSchema>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
       email: "",
@@ -43,26 +35,28 @@ export function SignUpForm() {
     },
   });
 
-  async function onSubmit(data: Inputs) {
-    try {
-      const res = await signUpWithPassword(data);
-      if (res.error) {
-        throw new Error(res.error.message);
-      }
-      toast.message("Check your email", {
-        description: "We sent you a link to verify your email address.",
-      });
-      router.refresh();
-    } catch (err) {
-      catchError(err);
-    }
+  const { mutate: signUp, isLoading } =
+    trpc.auth.signUpWithPassword.useMutation({
+      onSuccess: async () => {
+        toast.message("Check your email", {
+          description: "We sent you a link to verify your email address.",
+        });
+        router.refresh();
+      },
+      onError: (err) => {
+        catchError(err);
+      },
+    });
+
+  async function onSubmit(data: TSignUpSchema) {
+    signUp(data);
   }
 
   return (
     <Form {...form}>
       <form
         className="grid gap-4"
-        action={(...args) => void form.handleSubmit(onSubmit)(...args)}
+        onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
       >
         <FormField
           control={form.control}
@@ -103,10 +97,10 @@ export function SignUpForm() {
             </FormItem>
           )}
         />
-        <SubmitButton>
+        <Button isLoading={isLoading}>
           Continue
           <span className="sr-only">Continue to email verification page</span>
-        </SubmitButton>
+        </Button>
       </form>
     </Form>
   );
