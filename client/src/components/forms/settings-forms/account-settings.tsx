@@ -9,53 +9,71 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { accountSettingsSchema } from "@/lib/validations/settings";
+import {
+  TaccountSettingsSchema,
+  accountSettingsSchema,
+} from "@/lib/validations/settings";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import type { z } from "zod";
 
 import { FC, useEffect } from "react";
 
-import type { user } from "@prisma/client";
-import { updateUser } from "@/lib/services/user/actions";
-import SubmitButton from "@/components/submit-button";
-
-//@ts-ignore
-// import { experimental_useFormState as useFormState } from "react-dom";
-
-type Inputs = z.infer<typeof accountSettingsSchema>;
+import { trpc } from "@/trpc/client";
+import { catchError } from "@/utils";
+import { toast } from "sonner";
+import { serverClient } from "@/trpc/serverClient";
 
 interface AccountFormProps {
-  user: Pick<user, "first_name" | "last_name" | "email" | "image_uri" | "id">;
+  user: NonNullable<
+    Awaited<ReturnType<(typeof serverClient)["user"]["getCurrentUser"]>>
+  >;
 }
 
 const AccountForm: FC<AccountFormProps> = ({ user }) => {
-  const form = useForm<Inputs>({
+  const utils = trpc.useUtils();
+
+  const { data, refetch } = trpc.user.getCurrentUser.useQuery(undefined, {
+    initialData: user,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+
+  const form = useForm<TaccountSettingsSchema>({
     resolver: zodResolver(accountSettingsSchema),
     defaultValues: {
-      email: user?.email || "",
-      first_name: user?.first_name || "",
-      last_name: user?.last_name || "",
+      email: data?.email || "",
+      first_name: data?.first_name || "",
+      last_name: data?.last_name || "",
     },
   });
 
-  useEffect(() => {
-    form.reset({
-      email: user?.email || "",
-      first_name: user?.first_name || "",
-      last_name: user?.last_name || "",
-    });
-  }, [user]);
+  const { mutate: updateUser, isLoading } = trpc.user.updateUser.useMutation({
+    onSuccess: async () => {
+      toast.success("Updated successfully");
+    },
+    onSettled: async () => {
+      await utils.user.getCurrentUser.invalidate();
+      const { data } = await refetch();
+      form.reset({
+        email: data?.email || "",
+        first_name: data?.first_name || "",
+        last_name: data?.last_name || "",
+      });
+    },
+    onError: (err) => {
+      catchError(err);
+    },
+  });
 
-  async function onSubmit(data: Inputs) {
-    updateUser(data, user.id);
+  async function onSubmit(data: TaccountSettingsSchema) {
+    updateUser(data);
   }
 
   return (
     <Form {...form}>
       <form
         className="grid gap-4"
-        action={(...args) => void form.handleSubmit(onSubmit)(...args)}
+        onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
       >
         <FormField
           control={form.control}
@@ -107,7 +125,7 @@ const AccountForm: FC<AccountFormProps> = ({ user }) => {
               Cancel
               <span className="sr-only">cancel</span>
             </Button>
-            <SubmitButton>Save</SubmitButton>
+            <Button isLoading={isLoading}>Save</Button>
           </div>
         )}
       </form>
