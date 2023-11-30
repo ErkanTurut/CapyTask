@@ -7,19 +7,21 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
+import { useRouter } from "next/router";
 
 export interface HeaderSidebarProps
   extends React.HTMLAttributes<HTMLDivElement> {
   items: SidebarNavItem;
+  url_key: string;
 }
 
 export function HeaderSidebar({
   items,
+  url_key,
   className,
   ...props
 }: HeaderSidebarProps) {
   const pathname = usePathname();
-
   return (
     <span className={cn("flex w-full flex-col gap-1 ", className)} {...props}>
       {items.header.map((headerItem, headerIndex) => {
