@@ -1,3 +1,4 @@
+"use client";
 import { FC } from "react";
 import {
   DropdownMenu,
@@ -15,23 +16,33 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Icons } from "./icons";
 import ThemeToggle from "./themeToggle";
 
-import { getUser } from "@/lib/services/user";
 import { cn } from "@/utils";
+import { serverClient } from "@/trpc/serverClient";
+import { trpc } from "@/trpc/client";
 
 interface UserAccountNavProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  user_id: string;
-  isDashboard?: boolean;
+  className?: string;
+
+  initialData: {
+    user: NonNullable<
+      Awaited<ReturnType<(typeof serverClient)["user"]["getCurrentUser"]>>
+    >;
+  };
 }
 
-const UserAccountNav: FC<UserAccountNavProps> = async ({
-  user_id,
-  isDashboard,
+const UserAccountNav: FC<UserAccountNavProps> = ({
   className,
+  initialData,
 }) => {
-  const user = await getUser(user_id);
+  const { data: user } = trpc.user.getCurrentUser.useQuery(undefined, {
+    initialData: initialData.user,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
 
   if (!user) return null;
+
   const initials = `${user.first_name?.charAt(0) ?? ""} ${
     user.last_name?.charAt(0) ?? ""
   }`;
@@ -66,22 +77,11 @@ const UserAccountNav: FC<UserAccountNavProps> = async ({
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            {isDashboard ? (
-              <Link href="/">
-                <Icons.externalLink
-                  className="mr-2 h-4 w-4"
-                  aria-hidden="true"
-                />
-                Back to site
-                <DropdownMenuShortcut>⌘D</DropdownMenuShortcut>
-              </Link>
-            ) : (
-              <Link href="/dashboard">
-                <Icons.mix className="mr-2 h-4 w-4" aria-hidden="true" />
-                Dashboard
-                <DropdownMenuShortcut>⌘D</DropdownMenuShortcut>
-              </Link>
-            )}
+            <Link href="/dashboard">
+              <Icons.mix className="mr-2 h-4 w-4" aria-hidden="true" />
+              Dashboard
+              <DropdownMenuShortcut>⌘D</DropdownMenuShortcut>
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link href="/dashboard/account/settings">
