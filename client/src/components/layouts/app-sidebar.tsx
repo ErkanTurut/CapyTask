@@ -7,6 +7,7 @@ import { FooterSidebar } from "./sidebar/footer-sidebar";
 import { dashboardConfig } from "@/config/dashboard.config";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import WorkspaceNav from "@/components/workspace-navigation";
+import { useRouter } from "next/router";
 
 export interface SidebarNavProps extends React.HTMLAttributes<HTMLDivElement> {
   props: {
@@ -17,11 +18,13 @@ export interface SidebarNavProps extends React.HTMLAttributes<HTMLDivElement> {
 
 import { Suspense } from "react";
 import ResizeZone from "./resize-zone";
-import { getWorkspaces } from "@/lib/services/workspace";
-import UserAccountNav from "../user-account-navigation";
+import { serverClient } from "@/trpc/serverClient";
 
 export async function SidebarNav({ className, props }: SidebarNavProps) {
-  const { data: workspaces } = await getWorkspaces();
+  const workspaces = await serverClient.workspace.getWorkspaces();
+  const user = await serverClient.user.getCurrentUser();
+
+  if (!user) return null;
 
   return (
     <ResizeZone>
@@ -34,22 +37,23 @@ export async function SidebarNav({ className, props }: SidebarNavProps) {
       >
         <div className="flex flex-col w-full h-full gap-1">
           <Suspense fallback="loading...">
-            <WorkspaceNav url_key={props.url_key} workspaces={workspaces} />
+            <WorkspaceNav
+              url_key={props.url_key}
+              initialData={{ workspaces }}
+            />
           </Suspense>
-          {/* <div className="flex items-center justify-between gap-1">
-            <Suspense fallback="loading...">
-              <WorkspaceNav workspaces={workspaces} />
-            </Suspense>
-            <Suspense fallback="loading...">
-              <UserAccountNav className="h-7 w-7" user_id={props.user_id} />
-            </Suspense>
-          </div> */}
+          {/* <Suspense fallback="loading...">
+            <UserAccountNav initialData={{ user }} className="h-7 w-7" />
+          </Suspense> */}
 
           {/* <ThemeToggle toggle={true} /> */}
 
           <nav className="flex w-full flex-col gap-1 flex-grow overflow-hidden">
             <div className="flex w-full flex-col gap-1 overflow-hidden">
-              <HeaderSidebar items={dashboardConfig.sidebarNav} />
+              <HeaderSidebar
+                url_key={props.url_key}
+                items={dashboardConfig.sidebarNav}
+              />
               <Separator className="flex" />
               <div className="flex-grow overflow-y-auto">
                 <ScrollArea>
