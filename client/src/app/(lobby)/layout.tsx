@@ -6,11 +6,9 @@ interface LobbyLayoutProps {
 }
 
 export default async function LobbyLayout({ children }: LobbyLayoutProps) {
-  const { data } = await getUserSession();
-
   return (
     <div className="relative flex min-h-screen flex-col">
-      <NavBar user={data.session?.user} />
+      <NavBar />
       <main className="flex-1">{children}</main>
     </div>
   );
