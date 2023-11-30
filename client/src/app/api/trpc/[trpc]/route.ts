@@ -9,4 +9,6 @@ const handler = (req: Request) =>
     createContext: () => ({}),
   });
 
+console.log("handler");
+
 export { handler as GET, handler as POST };
