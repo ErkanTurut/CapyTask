@@ -10,21 +10,15 @@ import {
 
 import { redirect } from "next/navigation";
 
-import { getUser, getUserSession } from "@/lib/services/user";
-
 import { Suspense } from "react";
+import { serverClient } from "@/trpc/serverClient";
 
 export default async function SettingsPage() {
-  const {
-    data: { session },
-    error,
-  } = await getUserSession();
+  const user = await serverClient.user.getCurrentUser();
 
-  if (!session?.user || error) {
+  if (!user) {
     redirect("/signin");
   }
-
-  const user = await getUser(session.user.id);
 
   return (
     <section id="user-account-info" aria-labelledby="user-account-info-heading">
