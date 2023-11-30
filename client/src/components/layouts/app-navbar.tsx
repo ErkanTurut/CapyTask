@@ -14,14 +14,13 @@ import ThemeToggle from "../themeToggle";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import UserAccountNav from "../user-account-navigation";
+import { serverClient } from "@/trpc/serverClient";
 
-import type { User } from "@supabase/supabase-js";
+interface NavbarProps {}
 
-interface NavbarProps {
-  user: User | null | undefined;
-}
+const NavBar: FC<NavbarProps> = async () => {
+  const user = await serverClient.user.getCurrentUser();
 
-const NavBar: FC<NavbarProps> = ({ user }) => {
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background">
       <div className="px-6 flex h-16 items-center">
@@ -37,7 +36,7 @@ const NavBar: FC<NavbarProps> = ({ user }) => {
               <Suspense
                 fallback={<Skeleton className="h-8 w-8 rounded-full" />}
               >
-                <UserAccountNav user_id={user.id} />
+                <UserAccountNav initialData={{ user }} />
               </Suspense>
             ) : (
               <Link href="/signin" className={buttonVariants()}>
