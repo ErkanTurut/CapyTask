@@ -1,13 +1,11 @@
 "use client";
 
-import * as React from "react";
 import { useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import type { z } from "zod";
 
-import { signInSchema } from "@/lib/validations/auth";
+import { PasswordInput } from "@/components/passwordInput";
 import {
   Form,
   FormControl,
@@ -17,22 +15,20 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Icons } from "@/components/icons";
-import { PasswordInput } from "@/components/passwordInput";
+import { signInSchema, TSignInSchema } from "@/lib/validations/auth";
 
-import { toast } from "sonner";
 import { catchError } from "@/utils";
-import SubmitButton from "../submit-button";
-import { signInWithPassword } from "@/lib/auth/actions";
-import type { AuthResponse } from "@supabase/supabase-js";
+import { toast } from "sonner";
 
-type Inputs = z.infer<typeof signInSchema>;
+// import { serverClient } from "@/trpc/serverClient";
+import { trpc } from "@/trpc/client";
+import { Button } from "../ui/button";
 
 export function SignInForm() {
   const router = useRouter();
 
   // react-hook-form
-  const form = useForm<Inputs>({
+  const form = useForm<TSignInSchema>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
       email: "",
@@ -40,25 +36,27 @@ export function SignInForm() {
     },
   });
 
-  async function onSubmit(data: Inputs) {
-    try {
-      const res = JSON.parse(await signInWithPassword(data)) as AuthResponse;
-      if (res.error) {
-        throw new Error(res.error.message);
-      }
-      toast.success("Signed in successfully");
-      router.refresh();
-      router.push("/dashboard");
-    } catch (err) {
-      catchError(err);
-    }
+  const { mutate: signIn, isLoading } =
+    trpc.auth.signInWithPassword.useMutation({
+      onSuccess: async () => {
+        toast.success("Signed in successfully");
+        router.refresh();
+        router.push("/dashboard");
+      },
+      onError: (err) => {
+        catchError(err);
+      },
+    });
+
+  async function onSubmit(data: TSignInSchema) {
+    signIn(data);
   }
 
   return (
     <Form {...form}>
       <form
         className="grid gap-4"
-        action={(...args) => void form.handleSubmit(onSubmit)(...args)}
+        onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
       >
         <FormField
           control={form.control}
@@ -87,10 +85,10 @@ export function SignInForm() {
           )}
         />
 
-        <SubmitButton>
+        <Button isLoading={isLoading}>
           Sign in
           <span className="sr-only">Sign in</span>
-        </SubmitButton>
+        </Button>
       </form>
     </Form>
   );
