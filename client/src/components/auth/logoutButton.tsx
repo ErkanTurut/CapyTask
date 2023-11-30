@@ -1,32 +1,38 @@
 "use client";
 
-import * as React from "react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { signOut } from "@/lib/auth/actions";
+import { trpc } from "@/trpc/client";
+import { catchError } from "@/utils";
 
 export function LogOutButtons() {
   const router = useRouter();
-  const [isPending, startTransition] = React.useTransition();
 
-  const onLogout = async () => {
+  const { mutate: signOut, isLoading } = trpc.auth.signOut.useMutation({
+    onSuccess: async () => {
+      toast.success("You have been logged out.");
+      router.refresh();
+      router.push("/signin");
+    },
+    onError: (err) => {
+      catchError(err);
+    },
+  });
+
+  const onClick = async () => {
     signOut();
-    router.refresh();
-    toast.success("You have been logged out.");
-    router.push("/signin");
   };
 
   return (
     <div className="flex w-full items-center space-x-2">
       <Button
-        onClick={onLogout}
+        onClick={onClick}
         aria-label="Log out"
         size="sm"
         className="w-full"
-        disabled={isPending}
-        isLoading={isPending}
+        isLoading={isLoading}
       >
         Log out
       </Button>
@@ -37,7 +43,7 @@ export function LogOutButtons() {
         size="sm"
         className="w-full"
         onClick={() => router.back()}
-        disabled={isPending}
+        isLoading={isLoading}
       >
         Go back
       </Button>
