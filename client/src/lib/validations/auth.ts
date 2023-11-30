@@ -12,6 +12,8 @@ export const signInSchema = z.object({
     }),
 });
 
+export type TSignInSchema = z.infer<typeof signInSchema>;
+
 export const signUpSchema = z
   .object({
     email: z.string().email({ message: "Please enter a valid email address" }),
@@ -30,6 +32,8 @@ export const signUpSchema = z
     path: ["confirmPassword"],
   });
 
+export type TSignUpSchema = z.infer<typeof signUpSchema>;
+
 export const otpCodeSchema = z.object({
   code: z
     .string()
@@ -38,6 +42,8 @@ export const otpCodeSchema = z.object({
     })
     .max(6),
 });
+
+export type TOtpCodeSchema = z.infer<typeof otpCodeSchema>;
 
 export const checkEmailSchema = z.object({
   email: signInSchema.shape.email,
