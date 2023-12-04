@@ -1,6 +1,6 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import { getWorkspace } from "./lib/services/workspace";
+import { serverClient } from "./trpc";
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
@@ -55,38 +55,39 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  await supabase.auth.getSession();
 
   // if (!session) {
   //   return NextResponse.redirect(new URL("signin", request.url));
   // }
 
-  if (session) {
-    // console.log(request.nextUrl.pathname);
-    // const { data, error } = await getWorkspace(slug);
-    // console.log(data, error);
-    // if (error || !data || data.length === 0) {
-    //   return NextResponse.redirect(new URL("dashboard/create", request.url));
-    // }
-    // return NextResponse.redirect(
-    //   new URL("/dashboard/account/settings", request.url)
-    // );
-  }
+  // if (
+  //   request.nextUrl.pathname === "/signin" ||
+  //   (request.nextUrl.pathname === "/signup" && session)
+  // ) {
+  //   const workspaces = await serverClient.workspace.getWorkspaces.query();
+  //   if (workspaces.length === 0) {
+  //     return NextResponse.redirect(new URL("/create", request.url));
+  //   }
+  //   if (workspaces.length > 0) {
+  //     return NextResponse.redirect(
+  //       new URL(`/${workspaces[0].url_key}`, request.url)
+  //     );
+  //   }
+  //   // console.log(request.nextUrl.pathname);
+  //   // const { data, error } = await getWorkspace(slug);
+  //   // console.log(data, error);
+  //   // if (error || !data || data.length === 0) {
+  //   //   return NextResponse.redirect(new URL("dashboard/create", request.url));
+  //   // }
+  //   // return NextResponse.redirect(
+  //   //   new URL("/dashboard/account/settings", request.url)
+  //   // );
+  // }
 
   return response;
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    "/((?!api|_next/static|_next/image|favicon.ico).*)",
-  ],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };
