@@ -13,6 +13,7 @@ import {
 import { OAuthSignIn } from "@/components/auth/oauthSignIn";
 import { SignInForm } from "@/components/forms/sign-in";
 import { Shell } from "@/components/shells/shell";
+import { getCurrentUser } from "@/lib/services/user";
 
 // export const metadata: Metadata = {
 //   metadataBase: new URL("oue"),
@@ -21,6 +22,11 @@ import { Shell } from "@/components/shells/shell";
 // };
 
 export default async function SignInPage() {
+  // const { data: user } = await getCurrentUser();
+  // if (user) {
+  //   redirect("/dashboard");
+  // }
+
   return (
     <Shell className="max-w-lg">
       <Card>
