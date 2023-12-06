@@ -14,6 +14,7 @@ import { OAuthSignIn } from "@/components/auth/oauthSignIn";
 import { SignInForm } from "@/components/forms/sign-in";
 import { Shell } from "@/components/shells/shell";
 import { getCurrentUser } from "@/lib/services/user";
+import { cookies } from "next/headers";
 
 // export const metadata: Metadata = {
 //   metadataBase: new URL("oue"),
@@ -26,6 +27,8 @@ export default async function SignInPage() {
   // if (user) {
   //   redirect("/dashboard");
   // }
+  const cookieStore = cookies();
+  console.log("cookieStore route", cookieStore.getAll());
 
   return (
     <Shell className="max-w-lg">
