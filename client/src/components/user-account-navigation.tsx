@@ -17,32 +17,19 @@ import { Icons } from "./icons";
 import ThemeToggle from "./themeToggle";
 
 import { cn } from "@/utils";
-import { serverClient } from "@/trpc/serverClient";
-import { trpc } from "@/trpc/client";
+import { serverClient } from "@/trpc";
 
 interface UserAccountNavProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
-
-  initialData: {
-    user: NonNullable<
-      Awaited<ReturnType<(typeof serverClient)["user"]["getCurrentUser"]>>
-    >;
-  };
+  user: NonNullable<
+    Awaited<
+      ReturnType<(typeof serverClient)["user"]["getCurrentUser"]["query"]>
+    >
+  >;
 }
 
-const UserAccountNav: FC<UserAccountNavProps> = ({
-  className,
-  initialData,
-}) => {
-  const { data: user } = trpc.user.getCurrentUser.useQuery(undefined, {
-    initialData: initialData.user,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-  });
-
-  if (!user) return null;
-
+const UserAccountNav: FC<UserAccountNavProps> = ({ className, user }) => {
   const initials = `${user.first_name?.charAt(0) ?? ""} ${
     user.last_name?.charAt(0) ?? ""
   }`;
@@ -77,19 +64,19 @@ const UserAccountNav: FC<UserAccountNavProps> = ({
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href="/dashboard">
-              <Icons.mix className="mr-2 h-4 w-4" aria-hidden="true" />
-              Dashboard
+            <Link href="/login">
+              <Icons.rocket className="mr-2 h-4 w-4" aria-hidden="true" />
+              Go to App
               <DropdownMenuShortcut>⌘D</DropdownMenuShortcut>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
+          {/* <DropdownMenuItem asChild>
             <Link href="/dashboard/account/settings">
               <Icons.gear className="mr-2 h-4 w-4" aria-hidden="true" />
               Settings
               <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
             </Link>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
