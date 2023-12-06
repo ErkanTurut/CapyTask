@@ -36,40 +36,33 @@ import {
 } from "./ui/select";
 import { Icons } from "./icons";
 
-import type { workspace } from "@prisma/client";
-import { useRouter } from "next/navigation";
-import { serverClient } from "@/trpc/serverClient";
+import { useParams, useRouter } from "next/navigation";
+import { serverClient } from "@/trpc";
+import { workspace } from "@prisma/client";
 
 interface WorkspaceNavProps extends React.HTMLAttributes<HTMLDivElement> {
-  initialData: {
-    workspaces: Awaited<
-      ReturnType<(typeof serverClient)["workspace"]["getWorkspaces"]>
-    >;
-  };
-  url_key: string;
+  workspaces: Pick<workspace, "name" | "description" | "url_key">[];
+  // workspaces: Awaited<
+  //   ReturnType<(typeof serverClient)["workspace"]["getWorkspaces"]["query"]>
+  // >;
 }
 
-const WorkspaceNav: FC<WorkspaceNavProps> = ({
-  initialData,
-  url_key,
-  className,
-}) => {
-  const { workspaces } = initialData;
+const WorkspaceNav: FC<WorkspaceNavProps> = ({ workspaces, className }) => {
+  const [open, setOpen] = useState(false);
+  const [showNewTeamDialog, setShowNewTeamDialog] = useState(false);
+  const router = useRouter();
+  const { url_key } = useParams();
 
   const groups = [
     {
       label: "Workspaces",
-      workspaces: workspaces ?? [],
+      workspaces: workspaces,
     },
   ];
-
-  const [open, setOpen] = useState(false);
-  const [showNewTeamDialog, setShowNewTeamDialog] = useState(false);
 
   const selectedWorkspace =
     workspaces.find((workspace) => workspace?.url_key === url_key) ??
     workspaces?.[0];
-  const router = useRouter();
 
   if (!selectedWorkspace) return null;
 
@@ -111,7 +104,7 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({
                       key={workspace.url_key}
                       onSelect={() => {
                         setOpen(false);
-                        router.push(`/${workspace.url_key}/team`);
+                        router.push(`/${workspace.url_key}/teams`);
                       }}
                       className="text-sm overflow-hidden whitespace-nowrap overflow-ellipsis"
                     >
