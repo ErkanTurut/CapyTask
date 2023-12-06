@@ -1,9 +1,8 @@
 import { SidebarNav } from "@/components/layouts/app-sidebar";
 import { Shell } from "@/components/shells/shell";
 import { getCurrentUser } from "@/lib/services/user";
-import { getWorkspace } from "@/lib/services/workspace";
+import { getWorkspace, getWorkspaces } from "@/lib/services/workspace";
 import { redirect } from "next/navigation";
-import { serverClient } from "@/trpc";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -17,31 +16,24 @@ export default async function DashboardLayout({
   params,
 }: DashboardLayoutProps) {
   const { data: user } = await getCurrentUser();
-
   if (!user) {
     redirect("/signin");
   }
 
-  // const { data, error } = await getWorkspace(params.url_key);
-  // const workspace = await serverClient.workspace.getWorkspaceById.query({
-  //   url_key: params.url_key,
-  // });
+  const { data: workspaces, error } = await getWorkspaces();
 
-  // if (!data || error || !data.length) {
-  //   redirect("/create");
-  // }
-  // console.log("===>", data);
-  // if (data?.length) {
-  //   redirect(`/${params.url_key}/team`);
-  // } else {
-  //   redirect("/create");
-  // }
-  // redirect(`/${params.url_key}/team`);
+  const isInclude = workspaces?.some((workspace) => {
+    return workspace.url_key === params.url_key;
+  });
+
+  if (!workspaces || error || !workspaces.length || !isInclude) {
+    redirect("/create");
+  }
 
   return (
     <div className="relative mx-auto flex min-h-screen w-full flex-col items-center justify-center">
       <div className="flex w-full flex-1 gap-2 lg:gap-1">
-        <SidebarNav props={{ url_key: params.url_key }} />
+        <SidebarNav props={{ workspaces: workspaces }} />
         <main className="z-10 flex w-full flex-1 flex-col items-start justify-center">
           <Shell
             variant="sidebar"
