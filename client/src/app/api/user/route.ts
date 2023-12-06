@@ -1,43 +1,32 @@
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
+import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
+import { jwtVerify } from "jose";
 
-import { PostgrestError } from "@supabase/supabase-js";
-import type { user } from "@prisma/client";
-import type { Database } from "@/types/supabase.types";
+// Javascript Object Signing and Encryption (JOSE)
+// https://www.npmjs.com/package/jose
 
-export async function GET(request: NextRequest) {
+// Get secret
+const secret = new Uint8Array(
+  Buffer.from(process.env.JWT_SECRET_KEY || "", "base64")
+);
+
+export async function GET() {
+  const token = cookies().get("token")?.value || null;
+
+  // Verify the JWT signature
+  let verifiedToken;
   try {
-    const supabase = createRouteHandlerClient<Database>({ cookies });
-    const {
-      data: { session: session },
-    } = await supabase.auth.getSession();
-    if (!session) throw new Error("Unauthorized");
-    // await new Promise((resolve) => setTimeout(resolve, 10000));
-    const {
-      data: user,
-      error,
-    }: { data: user | null; error: PostgrestError | null } = await supabase
-      .from("user")
-      .select()
-      .eq("id", session.user.id)
-      .single();
-
-    if (error) throw new Error(error.message);
-    return NextResponse.json(user, {
-      status: 200,
-    });
-  } catch (error: Error | z.ZodError | PostgrestError | unknown) {
-    if (error instanceof z.ZodError) {
-      return new Response(JSON.stringify(error.issues), { status: 422 });
-    } else if (error instanceof Error) {
-      return NextResponse.json(error.message, {
-        status: 400,
-      });
-    }
-    return NextResponse.json("Something went wrong, please try again later.", {
-      status: 500,
-    });
+    verifiedToken = await jwtVerify(token, secret);
+  } catch {
+    return NextResponse.json({ isAuthenticated: false }, { status: 401 });
   }
+
+  // Return the User object if the token is valid
+  return NextResponse.json(
+    {
+      isAuthenticated: true,
+      user: verifiedToken.payload.user,
+    },
+    { status: 200 }
+  );
 }
