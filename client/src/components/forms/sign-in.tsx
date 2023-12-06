@@ -1,11 +1,13 @@
 "use client";
 
+import * as React from "react";
 import { useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import type { z } from "zod";
 
-import { PasswordInput } from "@/components/passwordInput";
+import { TSignInSchema, signInSchema } from "@/lib/validations/auth";
 import {
   Form,
   FormControl,
@@ -15,14 +17,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { signInSchema, TSignInSchema } from "@/lib/validations/auth";
+import { Icons } from "@/components/icons";
+import { PasswordInput } from "@/components/passwordInput";
 
-import { catchError } from "@/utils";
 import { toast } from "sonner";
-
-// import { serverClient } from "@/trpc/serverClient";
+import { catchError } from "@/utils";
 import { trpc } from "@/trpc/client";
 import { Button } from "../ui/button";
+import createSupabaseBrowserClient from "@/lib/supabase/browser";
+import { signInWithPassword } from "@/lib/auth/actions";
+import SubmitButton from "../submit-button";
 
 export function SignInForm() {
   const router = useRouter();
@@ -36,27 +40,32 @@ export function SignInForm() {
     },
   });
 
-  const { mutate: signIn, isLoading } =
-    trpc.auth.signInWithPassword.useMutation({
-      onSuccess: async () => {
-        toast.success("Signed in successfully");
-        router.refresh();
-        router.push("/dashboard");
-      },
-      onError: (err) => {
-        catchError(err);
-      },
-    });
+  // const { mutate: signIn, isLoading } =
+  //   trpc.auth.signInWithPassword.useMutation({
+  //     onSuccess: async () => {
+  //       toast.success("Signed in successfully");
+  //       router.refresh();
+  //       //router.push("/");
+  //     },
+  //     onError: (err) => {
+  //       catchError(err);
+  //     },
+  //   });
 
   async function onSubmit(data: TSignInSchema) {
-    signIn(data);
+    //signIn(data);
+    try {
+      await signInWithPassword(data);
+    } catch (err) {
+      catchError(err);
+    }
   }
 
   return (
     <Form {...form}>
       <form
         className="grid gap-4"
-        onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
+        action={(...args) => void form.handleSubmit(onSubmit)(...args)}
       >
         <FormField
           control={form.control}
@@ -85,10 +94,10 @@ export function SignInForm() {
           )}
         />
 
-        <Button isLoading={isLoading}>
+        <SubmitButton>
           Sign in
           <span className="sr-only">Sign in</span>
-        </Button>
+        </SubmitButton>
       </form>
     </Form>
   );
