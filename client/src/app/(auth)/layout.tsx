@@ -4,12 +4,14 @@ import Link from "next/link";
 import { siteConfig } from "@/config/site.config";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Icons } from "@/components/icons";
+import { serverClient } from "@/trpc";
+import { redirect } from "next/navigation";
 
 interface AuthLayoutProps {
   children: React.ReactNode;
 }
 
-export default function AuthLayout({ children }: AuthLayoutProps) {
+export default async function AuthLayout({ children }: AuthLayoutProps) {
   return (
     <div className="grid min-h-screen grid-cols-1 overflow-hidden md:grid-cols-3 lg:grid-cols-2">
       <AspectRatio ratio={16 / 9}>
