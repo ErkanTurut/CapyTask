@@ -15,49 +15,55 @@ import {
 } from "@/lib/validations/settings";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-
-import { FC, useEffect } from "react";
+import { FC } from "react";
 
 import { trpc } from "@/trpc/client";
 import { catchError } from "@/utils";
 import { toast } from "sonner";
-import { serverClient } from "@/trpc/serverClient";
+
+import { useRouter } from "next/navigation";
+
+import type { serverClient } from "@/trpc/serverClient";
 
 interface AccountFormProps {
   user: NonNullable<
-    Awaited<ReturnType<(typeof serverClient)["user"]["getCurrentUser"]>>
+    Awaited<
+      ReturnType<(typeof serverClient)["user"]["getCurrentUser"]["query"]>
+    >
   >;
 }
 
 const AccountForm: FC<AccountFormProps> = ({ user }) => {
-  const utils = trpc.useUtils();
+  const router = useRouter();
 
-  const { data, refetch } = trpc.user.getCurrentUser.useQuery(undefined, {
-    initialData: user,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-  });
+  // const { data } = trpc.user.getCurrentUser.useQuery(undefined, {
+  //   initialData: user,
+  //   refetchOnMount: false,
+  //   refetchOnReconnect: false,
+  // });
 
   const form = useForm<TaccountSettingsSchema>({
     resolver: zodResolver(accountSettingsSchema),
     defaultValues: {
-      email: data?.email || "",
-      first_name: data?.first_name || "",
-      last_name: data?.last_name || "",
+      email: user?.email || "",
+      first_name: user?.first_name || "",
+      last_name: user?.last_name || "",
     },
   });
 
-  const { mutate: updateUser, isLoading } = trpc.user.updateUser.useMutation({
+  const {
+    mutate: updateUser,
+    isLoading,
+    variables,
+  } = trpc.user.updateUser.useMutation({
     onSuccess: async () => {
       toast.success("Updated successfully");
     },
     onSettled: async () => {
-      await utils.user.getCurrentUser.invalidate();
-      const { data } = await refetch();
       form.reset({
-        email: data?.email || "",
-        first_name: data?.first_name || "",
-        last_name: data?.last_name || "",
+        email: variables?.email || "",
+        first_name: variables?.first_name || "",
+        last_name: variables?.last_name || "",
       });
     },
     onError: (err) => {
