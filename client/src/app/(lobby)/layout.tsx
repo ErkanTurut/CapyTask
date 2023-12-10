@@ -1,5 +1,4 @@
 import NavBar from "@/components/layouts/app-navbar";
-import { getUserSession } from "@/lib/services/user";
 
 interface LobbyLayoutProps {
   children: React.ReactNode;

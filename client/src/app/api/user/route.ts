@@ -13,6 +13,9 @@ const secret = new Uint8Array(
 
 export async function GET() {
   const token = cookies().get("token")?.value || null;
+  if (!token) {
+    return NextResponse.json({ isAuthenticated: false }, { status: 401 });
+  }
 
   // Verify the JWT signature
   let verifiedToken;

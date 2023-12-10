@@ -14,14 +14,14 @@ import {
   PageHeaderHeading,
 } from "@/components/pageHeader";
 import { Shell } from "@/components/shells/shell";
-import { getUserSession } from "@/lib/services/user";
 import { redirect } from "next/navigation";
 
 import { CreateWorspaceForm } from "@/components/workspace/workspace-create";
 import Link from "next/link";
+import { getSession } from "@/lib/auth";
 
 export default async function CreatePage() {
-  const { data } = await getUserSession();
+  const { data } = await getSession();
 
   if (!data.session) {
     redirect("/signin");
