@@ -11,12 +11,11 @@ import {
 import { redirect } from "next/navigation";
 
 import { Suspense } from "react";
-import { serverClient } from "@/trpc/serverClient";
-import { getCurrentUser } from "@/lib/services/user";
+import { getUser } from "@/lib/services/user";
 
 export default async function SettingsPage() {
   // const user = await trpc.user.getCurrentUser.query();
-  const { data: user } = await getCurrentUser();
+  const { data: user } = await getUser();
 
   if (!user) {
     redirect("/signin");

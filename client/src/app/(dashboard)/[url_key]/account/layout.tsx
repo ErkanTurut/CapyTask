@@ -13,7 +13,7 @@ import {
 } from "@/components/pageHeader";
 import { Icons } from "@/components/icons";
 import { Shell } from "@/components/shells/shell";
-import { getUserSession } from "@/lib/services/user";
+import { getSession } from "@/lib/auth";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -25,7 +25,7 @@ export default async function AccountLayout({
   const {
     data: { session },
     error,
-  } = await getUserSession();
+  } = await getSession();
 
   if (!session?.user || error) {
     redirect("/signin");
