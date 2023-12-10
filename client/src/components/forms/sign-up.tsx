@@ -17,17 +17,18 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { TSignUpSchema, signUpSchema } from "@/lib/validations/auth";
+
 import { catchError } from "@/utils";
 
-import { trpc } from "@/trpc/client";
+import { useAction } from "@/hooks/use-actions";
+import { signup, TSignUp, ZSignUp } from "@/lib/actions/auth/signup";
 
 export function SignUpForm() {
   const router = useRouter();
 
   // react-hook-form
-  const form = useForm<TSignUpSchema>({
-    resolver: zodResolver(signUpSchema),
+  const form = useForm<TSignUp>({
+    resolver: zodResolver(ZSignUp),
     defaultValues: {
       email: "",
       password: "",
@@ -35,21 +36,21 @@ export function SignUpForm() {
     },
   });
 
-  const { mutate: signUp, isLoading } =
-    trpc.auth.signUpWithPassword.useMutation({
-      onSuccess: async () => {
-        toast.message("Check your email", {
-          description: "We sent you a link to verify your email address.",
-        });
-        router.refresh();
-      },
-      onError: (err) => {
-        catchError(err);
-      },
-    });
+  const { run, fieldErrors, isLoading } = useAction(signup, {
+    onSuccess: (data) => {
+      toast.message("Check your email", {
+        description: "We sent you a link to verify your email address.",
+      });
+      router.refresh();
+      router.push(`/signin`);
+    },
+    onError: (err) => {
+      catchError(err);
+    },
+  });
 
-  async function onSubmit(data: TSignUpSchema) {
-    signUp(data);
+  async function onSubmit(data: TSignUp) {
+    run(data);
   }
 
   return (
