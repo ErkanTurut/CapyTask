@@ -39,7 +39,8 @@ import { Icons } from "./icons";
 import { useParams, useRouter } from "next/navigation";
 import { serverClient } from "@/trpc";
 import { workspace } from "@prisma/client";
-
+import Link from "next/link";
+import { CreateWorspaceForm } from "./workspace/workspace-create";
 interface WorkspaceNavProps extends React.HTMLAttributes<HTMLDivElement> {
   workspaces: Pick<workspace, "name" | "description" | "url_key">[];
   // workspaces: Awaited<
@@ -49,7 +50,7 @@ interface WorkspaceNavProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const WorkspaceNav: FC<WorkspaceNavProps> = ({ workspaces, className }) => {
   const [open, setOpen] = useState(false);
-  const [showNewTeamDialog, setShowNewTeamDialog] = useState(false);
+  const [showNewWorkspaceDialog, setShowNewWorkspaceDialog] = useState(false);
   const router = useRouter();
   const { url_key } = useParams();
 
@@ -69,7 +70,10 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({ workspaces, className }) => {
   const initials = `${selectedWorkspace.name?.charAt(0) ?? ""}`;
 
   return (
-    <Dialog open={showNewTeamDialog} onOpenChange={setShowNewTeamDialog}>
+    <Dialog
+      open={showNewWorkspaceDialog}
+      onOpenChange={setShowNewWorkspaceDialog}
+    >
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -138,18 +142,18 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({ workspaces, className }) => {
                   <CommandItem
                     onSelect={() => {
                       setOpen(false);
-                      setShowNewTeamDialog(true);
+                      setShowNewWorkspaceDialog(true);
                     }}
                   >
                     <Icons.plusCircled className="mr-2 h-4 w-4" />
-                    Create Team
+                    Create workspace
                   </CommandItem>
                 </DialogTrigger>
                 <DialogTrigger asChild>
                   <CommandItem
                     onSelect={() => {
                       setOpen(false);
-                      setShowNewTeamDialog(true);
+                      setShowNewWorkspaceDialog(true);
                     }}
                   >
                     <Icons.logout className="mr-2 h-4 w-4" />
@@ -163,46 +167,21 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({ workspaces, className }) => {
       </Popover>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create team</DialogTitle>
+          <DialogTitle>Create workspace</DialogTitle>
           <DialogDescription>
-            Add a new team to manage products and customers.
+            Create a new workspace to collaborate with your buddies.
           </DialogDescription>
         </DialogHeader>
-        <div>
-          <div className="space-y-4 py-2 pb-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Team name</Label>
-              <Input id="name" placeholder="Acme Inc." />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="plan">Subscription plan</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a plan" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="free">
-                    <span className="font-medium">Free</span> -{" "}
-                    <span className="text-muted-foreground">
-                      Trial for two weeks
-                    </span>
-                  </SelectItem>
-                  <SelectItem value="pro">
-                    <span className="font-medium">Pro</span> -{" "}
-                    <span className="text-muted-foreground">
-                      $9/month per user
-                    </span>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </div>
+        <CreateWorspaceForm />
+
         <DialogFooter>
-          <Button variant="outline" onClick={() => setShowNewTeamDialog(false)}>
+          <Button
+            variant="outline"
+            onClick={() => setShowNewWorkspaceDialog(false)}
+            className="w-full"
+          >
             Cancel
           </Button>
-          <Button type="submit">Continue</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -18,15 +18,12 @@ import ThemeToggle from "./themeToggle";
 
 import { cn } from "@/utils";
 import { serverClient } from "@/trpc";
+import { user } from "@prisma/client";
 
 interface UserAccountNavProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
-  user: NonNullable<
-    Awaited<
-      ReturnType<(typeof serverClient)["user"]["getCurrentUser"]["query"]>
-    >
-  >;
+  user: Pick<user, "first_name" | "last_name" | "image_uri" | "email">;
 }
 
 const UserAccountNav: FC<UserAccountNavProps> = ({ className, user }) => {
@@ -64,7 +61,7 @@ const UserAccountNav: FC<UserAccountNavProps> = ({ className, user }) => {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href="/login">
+            <Link href="/signin">
               <Icons.rocket className="mr-2 h-4 w-4" aria-hidden="true" />
               Go to App
               <DropdownMenuShortcut>⌘D</DropdownMenuShortcut>
