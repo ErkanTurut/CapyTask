@@ -24,24 +24,15 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
 import type { serverClient } from "@/trpc/serverClient";
+import { user } from "@prisma/client";
+import { useAction } from "@/hooks/use-actions";
+import { updateUser } from "@/lib/actions/user";
 
 interface AccountFormProps {
-  user: NonNullable<
-    Awaited<
-      ReturnType<(typeof serverClient)["user"]["getCurrentUser"]["query"]>
-    >
-  >;
+  user: Pick<user, "email" | "first_name" | "last_name">;
 }
 
 const AccountForm: FC<AccountFormProps> = ({ user }) => {
-  const router = useRouter();
-
-  // const { data } = trpc.user.getCurrentUser.useQuery(undefined, {
-  //   initialData: user,
-  //   refetchOnMount: false,
-  //   refetchOnReconnect: false,
-  // });
-
   const form = useForm<TaccountSettingsSchema>({
     resolver: zodResolver(accountSettingsSchema),
     defaultValues: {
@@ -51,19 +42,13 @@ const AccountForm: FC<AccountFormProps> = ({ user }) => {
     },
   });
 
-  const {
-    mutate: updateUser,
-    isLoading,
-    variables,
-  } = trpc.user.updateUser.useMutation({
-    onSuccess: async () => {
+  const { run, isLoading, data } = useAction(updateUser, {
+    onSuccess: (data) => {
       toast.success("Updated successfully");
-    },
-    onSettled: async () => {
       form.reset({
-        email: variables?.email || "",
-        first_name: variables?.first_name || "",
-        last_name: variables?.last_name || "",
+        email: data?.email || "",
+        first_name: data?.first_name || "",
+        last_name: data?.last_name || "",
       });
     },
     onError: (err) => {
@@ -72,7 +57,7 @@ const AccountForm: FC<AccountFormProps> = ({ user }) => {
   });
 
   async function onSubmit(data: TaccountSettingsSchema) {
-    updateUser(data);
+    run(data);
   }
 
   return (
