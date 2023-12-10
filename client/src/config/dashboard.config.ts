@@ -30,12 +30,12 @@ export const dashboardConfig: DashboardConfig = {
         items: [
           {
             title: "All Teams",
-            href: "/dashboard/teams",
+            href: "/teams",
             items: [],
           },
           {
             title: "New Team",
-            href: "/dashboard/teams/new",
+            href: "/teams/new",
             icon: "plus",
             items: [],
           },
