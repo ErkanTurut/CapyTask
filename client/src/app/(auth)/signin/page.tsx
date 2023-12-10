@@ -13,8 +13,8 @@ import {
 import { OAuthSignIn } from "@/components/auth/oauthSignIn";
 import { SignInForm } from "@/components/forms/sign-in";
 import { Shell } from "@/components/shells/shell";
-import { getCurrentUser } from "@/lib/services/user";
-import { cookies } from "next/headers";
+import { getUser } from "@/lib/services/user";
+import { getWorkspaces } from "@/lib/services/workspace";
 
 // export const metadata: Metadata = {
 //   metadataBase: new URL("oue"),
@@ -23,12 +23,16 @@ import { cookies } from "next/headers";
 // };
 
 export default async function SignInPage() {
-  // const { data: user } = await getCurrentUser();
-  // if (user) {
-  //   redirect("/dashboard");
-  // }
-  const cookieStore = cookies();
-  console.log("cookieStore route", cookieStore.getAll());
+  const { data: user, error } = await getUser();
+
+  if (user) {
+    const { data: workspaces, error } = await getWorkspaces();
+    console.log(workspaces);
+    if (!workspaces || workspaces.length < 1) {
+      return redirect("/create");
+    }
+    return redirect(`/${workspaces[0].url_key}`);
+  }
 
   return (
     <Shell className="max-w-lg">
