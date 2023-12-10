@@ -9,9 +9,7 @@ interface ResizeZoneProps {
 const ResizeZone: FC<ResizeZoneProps> = ({ children }) => {
   const handleMouseDown = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
-    console.log(event);
-  };
+  ) => {};
 
   return (
     <Shell
