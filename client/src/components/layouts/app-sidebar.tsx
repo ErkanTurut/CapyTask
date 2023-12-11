@@ -7,19 +7,19 @@ import { FooterSidebar } from "./sidebar/footer-sidebar";
 import { dashboardConfig } from "@/config/dashboard.config";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import WorkspaceNav from "@/components/workspace-navigation";
-import { workspace, team } from "@prisma/client";
 
-export interface SidebarNavProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   props: {
-    workspaces: Pick<workspace, "name" | "description" | "url_key">[];
-    teams: Pick<team, "name" | "description">[] | null;
+    workspaces: Database["public"]["Tables"]["workspace"]["Row"][];
+    teams: Database["public"]["Tables"]["team"]["Row"][] | null;
   };
 }
 
 import { Suspense } from "react";
 import ResizeZone from "./resize-zone";
+import { Database } from "@/types/supabase.types";
 
-export async function SidebarNav({ className, props }: SidebarNavProps) {
+export async function Sidebar({ className, props }: SidebarProps) {
   return (
     <ResizeZone>
       <div
