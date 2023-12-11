@@ -39,7 +39,7 @@ const NavBar: FC<NavbarProps> = async () => {
                 fallback={<Skeleton className="h-8 w-8 rounded-full" />}
               >
                 <Link href="/signin" className={cn(buttonVariants())}>
-                  Use Gembuddy for free
+                  Use App
                   <Icons.chevronRight
                     className="ml-1 h-4 w-4"
                     aria-hidden="true"
