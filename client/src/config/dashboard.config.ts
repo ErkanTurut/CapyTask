@@ -35,7 +35,7 @@ export const dashboardConfig: DashboardConfig = {
           },
           {
             title: "New Team",
-            href: "/teams/new",
+            href: "/teams/create",
             icon: "plus",
             items: [],
           },
