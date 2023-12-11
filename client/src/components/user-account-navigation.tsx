@@ -17,13 +17,13 @@ import { Icons } from "./icons";
 import ThemeToggle from "./themeToggle";
 
 import { cn } from "@/utils";
-import { serverClient } from "@/trpc";
-import { user } from "@prisma/client";
+
+import { Database } from "@/types/supabase.types";
 
 interface UserAccountNavProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
-  user: Pick<user, "first_name" | "last_name" | "image_uri" | "email">;
+  user: Database["public"]["Tables"]["user"]["Row"];
 }
 
 const UserAccountNav: FC<UserAccountNavProps> = ({ className, user }) => {
