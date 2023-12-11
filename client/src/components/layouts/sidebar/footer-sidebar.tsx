@@ -3,7 +3,11 @@
 import * as React from "react";
 import Link from "next/link";
 import type { SidebarNavItem } from "@/types";
-import { usePathname, useSelectedLayoutSegment } from "next/navigation";
+import {
+  useParams,
+  usePathname,
+  useSelectedLayoutSegment,
+} from "next/navigation";
 import { siteConfig } from "@/config/site.config";
 
 import { cn } from "@/utils";
@@ -24,6 +28,8 @@ export function FooterSidebar({
   ...props
 }: FooterSidebarProps) {
   const pathname = usePathname();
+  const params = useParams();
+
   return (
     <span className={cn("flex w-full flex-col gap-1 ", className)} {...props}>
       {items.footer.map((footerItem, footerIndex) => {
@@ -37,11 +43,13 @@ export function FooterSidebar({
             {footerItem.items.length > 0
               ? footerItem.items.map((subitem, subIndex) => {
                   const Icon = subitem.icon ? Icons[subitem.icon] : null;
+                  const link = `${subitem.href}`;
+
                   return (
                     <Link
                       aria-label={subitem.title}
                       key={subIndex}
-                      href={subitem.href ? subitem.href : ""}
+                      href={subitem.href ? link : ""}
                       target={subitem.external ? "_blank" : ""}
                       rel={subitem.external ? "noreferrer" : ""}
                       className={cn(
