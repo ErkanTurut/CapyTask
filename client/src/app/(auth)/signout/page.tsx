@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 
-import { LogOutButtons } from "@/components/auth/logoutButton";
+import { SignOutButtons } from "@/components/auth/SignOutButtons";
 import {
   PageHeader,
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/components/pageHeader";
 import { Shell } from "@/components/shells/shell";
+import { Button } from "@/components/ui/button";
 
 export default function SignOutPage() {
   return (
@@ -21,7 +22,7 @@ export default function SignOutPage() {
           Are you sure you want to sign out?
         </PageHeaderDescription>
       </PageHeader>
-      <LogOutButtons />
+      <SignOutButtons />
     </Shell>
   );
 }
