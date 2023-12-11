@@ -29,7 +29,6 @@ export function SignInForm() {
     onSuccess: (data) => {
       toast.success("Signed in successfully");
       router.refresh();
-      router.push(`/`);
     },
     onError: (err) => {
       catchError(err);
