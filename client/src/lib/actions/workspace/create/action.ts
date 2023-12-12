@@ -17,14 +17,13 @@ const handler = async (data: TCreateWorkspace): Promise<ReturnType> => {
     return redirect("/signin");
   }
 
-  const { data: workspace, error } = await supabase
+  const { error } = await supabase
     .from("workspace")
     .insert({
       name: data.name,
       url_key: data.url_key,
       created_by: session.user.id,
     })
-    .select()
     .single();
 
   if (error) {
@@ -33,10 +32,10 @@ const handler = async (data: TCreateWorkspace): Promise<ReturnType> => {
       error: error.message,
     };
   }
-  revalidatePath(`/${workspace.url_key}`);
+  revalidatePath(`/${data.url_key}`);
 
   return {
-    data: workspace,
+    data: { success: true, url_key: data.url_key },
   };
 };
 
