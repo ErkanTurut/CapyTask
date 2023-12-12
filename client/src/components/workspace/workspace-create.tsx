@@ -33,7 +33,7 @@ export function CreateWorspaceForm() {
     onSuccess: (data) => {
       toast.success("Workspace created successfully");
       router.refresh();
-      router.push(`/${data.url_key}`);
+      router.push(`/dashboard/${data.url_key}`);
     },
     onError: (err) => {
       catchError(err);
