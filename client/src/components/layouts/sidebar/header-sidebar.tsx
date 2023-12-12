@@ -36,7 +36,7 @@ export function HeaderSidebar({
             {headerItem.items.length > 0
               ? headerItem.items.map((subitem, subIndex) => {
                   const Icon = subitem.icon ? Icons[subitem.icon] : null;
-                  const link = `/${params?.url_key}${subitem.href}`;
+                  const link = `/dashboard/${params?.url_key}${subitem.href}`;
                   return (
                     <Link
                       aria-label={subitem.title}
