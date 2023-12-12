@@ -30,7 +30,6 @@ const handler = async (data: TAccountUpdate): Promise<ReturnType> => {
     };
   }
   revalidatePath("/");
-  console.log("user", user);
   return {
     data: user,
   };
