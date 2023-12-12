@@ -35,6 +35,7 @@ export interface FooterItem {
 
 export interface SideNavItem {
   label?: string;
+  create?: string;
   items: NavItemWithChildren[];
 }
 

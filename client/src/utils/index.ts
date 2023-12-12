@@ -1,13 +1,10 @@
-import { type ClassValue, clsx } from "clsx";
+import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 import { formatDistanceToNowStrict } from "date-fns";
 import locale from "date-fns/locale/en-US";
-import * as z from "zod";
-import type { ZodError } from "zod";
 import dayjs from "dayjs";
-import { AuthError } from "@supabase/supabase-js";
-import { PostgrestError } from "@supabase/supabase-js";
+import { z } from "zod";
 
 import { toast } from "sonner";
 
@@ -84,24 +81,4 @@ export function isMacOs() {
   if (typeof window === "undefined") return false;
 
   return window.navigator.userAgent.includes("Mac");
-}
-
-interface SWRError extends Error {
-  status: number;
-}
-
-export async function fetcher<JSON = any>(
-  input: RequestInfo,
-  init?: RequestInit
-): Promise<JSON> {
-  const res = await fetch(input, init);
-
-  if (!res.ok) {
-    const error = await res.text();
-    const err = new Error(error) as SWRError;
-    err.status = res.status;
-    throw err;
-  }
-
-  return res.json();
 }
