@@ -8,6 +8,6 @@ import { Suspense } from "react";
 import { PostgrestError } from "@supabase/supabase-js";
 import { Shell } from "@/components/shells/shell";
 
-export default async function Error({ error }: { error: Error }) {
+export default function Error({ error }: { error: Error }) {
   return <h1>something went wring :c</h1>;
 }
