@@ -23,17 +23,6 @@ import { getWorkspaces } from "@/lib/services/workspace";
 // };
 
 export default async function SignInPage() {
-  const { data: user, error } = await getUser();
-
-  if (user) {
-    const { data: workspaces, error } = await getWorkspaces();
-    console.log(workspaces);
-    if (!workspaces || workspaces.length < 1) {
-      return redirect("/create");
-    }
-    return redirect(`/${workspaces[0].url_key}`);
-  }
-
   return (
     <Shell className="max-w-lg">
       <Card>
