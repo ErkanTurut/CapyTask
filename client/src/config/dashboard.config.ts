@@ -27,19 +27,8 @@ export const dashboardConfig: DashboardConfig = {
     main: [
       {
         label: "Your teams",
-        items: [
-          {
-            title: "All Teams",
-            href: "/teams",
-            items: [],
-          },
-          {
-            title: "New Team",
-            href: "/teams/create",
-            icon: "plus",
-            items: [],
-          },
-        ],
+        create: "/teams/create",
+        items: [],
       },
     ],
     footer: [
@@ -62,52 +51,3 @@ export const dashboardConfig: DashboardConfig = {
     ],
   },
 };
-
-/*
-    {
-      title: "Organisations",
-      icon: "backpack",
-      href: "/dashboard/organisations",
-      items: [],
-    },
-    {
-      title: "Profile",
-      icon: "user",
-      href: "/dashboard/account/preferences",
-      items: [],
-    },
-    {
-      title: "Settings",
-      icon: "gear",
-      href: "/dashboard/account/settings",
-      items: [],
-    },
-    {
-      title: "Projects",
-      items: [
-        {
-          title: "All Projects",
-          href: "/dashboard/projects",
-          items: [],
-        },
-      ],
-    },
-    {
-      title: "Account",
-      href: "/dashboard/account",
-      items: [
-        {
-          title: "My Profile",
-          icon: "user",
-          href: "/dashboard/account/preferences",
-          items: [],
-        },
-        {
-          title: "Settings",
-          icon: "gear",
-          href: "/dashboard/account/settings",
-          items: [],
-        },
-      ],
-    },
-    */
