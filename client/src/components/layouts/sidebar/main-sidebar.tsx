@@ -27,12 +27,20 @@ export function MainSidebar({ items, className, ...props }: MainSidebarProps) {
             {mainItem.label && (
               <h2 className="flex w-full items-center py-1 text-sm font-semibold text-muted-foreground">
                 {mainItem.label}
+                {mainItem.create && (
+                  <Link
+                    href={`/dashboard/${params?.url_key}${mainItem.create}`}
+                    className="ml-auto w-4 h-4"
+                  >
+                    <Icons.plusCircled />
+                  </Link>
+                )}
               </h2>
             )}
             {mainItem.items.length > 0
               ? mainItem.items.map((subitem, subIndex) => {
                   const Icon = subitem.icon ? Icons[subitem.icon] : null;
-                  const link = `/${params?.url_key}${subitem.href}`;
+                  const link = `/dashboard/${params?.url_key}${subitem.href}`;
                   return (
                     <Link
                       aria-label={subitem.title}
