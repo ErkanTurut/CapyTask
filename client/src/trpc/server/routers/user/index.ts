@@ -96,6 +96,5 @@ export const userRouter = router({
   //     .select("*")
   //     .eq("id", "78353bb2-b92b-4940-9892-70e8bed02022")
   //     .single();
-  //   console.log(data, error);
   // }),
 });
