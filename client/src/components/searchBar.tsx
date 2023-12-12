@@ -24,25 +24,8 @@ export function SearchBar() {
   const [isOpen, setIsOpen] = React.useState(false);
   const [query, setQuery] = React.useState("");
   const debouncedQuery = useDebounce(query, 300);
-  // const [data, setData] = React.useState<
-  //   | {
-  //       category: Product["category"]
-  //       products: Pick<Product, "id" | "name" | "category">[]
-  //     }[]
-  //   | null
-  // >(null)
+
   const [isPending, startTransition] = React.useTransition();
-
-  // React.useEffect(() => {
-  //   if (debouncedQuery.length === 0) setData(null)
-
-  //   if (debouncedQuery.length > 0) {
-  //     startTransition(async () => {
-  //       const data = await filterProductsAction(debouncedQuery)
-  //       setData(data)
-  //     })
-  //   }
-  // }, [debouncedQuery])
 
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

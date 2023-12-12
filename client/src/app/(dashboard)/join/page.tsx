@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-import { LogOutButtons } from "@/components/auth/SignOutButtons";
 import {
   PageHeader,
   PageHeaderDescription,
