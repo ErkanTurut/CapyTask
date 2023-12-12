@@ -21,13 +21,11 @@ export default async function RootLayout({
           inter.className
         )}
       >
-        <Providers cookies={cookies().toString()}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            {children}
-            <TailwindIndicator />
-            <Toaster />
-          </ThemeProvider>
-        </Providers>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {children}
+          <TailwindIndicator />
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );
