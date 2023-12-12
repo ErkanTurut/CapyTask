@@ -81,7 +81,7 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({ workspaces, className }) => {
                     key={workspace.url_key}
                     onSelect={() => {
                       setOpen(false);
-                      router.push(`/${workspace.url_key}/teams`);
+                      router.push(`/dashboard/${workspace.url_key}/teams`);
                     }}
                     className="text-sm overflow-hidden whitespace-nowrap overflow-ellipsis"
                   >
