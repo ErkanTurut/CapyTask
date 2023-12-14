@@ -42,13 +42,21 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({ workspaces, className }) => {
     workspaces.find((workspace) => workspace?.url_key === url_key) ??
     workspaces?.[0];
 
+  const WorkspaceIcon: FC<{ isSelected: boolean }> = ({ isSelected }) => (
+    <Icons.checkCircled
+      className={cn(
+        "ml-auto h-4 w-4",
+        isSelected ? "opacity-100" : "opacity-0"
+      )}
+    />
+  );
   if (!selectedWorkspace) return null;
 
   const initials = `${selectedWorkspace.name?.charAt(0) ?? ""}`;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
+      <PopoverTrigger className={cn(className)} asChild>
         <Button
           variant="outline"
           role="combobox"
@@ -65,7 +73,10 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({ workspaces, className }) => {
               {initials}
             </AvatarFallback>
           </Avatar>
-          {selectedWorkspace.name}
+          <span className="flex max-w-md text-left justify-start overflow-hidden whitespace-nowrap overflow-ellipsis cursor-pointer">
+            {selectedWorkspace.name}
+          </span>
+
           <Icons.caretSort className="ml-auto h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -83,7 +94,7 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({ workspaces, className }) => {
                       setOpen(false);
                       router.push(`/dashboard/${workspace.url_key}/teams`);
                     }}
-                    className="text-sm overflow-hidden whitespace-nowrap overflow-ellipsis"
+                    className="text-sm overflow-hidden whitespace-nowrap overflow-ellipsis cursor-pointer"
                   >
                     <Avatar className="mr-2 h-5 w-5 rounded-sm">
                       <AvatarImage
@@ -95,13 +106,10 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({ workspaces, className }) => {
                       </AvatarFallback>
                     </Avatar>
                     {workspace.name}
-                    <Icons.checkCircled
-                      className={cn(
-                        "ml-auto h-4 w-4",
+                    <WorkspaceIcon
+                      isSelected={
                         selectedWorkspace.url_key === workspace.url_key
-                          ? "opacity-100"
-                          : "opacity-0"
-                      )}
+                      }
                     />
                   </CommandItem>
                 ))}
