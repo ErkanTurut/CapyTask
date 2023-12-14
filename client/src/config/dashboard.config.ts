@@ -1,10 +1,11 @@
 import { type SidebarNavItem } from "@/types";
 
-export interface DashboardConfig {
+export interface TDashboardConfig {
   sidebarNav: SidebarNavItem;
+  settingsNav: SidebarNavItem;
 }
 
-export const dashboardConfig: DashboardConfig = {
+export const dashboardConfig: TDashboardConfig = {
   sidebarNav: {
     header: [
       {
@@ -27,7 +28,6 @@ export const dashboardConfig: DashboardConfig = {
     main: [
       {
         label: "Your teams",
-        create: "/teams/create",
         items: [],
       },
     ],
@@ -44,6 +44,54 @@ export const dashboardConfig: DashboardConfig = {
             title: "Back to website",
             href: "/",
             icon: "externalLink",
+            items: [],
+          },
+        ],
+      },
+    ],
+  },
+  settingsNav: {
+    header: [
+      {
+        label: "Settings",
+        icon: "chevronLeft",
+        href: "/",
+        items: [],
+      },
+    ],
+    main: [
+      {
+        label: "Account",
+        items: [
+          {
+            title: "Profile",
+            href: "/settings/account/profile",
+            items: [],
+          },
+          {
+            title: "Security",
+            href: "/settings/account/security",
+            items: [],
+          },
+          {
+            title: "Preferences",
+            href: "/settings/account/preferences",
+            items: [],
+          },
+        ],
+      },
+      {
+        label: "Teams",
+        items: [
+          {
+            title: "Your teams",
+            href: "/settings/account/teams",
+            items: [],
+          },
+          {
+            title: "Create a team",
+            icon: "plusCircled",
+            href: "/settings/account/teams/create",
             items: [],
           },
         ],
