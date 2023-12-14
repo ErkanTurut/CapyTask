@@ -29,7 +29,7 @@ type Inputs = z.infer<typeof createWorkspaceSchema>;
 
 export function CreateWorspaceForm() {
   const router = useRouter();
-  const { run, fieldErrors, isLoading } = useAction(createWorkspace, {
+  const { run, isLoading } = useAction(createWorkspace, {
     onSuccess: (data) => {
       toast.success("Workspace created successfully");
       router.refresh();
