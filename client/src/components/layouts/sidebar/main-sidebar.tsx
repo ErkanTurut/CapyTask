@@ -19,6 +19,7 @@ export function MainSidebar({ items, className, ...props }: MainSidebarProps) {
   const pathname = usePathname();
   const params = useParams();
 
+  if (!items.main) return null;
   return (
     <span className={cn("flex w-full flex-col gap-1 ", className)} {...props}>
       {items.main.map((mainItem, mainIndex) => {
@@ -27,14 +28,6 @@ export function MainSidebar({ items, className, ...props }: MainSidebarProps) {
             {mainItem.label && (
               <h2 className="flex w-full items-center py-1 text-sm font-semibold text-muted-foreground">
                 {mainItem.label}
-                {mainItem.create && (
-                  <Link
-                    href={`/dashboard/${params?.url_key}${mainItem.create}`}
-                    className="ml-auto w-4 h-4"
-                  >
-                    <Icons.plusCircled />
-                  </Link>
-                )}
               </h2>
             )}
             {mainItem.items.length > 0
