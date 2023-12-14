@@ -14,6 +14,9 @@ export interface NavItem {
   icon?: keyof typeof Icons;
   label?: string;
   description?: string;
+  badge?: string;
+  badgeColor?: string;
+  backnav?: boolean;
 }
 
 export interface NavItemWithChildren extends NavItem {
@@ -35,14 +38,15 @@ export interface FooterItem {
 
 export interface SideNavItem {
   label?: string;
-  create?: string;
-  items: NavItemWithChildren[];
+  icon?: keyof typeof Icons;
+  href?: string;
+  items: NavItemWithOptionalChildren[];
 }
 
 export interface NavContainerProps {
-  header: SideNavItem[];
-  main: SideNavItem[];
-  footer: SideNavItem[];
+  header?: SideNavItem[];
+  main?: SideNavItem[];
+  footer?: SideNavItem[];
 }
 
 export type MainNavItem = NavItemWithOptionalChildren;
