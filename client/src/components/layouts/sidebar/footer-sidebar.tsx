@@ -30,6 +30,7 @@ export function FooterSidebar({
   const pathname = usePathname();
   const params = useParams();
 
+  if (!items.footer) return null;
   return (
     <span className={cn("flex w-full flex-col gap-1 ", className)} {...props}>
       {items.footer.map((footerItem, footerIndex) => {
