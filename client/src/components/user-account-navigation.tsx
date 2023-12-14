@@ -19,6 +19,7 @@ import ThemeToggle from "./themeToggle";
 import { cn } from "@/utils";
 
 import { Database } from "@/types/supabase.types";
+import { useParams } from "next/navigation";
 
 interface UserAccountNavProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -34,12 +35,15 @@ const UserAccountNav: FC<UserAccountNavProps> = ({ className, user }) => {
     user?.image_uri ??
     `https://avatar.vercel.sh/${initials}.svg?text=${initials}`;
 
+  const { url_key } = useParams();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className={cn("h-8 w-8 rounded-full", className)}
+          size="icon"
+          className={cn("relative h-8 w-8 rounded-full", className)}
         >
           <Avatar className={cn("h-8 w-8", className)}>
             <AvatarImage src={profilePicture} alt={user.first_name ?? ""} />
@@ -60,20 +64,20 @@ const UserAccountNav: FC<UserAccountNavProps> = ({ className, user }) => {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem asChild>
+          {/* <DropdownMenuItem asChild>
             <Link href="/signin">
               <Icons.rocket className="mr-2 h-4 w-4" aria-hidden="true" />
               Go to App
               <DropdownMenuShortcut>⌘D</DropdownMenuShortcut>
             </Link>
-          </DropdownMenuItem>
-          {/* <DropdownMenuItem asChild>
-            <Link href="/dashboard/account/settings">
+          </DropdownMenuItem> */}
+          <DropdownMenuItem asChild>
+            <Link href={`/dashboard/${url_key}/settings`}>
               <Icons.gear className="mr-2 h-4 w-4" aria-hidden="true" />
               Settings
               <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
             </Link>
-          </DropdownMenuItem> */}
+          </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
