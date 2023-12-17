@@ -7,7 +7,7 @@ import {
 } from "@/components/pageHeader";
 import { Shell } from "@/components/shells/shell";
 import { redirect } from "next/navigation";
-import { getSession } from "@/lib/auth";
+import { getSession } from "@/lib/services/auth";
 
 export default async function JoinPage() {
   const { data } = await getSession();
