@@ -6,11 +6,7 @@ import {
   revalidateTag,
 } from "next/cache";
 import createSupabaseServerClient from "@/lib/supabase/server";
-import { getSession } from "@/lib/auth";
-import {
-  PostgrestResponse,
-  PostgrestSingleResponse,
-} from "@supabase/supabase-js";
+import { getSession } from "@/lib/services/auth";
 
 export const getUser = async () => {
   const supabase = await createSupabaseServerClient();
