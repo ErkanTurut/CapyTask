@@ -1,4 +1,5 @@
 import { type SidebarNavItem } from "@/types";
+import { Database } from "@/types/supabase.types";
 
 export interface TDashboardConfig {
   sidebarNav: SidebarNavItem;
@@ -85,13 +86,28 @@ export const dashboardConfig: TDashboardConfig = {
         items: [
           {
             title: "Your teams",
-            href: "/settings/account/teams",
+            href: "/settings/teams",
             items: [],
           },
           {
             title: "Create a team",
             icon: "plusCircled",
-            href: "/settings/account/teams/create",
+            href: "settings/teams/create",
+            items: [],
+          },
+        ],
+      },
+      {
+        label: "Workspace",
+        items: [
+          {
+            title: "General",
+            href: "/settings/workspace/general",
+            items: [],
+          },
+          {
+            title: "Billing",
+            href: "/settings/workspace/billing",
             items: [],
           },
         ],
