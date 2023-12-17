@@ -13,6 +13,7 @@ import { Database } from "@/types/supabase.types";
 import { TDashboardConfig } from "@/config/dashboard.config";
 import { SidebarNavItem } from "@/types";
 import UserAccountNav from "../user-account-navigation";
+import { TeamSidebar } from "./sidebar/team-sidebar";
 
 export interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   props: {
@@ -24,6 +25,7 @@ export interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export async function Sidebar({ className, props }: SidebarProps) {
+  console.log(props.teams);
   return (
     <ResizeZone>
       <div className={cn("flex w-full h-full", className)} {...props}>
@@ -46,7 +48,6 @@ export async function Sidebar({ className, props }: SidebarProps) {
               </Suspense>
             )}
           </div>
-
           <nav className="flex w-full flex-col gap-1 flex-grow">
             <div className="flex w-full flex-col gap-1">
               <HeaderSidebar items={props.sidebarnav} />
@@ -54,6 +55,7 @@ export async function Sidebar({ className, props }: SidebarProps) {
               <div className="flex-grow overflow-y-auto">
                 <ScrollArea>
                   <MainSidebar items={props.sidebarnav} />
+                  {props.teams && <TeamSidebar items={{ team: props.teams }} />}
                 </ScrollArea>
               </div>
             </div>
