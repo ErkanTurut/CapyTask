@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
-import { serverClient } from "@/trpc/serverClient";
 
 // Javascript Object Signing and Encryption (JOSE)
 // https://www.npmjs.com/package/jose
