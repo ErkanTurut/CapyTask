@@ -14,7 +14,6 @@ import { Suspense } from "react";
 import { getUser } from "@/lib/services/user";
 
 export default async function SettingsPage() {
-  // const user = await trpc.user.getCurrentUser.query();
   const { data: user } = await getUser();
 
   if (!user) {
