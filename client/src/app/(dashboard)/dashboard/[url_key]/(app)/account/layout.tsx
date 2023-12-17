@@ -6,7 +6,7 @@ import {
   PageHeaderHeading,
 } from "@/components/pageHeader";
 import { Shell } from "@/components/shells/shell";
-import { getSession } from "@/lib/auth";
+import { getSession } from "@/lib/services/auth";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
