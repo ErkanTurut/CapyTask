@@ -1,11 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { siteConfig } from "@/config/site.config";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Icons } from "@/components/icons";
-import { serverClient } from "@/trpc";
-import { redirect } from "next/navigation";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { siteConfig } from "@/config/site.config";
 
 interface AuthLayoutProps {
   children: React.ReactNode;
