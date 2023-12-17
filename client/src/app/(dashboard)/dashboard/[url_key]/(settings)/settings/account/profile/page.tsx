@@ -10,17 +10,16 @@ import {
 
 import { redirect } from "next/navigation";
 
-import { Suspense } from "react";
 import { getUser } from "@/lib/services/user";
+import { Suspense } from "react";
 
-export default async function SettingsPage() {
-  // const user = await trpc.user.getCurrentUser.query();
+interface profilePageProps {}
+
+export default async function profilePage({}: profilePageProps) {
   const { data: user } = await getUser();
-
   if (!user) {
     redirect("/signin");
   }
-
   return (
     <section id="user-account-info" aria-labelledby="user-account-info-heading">
       <Card>
