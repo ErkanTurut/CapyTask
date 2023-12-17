@@ -18,7 +18,7 @@ import { redirect } from "next/navigation";
 
 import { CreateWorspaceForm } from "@/components/workspace/workspace-create";
 import Link from "next/link";
-import { getSession } from "@/lib/auth";
+import { getSession } from "@/lib/services/auth";
 import { cn } from "@/utils";
 import { buttonVariants } from "@/components/ui/button";
 
