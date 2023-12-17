@@ -18,9 +18,15 @@ export default async function DashboardLayout({
   params,
   modal,
 }: DashboardLayoutProps) {
-  const { data: user } = await getUser();
-  const { data: workspaces, error } = await getWorkspaces();
-  const { data: teams } = await getTeams();
+  const [userData, workspacesData, teamsData] = await Promise.all([
+    getUser(),
+    getWorkspaces(),
+    getTeams(),
+  ]);
+  const { data: user } = userData;
+  const { data: workspaces } = workspacesData;
+  const { data: teams } = teamsData;
+
   if (!user) {
     redirect("/signin");
   }
