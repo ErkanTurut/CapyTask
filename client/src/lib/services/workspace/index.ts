@@ -8,7 +8,11 @@ import createSupabaseServerClient from "@/lib/supabase/server";
 
 export const getWorkspace = async (url_key: string) => {
   const supabase = await createSupabaseServerClient();
-  return await supabase.from("workspace").select("*").eq("url_key", url_key);
+  return await supabase
+    .from("workspace")
+    .select("*")
+    .eq("url_key", url_key)
+    .single();
 };
 
 export const getWorkspaces = async () => {
