@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "supabase": "npx supabase gen types typescript --project-id qnjfhxvyxiwpcadtohnd --schema public > src/types/supabase.types.ts"
+    "db": "npx prisma db push && npx supabase gen types typescript --project-id qnjfhxvyxiwpcadtohnd --schema public > src/types/supabase.types.ts && npx prisma generate"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.1.1",
