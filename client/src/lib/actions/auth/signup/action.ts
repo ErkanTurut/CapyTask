@@ -1,6 +1,6 @@
 "use server";
 
-import createSupabaseServerClient from "@/lib/supabase/server";
+import createSupabaseServerClient from "@/lib/supabase/server-actions";
 import { TSignUp, ReturnType } from "./types";
 import { revalidatePath } from "next/cache";
 import { createSafeAction } from "@/lib/safe-action";
