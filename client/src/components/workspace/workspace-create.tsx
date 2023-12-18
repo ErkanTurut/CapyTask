@@ -7,7 +7,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 
-import { createWorkspaceSchema } from "@/lib/validations/workspace";
 import {
   Form,
   FormControl,
@@ -21,11 +20,13 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { catchError } from "@/utils";
 
-import { createWorkspace } from "@/lib/actions/workspace";
+import {
+  createWorkspace,
+  TCreateWorkspace,
+  ZCreateWorkspace,
+} from "@/lib/actions/workspace";
 import { useAction } from "@/hooks/use-actions";
 import { Button } from "../ui/button";
-
-type Inputs = z.infer<typeof createWorkspaceSchema>;
 
 export function CreateWorspaceForm() {
   const router = useRouter();
@@ -41,16 +42,16 @@ export function CreateWorspaceForm() {
   });
 
   // react-hook-form
-  const form = useForm<Inputs>({
-    resolver: zodResolver(createWorkspaceSchema),
+  const form = useForm<TCreateWorkspace>({
+    resolver: zodResolver(ZCreateWorkspace),
     defaultValues: {
       name: "",
-      urlKey: "",
+      url_key: "",
     },
   });
 
-  async function onSubmit(data: Inputs) {
-    run({ name: data.name, url_key: data.urlKey });
+  async function onSubmit(data: TCreateWorkspace) {
+    run({ name: data.name, url_key: data.url_key });
   }
 
   return (
@@ -74,7 +75,7 @@ export function CreateWorspaceForm() {
         />
         <FormField
           control={form.control}
-          name="urlKey"
+          name="url_key"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Workspace Url</FormLabel>
