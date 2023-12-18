@@ -131,7 +131,8 @@ export interface Database {
           image_uri: string | null
           name: string
           updated_at: string
-          workspaces_id: string
+          url_key: string
+          workspace_id: string
         }
         Insert: {
           created_at?: string
@@ -140,7 +141,8 @@ export interface Database {
           image_uri?: string | null
           name: string
           updated_at?: string
-          workspaces_id: string
+          url_key: string
+          workspace_id: string
         }
         Update: {
           created_at?: string
@@ -149,12 +151,13 @@ export interface Database {
           image_uri?: string | null
           name?: string
           updated_at?: string
-          workspaces_id?: string
+          url_key?: string
+          workspace_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "team_workspaces_id_fkey"
-            columns: ["workspaces_id"]
+            foreignKeyName: "team_workspace_id_fkey"
+            columns: ["workspace_id"]
             isOneToOne: false
             referencedRelation: "workspace"
             referencedColumns: ["id"]
@@ -236,24 +239,27 @@ export interface Database {
       }
       user_team: {
         Row: {
-          role_id: string
+          role_id: string | null
+          roleId: string | null
           team_id: string
           user_id: string
         }
         Insert: {
-          role_id: string
+          role_id?: string | null
+          roleId?: string | null
           team_id: string
           user_id: string
         }
         Update: {
-          role_id?: string
+          role_id?: string | null
+          roleId?: string | null
           team_id?: string
           user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "user_team_role_id_fkey"
-            columns: ["role_id"]
+            foreignKeyName: "user_team_roleId_fkey"
+            columns: ["roleId"]
             isOneToOne: false
             referencedRelation: "role"
             referencedColumns: ["id"]
@@ -276,17 +282,17 @@ export interface Database {
       }
       user_workspace: {
         Row: {
-          role_id: string
+          role_id: string | null
           user_id: string
           workspace_id: string
         }
         Insert: {
-          role_id: string
+          role_id?: string | null
           user_id: string
           workspace_id: string
         }
         Update: {
-          role_id?: string
+          role_id?: string | null
           user_id?: string
           workspace_id?: string
         }
