@@ -36,7 +36,7 @@ export default async function CreatePage() {
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl">Create workspace</CardTitle>
             <CardDescription>
-              Create a new workspace to collaborate with your buddies.
+              Create a new workspace to work on.
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4">
