@@ -55,25 +55,25 @@ const ResizeZone: FC<ResizeZoneProps> = ({ children }) => {
     // Add any hover effect cleanup you want when the mouse leaves the div
   };
 
-  useEffect(() => {
-    if (resizeRef.current) {
-      resizeRef.current.addEventListener("mouseenter", handleMouseEnter);
-      resizeRef.current.addEventListener("mouseleave", handleMouseLeave);
-    }
+  // useEffect(() => {
+  //   if (resizeRef.current) {
+  //     resizeRef.current.addEventListener("mouseenter", handleMouseEnter);
+  //     resizeRef.current.addEventListener("mouseleave", handleMouseLeave);
+  //   }
 
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
+  //   document.addEventListener("mousemove", handleMouseMove);
+  //   document.addEventListener("mouseup", handleMouseUp);
 
-    return () => {
-      if (resizeRef.current) {
-        resizeRef.current.removeEventListener("mouseenter", handleMouseEnter);
-        resizeRef.current.removeEventListener("mouseleave", handleMouseLeave);
-      }
+  //   return () => {
+  //     if (resizeRef.current) {
+  //       resizeRef.current.removeEventListener("mouseenter", handleMouseEnter);
+  //       resizeRef.current.removeEventListener("mouseleave", handleMouseLeave);
+  //     }
 
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
-    };
-  }, [isResizing]);
+  //     document.removeEventListener("mousemove", handleMouseMove);
+  //     document.removeEventListener("mouseup", handleMouseUp);
+  //   };
+  // }, [isResizing]);
 
   return (
     <aside

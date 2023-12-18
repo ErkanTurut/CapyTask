@@ -25,7 +25,6 @@ export interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export async function Sidebar({ className, props }: SidebarProps) {
-  console.log(props.teams);
   return (
     <ResizeZone>
       <div className={cn("flex w-full h-full", className)} {...props}>
