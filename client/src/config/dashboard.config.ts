@@ -63,6 +63,7 @@ export const dashboardConfig: TDashboardConfig = {
     main: [
       {
         label: "Account",
+        href: "/settings/account",
         items: [
           {
             title: "Profile",
@@ -92,7 +93,7 @@ export const dashboardConfig: TDashboardConfig = {
           {
             title: "Create a team",
             icon: "plusCircled",
-            href: "settings/teams/create",
+            href: "/settings/teams/create",
             items: [],
           },
         ],
