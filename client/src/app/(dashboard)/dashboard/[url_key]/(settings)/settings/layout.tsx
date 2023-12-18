@@ -29,7 +29,6 @@ export default async function SettingsLayout({
           <Shell variant="markdown">{children}</Shell>
         </main>
       </div>
-
       {/* <SiteFooter /> */}
     </div>
   );
