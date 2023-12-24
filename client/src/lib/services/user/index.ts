@@ -11,11 +11,9 @@ import { getSession } from "@/lib/services/auth";
 export const getUser = async () => {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await getSession();
-
   if (!data.session) {
     return { data: null, error };
   }
-
   return await supabase
     .from("user")
     .select("*")
