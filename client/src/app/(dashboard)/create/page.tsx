@@ -19,7 +19,7 @@ import { redirect } from "next/navigation";
 import { CreateWorspaceForm } from "@/components/workspace/workspace-create";
 import Link from "next/link";
 import { getSession } from "@/lib/services/auth";
-import { cn } from "@/utils";
+import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 
 export default async function CreatePage() {
