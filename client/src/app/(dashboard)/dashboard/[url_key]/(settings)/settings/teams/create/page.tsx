@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getWorkspace } from "@/lib/services/workspace";
-import { cn } from "@/utils";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 

@@ -20,11 +20,11 @@ export default async function SettingsLayout({
   return (
     <div className="relative mx-auto flex min-h-screen w-full flex-col items-center justify-center">
       <div className="flex w-full flex-1 gap-2 lg:gap-1">
-        <Sidebar
+        {/* <Sidebar
           props={{
             sidebarnav: dashboardConfig.settingsNav,
           }}
-        />
+        /> */}
         <main className="z-10 flex w-full flex-1 flex-col items-start">
           <Shell variant="markdown">{children}</Shell>
         </main>
