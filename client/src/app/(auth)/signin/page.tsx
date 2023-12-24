@@ -13,14 +13,7 @@ import {
 import { OAuthSignIn } from "@/components/auth/oauthSignIn";
 import { SignInForm } from "@/components/forms/sign-in";
 import { Shell } from "@/components/shells/shell";
-import { getUser } from "@/lib/services/user";
-import { getWorkspaces } from "@/lib/services/workspace";
 
-// export const metadata: Metadata = {
-//   metadataBase: new URL("oue"),
-//   title: "Sign In",
-//   description: "Sign in to your account",
-// };
 
 export default async function SignInPage() {
   return (
