@@ -4,7 +4,7 @@ import { useTheme } from "next-themes";
 
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
-import { cn } from "@/utils";
+import { cn } from "@/lib/utils";
 
 import {
   Select,

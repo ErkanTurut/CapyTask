@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import { catchError } from "@/utils";
+import { catchError } from "@/lib/utils";
 
 import { useAction } from "@/hooks/use-actions";
 import { signup, TSignUp, ZSignUp } from "@/lib/actions/auth/signup";
