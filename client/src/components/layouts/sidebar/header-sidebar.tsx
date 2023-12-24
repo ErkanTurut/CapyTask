@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import type { SidebarNavItem } from "@/types";
 import { useParams, usePathname } from "next/navigation";
-import { cn } from "@/utils";
+import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 import { useRouter } from "next/navigation";

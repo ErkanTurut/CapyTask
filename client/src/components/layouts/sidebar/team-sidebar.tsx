@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { SidebarNavItem } from "@/types";
 import { useParams, usePathname } from "next/navigation";
 
-import { cn } from "@/utils";
+import { cn } from "@/lib/utils";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";

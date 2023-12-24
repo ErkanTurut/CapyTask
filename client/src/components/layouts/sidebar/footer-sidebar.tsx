@@ -10,7 +10,7 @@ import {
 } from "next/navigation";
 import { siteConfig } from "@/config/site.config";
 
-import { cn } from "@/utils";
+import { cn } from "@/lib/utils";
 
 import { buttonVariants } from "@/components/ui/button";
 
