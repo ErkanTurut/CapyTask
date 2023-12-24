@@ -1,10 +1,6 @@
-import { Sidebar } from "@/components/layouts/app-sidebar";
-import { Shell } from "@/components/shells/shell";
-import { getUser } from "@/lib/services/user";
-import { getWorkspaces } from "@/lib/services/workspace";
-import { redirect } from "next/navigation";
-import { getTeams } from "@/lib/services/team";
-import { dashboardConfig } from "@/config/dashboard.config";
+import { cookies } from "next/headers";
+import App from "./_components/app";
+
 interface DashboardLayoutProps {
   children: React.ReactNode;
   modal: React.ReactNode;
@@ -18,45 +14,22 @@ export default async function DashboardLayout({
   params,
   modal,
 }: DashboardLayoutProps) {
-  const [userData, workspacesData, teamsData] = await Promise.all([
-    getUser(),
-    getWorkspaces(),
-    getTeams(),
-  ]);
-  const { data: user } = userData;
-  const { data: workspaces } = workspacesData;
-  const { data: teams } = teamsData;
+  const layout = cookies().get("react-resizable-panels:layout");
+  const collapsed = cookies().get("react-resizable-panels:collapsed");
 
-  if (!user) {
-    redirect("/signin");
-  }
-  if (!workspaces) {
-    redirect("/dashboard/create");
-  }
+  const defaultLayout = layout ? JSON.parse(layout.value) : undefined;
+  const defaultCollapsed = collapsed ? JSON.parse(collapsed.value) : undefined;
 
   return (
-    <div className="relative mx-auto flex min-h-screen w-full flex-col items-center justify-center">
-      <div className="flex w-full flex-1 gap-2 lg:gap-1">
-        {modal}
-        <Sidebar
-          props={{
-            workspaces: workspaces,
-            teams: teams,
-            sidebarnav: dashboardConfig.sidebarNav,
-            user: user,
-          }}
-        />
-        <main className="z-10 flex w-full flex-1 flex-col items-start justify-center">
-          <Shell
-            variant="sidebar"
-            className="relative flex-1 flex-col overflow-x-hidden  lg:ml-0 backdrop-blur-[1px]"
-          >
-            {children}
-          </Shell>
-        </main>
-      </div>
-
-      {/* <SiteFooter /> */}
+    <div className="min-h-screen">
+      {modal}
+      <App
+        defaultLayout={defaultLayout}
+        defaultCollapsed={defaultCollapsed}
+        navCollapsedSize={4}
+      >
+        {children}
+      </App>
     </div>
   );
 }
