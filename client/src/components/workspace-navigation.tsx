@@ -2,7 +2,7 @@
 import React, { FC, useState } from "react";
 
 import { Database } from "@/types/supabase.types";
-import { cn } from "@/utils";
+import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 
@@ -21,15 +21,34 @@ import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import { useWorkspace } from "@/lib/store";
 
 interface WorkspaceNavProps extends React.HTMLAttributes<HTMLDivElement> {
   workspaces: Database["public"]["Tables"]["workspace"]["Row"][];
+  isCollapsed?: boolean;
 }
 
-const WorkspaceNav: FC<WorkspaceNavProps> = ({ workspaces, className }) => {
+const WorkspaceNav: FC<WorkspaceNavProps> = ({
+  workspaces,
+  isCollapsed,
+  className,
+}) => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const { url_key } = useParams();
+  const selectedWorkspace = useWorkspace()((state) => state.workspace);
+  const setSelectedWorkspace = useWorkspace()((state) => state.setWorkspace);
+  setSelectedWorkspace(
+    workspaces.find((workspace) => workspace?.url_key === url_key) ??
+      workspaces?.[0]
+  );
+
+  // const [selectedWorkspace, setSelectedWorkspace] = React.useState<
+  //   Database["public"]["Tables"]["workspace"]["Row"]
+  // >(
+  //   workspaces.find((workspace) => workspace?.url_key === url_key) ??
+  //     workspaces?.[0]
+  // );
 
   const groups = [
     {
@@ -37,10 +56,6 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({ workspaces, className }) => {
       workspaces: workspaces,
     },
   ];
-
-  const selectedWorkspace =
-    workspaces.find((workspace) => workspace?.url_key === url_key) ??
-    workspaces?.[0];
 
   const WorkspaceIcon: FC<{ isSelected: boolean }> = ({ isSelected }) => (
     <Icons.checkCircled
@@ -56,27 +71,38 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({ workspaces, className }) => {
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger className={cn(className)} asChild>
+      <PopoverTrigger
+        className={cn(
+          className,
+          isCollapsed &&
+            "flex h-8 w-8 items-center justify-center p-0 [&>span]:w-auto [&>svg]:hidden"
+        )}
+        asChild
+      >
         <Button
           variant="outline"
           role="combobox"
           aria-expanded={open}
           aria-label="Select a team"
-          className="w-full"
+          className="w-full gap-1"
         >
-          <Avatar className="mr-2 h-5 w-5 rounded-sm">
+          <Avatar className="h-5 w-5 rounded-sm">
             <AvatarImage
               src={`https://avatar.vercel.sh/${selectedWorkspace.url_key}.png`}
               alt={selectedWorkspace.url_key}
             />
-            <AvatarFallback className="mr-2 h-5 w-5 rounded-sm">
+            <AvatarFallback className="h-5 w-5 rounded-sm">
               {initials}
             </AvatarFallback>
           </Avatar>
-          <span className="flex max-w-md text-left justify-start overflow-hidden whitespace-nowrap overflow-ellipsis cursor-pointer">
+          <span
+            className={cn(
+              "flex max-w-md text-left justify-start overflow-hidden whitespace-nowrap overflow-ellipsis cursor-pointer",
+              isCollapsed && "hidden"
+            )}
+          >
             {selectedWorkspace.name}
           </span>
-
           <Icons.caretSort className="ml-auto h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -92,6 +118,7 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({ workspaces, className }) => {
                     key={workspace.url_key}
                     onSelect={() => {
                       setOpen(false);
+                      setSelectedWorkspace(workspace);
                       router.push(`/dashboard/${workspace.url_key}/teams`);
                     }}
                     className="text-sm overflow-hidden whitespace-nowrap overflow-ellipsis cursor-pointer"
