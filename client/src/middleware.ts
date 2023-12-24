@@ -55,7 +55,21 @@ export async function middleware(request: NextRequest) {
     if (!workspaces || workspaces.length < 1) {
       url = new URL("/create", request.url);
     } else {
-      url = new URL(`/dashboard/${workspaces[0].url_key}`, request.url);
+      const workspace_cookie = request.cookies.get(
+        "gembuddy:workspace_url_key"
+      );
+      const latestWorkspace_url_key = workspace_cookie
+        ? JSON.parse(workspace_cookie.value)
+        : undefined;
+
+      console.log("cookies", latestWorkspace_url_key);
+
+      const latestWorkspace =
+        workspaces?.find(
+          (workspace) => workspace?.url_key === latestWorkspace_url_key
+        ) ?? workspaces?.[0];
+
+      url = new URL(`/dashboard/${latestWorkspace.url_key}`, request.url);
     }
     return NextResponse.redirect(url);
   };
