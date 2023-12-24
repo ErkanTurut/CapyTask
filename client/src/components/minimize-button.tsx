@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
-import { cn } from "@/utils";
+import { cn } from "@/lib/utils";
 interface minimizeButtonProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const MinimizeButton: FC<minimizeButtonProps> = ({ className }) => {
