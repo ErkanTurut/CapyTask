@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 
 import { Provider } from "@/types";
-import { catchError } from "@/utils";
+import { catchError } from "@/lib/utils";
 import createSupabaseBrowserClient from "@/lib/supabase/browser";
 
 const oauthProviders = [

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { catchError } from "@/utils";
+import { catchError } from "@/lib/utils";
 import { useAction } from "@/hooks/use-actions";
 import { signout } from "@/lib/actions/auth/signout";
 
