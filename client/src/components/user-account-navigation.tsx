@@ -16,7 +16,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Icons } from "./icons";
 import ThemeToggle from "./themeToggle";
 
-import { cn } from "@/utils";
+import { cn } from "@/lib/utils";
 
 import { Database } from "@/types/supabase.types";
 import { useParams } from "next/navigation";
