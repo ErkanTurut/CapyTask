@@ -1,11 +1,9 @@
-import { cn } from "@/utils";
+import { cn } from "@/lib/utils";
 import "@/styles/globals.css";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/themeProvider";
 import { TailwindIndicator } from "@/components/tailwindIndicator";
 import { Toaster } from "@/components/ui/toaster";
-import Providers from "@/components/providers";
-import { cookies } from "next/headers";
 const inter = Inter({ subsets: ["latin"] });
 
 export default async function RootLayout({
