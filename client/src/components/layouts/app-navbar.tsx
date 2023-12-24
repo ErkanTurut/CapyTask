@@ -4,26 +4,19 @@ import { FC, Suspense } from "react";
 
 import { buttonVariants } from "@/components/ui/button";
 
-// import { CartSheet } from "@/components/cart/cart-sheet";
 import { MainNav } from "@/components/layouts/main-navigation/main-navbar";
-import { MobileNav } from "./mobile-navbar";
-import ThemeToggle from "../themeToggle";
-// import { MobileNav } from "@/components/layouts/mobile-nav"
 import { Skeleton } from "@/components/ui/skeleton";
 
 import UserAccountNav from "../user-account-navigation";
 
-import { serverClient } from "@/trpc";
 import { getUser } from "@/lib/services/user";
-import { cn } from "@/utils";
+import { cn } from "@/lib/utils";
 import { Icons } from "../icons";
-import { getWorkspace } from "@/lib/services/workspace";
 
 interface NavbarProps {}
 
 const NavBar: FC<NavbarProps> = async () => {
   const { data: user } = await getUser();
-
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background">
       <div className="px-6 flex h-16 items-center">

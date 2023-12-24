@@ -18,7 +18,7 @@ import { useForm } from "react-hook-form";
 import { FC } from "react";
 
 import { trpc } from "@/trpc/client";
-import { catchError } from "@/utils";
+import { catchError } from "@/lib/utils";
 import { toast } from "sonner";
 
 import { useRouter } from "next/navigation";
