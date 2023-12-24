@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { toast } from "sonner";
-import { catchError } from "@/utils";
+import { catchError } from "@/lib/utils";
 
 import {
   createWorkspace,
