@@ -16,7 +16,8 @@ export interface NavItem {
   description?: string;
   badge?: string;
   badgeColor?: string;
-  backnav?: boolean;
+  variant: "default" | "ghost";
+  items?: NavItem[];
 }
 
 export interface NavItemWithChildren extends NavItem {
@@ -37,21 +38,14 @@ export interface FooterItem {
 }
 
 export interface SideNavItem {
-  label?: string;
-  icon?: keyof typeof Icons;
-  href?: string;
+  isCollapsed: boolean;
   items: NavItemWithOptionalChildren[];
-}
-
-export interface NavContainerProps {
-  header?: SideNavItem[];
-  main?: SideNavItem[];
-  footer?: SideNavItem[];
 }
 
 export type MainNavItem = NavItemWithOptionalChildren;
 
-export type SidebarNavItem = NavContainerProps;
+export type SidebarNavItem = SideNavItem;
+export type SettingsNavItem = SideNavItem;
 
 export type UserRole = z.infer<typeof userPrivateMetadataSchema.shape.role>;
 
