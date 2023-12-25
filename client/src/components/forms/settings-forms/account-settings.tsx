@@ -17,22 +17,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { FC } from "react";
 
-import { trpc } from "@/trpc/client";
 import { catchError } from "@/lib/utils";
 import { toast } from "sonner";
 
-import { useRouter } from "next/navigation";
-
-import type { serverClient } from "@/trpc/serverClient";
 import { user } from "@prisma/client";
 import { useAction } from "@/hooks/use-actions";
 import { updateUser } from "@/lib/actions/user";
+import { useUser } from "@/lib/store";
 
 interface AccountFormProps {
   user: Pick<user, "email" | "first_name" | "last_name">;
 }
 
 const AccountForm: FC<AccountFormProps> = ({ user }) => {
+  const setUser = useUser()((state) => state.setUser);
+
   const form = useForm<TaccountSettingsSchema>({
     resolver: zodResolver(accountSettingsSchema),
     defaultValues: {
@@ -50,6 +49,7 @@ const AccountForm: FC<AccountFormProps> = ({ user }) => {
         first_name: data?.first_name || "",
         last_name: data?.last_name || "",
       });
+      setUser(data);
     },
     onError: (err) => {
       catchError(err);
@@ -61,66 +61,68 @@ const AccountForm: FC<AccountFormProps> = ({ user }) => {
   }
 
   return (
-    <Form {...form}>
-      <form
-        className="grid gap-4"
-        onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
-      >
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input placeholder="" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+    <>
+      <Form {...form}>
+        <form
+          className="grid gap-4"
+          onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
+        >
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input placeholder="" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="first_name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>first name</FormLabel>
+                <FormControl>
+                  <Input placeholder="" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="last_name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Last name</FormLabel>
+                <FormControl>
+                  <Input placeholder="" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {form.formState.isDirty && (
+            <div className="flex justify-end gap-2 transition-all ">
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  form.reset();
+                }}
+              >
+                Cancel
+                <span className="sr-only">cancel</span>
+              </Button>
+              <Button isLoading={isLoading}>Save</Button>
+            </div>
           )}
-        />
-        <FormField
-          control={form.control}
-          name="first_name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>first name</FormLabel>
-              <FormControl>
-                <Input placeholder="" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="last_name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Last name</FormLabel>
-              <FormControl>
-                <Input placeholder="" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {form.formState.isDirty && (
-          <div className="flex justify-end gap-2 transition-all ">
-            <Button
-              variant="secondary"
-              onClick={() => {
-                form.reset();
-              }}
-            >
-              Cancel
-              <span className="sr-only">cancel</span>
-            </Button>
-            <Button isLoading={isLoading}>Save</Button>
-          </div>
-        )}
-      </form>
-    </Form>
+        </form>
+      </Form>
+    </>
   );
 };
 
