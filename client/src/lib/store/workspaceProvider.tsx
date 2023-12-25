@@ -42,8 +42,8 @@ export const WorkspaceProvider = ({
   workspaceList,
   children,
 }: {
-  workspace: Database["public"]["Tables"]["workspace"]["Row"];
-  workspaceList: Database["public"]["Tables"]["workspace"]["Row"][];
+  workspace: WorkspaceState["workspace"];
+  workspaceList: WorkspaceState["workspaceList"];
   children: React.ReactNode;
 }) => {
   const [store] = useState(() => createWorkspace(workspace, workspaceList));
