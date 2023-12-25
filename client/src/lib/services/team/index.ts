@@ -6,7 +6,10 @@ import {
 } from "next/cache";
 import createSupabaseServerClient from "@/lib/supabase/server";
 
-export const getTeams = async () => {
+export const getTeams = async (workspace_id: string) => {
   const supabase = await createSupabaseServerClient();
-  return await supabase.from("team").select("*");
+  return await supabase
+    .from("team")
+    .select("*")
+    .eq("workspace_id", workspace_id);
 };
