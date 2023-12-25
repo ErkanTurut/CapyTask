@@ -19,52 +19,61 @@ export const siteConfig = {
   mainNav: [
     {
       title: "Home",
+      variant: "default",
       items: [
         {
           title: "Products",
           href: "/products",
           description: "All the products we have to offer.",
           items: [],
+          variant: "ghost",
         },
         {
           title: "Build a Board",
           href: "/build-a-board",
           description: "Build your own custom skateboard.",
           items: [],
+          variant: "ghost",
         },
         {
           title: "Blog",
           href: "/blog",
           description: "Read our latest blog posts.",
           items: [],
+          variant: "ghost",
         },
       ],
     },
     {
       title: "About",
+      variant: "ghost",
       items: [
         {
           title: "About Us",
           href: "/about",
           description: "Learn more about us.",
           items: [],
+          variant: "ghost",
         },
         {
           title: "Contact",
           href: "/contact",
           description: "Get in touch with us.",
           items: [],
+          variant: "ghost",
         },
       ],
     },
     {
       title: "Blog",
+      variant: "ghost",
       items: [
         {
           title: "Blog",
           href: "/blog",
           description: "Read our latest blog posts.",
           items: [],
+          variant: "ghost",
         },
       ],
     },
