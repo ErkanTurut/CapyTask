@@ -45,7 +45,15 @@ export const appNavItems: {
       label: "Teams",
       title: "Your teams",
       icon: "moon",
-      items: [],
+      href: "/teams",
+      items: [
+        {
+          title: "Team 1",
+          href: "/team/1",
+          items: [],
+          variant: "ghost",
+        },
+      ],
       variant: "ghost",
     },
   ],
