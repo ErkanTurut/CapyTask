@@ -1,6 +1,12 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const DASHBOARD_PATH = "/dashboard";
+const CREATE_PATH = "/create";
+const SIGNIN_PATH = "/signin";
+
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
     request: {
@@ -8,41 +14,37 @@ export async function middleware(request: NextRequest) {
     },
   });
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return request.cookies.get(name)?.value;
-        },
-        set(name: string, value: string, options: CookieOptions) {
-          request.cookies.set({
-            name,
-            value,
-            ...options,
-          });
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          });
-        },
-        remove(name: string, options: CookieOptions) {
-          request.cookies.set({
-            name,
-            value: "",
-            ...options,
-          });
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          });
-        },
+  const supabase = createServerClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    cookies: {
+      get(name: string) {
+        return request.cookies.get(name)?.value;
       },
-    }
-  );
+      set(name: string, value: string, options: CookieOptions) {
+        request.cookies.set({
+          name,
+          value,
+          ...options,
+        });
+        response = NextResponse.next({
+          request: {
+            headers: request.headers,
+          },
+        });
+      },
+      remove(name: string, options: CookieOptions) {
+        request.cookies.set({
+          name,
+          value: "",
+          ...options,
+        });
+        response = NextResponse.next({
+          request: {
+            headers: request.headers,
+          },
+        });
+      },
+    },
+  });
 
   const {
     data: { session },
@@ -55,18 +57,15 @@ export async function middleware(request: NextRequest) {
     if (!workspaces || workspaces.length < 1) {
       url = new URL("/create", request.url);
     } else {
-      const workspace_cookie = request.cookies.get(
-        "gembuddy:workspace_url_key"
-      );
-      const latestWorkspace_url_key = workspace_cookie
-        ? JSON.parse(workspace_cookie.value)
-        : undefined;
+      const workspaceCookie = request.cookies.get("gembuddy:workspace_url_key");
 
-      console.log("cookies", latestWorkspace_url_key);
+      const latestWorkspaceUrlKey: string | undefined = workspaceCookie
+        ? JSON.parse(workspaceCookie.value)
+        : undefined;
 
       const latestWorkspace =
         workspaces?.find(
-          (workspace) => workspace?.url_key === latestWorkspace_url_key
+          (workspace) => workspace?.url_key === latestWorkspaceUrlKey
         ) ?? workspaces?.[0];
 
       url = new URL(`/dashboard/${latestWorkspace.url_key}`, request.url);
