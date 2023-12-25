@@ -1,10 +1,11 @@
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/services/auth";
-import { WorkspaceProvider, UserProvider } from "@/lib/store";
+import { WorkspaceProvider, UserProvider, TeamProvider } from "@/lib/store";
 import { getUser } from "@/lib/services/user";
 import { getWorkspaces } from "@/lib/services/workspace";
 
 import { getTeams } from "@/lib/services/team";
+import { cookies } from "next/headers";
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
@@ -16,25 +17,40 @@ export default async function AccountLayout({
     data: { session },
     error,
   } = await getSession();
-  const [userData, workspacesData, teamsData] = await Promise.all([
-    getUser(),
-    getWorkspaces(),
-    getTeams(),
-  ]);
-  const { data: user } = userData;
-  const { data: workspaces } = workspacesData;
 
-  if (!user || !session?.user || error) {
+  if (!session || !session.user || error) {
     redirect("/signin");
   }
+
+  const [userData, workspacesData] = await Promise.all([
+    getUser(session.user.id),
+    getWorkspaces(),
+  ]);
+
+  const { data: user } = userData;
+  if (!user) {
+    redirect("/signin");
+  }
+  const { data: workspaces } = workspacesData;
   if (!workspaces) {
     redirect("/dashboard/create");
   }
 
+  const workspaceCookie = cookies().get("gembuddy:workspace_url_key");
+
+  const latestWorkspaceUrlKey: string | undefined = workspaceCookie
+    ? JSON.parse(workspaceCookie.value)
+    : undefined;
+
+  const latestWorkspace =
+    workspaces?.find(
+      (workspace) => workspace?.url_key === latestWorkspaceUrlKey
+    ) ?? workspaces?.[0];
+
   return (
     <UserProvider user={user}>
-      <WorkspaceProvider workspace={workspaces[0]} workspaceList={workspaces}>
-        {children};
+      <WorkspaceProvider workspace={latestWorkspace} workspaceList={workspaces}>
+        {children}
       </WorkspaceProvider>
     </UserProvider>
   );
