@@ -12,11 +12,20 @@ import UserAccountNav from "../user-account-navigation";
 import { getUser } from "@/lib/services/user";
 import { cn } from "@/lib/utils";
 import { Icons } from "../icons";
+import { getSession } from "@/lib/services/auth";
 
 interface NavbarProps {}
 
 const NavBar: FC<NavbarProps> = async () => {
-  const { data: user } = await getUser();
+  const {
+    data: { session },
+    error,
+  } = await getSession();
+
+  const { data: user } = session
+    ? await getUser(session.user.id)
+    : { data: null };
+
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background">
       <div className="px-6 flex h-16 items-center">
