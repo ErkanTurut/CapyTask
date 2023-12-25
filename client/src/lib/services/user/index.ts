@@ -8,15 +8,7 @@ import {
 import createSupabaseServerClient from "@/lib/supabase/server";
 import { getSession } from "@/lib/services/auth";
 
-export const getUser = async () => {
+export const getUser = async (user_id: string) => {
   const supabase = await createSupabaseServerClient();
-  const { data, error } = await getSession();
-  if (!data.session) {
-    return { data: null, error };
-  }
-  return await supabase
-    .from("user")
-    .select("*")
-    .eq("id", data.session.user.id)
-    .single();
+  return await supabase.from("user").select("*").eq("id", user_id).single();
 };
