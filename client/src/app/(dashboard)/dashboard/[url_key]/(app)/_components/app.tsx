@@ -7,9 +7,10 @@ import {
 } from "@/components/ui/resizable";
 import { cn } from "@/lib/utils";
 import { useState, FC, useEffect } from "react";
-import { Sidebar } from "./sidebar";
 import { Shell } from "@/components/shells/shell";
 import { useParams } from "next/navigation";
+import { useWorkspace } from "@/lib/store";
+import { useSelectedLayoutSegment } from "next/navigation";
 
 interface appProps {
   children: React.ReactNode;
@@ -32,6 +33,9 @@ const App: FC<appProps> = ({
       url_key
     )};path=/`;
   }, [url_key]);
+
+  const workspace = useWorkspace()((state) => state.workspace)!;
+  const sidebarSegment = useSelectedLayoutSegment();
 
   return (
     <ResizablePanelGroup
@@ -64,7 +68,7 @@ const App: FC<appProps> = ({
         }}
         className={cn(isCollapsed && "transition-all duration-300 ease-in-out")}
       >
-        <Sidebar isCollapsed={isCollapsed} />
+        {/* <Sidebar isCollapsed={isCollapsed} workspace={workspace} /> */}
       </ResizablePanel>
       <ResizableHandle withHandle />
       <ResizablePanel defaultSize={defaultLayout[1]}>

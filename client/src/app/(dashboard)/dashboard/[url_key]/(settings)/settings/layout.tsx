@@ -25,6 +25,7 @@ export default async function SettingsLayout({
             sidebarnav: dashboardConfig.settingsNav,
           }}
         /> */}
+
         <main className="z-10 flex w-full flex-1 flex-col items-start">
           <Shell variant="markdown">{children}</Shell>
         </main>

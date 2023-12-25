@@ -12,11 +12,18 @@ import { redirect } from "next/navigation";
 
 import { getUser } from "@/lib/services/user";
 import { Suspense } from "react";
+import { getSession } from "@/lib/services/auth";
 
 interface profilePageProps {}
 
 export default async function profilePage({}: profilePageProps) {
-  const { data: user } = await getUser();
+  const {
+    data: { session },
+  } = await getSession();
+  if (!session || !session.user) {
+    redirect("/signin");
+  }
+  const { data: user } = await getUser(session.user.id);
   if (!user) {
     redirect("/signin");
   }
