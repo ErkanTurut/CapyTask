@@ -31,7 +31,7 @@ export const UserProvider = ({
   user,
   children,
 }: {
-  user: Database["public"]["Tables"]["user"]["Row"];
+  user: UserState["user"];
   children: React.ReactNode;
 }) => {
   const [store] = useState(() => createUser(user));
