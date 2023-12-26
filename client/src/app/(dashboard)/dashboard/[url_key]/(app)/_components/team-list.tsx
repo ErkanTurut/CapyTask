@@ -1,3 +1,4 @@
+"use client";
 import { NavItem } from "@/types";
 import Link from "next/link";
 import {
@@ -22,12 +23,12 @@ import { Separator } from "@/components/ui/separator";
 interface TeamListProps {
   isCollapsed: boolean;
   items: NavItem[];
-  teams?: Database["public"]["Tables"]["team"]["Row"][] | null;
+  teams: Database["public"]["Tables"]["team"]["Row"][] | null;
 }
 
 export function TeamList({ items, teams, isCollapsed }: TeamListProps) {
   const params = useParams();
-
+  console.log(teams);
   return (
     <div
       data-collapsed={isCollapsed}
@@ -51,12 +52,17 @@ export function TeamList({ items, teams, isCollapsed }: TeamListProps) {
                     item.variant === "default" &&
                       "dark:bg-muted dark:text-muted-foreground"
                   )}
+                  key={index}
                 >
                   {Icon && <Icon className="w-4 h-4" />}
                   <span className="sr-only">{item.title}</span>
                 </Link>
               </TooltipTrigger>
-              <TooltipContent side="right" className="flex items-center gap-4">
+              <TooltipContent
+                key={index}
+                side="right"
+                className="flex items-center gap-4"
+              >
                 {item.title}
                 {item.label && (
                   <span className="ml-auto text-muted-foreground">
@@ -92,7 +98,7 @@ export function TeamList({ items, teams, isCollapsed }: TeamListProps) {
                   </span>
                 )}
               </Link>
-              {teams ? (
+              {teams && teams?.length > 0 ? (
                 <Accordion type="single" collapsible>
                   {teams.map((team, teamIndex) => {
                     const link = `/dashboard/${params?.url_key}/${team.id}`;
