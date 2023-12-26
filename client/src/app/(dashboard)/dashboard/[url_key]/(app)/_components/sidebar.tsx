@@ -10,15 +10,19 @@ import { Nav } from "@/components/layouts/sidebar/nav";
 import { appNavItems } from "@/config/dashboard.config";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { TeamList } from "./team-list";
-import { getTeams } from "@/lib/services/team";
 
 export interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   isCollapsed: boolean;
   workspace: Database["public"]["Tables"]["workspace"]["Row"];
+  teams: Database["public"]["Tables"]["team"]["Row"][] | null;
 }
 
-export function Sidebar({ className, isCollapsed, workspace }: SidebarProps) {
-  const teams = null;
+export function Sidebar({
+  className,
+  isCollapsed,
+  workspace,
+  teams,
+}: SidebarProps) {
   return (
     <TooltipProvider delayDuration={0}>
       <div className="flex flex-col h-full w-full">
