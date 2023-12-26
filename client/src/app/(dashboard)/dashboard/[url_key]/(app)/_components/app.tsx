@@ -9,11 +9,13 @@ import { cn } from "@/lib/utils";
 import { useState, FC, useEffect } from "react";
 import { Shell } from "@/components/shells/shell";
 import { useParams } from "next/navigation";
-import { useWorkspace } from "@/lib/store";
-import { useSelectedLayoutSegment } from "next/navigation";
+import { useTeam, useWorkspace } from "@/lib/store";
+import { Sidebar } from "./sidebar";
+import { Database } from "@/types/supabase.types";
 
 interface appProps {
   children: React.ReactNode;
+  teams: Database["public"]["Tables"]["team"]["Row"][] | null;
   defaultLayout: number[];
   defaultCollapsed: boolean;
   navCollapsedSize: number;
@@ -24,6 +26,7 @@ const App: FC<appProps> = ({
   defaultLayout = [30, 70],
   navCollapsedSize,
   defaultCollapsed = false,
+  teams,
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
   const { url_key } = useParams();
@@ -35,7 +38,8 @@ const App: FC<appProps> = ({
   }, [url_key]);
 
   const workspace = useWorkspace()((state) => state.workspace)!;
-  const sidebarSegment = useSelectedLayoutSegment();
+  const setTeamList = useTeam()((state) => state.setTeamList);
+  setTeamList(teams);
 
   return (
     <ResizablePanelGroup
@@ -60,7 +64,6 @@ const App: FC<appProps> = ({
           )};path=/`;
         }}
         onExpand={() => {
-          console.log("expanded");
           setIsCollapsed(false);
           document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
             false
@@ -68,7 +71,11 @@ const App: FC<appProps> = ({
         }}
         className={cn(isCollapsed && "transition-all duration-300 ease-in-out")}
       >
-        {/* <Sidebar isCollapsed={isCollapsed} workspace={workspace} /> */}
+        <Sidebar
+          isCollapsed={isCollapsed}
+          teams={teams}
+          workspace={workspace}
+        />
       </ResizablePanel>
       <ResizableHandle withHandle />
       <ResizablePanel defaultSize={defaultLayout[1]}>
