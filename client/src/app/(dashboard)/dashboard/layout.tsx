@@ -4,7 +4,6 @@ import { WorkspaceProvider, UserProvider, TeamProvider } from "@/lib/store";
 import { getUser } from "@/lib/services/user";
 import { getWorkspaces } from "@/lib/services/workspace";
 
-import { getTeams } from "@/lib/services/team";
 import { cookies } from "next/headers";
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -50,7 +49,9 @@ export default async function AccountLayout({
   return (
     <UserProvider user={user}>
       <WorkspaceProvider workspace={latestWorkspace} workspaceList={workspaces}>
-        {children}
+        <TeamProvider team={null} teamList={null}>
+          {children}
+        </TeamProvider>
       </WorkspaceProvider>
     </UserProvider>
   );
