@@ -3,6 +3,7 @@ import {
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/components/pageHeader";
+import { useTeam } from "@/lib/store";
 interface SettingsPageProps {
   params: {
     url_key: string;
