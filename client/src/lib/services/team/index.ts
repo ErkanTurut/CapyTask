@@ -13,3 +13,12 @@ export const getTeams = async (workspace_id: string) => {
     .select("*")
     .eq("workspace_id", workspace_id);
 };
+
+export const getTeamsByUrlKey = async (url_key: string) => {
+  const supabase = await createSupabaseServerClient();
+  return await supabase
+    .from("workspace")
+    .select("team(*)")
+    .eq("url_key", url_key)
+    .single();
+};
