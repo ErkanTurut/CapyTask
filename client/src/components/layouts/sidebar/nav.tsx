@@ -6,19 +6,20 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { buttonVariants } from "@/components/ui/button";
+import { buttonVariants, ButtonProps } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Icons } from "@/components/icons";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
+import { cva, type VariantProps } from "class-variance-authority";
 
-interface NavProps {
+interface NavProps extends React.HTMLAttributes<HTMLDivElement> {
   isCollapsed: boolean;
   items: NavItem[];
+  size?: VariantProps<typeof buttonVariants>["size"];
 }
 
-export function Nav({ items, isCollapsed }: NavProps) {
+export function Nav({ items, isCollapsed, size, className }: NavProps) {
   const params = useParams();
-
   return (
     <div
       data-collapsed={isCollapsed}
@@ -26,7 +27,7 @@ export function Nav({ items, isCollapsed }: NavProps) {
     >
       <nav className="grid gap-1 px-2 group-[[data-collapsed=true]]:px-2">
         {items.map((item, index) => {
-          const Icon = item.icon ? Icons[item.icon] : null;
+          const Icon = item.icon ? Icons[item.icon] : Icons["chevronRight"];
           return isCollapsed ? (
             <Tooltip key={index} delayDuration={0}>
               <TooltipTrigger asChild>
@@ -56,14 +57,14 @@ export function Nav({ items, isCollapsed }: NavProps) {
                 )}
               </TooltipContent>
             </Tooltip>
-          ) : (
+          ) : item.href ? (
             <Link
               key={index}
               href={
-                item.href ? `/dashboard/${params?.url_key}${item.href}` : "/"
+                item.href ? `/dashboard/${params?.url_key}${item.href}` : "#"
               }
               className={cn(
-                buttonVariants({ variant: item.variant, size: "sm" }),
+                buttonVariants({ variant: item.variant, size: size || "sm" }),
                 item.variant === "default" && "dark:bg-muted dark:text-white",
                 "justify-start"
               )}
@@ -82,6 +83,22 @@ export function Nav({ items, isCollapsed }: NavProps) {
                 </span>
               )}
             </Link>
+          ) : (
+            <h3>
+              {Icon && <Icon className="mr-2 w-4 h-4" aria-hidden="true" />}
+              {item.title}
+              {item.label && (
+                <span
+                  className={cn(
+                    "ml-auto",
+                    item.variant === "default" &&
+                      "text-background dark:text-white"
+                  )}
+                >
+                  {item.label}
+                </span>
+              )}
+            </h3>
           );
         })}
       </nav>
