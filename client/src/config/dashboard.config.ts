@@ -40,23 +40,7 @@ export const appNavItems: {
       variant: "ghost",
     },
   ],
-  main: [
-    {
-      label: "Teams",
-      title: "Your teams",
-      icon: "moon",
-      href: "/teams",
-      items: [
-        {
-          title: "Team 1",
-          href: "/team/1",
-          items: [],
-          variant: "ghost",
-        },
-      ],
-      variant: "ghost",
-    },
-  ],
+  main: [],
   footer: [
     {
       title: "Notifications",
@@ -67,12 +51,93 @@ export const appNavItems: {
     },
     {
       title: "Back to website",
-
+      href: "/",
       icon: "externalLink",
       items: [],
       variant: "ghost",
     },
   ],
+};
+
+export const settingsNavItems: {
+  header: NavItem[];
+  main: NavItem[];
+  footer: NavItem[];
+} = {
+  header: [
+    {
+      title: "Settings",
+      icon: "chevronLeft",
+      href: "/",
+      items: [],
+      variant: "ghost",
+    },
+  ],
+  main: [
+    {
+      title: "Account",
+      variant: "ghost",
+      href: "/settings/account",
+      items: [
+        {
+          title: "Profile",
+          href: "/settings/account/profile",
+          items: [],
+          variant: "ghost",
+        },
+        {
+          title: "Security",
+          href: "/settings/account/security",
+          items: [],
+          variant: "ghost",
+        },
+        {
+          title: "Preferences",
+          href: "/settings/account/preferences",
+          items: [],
+          variant: "ghost",
+        },
+      ],
+    },
+    {
+      title: "Your teams",
+      variant: "ghost",
+      items: [
+        {
+          title: "Your teams",
+          href: "/settings/team",
+          items: [],
+          variant: "ghost",
+        },
+        {
+          title: "Create a team",
+          icon: "plusCircled",
+          href: "/settings/team/create",
+          items: [],
+          variant: "ghost",
+        },
+      ],
+    },
+    {
+      title: "Workspace",
+      variant: "ghost",
+      items: [
+        {
+          title: "General",
+          href: "/settings/workspace/general",
+          items: [],
+          variant: "ghost",
+        },
+        {
+          title: "Billing",
+          href: "/settings/workspace/billing",
+          items: [],
+          variant: "ghost",
+        },
+      ],
+    },
+  ],
+  footer: [],
 };
 
 export const dashboardConfig: TDashboardConfig = {

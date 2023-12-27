@@ -16,6 +16,9 @@ export const getTeams = async (workspace_id: string) => {
 
 export const getTeamsByUrlKey = async (url_key: string) => {
   const supabase = await createSupabaseServerClient();
+
+  // await new Promise((resolve) => setTimeout(resolve, 3000));
+
   return await supabase
     .from("workspace")
     .select("team(*)")
