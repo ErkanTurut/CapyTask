@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { useState, FC, useEffect } from "react";
 import { Shell } from "@/components/shells/shell";
 import { useParams } from "next/navigation";
-import { useTeam, useWorkspace } from "@/lib/store";
+import { useTeam, useUser, useWorkspace } from "@/lib/store";
 import { Sidebar } from "./sidebar";
 import { Database } from "@/types/supabase.types";
 
@@ -38,6 +38,7 @@ const App: FC<appProps> = ({
   }, [url_key]);
 
   const workspace = useWorkspace()((state) => state.workspace)!;
+  const user = useUser()((state) => state.user)!;
   const setTeamList = useTeam()((state) => state.setTeamList);
   setTeamList(teams);
 
@@ -75,6 +76,7 @@ const App: FC<appProps> = ({
           isCollapsed={isCollapsed}
           teams={teams}
           workspace={workspace}
+          user={user}
         />
       </ResizablePanel>
       <ResizableHandle withHandle />

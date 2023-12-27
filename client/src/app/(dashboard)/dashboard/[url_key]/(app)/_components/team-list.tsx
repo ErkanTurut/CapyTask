@@ -1,4 +1,3 @@
-"use client";
 import { NavItem } from "@/types";
 import Link from "next/link";
 import {
@@ -24,11 +23,10 @@ interface TeamListProps {
   isCollapsed: boolean;
   items: NavItem[];
   teams: Database["public"]["Tables"]["team"]["Row"][] | null;
+  params: { url_key: string };
 }
 
-export function TeamList({ items, teams, isCollapsed }: TeamListProps) {
-  const params = useParams();
-  console.log(teams);
+export function TeamList({ items, teams, isCollapsed, params }: TeamListProps) {
   return (
     <div
       data-collapsed={isCollapsed}
@@ -36,7 +34,7 @@ export function TeamList({ items, teams, isCollapsed }: TeamListProps) {
     >
       <nav className="grid gap-1 px-2 group-[[data-collapsed=true]]:px-2">
         {items.map((item, index) => {
-          const Icon = item.icon ? Icons[item.icon] : null;
+          const Icon = item.icon ? Icons[item.icon] : Icons["chevronRight"];
           return isCollapsed ? (
             <Tooltip key={index} delayDuration={0}>
               <TooltipTrigger asChild>
@@ -101,7 +99,6 @@ export function TeamList({ items, teams, isCollapsed }: TeamListProps) {
               {teams && teams?.length > 0 ? (
                 <Accordion type="single" collapsible>
                   {teams.map((team, teamIndex) => {
-                    const link = `/dashboard/${params?.url_key}/${team.id}`;
                     const initials = `${team.name?.charAt(0) ?? ""}`;
                     const pathname = "1";
                     const profilePicture =
@@ -110,7 +107,6 @@ export function TeamList({ items, teams, isCollapsed }: TeamListProps) {
                     return (
                       <AccordionItem key={teamIndex} value="item-1">
                         <AccordionTrigger
-                          key={teamIndex}
                           className={cn(
                             buttonVariants({ variant: "ghost", size: "sm" }),
                             "flex w-full justify-between gap-2 py-0  mb-1 bg-muted"
@@ -128,7 +124,7 @@ export function TeamList({ items, teams, isCollapsed }: TeamListProps) {
                           </span>
                         </AccordionTrigger>
 
-                        <AccordionContent>
+                        <AccordionContent key={team.id}>
                           <span className="flex gap-2 ml-2">
                             <Separator
                               orientation="vertical"
@@ -138,7 +134,7 @@ export function TeamList({ items, teams, isCollapsed }: TeamListProps) {
                               <Link
                                 aria-label={team.name}
                                 key={teamIndex}
-                                href={`${link}/members`}
+                                href="/"
                                 className={cn(
                                   buttonVariants({
                                     variant: "ghost",
@@ -159,7 +155,7 @@ export function TeamList({ items, teams, isCollapsed }: TeamListProps) {
                               <Link
                                 aria-label={team.name}
                                 key={teamIndex}
-                                href={`${link}/Projets`}
+                                href={`/dashboard/${params?.url_key}/team/${team.id}/projects`}
                                 className={cn(
                                   buttonVariants({
                                     variant: "ghost",
@@ -180,7 +176,7 @@ export function TeamList({ items, teams, isCollapsed }: TeamListProps) {
                               <Link
                                 aria-label={team.name}
                                 key={teamIndex}
-                                href={link}
+                                href="/"
                                 className={cn(
                                   buttonVariants({
                                     variant: "ghost",

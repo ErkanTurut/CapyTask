@@ -1,20 +1,22 @@
+"use client";
 import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
 
-import { ScrollArea } from "@/components/ui/scroll-area";
 import WorkspaceNav from "@/components/workspace/workspace-navigation";
 
-import { Database } from "@/types/supabase.types";
 import { Nav } from "@/components/layouts/sidebar/nav";
+import { Database } from "@/types/supabase.types";
 
-import { appNavItems } from "@/config/dashboard.config";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { appNavItems } from "@/config/dashboard.config";
+import { Suspense } from "react";
 import { TeamList } from "./team-list";
+import UserAccountNav from "@/components/user-account-navigation";
 
 export interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   isCollapsed: boolean;
   workspace: Database["public"]["Tables"]["workspace"]["Row"];
   teams: Database["public"]["Tables"]["team"]["Row"][] | null;
+  user: Database["public"]["Tables"]["user"]["Row"];
 }
 
 export function Sidebar({
@@ -22,6 +24,7 @@ export function Sidebar({
   isCollapsed,
   workspace,
   teams,
+  user,
 }: SidebarProps) {
   return (
     <TooltipProvider delayDuration={0}>
@@ -30,16 +33,26 @@ export function Sidebar({
           <div className="w-full">
             <WorkspaceNav isCollapsed={isCollapsed} />
           </div>
+          {!isCollapsed && <UserAccountNav user={user} className="h-6 w-6" />}{" "}
         </div>
         <Separator />
         <Nav isCollapsed={isCollapsed} items={appNavItems.header} />
         <Separator />
         {/* <Nav isCollapsed={isCollapsed} items={appNavItems.main} /> */}
-        <TeamList
-          isCollapsed={isCollapsed}
-          items={appNavItems.main}
-          teams={teams}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <TeamList
+            isCollapsed={isCollapsed}
+            items={[
+              {
+                title: "Teams",
+                items: [],
+                variant: "ghost",
+              },
+            ]}
+            teams={teams}
+            params={workspace}
+          />
+        </Suspense>
         <Separator />
         <Nav isCollapsed={isCollapsed} items={appNavItems.footer} />
       </div>
