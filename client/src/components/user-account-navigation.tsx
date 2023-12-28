@@ -16,7 +16,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Icons } from "./icons";
 import ThemeToggle from "./themeToggle";
 
-import { cn } from "@/lib/utils";
+import { cn, generateAvatar } from "@/lib/utils";
 
 import { Database } from "@/types/supabase.types";
 import { useParams } from "next/navigation";
@@ -28,12 +28,10 @@ interface UserAccountNavProps
 }
 
 const UserAccountNav: FC<UserAccountNavProps> = ({ className, user }) => {
-  const initials = `${user.first_name?.charAt(0) ?? ""} ${
-    user.last_name?.charAt(0) ?? ""
-  }`;
-  const profilePicture =
-    user?.image_uri ??
-    `https://avatar.vercel.sh/${initials}.svg?text=${initials}`;
+  const { image_uri, initials } = generateAvatar({
+    first_name: user.first_name,
+    last_name: user.last_name,
+  });
 
   const { url_key } = useParams();
 
@@ -46,7 +44,7 @@ const UserAccountNav: FC<UserAccountNavProps> = ({ className, user }) => {
           className={cn("relative h-8 w-8 rounded-full", className)}
         >
           <Avatar className={cn("h-8 w-8", className)}>
-            <AvatarImage src={profilePicture} alt={user.first_name ?? ""} />
+            <AvatarImage src={image_uri} alt={user.first_name ?? ""} />
             <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
         </Button>

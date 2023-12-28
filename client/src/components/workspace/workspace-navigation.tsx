@@ -1,7 +1,7 @@
 "use client";
 import React, { FC, useEffect, useState } from "react";
 
-import { cn } from "@/lib/utils";
+import { cn, generateAvatar } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 
@@ -59,8 +59,9 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({ isCollapsed, className }) => {
     />
   );
   if (!selectedWorkspace) return null;
-
-  const initials = `${selectedWorkspace.name?.charAt(0) ?? ""}`;
+  const { image_uri, initials } = generateAvatar({
+    name: selectedWorkspace.name,
+  });
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -78,14 +79,10 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({ isCollapsed, className }) => {
           aria-expanded={open}
           aria-label="Select a team"
           className="w-full gap-1"
+          size={isCollapsed ? "icon" : "default"}
         >
           <Avatar className="h-5 w-5 rounded-sm">
-            <AvatarImage
-              src={`https://avatar.vercel.sh/${
-                selectedWorkspace.url_key
-              }.svg?text=${initials.toUpperCase()}`}
-              alt={selectedWorkspace.url_key}
-            />
+            <AvatarImage src={image_uri} alt={selectedWorkspace.url_key} />
             <AvatarFallback className="h-5 w-5 rounded-sm">
               {initials}
             </AvatarFallback>
@@ -114,13 +111,17 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({ isCollapsed, className }) => {
                     onSelect={() => {
                       setOpen(false);
                       setSelectedWorkspace(workspace);
-                      router.push(`/dashboard/${workspace.url_key}/teams`);
+                      router.push(`/dashboard/${workspace.url_key}/team`);
                     }}
                     className="text-sm overflow-hidden whitespace-nowrap overflow-ellipsis cursor-pointer"
                   >
                     <Avatar className="mr-2 h-5 w-5 rounded-sm">
                       <AvatarImage
-                        src={`https://avatar.vercel.sh/${workspace.url_key}.png`}
+                        src={
+                          generateAvatar({
+                            name: workspace.url_key,
+                          }).image_uri
+                        }
                         alt={workspace.url_key}
                       />
                       <AvatarFallback className="mr-2 h-5 w-5 rounded-sm">
