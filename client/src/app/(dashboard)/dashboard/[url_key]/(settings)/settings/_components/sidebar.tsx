@@ -5,7 +5,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import WorkspaceNav from "@/components/workspace/workspace-navigation";
 
 import { Database } from "@/types/supabase.types";
-import { Nav } from "@/components/layouts/sidebar/nav";
+import { Nav } from "@/components/layouts/nav";
 
 import { settingsNavItems } from "@/config/dashboard.config";
 import { TooltipProvider } from "@/components/ui/tooltip";

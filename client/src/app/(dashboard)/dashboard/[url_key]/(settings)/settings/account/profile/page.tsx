@@ -13,6 +13,11 @@ import { redirect } from "next/navigation";
 import { getUser } from "@/lib/services/user";
 import { Suspense } from "react";
 import { getSession } from "@/lib/services/auth";
+import {
+  PageHeader,
+  PageHeaderDescription,
+  PageHeaderHeading,
+} from "@/components/pageHeader";
 
 interface profilePageProps {}
 
@@ -29,6 +34,16 @@ export default async function profilePage({}: profilePageProps) {
   }
   return (
     <section id="user-account-info" aria-labelledby="user-account-info-heading">
+      <PageHeader
+        className="pb-4"
+        id="account-header"
+        aria-labelledby="account-header-heading"
+      >
+        <PageHeaderHeading size="sm">Account</PageHeaderHeading>
+        <PageHeaderDescription size="sm">
+          Manage your account settings
+        </PageHeaderDescription>
+      </PageHeader>
       <Card>
         <CardHeader>
           <CardTitle>Account Info</CardTitle>
