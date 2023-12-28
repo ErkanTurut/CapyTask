@@ -29,14 +29,13 @@ export const appNavItems: {
       title: "Research",
       href: "/research",
       icon: "search",
-      items: [],
       variant: "ghost",
     },
     {
       title: "Account",
       href: "/account",
       icon: "user",
-      items: [],
+
       variant: "ghost",
     },
   ],
@@ -46,14 +45,14 @@ export const appNavItems: {
       title: "Notifications",
       href: "/",
       icon: "bell",
-      items: [],
+
       variant: "ghost",
     },
     {
       title: "Back to website",
       href: "/",
       icon: "externalLink",
-      items: [],
+
       variant: "ghost",
     },
   ],
@@ -69,7 +68,6 @@ export const settingsNavItems: {
       title: "Settings",
       icon: "chevronLeft",
       href: "/",
-      items: [],
       variant: "ghost",
     },
   ],
@@ -77,24 +75,22 @@ export const settingsNavItems: {
     {
       title: "Account",
       variant: "ghost",
+      icon: "user",
       href: "/settings/account",
       items: [
         {
           title: "Profile",
           href: "/settings/account/profile",
-          items: [],
           variant: "ghost",
         },
         {
           title: "Security",
           href: "/settings/account/security",
-          items: [],
           variant: "ghost",
         },
         {
           title: "Preferences",
           href: "/settings/account/preferences",
-          items: [],
           variant: "ghost",
         },
       ],
@@ -106,14 +102,12 @@ export const settingsNavItems: {
         {
           title: "Your teams",
           href: "/settings/team",
-          items: [],
           variant: "ghost",
         },
         {
           title: "Create a team",
           icon: "plusCircled",
           href: "/settings/team/create",
-          items: [],
           variant: "ghost",
         },
       ],
@@ -125,13 +119,11 @@ export const settingsNavItems: {
         {
           title: "General",
           href: "/settings/workspace/general",
-          items: [],
           variant: "ghost",
         },
         {
           title: "Billing",
           href: "/settings/workspace/billing",
-          items: [],
           variant: "ghost",
         },
       ],
