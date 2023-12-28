@@ -1,9 +1,8 @@
-"use client";
 import { Separator } from "@/components/ui/separator";
 
 import WorkspaceNav from "@/components/workspace/workspace-navigation";
 
-import { Nav } from "@/components/layouts/sidebar/nav";
+import { Nav } from "@/components/layouts/nav";
 import { Database } from "@/types/supabase.types";
 
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -38,15 +37,27 @@ export function Sidebar({
         <Separator />
         <Nav isCollapsed={isCollapsed} items={appNavItems.header} />
         <Separator />
-        {/* <Nav isCollapsed={isCollapsed} items={appNavItems.main} /> */}
         <Suspense fallback={<div>Loading...</div>}>
           <TeamList
             isCollapsed={isCollapsed}
             items={[
               {
-                title: "Teams",
-                items: [],
+                title: "Members",
+                icon: "user",
                 variant: "ghost",
+                href: "/team/all",
+              },
+              {
+                title: "Projects",
+                icon: "lightning",
+                variant: "ghost",
+                href: "/team/all",
+              },
+              {
+                title: "Repports",
+                icon: "fileText",
+                variant: "ghost",
+                href: "/team/all",
               },
             ]}
             teams={teams}

@@ -50,13 +50,13 @@ const App: FC<appProps> = ({
           sizes
         )};path=/`;
       }}
-      className="min-h-screen  items-stretch"
+      className="min-h-screen items-stretch"
     >
       <ResizablePanel
         defaultSize={defaultLayout[0]}
         collapsedSize={navCollapsedSize}
         collapsible={true}
-        minSize={14}
+        minSize={12}
         maxSize={30}
         onCollapse={() => {
           setIsCollapsed(true);
