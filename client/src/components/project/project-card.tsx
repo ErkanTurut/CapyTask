@@ -13,9 +13,6 @@ import {
 interface projectCardProps {}
 
 const ProjectCard: FC<projectCardProps> = ({}) => {
-  // const profilePicture =
-  // user?.image_uri ??
-  // `https://avatar.vercel.sh/${initials}.svg?text=${initials}`;
   return (
     <Card>
       <CardHeader>
