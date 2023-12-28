@@ -61,7 +61,6 @@ const CreateTeamForm: FC<CreateTeamFormProps> = ({ workspace_id }) => {
       workspace_id,
     });
   }
-
   return (
     <Form {...form}>
       <form
@@ -88,7 +87,18 @@ const CreateTeamForm: FC<CreateTeamFormProps> = ({ workspace_id }) => {
             <FormItem>
               <FormLabel>Identifier</FormLabel>
               <FormControl>
-                <Input className="lowercase" placeholder="exmpl" {...field} />
+                <Input
+                  className="lowercase"
+                  placeholder="exmpl"
+                  {...field}
+                  maxLength={
+                    //@ts-ignore
+                    ZCreateTeam["shape"]["url_key"]["_def"]["checks"].find(
+                      (check) => check.kind === "max"
+                      // @ts-ignore
+                    ).value || 0
+                  }
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

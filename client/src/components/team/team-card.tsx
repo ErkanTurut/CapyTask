@@ -13,9 +13,6 @@ import {
 interface teamCardProps {}
 
 const TeamCard: FC<teamCardProps> = ({}) => {
-  // const profilePicture =
-  // user?.image_uri ??
-  // `https://avatar.vercel.sh/${initials}.svg?text=${initials}`;
   return (
     <Card>
       <CardHeader>
