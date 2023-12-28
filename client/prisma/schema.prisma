@@ -39,7 +39,8 @@ model team {
   workspace    workspace   @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
   users        user_team[]
 
-  @@unique([url_key, id])
+  @@unique([url_key, workspace_id])
+  @@unique([name, workspace_id])
 }
 
 model role {
