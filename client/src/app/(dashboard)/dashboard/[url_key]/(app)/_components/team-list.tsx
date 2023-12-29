@@ -76,21 +76,24 @@ export function TeamList({ items, teams, isCollapsed, params }: TeamListProps) {
               })}
           </>
         ) : (
-          <div className="flex flex-col">
+          <div className="flex flex-col ">
             {teams && teams?.length > 0 ? (
-              <Accordion type="single" collapsible>
+              <Accordion
+                type="single"
+                className="flex flex-col gap-1"
+                collapsible
+              >
                 {teams.map((team) => {
                   const { image_uri, initials } = generateAvatar({
                     name: team.name,
                   });
                   const teamIndex = team.id;
-                  const pathname = "1";
                   return (
                     <AccordionItem key={teamIndex} value={team.id}>
                       <AccordionTrigger
                         className={cn(
                           buttonVariants({ variant: "ghost", size: "sm" }),
-                          "flex w-full justify-between gap-2 py-0  mb-1 bg-muted"
+                          "flex w-full justify-between gap-2 py-0  "
                         )}
                       >
                         <span className="flex gap-2 items-center ">
