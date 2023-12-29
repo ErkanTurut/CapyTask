@@ -1,12 +1,7 @@
 import { cookies } from "next/headers";
 
-import App from "./_components/app";
 import { getTeamsByUrlKey } from "@/lib/services/team";
-import { Sidebar } from "./_components/sidebar";
-import ResizableGroup from "./_components/resizable-group";
-import Resizable from "./_components/resizable-main";
-import SidebarResizable from "./_components/resizable-panel-sidebar";
-import { getWorkspace } from "@/lib/services/workspace";
+import App from "./_components/app";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -33,7 +28,7 @@ export default async function DashboardLayout({
       <App
         defaultLayout={defaultLayout}
         defaultCollapsed={defaultCollapsed}
-        navCollapsedSize={4}
+        navCollapsedSize={3}
         teams={data ? data.team : null}
       >
         {children}

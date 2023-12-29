@@ -3,6 +3,7 @@ import { getSession } from "@/lib/services/auth";
 import { WorkspaceProvider, UserProvider, TeamProvider } from "@/lib/store";
 import { getUser } from "@/lib/services/user";
 import { getWorkspaces } from "@/lib/services/workspace";
+import DotPattern from "@/components/magicui/dot-pattern";
 
 import { cookies } from "next/headers";
 interface DashboardLayoutProps {

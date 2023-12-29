@@ -12,6 +12,7 @@ import { useParams } from "next/navigation";
 import { useTeam, useUser, useWorkspace } from "@/lib/store";
 import { Sidebar } from "./sidebar";
 import { Database } from "@/types/supabase.types";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 interface appProps {
   children: React.ReactNode;
@@ -43,52 +44,57 @@ const App: FC<appProps> = ({
   setTeamList(teams);
 
   return (
-    <ResizablePanelGroup
-      direction="horizontal"
-      onLayout={(sizes: number[]) => {
-        document.cookie = `react-resizable-panels:layout=${JSON.stringify(
-          sizes
-        )};path=/`;
-      }}
-      className="min-h-screen items-stretch"
-    >
-      <ResizablePanel
-        defaultSize={defaultLayout[0]}
-        collapsedSize={navCollapsedSize}
-        collapsible={true}
-        minSize={12}
-        maxSize={30}
-        onCollapse={() => {
-          setIsCollapsed(true);
-          document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
-            true
+    <TooltipProvider delayDuration={0}>
+      <ResizablePanelGroup
+        direction="horizontal"
+        onLayout={(sizes: number[]) => {
+          document.cookie = `react-resizable-panels:layout=${JSON.stringify(
+            sizes
           )};path=/`;
         }}
-        onExpand={() => {
-          setIsCollapsed(false);
-          document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
-            false
-          )};path=/`;
-        }}
-        className={cn(isCollapsed && "transition-all duration-300 ease-in-out")}
+        className="min-h-screen items-stretch"
       >
-        <Sidebar
-          isCollapsed={isCollapsed}
-          teams={teams}
-          workspace={workspace}
-          user={user}
-        />
-      </ResizablePanel>
-      <ResizableHandle withHandle />
-      <ResizablePanel defaultSize={defaultLayout[1]}>
-        <Shell
-          variant="sidebar"
-          className="relative flex-1 flex-col overflow-x-hidden  lg:ml-0 backdrop-blur-[1px]"
+        <ResizablePanel
+          defaultSize={defaultLayout[0]}
+          collapsedSize={navCollapsedSize}
+          collapsible={true}
+          minSize={13}
+          maxSize={20}
+          onCollapse={() => {
+            setIsCollapsed(true);
+            document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
+              true
+            )};path=/`;
+          }}
+          onExpand={() => {
+            setIsCollapsed(false);
+            document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
+              false
+            )};path=/`;
+          }}
+          className={cn(
+            isCollapsed &&
+              "min-w-[50px] transition-all duration-300 ease-in-out"
+          )}
         >
-          {children}
-        </Shell>
-      </ResizablePanel>
-    </ResizablePanelGroup>
+          <Sidebar
+            isCollapsed={isCollapsed}
+            teams={teams}
+            workspace={workspace}
+            user={user}
+          />
+        </ResizablePanel>
+        <ResizableHandle withHandle />
+        <ResizablePanel defaultSize={defaultLayout[1]} minSize={30}>
+          <Shell
+            variant="sidebar"
+            className="relative flex-1 flex-col overflow-x-hidden  lg:ml-0 backdrop-blur-[1px]"
+          >
+            {children}
+          </Shell>
+        </ResizablePanel>
+      </ResizablePanelGroup>
+    </TooltipProvider>
   );
 };
 
