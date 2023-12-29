@@ -10,6 +10,7 @@ import { appNavItems } from "@/config/dashboard.config";
 import { Suspense } from "react";
 import { TeamList } from "./team-list";
 import UserAccountNav from "@/components/user-account-navigation";
+import { cn } from "@/lib/utils";
 
 export interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   isCollapsed: boolean;
@@ -26,47 +27,43 @@ export function Sidebar({
   user,
 }: SidebarProps) {
   return (
-    <TooltipProvider delayDuration={0}>
-      <div className="flex flex-col h-full w-full">
-        <div className="flex items-center p-2">
-          <div className="w-full">
-            <WorkspaceNav isCollapsed={isCollapsed} />
-          </div>
-          {!isCollapsed && <UserAccountNav user={user} className="h-6 w-6" />}{" "}
-        </div>
-        <Separator />
-        <Nav isCollapsed={isCollapsed} items={appNavItems.header} />
-        <Separator />
-        <Suspense fallback={<div>Loading...</div>}>
-          <TeamList
-            isCollapsed={isCollapsed}
-            items={[
-              {
-                title: "Members",
-                icon: "user",
-                variant: "ghost",
-                href: "/team/all",
-              },
-              {
-                title: "Projects",
-                icon: "lightning",
-                variant: "ghost",
-                href: "/team/all",
-              },
-              {
-                title: "Repports",
-                icon: "fileText",
-                variant: "ghost",
-                href: "/team/all",
-              },
-            ]}
-            teams={teams}
-            params={workspace}
-          />
-        </Suspense>
-        <Separator />
-        <Nav isCollapsed={isCollapsed} items={appNavItems.footer} />
+    <div className="flex flex-col">
+      <div className={cn("flex items-center p-2 justify-center gap-1 ")}>
+        <WorkspaceNav isCollapsed={isCollapsed} />
+        {!isCollapsed && <UserAccountNav user={user} className="h-6 w-6" />}
       </div>
-    </TooltipProvider>
+      <Separator />
+      <Nav isCollapsed={isCollapsed} items={appNavItems.header} />
+      <Separator />
+      <Suspense fallback={<div>Loading...</div>}>
+        <TeamList
+          isCollapsed={isCollapsed}
+          items={[
+            {
+              title: "Members",
+              icon: "user",
+              variant: "ghost",
+              href: "/team/members",
+            },
+            {
+              title: "Projects",
+              icon: "lightning",
+              variant: "ghost",
+              href: "/team/all",
+            },
+            {
+              title: "Repports",
+              icon: "fileText",
+              variant: "ghost",
+              href: "/team/all",
+            },
+          ]}
+          teams={teams}
+          params={workspace}
+        />
+      </Suspense>
+      <Separator />
+      <Nav isCollapsed={isCollapsed} items={appNavItems.footer} />
+    </div>
   );
 }
