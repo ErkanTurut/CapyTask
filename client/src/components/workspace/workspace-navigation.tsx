@@ -15,7 +15,13 @@ import {
   CommandList,
   CommandSeparator,
 } from "../ui/command";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 import { useWorkspace } from "@/lib/store";
@@ -50,14 +56,6 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({ isCollapsed, className }) => {
     },
   ];
 
-  const WorkspaceIcon: FC<{ isSelected: boolean }> = ({ isSelected }) => (
-    <Icons.checkCircled
-      className={cn(
-        "ml-auto h-4 w-4",
-        isSelected ? "opacity-100" : "opacity-0"
-      )}
-    />
-  );
   if (!selectedWorkspace) return null;
   const { image_uri, initials } = generateAvatar({
     name: selectedWorkspace.name,
@@ -69,7 +67,7 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({ isCollapsed, className }) => {
         className={cn(
           className,
           isCollapsed &&
-            "flex h-8 w-8 items-center justify-center p-0 [&>span]:w-auto [&>svg]:hidden"
+            "flex h-8 w-8 items-center justify-center p-0 [&>span]:w-auto [&>svg]:hidden  overflow-ellipsis"
         )}
         asChild
       >
@@ -89,7 +87,7 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({ isCollapsed, className }) => {
           </Avatar>
           <span
             className={cn(
-              "flex max-w-md text-left justify-start overflow-hidden whitespace-nowrap overflow-ellipsis cursor-pointer",
+              "overflow-hidden whitespace-nowrap overflow-ellipsis cursor-pointer",
               isCollapsed && "hidden"
             )}
           >
@@ -113,7 +111,6 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({ isCollapsed, className }) => {
                       setSelectedWorkspace(workspace);
                       router.push(`/dashboard/${workspace.url_key}/team`);
                     }}
-                    className="text-sm overflow-hidden whitespace-nowrap overflow-ellipsis cursor-pointer"
                   >
                     <Avatar className="mr-2 h-5 w-5 rounded-sm">
                       <AvatarImage
@@ -128,11 +125,17 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({ isCollapsed, className }) => {
                         {initials}
                       </AvatarFallback>
                     </Avatar>
-                    {workspace.name}
-                    <WorkspaceIcon
-                      isSelected={
+                    <span className="overflow-hidden whitespace-nowrap overflow-ellipsis cursor-pointer">
+                      {workspace.name}
+                    </span>
+
+                    <Icons.checkCircled
+                      className={cn(
+                        "ml-auto h-4 w-4 min-w-min",
                         selectedWorkspace.url_key === workspace.url_key
-                      }
+                          ? "opacity-100"
+                          : "opacity-0"
+                      )}
                     />
                   </CommandItem>
                 ))}
