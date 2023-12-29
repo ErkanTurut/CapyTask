@@ -29,14 +29,11 @@ export const appNavItems: {
       title: "Research",
       href: "/research",
       icon: "search",
-      variant: "ghost",
     },
     {
       title: "Account",
       href: "/account",
       icon: "user",
-
-      variant: "ghost",
     },
   ],
   main: [],
@@ -45,15 +42,11 @@ export const appNavItems: {
       title: "Notifications",
       href: "/",
       icon: "bell",
-
-      variant: "ghost",
     },
     {
       title: "Back to website",
       href: "/",
       icon: "externalLink",
-
-      variant: "ghost",
     },
   ],
 };
@@ -68,63 +61,52 @@ export const settingsNavItems: {
       title: "Settings",
       icon: "chevronLeft",
       href: "/",
-      variant: "ghost",
     },
   ],
   main: [
     {
       title: "Account",
-      variant: "ghost",
       icon: "user",
       href: "/settings/account",
       items: [
         {
           title: "Profile",
           href: "/settings/account/profile",
-          variant: "ghost",
         },
         {
           title: "Security",
           href: "/settings/account/security",
-          variant: "ghost",
         },
         {
           title: "Preferences",
           href: "/settings/account/preferences",
-          variant: "ghost",
         },
       ],
     },
     {
       title: "Your teams",
-      variant: "ghost",
       items: [
         {
           title: "Your teams",
           href: "/settings/team",
-          variant: "ghost",
         },
         {
           title: "Create a team",
           icon: "plusCircled",
           href: "/settings/team/create",
-          variant: "ghost",
         },
       ],
     },
     {
       title: "Workspace",
-      variant: "ghost",
       items: [
         {
           title: "General",
           href: "/settings/workspace/general",
-          variant: "ghost",
         },
         {
           title: "Billing",
           href: "/settings/workspace/billing",
-          variant: "ghost",
         },
       ],
     },

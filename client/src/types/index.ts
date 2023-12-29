@@ -5,6 +5,7 @@ import { type z } from "zod";
 import { type userPrivateMetadataSchema } from "@/lib/validations/auth";
 
 import { type Icons } from "@/components/icons";
+import { Button, ButtonProps } from "@/components/ui/button";
 
 export interface NavItem {
   title: string;
@@ -16,7 +17,7 @@ export interface NavItem {
   description?: string;
   badge?: string;
   badgeColor?: string;
-  variant: "default" | "ghost";
+  variant?: ButtonProps["variant"];
   items?: NavItem[];
 }
 
