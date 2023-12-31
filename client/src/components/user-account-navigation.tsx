@@ -31,6 +31,7 @@ const UserAccountNav: FC<UserAccountNavProps> = ({ className, user }) => {
   const { image_uri, initials } = generateAvatar({
     first_name: user.first_name,
     last_name: user.last_name,
+    email: user.email,
   });
 
   const { url_key } = useParams();
@@ -44,7 +45,10 @@ const UserAccountNav: FC<UserAccountNavProps> = ({ className, user }) => {
           className={cn("relative h-8 w-8 rounded-full", className)}
         >
           <Avatar className={cn("h-8 w-8", className)}>
-            <AvatarImage src={image_uri} alt={user.first_name ?? ""} />
+            <AvatarImage
+              src={user.image_uri || image_uri}
+              alt={user.first_name ?? ""}
+            />
             <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
         </Button>
