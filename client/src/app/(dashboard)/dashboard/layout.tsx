@@ -35,7 +35,6 @@ export default async function AccountLayout({
   if (!workspaces) {
     redirect("/dashboard/create");
   }
-
   const workspaceCookie = cookies().get("gembuddy:workspace_url_key");
 
   const latestWorkspaceUrlKey: string | undefined = workspaceCookie
