@@ -14,20 +14,20 @@ import { Sidebar } from "./sidebar";
 import { Database } from "@/types/supabase.types";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
-interface appProps {
+interface AppProps {
   children: React.ReactNode;
   teams: Database["public"]["Tables"]["team"]["Row"][] | null;
-  defaultLayout: number[];
-  defaultCollapsed: boolean;
-  navCollapsedSize: number;
+  defaultLayout?: number[];
+  defaultCollapsed?: boolean;
+  navCollapsedSize?: number;
 }
 
-const App: FC<appProps> = ({
+const App: FC<AppProps> = ({
   children,
+  teams,
   defaultLayout = [30, 70],
   navCollapsedSize,
   defaultCollapsed = false,
-  teams,
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
   const { url_key } = useParams();
@@ -43,6 +43,14 @@ const App: FC<appProps> = ({
   const setTeamList = useTeam()((state) => state.setTeamList);
   setTeamList(teams);
 
+  // Handler for ResizablePanel collapse/expand
+  const handlePanelChange = (collapsed: boolean) => {
+    setIsCollapsed(collapsed);
+    document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
+      collapsed
+    )};path=/`;
+  };
+
   return (
     <TooltipProvider delayDuration={0}>
       <ResizablePanelGroup
@@ -52,27 +60,19 @@ const App: FC<appProps> = ({
             sizes
           )};path=/`;
         }}
-        className="min-h-screen items-stretch"
+        className="min-h-screen"
       >
+        {/* Sidebar */}
         <ResizablePanel
           defaultSize={defaultLayout[0]}
           collapsedSize={navCollapsedSize}
           collapsible={true}
           minSize={13}
           maxSize={20}
-          onCollapse={() => {
-            setIsCollapsed(true);
-            document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
-              true
-            )};path=/`;
-          }}
-          onExpand={() => {
-            setIsCollapsed(false);
-            document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
-              false
-            )};path=/`;
-          }}
+          onCollapse={() => handlePanelChange(true)}
+          onExpand={() => handlePanelChange(false)}
           className={cn(
+            "min-w-[120px]",
             isCollapsed &&
               "min-w-[50px] transition-all duration-300 ease-in-out"
           )}
@@ -84,11 +84,15 @@ const App: FC<appProps> = ({
             user={user}
           />
         </ResizablePanel>
+
+        {/* Resizable handle */}
         <ResizableHandle withHandle />
+
+        {/* Main content */}
         <ResizablePanel defaultSize={defaultLayout[1]} minSize={30}>
           <Shell
-            variant="sidebar"
-            className="relative flex-1 flex-col overflow-x-hidden  lg:ml-0 backdrop-blur-[1px]"
+            variant="default"
+            className="relative flex-1 flex-col overflow-x-hidden lg:ml-0 backdrop-blur-[1px]"
           >
             {children}
           </Shell>

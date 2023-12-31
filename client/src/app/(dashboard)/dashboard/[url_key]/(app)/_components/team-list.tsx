@@ -24,26 +24,38 @@ interface TeamListProps {
   items: NavItem[];
   teams: Database["public"]["Tables"]["team"]["Row"][] | null;
   params: { url_key: string };
+  rootPath: string;
 }
 
-export function TeamList({ items, teams, isCollapsed, params }: TeamListProps) {
+export function TeamList({
+  items,
+  teams,
+  isCollapsed,
+  params,
+  rootPath,
+}: TeamListProps) {
   return (
     <div
       data-collapsed={isCollapsed}
       className="group flex flex-col gap-4 py-2 data-[collapsed=true]:py-2"
     >
       <nav className="grid gap-1 px-2 group-[[data-collapsed=true]]:px-2">
-        {isCollapsed ? (
-          <>
-            {teams &&
-              teams.length > 0 &&
-              teams.map((team) => {
+        <div className="flex flex-col ">
+          {teams && teams?.length > 0 ? (
+            <Accordion
+              type="single"
+              className="flex flex-col gap-1"
+              collapsible
+            >
+              {teams.map((team, index) => {
                 const { image_uri, initials } = generateAvatar({
                   name: team.name,
                 });
-                return (
-                  <Tooltip delayDuration={0}>
-                    <TooltipTrigger asChild>
+                const href = `${rootPath}/${team.url_key}`;
+
+                return isCollapsed ? (
+                  <Tooltip key={index} delayDuration={0}>
+                    <TooltipTrigger key={index} asChild>
                       <Link
                         href={`/dashboard/${params?.url_key}/${team.id}`}
                         className={cn(
@@ -53,9 +65,13 @@ export function TeamList({ items, teams, isCollapsed, params }: TeamListProps) {
                           }),
                           "h-8 w-8"
                         )}
+                        key={index}
                       >
                         <Avatar className={cn("h-5 w-5 rounded-sm")}>
-                          <AvatarImage src={image_uri} alt={team.name ?? ""} />
+                          <AvatarImage
+                            src={team.image_uri || image_uri}
+                            alt={team.name ?? ""}
+                          />
                           <AvatarFallback>{initials}</AvatarFallback>
                         </Avatar>
                       </Link>
@@ -63,6 +79,7 @@ export function TeamList({ items, teams, isCollapsed, params }: TeamListProps) {
                     <TooltipContent
                       side="right"
                       className="flex items-center gap-4"
+                      key={team.id}
                     >
                       {team.name}
                       {team.name && (
@@ -72,59 +89,47 @@ export function TeamList({ items, teams, isCollapsed, params }: TeamListProps) {
                       )}
                     </TooltipContent>
                   </Tooltip>
+                ) : (
+                  <AccordionItem key={team.id} value={team.id}>
+                    <AccordionTrigger
+                      className={cn(
+                        buttonVariants({ variant: "ghost", size: "sm" }),
+                        "flex w-full justify-between gap-2 py-0  "
+                      )}
+                      key={index}
+                    >
+                      <span className="flex gap-2 items-center ">
+                        <Avatar className={cn("h-5 w-5 rounded-sm")}>
+                          <AvatarImage
+                            src={team.image_uri || image_uri}
+                            alt={team.name ?? ""}
+                          />
+                          <AvatarFallback>{initials}</AvatarFallback>
+                        </Avatar>
+                        {team.name}
+                      </span>
+                    </AccordionTrigger>
+                    <AccordionContent key={team.id}>
+                      <span className="flex gap-1 ml-1">
+                        <Separator
+                          orientation="vertical"
+                          className="bg-primary h-auto "
+                        />
+                        <Nav
+                          rootPath={href}
+                          isCollapsed={isCollapsed}
+                          items={items}
+                        />
+                      </span>
+                    </AccordionContent>
+                  </AccordionItem>
                 );
               })}
-          </>
-        ) : (
-          <div className="flex flex-col ">
-            {teams && teams?.length > 0 ? (
-              <Accordion
-                type="single"
-                className="flex flex-col gap-1"
-                collapsible
-              >
-                {teams.map((team) => {
-                  const { image_uri, initials } = generateAvatar({
-                    name: team.name,
-                  });
-                  const teamIndex = team.id;
-                  return (
-                    <AccordionItem key={teamIndex} value={team.id}>
-                      <AccordionTrigger
-                        className={cn(
-                          buttonVariants({ variant: "ghost", size: "sm" }),
-                          "flex w-full justify-between gap-2 py-0  "
-                        )}
-                      >
-                        <span className="flex gap-2 items-center ">
-                          <Avatar className={cn("h-5 w-5 rounded-sm")}>
-                            <AvatarImage
-                              src={image_uri}
-                              alt={team.name ?? ""}
-                            />
-                            <AvatarFallback>{initials}</AvatarFallback>
-                          </Avatar>
-                          {team.name}
-                        </span>
-                      </AccordionTrigger>
-                      <AccordionContent key={team.id}>
-                        <span className="flex gap-1 ml-1">
-                          <Separator
-                            orientation="vertical"
-                            className="bg-primary h-auto "
-                          />
-                          <Nav isCollapsed={isCollapsed} items={items} />
-                        </span>
-                      </AccordionContent>
-                    </AccordionItem>
-                  );
-                })}
-              </Accordion>
-            ) : (
-              <p>you have no teams</p>
-            )}
-          </div>
-        )}
+            </Accordion>
+          ) : (
+            <p>you have no teams</p>
+          )}
+        </div>
       </nav>
     </div>
   );

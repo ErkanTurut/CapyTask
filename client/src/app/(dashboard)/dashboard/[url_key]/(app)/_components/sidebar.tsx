@@ -1,9 +1,11 @@
+"use client";
 import { Separator } from "@/components/ui/separator";
 
 import WorkspaceNav from "@/components/workspace/workspace-navigation";
 
 import { Nav } from "@/components/layouts/nav";
 import { Database } from "@/types/supabase.types";
+import { useParams } from "next/navigation";
 
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { appNavItems } from "@/config/dashboard.config";
@@ -26,36 +28,45 @@ export function Sidebar({
   teams,
   user,
 }: SidebarProps) {
+  const params = useParams();
+
   return (
     <div className="flex flex-col">
-      <div className={cn("flex items-center p-2 justify-center gap-1 ")}>
+      <div
+        className={cn("flex flex-shrink  items-center p-2 justify-start gap-1")}
+      >
         <WorkspaceNav isCollapsed={isCollapsed} />
-        {!isCollapsed && <UserAccountNav user={user} className="h-6 w-6" />}
+        {!isCollapsed && <UserAccountNav user={user} className="h-6 w-6 " />}
       </div>
       <Separator />
-      <Nav isCollapsed={isCollapsed} items={appNavItems.header} />
+      <Nav
+        rootPath={`/dashboard/${params.url_key}`}
+        isCollapsed={isCollapsed}
+        items={appNavItems.header}
+      />
       <Separator />
       <Suspense fallback={<div>Loading...</div>}>
         <TeamList
           isCollapsed={isCollapsed}
+          rootPath={`/dashboard/${params.url_key}/team`}
           items={[
             {
               title: "Members",
               icon: "user",
               variant: "ghost",
-              href: "/team/members",
+              href: "/members",
             },
             {
               title: "Projects",
               icon: "lightning",
               variant: "ghost",
-              href: "/team/all",
+              href: "/projects",
             },
             {
               title: "Repports",
               icon: "fileText",
               variant: "ghost",
-              href: "/team/all",
+              href: "/repports",
             },
           ]}
           teams={teams}
@@ -63,7 +74,11 @@ export function Sidebar({
         />
       </Suspense>
       <Separator />
-      <Nav isCollapsed={isCollapsed} items={appNavItems.footer} />
+      <Nav
+        rootPath={`/dashboard/${params.url_key}`}
+        isCollapsed={isCollapsed}
+        items={appNavItems.footer}
+      />
     </div>
   );
 }
