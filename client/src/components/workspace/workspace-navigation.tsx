@@ -67,7 +67,7 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({ isCollapsed, className }) => {
         className={cn(
           className,
           isCollapsed &&
-            "flex h-8 w-8 items-center justify-center p-0 [&>span]:w-auto [&>svg]:hidden  overflow-ellipsis"
+            "flex h-8 w-8 items-center justify-center p-0 [&>span]:w-auto [&>svg]:hidden overflow-ellipsis"
         )}
         asChild
       >
@@ -76,18 +76,21 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({ isCollapsed, className }) => {
           role="combobox"
           aria-expanded={open}
           aria-label="Select a team"
-          className="w-full gap-1"
+          className="gap-1 w-full"
           size={isCollapsed ? "icon" : "default"}
         >
           <Avatar className="h-5 w-5 rounded-sm">
-            <AvatarImage src={image_uri} alt={selectedWorkspace.url_key} />
+            <AvatarImage
+              src={selectedWorkspace.image_uri || image_uri}
+              alt={selectedWorkspace.url_key}
+            />
             <AvatarFallback className="h-5 w-5 rounded-sm">
               {initials}
             </AvatarFallback>
           </Avatar>
           <span
             className={cn(
-              "overflow-hidden whitespace-nowrap overflow-ellipsis cursor-pointer",
+              "overflow-x-auto whitespace-nowrap overflow-ellipsis cursor-pointer max-w-1	", // Adjust the max-width as needed
               isCollapsed && "hidden"
             )}
           >
@@ -96,7 +99,7 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({ isCollapsed, className }) => {
           <Icons.caretSort className="ml-auto h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="w-[250px] p-1">
         <Command>
           <CommandList>
             <CommandInput placeholder="Search team..." />
@@ -116,7 +119,7 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({ isCollapsed, className }) => {
                       <AvatarImage
                         src={
                           generateAvatar({
-                            name: workspace.url_key,
+                            name: workspace.name,
                           }).image_uri
                         }
                         alt={workspace.url_key}
