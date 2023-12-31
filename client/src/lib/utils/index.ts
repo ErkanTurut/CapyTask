@@ -102,16 +102,18 @@ export function generateAvatar({
   withFallback = true,
   first_name,
   last_name,
+  email,
 }: {
   name?: string;
   size?: number;
   withFallback?: boolean;
   first_name?: string | null;
   last_name?: string | null;
+  email?: string | null;
 }) {
   let initials = "";
 
-  let input = name || first_name || last_name || randomString(5);
+  let input = name || first_name || last_name || email || randomString(5);
 
   if (name) {
     const nameParts = name.split(" ");
