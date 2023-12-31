@@ -37,7 +37,7 @@ export function CreateWorspaceForm() {
       router.push(`/dashboard/${data.url_key}`);
     },
     onError: (err) => {
-      catchError(err);
+      catchError(new Error(err));
     },
   });
 

@@ -35,11 +35,11 @@ const CreateTeamForm: FC<CreateTeamFormProps> = ({ workspace_id }) => {
   const { run, isLoading } = useAction(createTeam, {
     onSuccess: (data) => {
       toast.success("Team created successfully");
+      form.reset();
       router.refresh();
-      // router.push(`/${data.url_key}`);
     },
     onError: (err) => {
-      catchError(err);
+      catchError(new Error(err));
     },
   });
 
@@ -54,7 +54,6 @@ const CreateTeamForm: FC<CreateTeamFormProps> = ({ workspace_id }) => {
   });
 
   async function onSubmit(data: TCreateTeam) {
-    console.log("ok");
     run({
       name: data.name,
       url_key: data.url_key,
