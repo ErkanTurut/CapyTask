@@ -48,20 +48,20 @@ export interface Database {
         Row: {
           description: string
           id: string
-          name: string
-          permissions: string[] | null
+          name: Database["public"]["Enums"]["Role"]
+          permissions: Database["public"]["Enums"]["Permission"][] | null
         }
         Insert: {
           description: string
           id?: string
-          name: string
-          permissions?: string[] | null
+          name: Database["public"]["Enums"]["Role"]
+          permissions?: Database["public"]["Enums"]["Permission"][] | null
         }
         Update: {
           description?: string
           id?: string
-          name?: string
-          permissions?: string[] | null
+          name?: Database["public"]["Enums"]["Role"]
+          permissions?: Database["public"]["Enums"]["Permission"][] | null
         }
         Relationships: []
       }
@@ -73,8 +73,9 @@ export interface Database {
           id: string
           name: string
           parent_task_id: string | null
+          priority: Database["public"]["Enums"]["TaskPriority"]
           project_id: string
-          status: Database["public"]["Enums"]["status"]
+          status: Database["public"]["Enums"]["TaskStatus"]
           updated_at: string
         }
         Insert: {
@@ -84,8 +85,9 @@ export interface Database {
           id?: string
           name: string
           parent_task_id?: string | null
+          priority?: Database["public"]["Enums"]["TaskPriority"]
           project_id: string
-          status: Database["public"]["Enums"]["status"]
+          status: Database["public"]["Enums"]["TaskStatus"]
           updated_at?: string
         }
         Update: {
@@ -95,8 +97,9 @@ export interface Database {
           id?: string
           name?: string
           parent_task_id?: string | null
+          priority?: Database["public"]["Enums"]["TaskPriority"]
           project_id?: string
-          status?: Database["public"]["Enums"]["status"]
+          status?: Database["public"]["Enums"]["TaskStatus"]
           updated_at?: string
         }
         Relationships: [
@@ -240,26 +243,23 @@ export interface Database {
       user_team: {
         Row: {
           role_id: string | null
-          roleId: string | null
           team_id: string
           user_id: string
         }
         Insert: {
           role_id?: string | null
-          roleId?: string | null
           team_id: string
           user_id: string
         }
         Update: {
           role_id?: string | null
-          roleId?: string | null
           team_id?: string
           user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "user_team_roleId_fkey"
-            columns: ["roleId"]
+            foreignKeyName: "user_team_role_id_fkey"
+            columns: ["role_id"]
             isOneToOne: false
             referencedRelation: "role"
             referencedColumns: ["id"]
@@ -326,6 +326,7 @@ export interface Database {
           created_by: string
           description: string | null
           id: string
+          image_uri: string | null
           name: string
           updated_at: string
           url_key: string
@@ -335,6 +336,7 @@ export interface Database {
           created_by: string
           description?: string | null
           id?: string
+          image_uri?: string | null
           name: string
           updated_at?: string
           url_key: string
@@ -344,6 +346,7 @@ export interface Database {
           created_by?: string
           description?: string | null
           id?: string
+          image_uri?: string | null
           name?: string
           updated_at?: string
           url_key?: string
@@ -366,6 +369,12 @@ export interface Database {
       [_ in never]: never
     }
     Enums: {
+      Permission:
+        | "FULL_ACCESS"
+        | "CAN_EDIT"
+        | "CAN_COMMENT"
+        | "CAN_VIEW"
+        | "NO_ACCESS"
       Role:
         | "ADMIN"
         | "MANAGER"
@@ -375,11 +384,8 @@ export interface Database {
         | "QUALITY_INSPECTOR"
         | "OPERATOR"
         | "OTHER"
-      status:
-        | "NOTSTARTED"
-        | "INPROGRESS"
-        | "COMPLETED_SUCCESS"
-        | "COMPLETED_FAIL"
+      TaskPriority: "LOW" | "MEDIUM" | "HIGH"
+      TaskStatus: "OPEN" | "IN_PROGRESS" | "COMPLETED" | "ON_HOLD" | "CANCELED"
     }
     CompositeTypes: {
       [_ in never]: never
