@@ -25,13 +25,11 @@ model user {
 }
 
 model team {
-  id          String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name        String
-  description String?
-  image_uri   String?
-
-  url_key String
-
+  id           String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name         String
+  description  String?
+  image_uri    String?
+  url_key      String
   created_at   DateTime    @default(now()) @db.Timestamptz(6)
   updated_at   DateTime    @default(now()) @updatedAt @db.Timestamptz(6)
   workspace_id String      @db.Uuid
@@ -41,13 +39,14 @@ model team {
 
   @@unique([url_key, workspace_id])
   @@unique([name, workspace_id])
+  @@index([workspace_id])
 }
 
 model role {
   id                 String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name               String           @unique
+  name               Role
   description        String
-  permissions        String[]
+  permissions        Permission[]     @default([])
   user_project_roles user_project[]
   user_team_roles    user_team[]
   user_workspace     user_workspace[]
@@ -68,19 +67,20 @@ model project {
 }
 
 model task {
-  id             String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id             String       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name           String
   description    String?
-  status         status
-  created_at     DateTime @default(now()) @db.Timestamptz(6)
-  updated_at     DateTime @default(now()) @updatedAt @db.Timestamptz(6)
-  project_id     String   @db.Uuid
-  parent_task_id String?  @db.Uuid
-  created_by_id  String?  @db.Uuid
-  created_by     user?    @relation(fields: [created_by_id], references: [id])
-  parent_task    task?    @relation("task_sub_tasks", fields: [parent_task_id], references: [id], onDelete: Cascade)
-  sub_tasks      task[]   @relation("task_sub_tasks")
-  project        project  @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  status         TaskStatus
+  created_at     DateTime     @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime     @default(now()) @updatedAt @db.Timestamptz(6)
+  project_id     String       @db.Uuid
+  parent_task_id String?      @db.Uuid
+  created_by_id  String?      @db.Uuid
+  priority       TaskPriority @default(LOW)
+  created_by     user?        @relation(fields: [created_by_id], references: [id])
+  parent_task    task?        @relation("task_sub_tasks", fields: [parent_task_id], references: [id], onDelete: Cascade)
+  sub_tasks      task[]       @relation("task_sub_tasks")
+  project        project      @relation(fields: [project_id], references: [id], onDelete: Cascade)
 
   @@index([project_id])
   @@index([parent_task_id])
@@ -91,11 +91,9 @@ model user_team {
   user_id String  @db.Uuid
   team_id String  @db.Uuid
   role_id String? @db.Uuid
-  // role    role   @relation(fields: [role_id], references: [id])
+  role    role?   @relation(fields: [role_id], references: [id])
   team    team    @relation(fields: [team_id], references: [id])
   user    user    @relation(fields: [user_id], references: [id])
-  role    role?   @relation(fields: [roleId], references: [id])
-  roleId  String? @db.Uuid
 
   @@id([user_id, team_id])
   @@index([team_id])
@@ -139,6 +137,7 @@ model workspace {
   updated_at     DateTime         @default(now()) @updatedAt @db.Timestamptz(6)
   url_key        String           @unique
   created_by     String           @db.Uuid
+  image_uri      String?
   team           team[]
   user_workspace user_workspace[]
   user           user             @relation(fields: [created_by], references: [id])
@@ -146,11 +145,12 @@ model workspace {
   @@index([url_key])
 }
 
-enum status {
-  NOTSTARTED
-  INPROGRESS
-  COMPLETED_SUCCESS
-  COMPLETED_FAIL
+enum TaskStatus {
+  OPEN
+  IN_PROGRESS
+  COMPLETED
+  ON_HOLD
+  CANCELED
 }
 
 enum Role {
@@ -162,4 +162,18 @@ enum Role {
   QUALITY_INSPECTOR
   OPERATOR
   OTHER
+}
+
+enum Permission {
+  FULL_ACCESS
+  CAN_EDIT
+  CAN_COMMENT
+  CAN_VIEW
+  NO_ACCESS
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
 }
