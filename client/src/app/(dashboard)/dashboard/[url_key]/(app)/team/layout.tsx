@@ -23,16 +23,5 @@ export default async function AccountLayout({
   if (!session?.user || error) {
     redirect("/signin");
   }
-
-  return (
-    <Shell variant="default">
-      <PageHeader id="account-header" aria-labelledby="account-header-heading">
-        <PageHeaderHeading size="sm">Teams</PageHeaderHeading>
-        <PageHeaderDescription size="sm">
-          Manage your teams
-        </PageHeaderDescription>
-      </PageHeader>
-      {children}
-    </Shell>
-  );
+  return <Shell variant="default">{children}</Shell>;
 }
