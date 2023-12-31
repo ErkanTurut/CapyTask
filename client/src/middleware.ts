@@ -89,7 +89,7 @@ export async function middleware(request: NextRequest) {
     request.nextUrl.pathname === "/signup"
   ) {
     if (!session) {
-      return NextResponse.next();
+      return response;
     }
     return redirectToDefaultWorkspace();
   }
