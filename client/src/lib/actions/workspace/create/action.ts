@@ -27,7 +27,6 @@ const handler = async (data: TCreateWorkspace): Promise<ReturnType> => {
     .single();
 
   if (error) {
-    console.log(error);
     return {
       error: error.message,
     };
