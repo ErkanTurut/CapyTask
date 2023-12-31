@@ -31,7 +31,7 @@ export function SignInForm() {
       router.refresh();
     },
     onError: (err) => {
-      catchError(err);
+      catchError(new Error(err));
     },
   });
 

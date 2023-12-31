@@ -45,7 +45,7 @@ export function SignUpForm() {
       router.push(`/signin`);
     },
     onError: (err) => {
-      catchError(err);
+      catchError(new Error(err));
     },
   });
 

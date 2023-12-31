@@ -20,15 +20,20 @@ const oauthProviders = [
 
 export function OAuthSignIn() {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const supabase = createSupabaseBrowserClient();
 
   async function oauthSignIn(provider: Provider) {
+    const supabase = await createSupabaseBrowserClient();
+
     try {
       setIsLoading(true);
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: provider,
         options: {
           redirectTo: `${location.origin}/api/auth/callback`,
+          queryParams: {
+            access_type: "offline",
+            prompt: "consent",
+          },
         },
       });
 
