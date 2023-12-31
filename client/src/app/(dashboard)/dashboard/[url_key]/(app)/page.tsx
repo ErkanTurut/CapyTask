@@ -5,6 +5,6 @@ interface DashboardLayoutProps {
   };
 }
 
-export default async function DashboardPage({ params }: DashboardLayoutProps) {
+export default async function RedirectPage({ params }: DashboardLayoutProps) {
   redirect(`/dashboard/${params.url_key}/team`);
 }
