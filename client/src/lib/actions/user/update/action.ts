@@ -24,7 +24,6 @@ const handler = async (data: TAccountUpdate): Promise<ReturnType> => {
     .select("*")
     .single();
 
-  console.log(user, error);
   if (error) {
     return {
       error: error.message,
