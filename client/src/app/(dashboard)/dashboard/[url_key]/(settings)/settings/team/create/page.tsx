@@ -20,7 +20,6 @@ interface createPageProps {
 }
 
 export default async function createPage({ params }: createPageProps) {
-  console.log(params);
   const { data: workspace } = await getWorkspace(params.url_key);
   if (!workspace) {
     redirect(`/create`);

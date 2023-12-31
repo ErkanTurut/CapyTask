@@ -1,5 +1,5 @@
 interface teamsPageProps {}
 
-export default function teamsPage({}: teamsPageProps) {
+export default async function teamsPage({}: teamsPageProps) {
   return <div> teams page</div>;
 }
