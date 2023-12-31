@@ -67,46 +67,48 @@ export const settingsNavItems: {
     {
       title: "Account",
       icon: "user",
-      href: "/settings/account",
+      href: "/account",
       items: [
         {
           title: "Profile",
-          href: "/settings/account/profile",
+          href: "/profile",
         },
         {
           title: "Security",
-          href: "/settings/account/security",
+          href: "/security",
         },
         {
           title: "Preferences",
-          href: "/settings/account/preferences",
+          href: "/preferences",
         },
       ],
     },
     {
       title: "Your teams",
+      href: "/team",
       items: [
         {
           title: "Your teams",
-          href: "/settings/team",
+          href: "/all",
         },
         {
           title: "Create a team",
           icon: "plusCircled",
-          href: "/settings/team/create",
+          href: "/create",
         },
       ],
     },
     {
       title: "Workspace",
+      href: "/workspace",
       items: [
         {
           title: "General",
-          href: "/settings/workspace/general",
+          href: "/general",
         },
         {
           title: "Billing",
-          href: "/settings/workspace/billing",
+          href: "/billing",
         },
       ],
     },
