@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation";
-import TeamList from "@/components/team/team-list";
+// import TeamList from "@/components/team/team-list";
 
 export default async function TeamsPage() {
   return (
     <>
-      <TeamList />
+      <h1>Teams</h1>
     </>
   );
 }

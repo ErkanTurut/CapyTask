@@ -40,7 +40,10 @@ export default async function workspaceGeneralPage({
     name: workspace.name,
   });
   return (
-    <section id="user-account-info" aria-labelledby="user-account-info-heading">
+    <section
+      id="workspace-general-settings"
+      aria-labelledby="workspace-general-settings"
+    >
       <PageHeader
         className="pb-4"
         id="account-header"
