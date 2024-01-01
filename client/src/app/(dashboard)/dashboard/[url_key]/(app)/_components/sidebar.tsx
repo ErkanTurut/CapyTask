@@ -7,12 +7,11 @@ import { Nav } from "@/components/layouts/nav";
 import { Database } from "@/types/supabase.types";
 import { useParams } from "next/navigation";
 
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { appNavItems } from "@/config/dashboard.config";
-import { Suspense } from "react";
-import { TeamList } from "./team-list";
 import UserAccountNav from "@/components/user-account-navigation";
+import { appNavItems } from "@/config/dashboard.config";
 import { cn } from "@/lib/utils";
+import { Suspense } from "react";
+import { TeamList } from "@/components/team/team-list";
 
 export interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   isCollapsed: boolean;
@@ -32,11 +31,9 @@ export function Sidebar({
 
   return (
     <div className="flex flex-col">
-      <div
-        className={cn("flex flex-shrink  items-center p-2 justify-start gap-1")}
-      >
+      <div className={cn("flex items-center p-2 justify-start gap-1")}>
         <WorkspaceNav isCollapsed={isCollapsed} />
-        {!isCollapsed && <UserAccountNav user={user} className="h-6 w-6 " />}
+        {!isCollapsed && <UserAccountNav user={user} className="h-6 w-6" />}
       </div>
       <Separator />
       <Nav
@@ -70,7 +67,6 @@ export function Sidebar({
             },
           ]}
           teams={teams}
-          params={workspace}
         />
       </Suspense>
       <Separator />
