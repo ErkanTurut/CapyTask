@@ -82,7 +82,7 @@ export function Nav({
                     }),
                     item.variant === "default" &&
                       "dark:bg-muted dark:text-white",
-                    "justify-start "
+                    "justify-between"
                   )}
                 >
                   {item.title}
