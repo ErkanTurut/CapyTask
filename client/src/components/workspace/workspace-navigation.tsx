@@ -67,7 +67,7 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({ isCollapsed, className }) => {
         className={cn(
           className,
           isCollapsed &&
-            "flex h-8 w-8 items-center justify-center p-0 [&>span]:w-auto [&>svg]:hidden overflow-ellipsis"
+            "flex  h-8 w-8 items-center justify-center p-0 [&>span]:w-auto [&>svg]:hidden overflow-ellipsis"
         )}
         asChild
       >
