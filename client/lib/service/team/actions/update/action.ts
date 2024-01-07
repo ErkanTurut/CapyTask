@@ -16,7 +16,7 @@ const handler = async (data: TUpdateTeam): Promise<ReturnType> => {
   } = await supabase.auth.getSession();
 
   if (!session) {
-    return redirect("/signin");
+    return redirect("/login");
   }
 
   const { data: team, error } = await supabase

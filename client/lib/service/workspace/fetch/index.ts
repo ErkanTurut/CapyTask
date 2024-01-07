@@ -17,10 +17,28 @@ export const getWorkspace = async (url_key: string) => {
     .single();
 };
 
+// export const getWorkspaces = async () => {
+//   const cookieStore = cookies();
+//   const supabase = createClient(cookieStore);
+//   return await supabase.from("workspace").select("*");
+// };
+
 export const getWorkspaces = async () => {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
-  return await supabase.from("workspace").select("*");
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  return await cache(
+    async () => {
+      return await supabase.from("workspace").select("*");
+    },
+    [`${session?.user.id}-workspaces`],
+    {
+      revalidate: 60,
+      tags: [`${session?.user.id}-workspaces`],
+    },
+  )();
 };
 
 export const getUserWorkspace = async (user_id: string) => {

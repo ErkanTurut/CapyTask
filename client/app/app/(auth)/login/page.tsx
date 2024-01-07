@@ -1,47 +1,63 @@
-import Image from "next/image";
-import LoginButton from "./login-button";
-import { Suspense } from "react";
-import DiscordLoginButton from "./discord-login";
-import { cookies } from "next/headers";
-import { createClient } from "@/lib/supabase/server";
+import Link from "next/link";
 
-export default async function LoginPage() {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
-  console.log(await supabase.auth.getUser());
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { OAuthSignIn } from "@/components/auth/oauth";
+import { SignInForm } from "@/components/auth/sign-in";
+import { Shell } from "@/components/shells";
+
+export default async function SignInPage() {
   return (
-    <div className="mx-5 border border-stone-200 py-10 dark:border-stone-700 sm:mx-auto sm:w-full sm:max-w-md sm:rounded-lg sm:shadow-md">
-      <Image
-        alt="Platforms Starter Kit"
-        width={100}
-        height={100}
-        className="relative mx-auto h-12 w-auto dark:scale-110 dark:rounded-full dark:border dark:border-stone-400"
-        src="/logo.png"
-      />
-      <h1 className="mt-6 text-center font-cal text-3xl dark:text-white">
-        Platforms Starter Kit
-      </h1>
-      <p className="mt-2 text-center text-sm text-stone-600 dark:text-stone-400">
-        Build multi-tenant applications with custom domains. <br />
-        <a
-          className="font-medium text-black hover:text-stone-800 dark:text-stone-300 dark:hover:text-stone-100"
-          href="https://vercel.com/blog/platforms-starter-kit"
-          rel="noreferrer"
-          target="_blank"
-        >
-          Read the announcement.
-        </a>
-      </p>
-
-      <div className="mx-auto mt-4 w-11/12 max-w-xs sm:w-full">
-        <Suspense
-          fallback={
-            <div className="my-2 h-10 w-full rounded-md border border-stone-200 bg-stone-100 dark:border-stone-700 dark:bg-stone-800" />
-          }
-        >
-          <DiscordLoginButton />
-        </Suspense>
-      </div>
-    </div>
+    <Shell className="max-w-lg">
+      <Card>
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl">Sign in</CardTitle>
+          <CardDescription>
+            Choose your preferred sign in method
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-4">
+          <OAuthSignIn />
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">
+                Or continue with
+              </span>
+            </div>
+          </div>
+          <SignInForm />
+        </CardContent>
+        <CardFooter className="flex flex-wrap items-center justify-between gap-2">
+          <div className="text-sm text-muted-foreground">
+            <span className="mr-1 hidden sm:inline-block">
+              Don&apos;t have an account?
+            </span>
+            <Link
+              aria-label="Sign up"
+              href="/signup"
+              className="text-primary underline-offset-4 transition-colors hover:underline"
+            >
+              Sign up
+            </Link>
+          </div>
+          <Link
+            aria-label="Reset password"
+            href="/reset-password"
+            className="text-sm text-primary underline-offset-4 transition-colors hover:underline"
+          >
+            Reset password
+          </Link>
+        </CardFooter>
+      </Card>
+    </Shell>
   );
 }

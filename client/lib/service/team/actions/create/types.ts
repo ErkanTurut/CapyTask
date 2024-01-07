@@ -7,5 +7,5 @@ import { ZCreateTeam } from "./schema";
 export type TCreateTeam = z.infer<typeof ZCreateTeam>;
 export type ReturnType = ActionState<
   TCreateTeam,
-  { success: boolean; url_key: string }
+  { success: boolean; indentity: string }
 >;

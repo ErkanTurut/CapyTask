@@ -43,25 +43,47 @@ export default async function middleware(req: NextRequest) {
 
   // rewrites for app pages
   if (hostname == `app.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
-    // const session = await getToken({ req });
     const {
       data: { session },
       error,
     } = await supabase.auth.getSession();
-    console.log(session);
-    if (!session && path !== "/login") {
+    if (
+      !session &&
+      path !== "/login" &&
+      path !== "/signup" &&
+      path !== "/logout"
+    ) {
       return NextResponse.redirect(new URL("/login", req.url), {
-        headers: req.headers,
+        headers: response.headers,
       });
     } else if (session && path == "/login") {
-      return NextResponse.redirect(new URL("/", req.url), {
-        headers: req.headers,
+      const { data: workspaces } = await supabase.from("workspace").select("*");
+      if (!workspaces || workspaces.length < 1) {
+        return NextResponse.redirect(new URL("/create", req.url), {
+          headers: response.headers,
+        });
+      }
+      let stored_workspace: { url_key: string } | null;
+      try {
+        stored_workspace = JSON.parse(
+          req.cookies.get("gembuddy:workspace_url_key")?.value || "null",
+        );
+      } catch (error) {
+        stored_workspace = null;
+      }
+      const workspace =
+        workspaces.find(
+          (workspace) => workspace.url_key === stored_workspace?.url_key,
+        ) || workspaces[0];
+
+      return NextResponse.redirect(new URL(`/${workspace.url_key}`, req.url), {
+        headers: response.headers,
       });
     }
     return NextResponse.rewrite(
       new URL(`/app${path === "/" ? "" : path}`, req.url),
       {
-        headers: req.headers,
+        headers: response.headers,
       },
     );
   }

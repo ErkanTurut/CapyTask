@@ -16,7 +16,7 @@ const handler = async (data: TCreateWorkspace): Promise<ReturnType> => {
   } = await supabase.auth.getSession();
 
   if (!session) {
-    return redirect("/signin");
+    return redirect("/login");
   }
 
   const { error } = await supabase

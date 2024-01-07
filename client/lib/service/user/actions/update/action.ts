@@ -16,7 +16,7 @@ const handler = async (data: TAccountUpdate): Promise<ReturnType> => {
   } = await supabase.auth.getSession();
 
   if (!session) {
-    return redirect("/signin");
+    return redirect("/login");
   }
 
   const { data: user, error } = await supabase

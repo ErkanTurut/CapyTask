@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { TCreateTeam, ReturnType } from "./types";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { createSafeAction } from "@/lib/safe-action";
 import { ZCreateTeam } from "./schema";
 import { redirect } from "next/navigation";
@@ -14,26 +14,22 @@ const handler = async (data: TCreateTeam): Promise<ReturnType> => {
   const {
     data: { session },
   } = await supabase.auth.getSession();
-
   if (!session) {
-    return redirect("/signin");
+    return redirect("/login");
   }
-
-  const { error } = await supabase.from("team").insert({
-    name: data.name,
-    workspace_id: data.workspace_id,
-    url_key: data.url_key,
-  });
-
-  if (error) {
-    return {
-      error: error.message,
-    };
-  }
-  revalidatePath(`dashboard/${data.url_key}`);
-
+  // const { error } = await supabase.from("team").insert({
+  //   name: data.name,
+  //   workspace_id: data.workspace_id,
+  //   indentity: data.indentity,
+  // });
+  // if (error) {
+  //   return {
+  //     error: error.message,
+  //   };
+  // }
+  revalidateTag(`${session?.user.id}-${data.workspace_id}-teams`);
   return {
-    data: { success: true, url_key: data.url_key },
+    data: { success: true, indentity: data.indentity },
   };
 };
 
