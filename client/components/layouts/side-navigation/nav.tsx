@@ -18,28 +18,24 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Separator } from "@/components/ui/separator";
+import { useSidebar } from "@/lib/store";
 
 interface NavProps extends React.HTMLAttributes<HTMLDivElement> {
-  isCollapsed: boolean;
   items: NavItem[];
   size?: VariantProps<typeof buttonVariants>["size"];
   rootPath: string;
+  isCollapsed?: boolean;
 }
 
-export function Nav({
-  items,
-  isCollapsed,
-  size,
-  className,
-  rootPath,
-}: NavProps) {
-  //const params = useParams();
+export function Nav({ items, size, className, rootPath }: NavProps) {
+  const isCollapsed = useSidebar()((state) => state.isCollapsed);
+
   return (
     <div
       data-collapsed={isCollapsed}
-      className="group flex w-full flex-col gap-4 py-2 data-[collapsed=true]:py-2"
+      className="group flex w-full flex-col gap-4"
     >
-      <nav className="grid gap-1 px-2 group-[[data-collapsed=true]]:px-2">
+      <nav className={cn("grid w-full gap-1", className)}>
         {items.map((item, index) => {
           const Icon = item.icon ? Icons[item.icon] : null;
           const href = item.href ? `${rootPath}${item.href}` : "#";
@@ -72,7 +68,7 @@ export function Nav({
               </TooltipContent>
             </Tooltip>
           ) : item.items && item.items.length > 0 ? (
-            <Accordion type="multiple">
+            <Accordion key={index} type="multiple">
               <AccordionItem value={item.title}>
                 <AccordionTrigger
                   className={cn(
@@ -104,12 +100,7 @@ export function Nav({
                       orientation="vertical"
                       className="h-auto bg-primary "
                     />
-                    <Nav
-                      items={item.items}
-                      isCollapsed={isCollapsed}
-                      size={size}
-                      rootPath={href}
-                    />
+                    <Nav items={item.items} size={size} rootPath={href} />
                   </span>
                 </AccordionContent>
               </AccordionItem>
