@@ -1,6 +1,7 @@
 import { Database } from "@/types/supabase.types";
 import { createContext, useContext, useState } from "react";
 import { create } from "zustand";
+
 interface SidebarState {
   isCollapsed: boolean;
   setIsCollapsed: (isCollapsed: boolean) => void;
