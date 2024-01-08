@@ -19,12 +19,16 @@ const handler = async (data: TUpdateTeam): Promise<ReturnType> => {
     return redirect("/login");
   }
 
+  console.log(data);
+
   const { data: team, error } = await supabase
     .from("team")
     .update(data)
     .eq("id", data.id)
     .select("*")
     .single();
+
+  console.log(team, error);
 
   if (error) {
     return {

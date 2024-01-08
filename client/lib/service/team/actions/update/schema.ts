@@ -1,5 +1,5 @@
+import { Database } from "@/types/supabase.types";
 import * as z from "zod";
-
 export const ZUpdateTeam = z.object({
   id: z.string(),
   name: z
@@ -12,6 +12,16 @@ export const ZUpdateTeam = z.object({
     .regex(/^[a-zA-Z0-9 ]+$/, {
       message: "Name must contain only letters, numbers and spaces",
     }),
+  identity: z
+    .string({
+      invalid_type_error: "Indentity must be a string",
+      required_error: "Indentity is required",
+    })
+    .min(3, { message: "Indentity must be at least 3 characters long" })
+    .max(5, { message: "Slug must be less than 5 characters long" })
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
+      message: "Slug must be lowercase and contain no spaces",
+    }),
   description: z
     .string()
     .max(500, {
@@ -22,11 +32,4 @@ export const ZUpdateTeam = z.object({
     .string()
     .url({ message: "Image URL must be a valid URL" })
     .optional(),
-  url_key: z
-    .string()
-    .max(5, { message: "Slug must be less than 5 characters long" })
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
-      message: "Slug must be lowercase and contain no spaces",
-    })
-    .toLowerCase(),
 });
