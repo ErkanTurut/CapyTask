@@ -368,8 +368,8 @@ export interface Database {
           created_at: string
           description: string | null
           id: string
+          identity: string
           image_uri: string | null
-          indentity: string
           name: string
           updated_at: string
           workspace_id: string
@@ -378,8 +378,8 @@ export interface Database {
           created_at?: string
           description?: string | null
           id?: string
+          identity: string
           image_uri?: string | null
-          indentity: string
           name: string
           updated_at?: string
           workspace_id: string
@@ -388,8 +388,8 @@ export interface Database {
           created_at?: string
           description?: string | null
           id?: string
+          identity?: string
           image_uri?: string | null
-          indentity?: string
           name?: string
           updated_at?: string
           workspace_id?: string
