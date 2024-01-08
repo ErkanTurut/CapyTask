@@ -4,6 +4,7 @@ import React, { FC, useEffect, useState } from "react";
 import { cn, generateAvatar } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
+import { unstable_batchedUpdates } from "react-dom"; // or 'react-native'
 
 import { Icons } from "../icons";
 import {
@@ -17,22 +18,20 @@ import {
 } from "../ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
-import { useWorkspace } from "@/lib/store";
+import { useSidebar, useWorkspace } from "@/lib/store";
 import Link from "next/link";
-import { useParams, useRouter, usePathname } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
-interface WorkspaceNavProps extends React.HTMLAttributes<HTMLDivElement> {
-  isCollapsed?: boolean;
-}
+interface WorkspaceNavProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-const WorkspaceNav: FC<WorkspaceNavProps> = ({ isCollapsed, className }) => {
+const WorkspaceNav: FC<WorkspaceNavProps> = ({ className }) => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const { url_key } = useParams();
-  const pathname = usePathname();
+
+  const isCollapsed = useSidebar()((state) => state.isCollapsed);
 
   const workspaces = useWorkspace()((state) => state.workspaceList)!;
-
   const selectedWorkspace = useWorkspace()((state) => state.workspace);
   const setSelectedWorkspace = useWorkspace()((state) => state.setWorkspace);
 
@@ -61,12 +60,12 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({ isCollapsed, className }) => {
         className={cn(
           className,
           isCollapsed &&
-            "flex  h-8 w-8 items-center justify-center overflow-ellipsis p-0 [&>span]:w-auto [&>svg]:hidden",
+            "flex h-8 w-8 items-center justify-center overflow-ellipsis [&>span]:w-auto [&>svg]:hidden",
         )}
         asChild
       >
         <Button
-          variant="outline"
+          variant="default"
           role="combobox"
           aria-expanded={open}
           aria-label="Select a team"

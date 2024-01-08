@@ -1,3 +1,4 @@
+"use client";
 import { NavItem } from "@/types";
 import Link from "next/link";
 import {
@@ -18,26 +19,29 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { Nav } from "@/components/layouts/side-navigation/nav";
+import { useSidebar } from "@/lib/store/sidebar-provider";
+import { useTeam } from "@/lib/store";
+import { useEffect } from "react";
 
 interface TeamListProps {
-  isCollapsed: boolean;
   items: NavItem[];
   teams: Database["public"]["Tables"]["team"]["Row"][] | null;
   rootPath: string;
+  isCollapsed?: boolean;
 }
 
-export function TeamList({
-  items,
-  teams,
-  isCollapsed,
-  rootPath,
-}: TeamListProps) {
+export function TeamList({ items, teams, rootPath }: TeamListProps) {
+  const isCollapsed = useSidebar()((state) => state.isCollapsed);
+
+  const setTeam = useTeam()((state) => state.setTeamList);
+
+  useEffect(() => {
+    setTeam(teams);
+  }, [teams]);
+
   return (
-    <div
-      data-collapsed={isCollapsed}
-      className=" group flex flex-col gap-4 py-2 data-[collapsed=true]:py-2"
-    >
-      <nav className="gap-1 px-2 group-[[data-collapsed=true]]:px-2">
+    <div data-collapsed={isCollapsed} className=" group flex flex-col gap-4 ">
+      <nav className="gap-1">
         <div className="flex flex-col gap-1">
           {isCollapsed ? (
             <>
@@ -76,10 +80,10 @@ export function TeamList({
                     <Tooltip key={index} delayDuration={0}>
                       <TooltipTrigger key={index} asChild>
                         <Link
-                          href={`${rootPath}/${team.indentity}`}
+                          href={`${rootPath}/${team.identity}`}
                           className={cn(
                             buttonVariants({
-                              variant: "outline",
+                              variant: "ghost",
                               size: "icon",
                             }),
                             "h-8 w-8",
@@ -199,8 +203,7 @@ export function TeamList({
                                   className="h-auto bg-primary"
                                 />
                                 <Nav
-                                  rootPath={`${rootPath}/${team.indentity}`}
-                                  isCollapsed={isCollapsed}
+                                  rootPath={`${rootPath}/${team.identity}`}
                                   items={items}
                                 />
                               </span>

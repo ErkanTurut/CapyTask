@@ -1,20 +1,13 @@
 "use client";
-import { Separator } from "@/components/ui/separator";
 
-import WorkspaceNav from "@/components/workspace/workspace-navigation";
-
-import { Nav } from "@/components/layouts/side-navigation/nav";
-import { Database } from "@/types/supabase.types";
-import { useParams } from "next/navigation";
-
-import { appNavItems } from "@/config/dashboard.config";
-import { cn } from "@/lib/utils";
-import { Suspense, useState } from "react";
-import { TeamList } from "@/components/team/team-list";
+import React, { PropsWithChildren } from "react";
 import { ResizableHandle, ResizablePanel } from "@/components/ui/resizable";
+import { cn } from "@/lib/utils";
+
+import { SidebarProvider, useSidebar } from "@/lib/store";
+import { unstable_batchedUpdates } from "react-dom";
 
 export interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
-  teams: Database["public"]["Tables"]["team"]["Row"][] | null;
   children: React.ReactNode;
   defaultLayout?: number[];
   defaultCollapsed?: boolean;
@@ -22,18 +15,18 @@ export interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export function Sidebar({
-  className,
-  teams,
   children,
   defaultLayout = [20, 80],
   navCollapsedSize,
   defaultCollapsed = false,
+  className,
 }: SidebarProps) {
-  const params = useParams();
-  const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
-
+  const setIsCollapsed = useSidebar()((state) => state.setIsCollapsed);
+  const isCollapsed = useSidebar()((state) => state.isCollapsed);
   const handlePanelChange = (collapsed: boolean) => {
-    setIsCollapsed(collapsed);
+    unstable_batchedUpdates(() => {
+      setIsCollapsed(collapsed);
+    });
     document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
       collapsed,
     )};path=/`;
@@ -52,61 +45,34 @@ export function Sidebar({
         className={cn(
           "flex min-w-[120px] flex-col justify-between",
           isCollapsed && "min-w-[50px] transition-all duration-300 ease-in-out",
+          className,
         )}
         data-collapsed={isCollapsed}
       >
-        <div>
-          <div className={cn("flex items-center justify-start gap-1 p-2 ")}>
-            <WorkspaceNav isCollapsed={isCollapsed} />
-          </div>
-          <Separator />
-          <Nav
-            rootPath={`/${params.url_key}`}
-            isCollapsed={isCollapsed}
-            items={appNavItems.header}
-          />
-          <Separator />
-          <Suspense fallback={<div>Loading...</div>}>
-            <TeamList
-              isCollapsed={isCollapsed}
-              rootPath={`/${params.url_key}/team`}
-              items={[
-                {
-                  title: "Members",
-                  icon: "user",
-                  variant: "ghost",
-                  href: "/members",
-                },
-                {
-                  title: "Projects",
-                  icon: "lightning",
-                  variant: "ghost",
-                  href: "/projects",
-                },
-                {
-                  title: "Repports",
-                  icon: "fileText",
-                  variant: "ghost",
-                  href: "/repports",
-                },
-              ]}
-              teams={teams}
-            />
-          </Suspense>
-        </div>
-
-        <div>
-          <Separator />
-          <Nav
-            rootPath={`/${params.url_key}`}
-            isCollapsed={isCollapsed}
-            items={appNavItems.footer}
-          />
-          <Separator />
-          {children}
-        </div>
+        {children}
       </ResizablePanel>
       <ResizableHandle withHandle />
     </>
   );
 }
+
+export const SidebarHeader: React.FC<SidebarProps> = ({
+  children,
+  className,
+}) => {
+  return <div className={cn(className)}>{children}</div>;
+};
+
+export const SidebarBody: React.FC<SidebarProps> = ({
+  children,
+  className,
+}) => {
+  return <div className={cn(className)}>{children}</div>;
+};
+
+export const SidebarFooter: React.FC<SidebarProps> = ({
+  children,
+  className,
+}) => {
+  return <div className={cn(className)}>{children}</div>;
+};
