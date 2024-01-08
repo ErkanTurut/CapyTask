@@ -29,7 +29,7 @@ import { useAction } from "@/lib/hooks/use-actions";
 import { Button } from "@/components/ui/button";
 
 import { FC } from "react";
-import { useUser, useWorkspace } from "@/lib/store";
+import { useTeam, useUser, useWorkspace } from "@/lib/store";
 import { revalidateTag } from "next/cache";
 
 interface CreateTeamFormProps extends React.HTMLAttributes<HTMLFormElement> {
@@ -37,16 +37,17 @@ interface CreateTeamFormProps extends React.HTMLAttributes<HTMLFormElement> {
   url_key?: string;
 }
 
-const CreateTeamForm: FC<CreateTeamFormProps> = ({ url_key, className }) => {
+const CreateTeamForm: FC<CreateTeamFormProps> = ({
+  url_key,
+  workspace_id,
+  className,
+}) => {
   const workspaces = useWorkspace()((state) => state.workspaceList);
-  const current_workspace = url_key
-    ? workspaces.find((w) => w.url_key === url_key)
-    : useWorkspace()((state) => state.workspace);
-
-  const workspace =
-    current_workspace || useWorkspace()((state) => state.workspace);
-
-  const router = useRouter();
+  const defaultWorkspace = useWorkspace()((state) => state.workspace);
+  const currentWorkspace =
+    (url_key && workspaces.find((w) => w.url_key === url_key)) ||
+    (workspace_id && workspaces.find((w) => w.id === workspace_id));
+  const workspace = currentWorkspace || defaultWorkspace;
 
   const { run, isLoading } = useAction(createTeam, {
     onSuccess: (data) => {
@@ -63,7 +64,7 @@ const CreateTeamForm: FC<CreateTeamFormProps> = ({ url_key, className }) => {
     resolver: zodResolver(ZCreateTeam),
     defaultValues: {
       name: "",
-      indentity: "",
+      identity: "",
       workspace_id: workspace.id,
     },
   });
@@ -71,25 +72,12 @@ const CreateTeamForm: FC<CreateTeamFormProps> = ({ url_key, className }) => {
   async function onSubmit(data: TCreateTeam) {
     run({
       name: data.name,
-      indentity: data.indentity,
+      identity: data.identity,
       workspace_id: workspace.id,
     });
   }
 
   const [isGenerating, setIsGenerating] = useState(false);
-  // const generateIdentity = () => {
-  //   if (!form.getFieldState("indentity").isDirty) {
-  //     setIsGenerating(true);
-  //     return setTimeout(() => {
-  //       form.setValue(
-  //         "indentity",
-  //         form.getValues("name").toLowerCase().replace(/\s/g, "-"),
-  //       );
-  //       setIsGenerating(false);
-  //     }, 3000);
-  //   }
-  //   return;
-  // };
 
   return (
     <Form {...form}>
@@ -112,7 +100,7 @@ const CreateTeamForm: FC<CreateTeamFormProps> = ({ url_key, className }) => {
         />
         <FormField
           control={form.control}
-          name="indentity"
+          name="identity"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Identifier</FormLabel>
@@ -124,7 +112,7 @@ const CreateTeamForm: FC<CreateTeamFormProps> = ({ url_key, className }) => {
                   placeholder={isGenerating ? "Loading..." : "example"}
                   maxLength={
                     //@ts-ignore
-                    ZCreateTeam["shape"]["indentity"]["_def"]["checks"].find(
+                    ZCreateTeam["shape"]["identity"]["_def"]["checks"].find(
                       (check) => check.kind === "max",
                       // @ts-ignore
                     ).value || 0
@@ -144,13 +132,6 @@ const CreateTeamForm: FC<CreateTeamFormProps> = ({ url_key, className }) => {
               <FormControl>
                 <Input
                   placeholder={isGenerating ? "Loading..." : "example"}
-                  maxLength={
-                    //@ts-ignore
-                    ZCreateTeam["shape"]["indentity"]["_def"]["checks"].find(
-                      (check) => check.kind === "max",
-                      // @ts-ignore
-                    ).value || 0
-                  }
                   type="hidden"
                   {...field}
                 />
