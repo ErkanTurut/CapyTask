@@ -17,19 +17,20 @@ const handler = async (data: TCreateTeam): Promise<ReturnType> => {
   if (!session) {
     return redirect("/login");
   }
-  // const { error } = await supabase.from("team").insert({
-  //   name: data.name,
-  //   workspace_id: data.workspace_id,
-  //   indentity: data.indentity,
-  // });
-  // if (error) {
-  //   return {
-  //     error: error.message,
-  //   };
-  // }
+  const { error } = await supabase.from("team").insert({
+    name: data.name,
+    workspace_id: data.workspace_id,
+    identity: data.identity,
+  });
+  if (error) {
+    return {
+      error: error.message,
+    };
+  }
   revalidateTag(`${session?.user.id}-${data.workspace_id}-teams`);
+
   return {
-    data: { success: true, indentity: data.indentity },
+    data: { success: true, indentity: data.identity },
   };
 };
 
