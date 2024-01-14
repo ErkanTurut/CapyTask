@@ -23,6 +23,7 @@ import { appNavItems } from "@/config/dashboard.config";
 import { Separator } from "@/components/ui/separator";
 import { redirect } from "next/navigation";
 import { getWorkspaces } from "@/lib/service/workspace/fetch";
+import { Shell } from "@/components/shells";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -64,7 +65,13 @@ export default async function DashboardLayout({
     data: { session },
     error,
   } = await getSession();
-  const { data: user } = await getUser(session!.user.id);
+  if (!session || error) {
+    redirect("/login");
+  }
+  const { data: user } = await getUser(session.user.id);
+  if (!user) {
+    redirect("/login");
+  }
 
   return (
     <SidebarProvider isCollapsed={defaultCollapsed || false}>
@@ -124,11 +131,13 @@ export default async function DashboardLayout({
                 />
                 <Separator />
                 <Suspense fallback={<div>Loading...</div>}>
-                  <UserAccountNav className="w-full" user={user!} />
+                  <UserAccountNav className="w-full" user={user} />
                 </Suspense>
               </SidebarFooter>
             </Sidebar>
-            <Resizable defaultLayout={defaultLayout}>{children}</Resizable>
+            <Resizable defaultLayout={defaultLayout}>
+              <Shell>{children}</Shell>
+            </Resizable>
           </ResizableGroup>
         </TooltipProvider>
       </div>
