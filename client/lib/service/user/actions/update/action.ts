@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { TAccountUpdate, ReturnType } from "./types";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { createSafeAction } from "@/lib/safe-action";
 import { ZAccountUpdate } from "./schema";
 import { redirect } from "next/navigation";
@@ -31,7 +31,8 @@ const handler = async (data: TAccountUpdate): Promise<ReturnType> => {
       error: error.message,
     };
   }
-  revalidatePath("/");
+
+  revalidateTag(`${session?.user.id}-user`);
   return {
     data: user,
   };
