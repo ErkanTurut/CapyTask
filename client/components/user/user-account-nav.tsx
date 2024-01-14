@@ -42,7 +42,7 @@ const UserAccountNav: FC<UserAccountNavProps> = ({ className, user }) => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          variant="secondary"
+          variant="outline"
           size={isCollapsed ? "icon" : "default"}
           className={cn(
             "flex items-center justify-start gap-1",
@@ -87,13 +87,6 @@ const UserAccountNav: FC<UserAccountNavProps> = ({ className, user }) => {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          {/* <DropdownMenuItem asChild>
-            <Link href="/login">
-              <Icons.rocket className="mr-2 h-4 w-4" aria-hidden="true" />
-              Go to App
-              <DropdownMenuShortcut>⌘D</DropdownMenuShortcut>
-            </Link>
-          </DropdownMenuItem> */}
           <DropdownMenuItem asChild>
             <Link href={`/${url_key}/settings`}>
               <Icons.gear className="mr-2 h-4 w-4" aria-hidden="true" />

@@ -65,7 +65,7 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({ className }) => {
         asChild
       >
         <Button
-          variant="default"
+          variant="outline"
           role="combobox"
           aria-expanded={open}
           aria-label="Select a team"
