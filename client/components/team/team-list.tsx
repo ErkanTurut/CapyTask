@@ -22,6 +22,7 @@ import { Nav } from "@/components/layouts/side-navigation/nav";
 import { useSidebar } from "@/lib/store/sidebar-provider";
 import { useTeam } from "@/lib/store";
 import { useEffect } from "react";
+import { useParams, usePathname } from "next/navigation";
 
 interface TeamListProps {
   items: NavItem[];
@@ -32,8 +33,9 @@ interface TeamListProps {
 
 export function TeamList({ items, teams, rootPath }: TeamListProps) {
   const isCollapsed = useSidebar()((state) => state.isCollapsed);
-
   const setTeam = useTeam()((state) => state.setTeamList);
+  const { team_identity }: { url_key: string; team_identity: string } =
+    useParams();
 
   useEffect(() => {
     setTeam(teams);
@@ -83,7 +85,11 @@ export function TeamList({ items, teams, rootPath }: TeamListProps) {
                           href={`${rootPath}/${team.identity}`}
                           className={cn(
                             buttonVariants({
-                              variant: "ghost",
+                              variant:
+                                team_identity === team.identity
+                                  ? "secondary"
+                                  : "ghost",
+
                               size: "icon",
                             }),
                             "h-8 w-8",
@@ -101,8 +107,8 @@ export function TeamList({ items, teams, rootPath }: TeamListProps) {
                       </TooltipTrigger>
                       <TooltipContent
                         side="right"
-                        className="flex items-center gap-4"
                         key={team.id}
+                        className="flex items-center gap-4"
                       >
                         {team.name}
                         {team.name && (
@@ -124,15 +130,13 @@ export function TeamList({ items, teams, rootPath }: TeamListProps) {
             >
               {teams && teams.length > 0 ? (
                 <AccordionItem value="all" className="flex flex-col gap-1">
-                  <div className="flex gap-1">
-                    <AccordionTrigger
-                      className={cn(
-                        buttonVariants({ variant: "ghost", size: "sm" }),
-                        "items-center justify-between gap-2 py-0 underline",
-                      )}
-                    >
-                      <span>All Teams</span>
-                    </AccordionTrigger>
+                  <AccordionTrigger
+                    className={cn(
+                      buttonVariants({ variant: "ghost", size: "sm" }),
+                      "items-center  justify-between gap-1 py-0 underline",
+                    )}
+                  >
+                    <span>All Teams</span>
                     <Link
                       href={`${rootPath}/create`}
                       className={cn(
@@ -140,49 +144,45 @@ export function TeamList({ items, teams, rootPath }: TeamListProps) {
                           variant: "ghost",
                           size: "icon",
                         }),
-                        "h-7 w-7",
+                        "order-last ml-auto h-7 w-7",
                       )}
                     >
                       <Icons.plusCircled className="h-4 w-4" />
                     </Link>
-                  </div>
+                  </AccordionTrigger>
 
                   <AccordionContent>
                     <Accordion
                       type="single"
-                      className="flex flex-col gap-1"
                       collapsible
+                      defaultValue={team_identity}
                     >
                       {teams.map((team, index) => {
                         const { image_uri, initials } = generateAvatar({
                           name: team.name,
                         });
                         return (
-                          <AccordionItem key={team.id} value={team.id}>
-                            <div className="flex justify-between gap-1">
-                              <AccordionTrigger
-                                className={cn(
-                                  buttonVariants({
-                                    variant: "ghost",
-                                    size: "sm",
-                                  }),
-                                  "items-center justify-between  gap-2 py-0",
-                                )}
-                                key={index}
-                              >
-                                <span className="flex items-center gap-2">
-                                  <Avatar className={cn("h-5 w-5 rounded-sm")}>
-                                    <AvatarImage
-                                      src={team.image_uri || image_uri}
-                                      alt={team.name ?? ""}
-                                    />
-                                    <AvatarFallback>{initials}</AvatarFallback>
-                                  </Avatar>
-                                  <span className="cursor-pointer overflow-x-auto overflow-ellipsis whitespace-nowrap">
-                                    {team.name}
-                                  </span>
-                                </span>
-                              </AccordionTrigger>
+                          <AccordionItem key={team.id} value={team.identity}>
+                            <AccordionTrigger
+                              className={cn(
+                                buttonVariants({
+                                  variant: "ghost",
+                                  size: "sm",
+                                }),
+                                "flex w-full justify-start gap-1 py-0",
+                              )}
+                              key={index}
+                            >
+                              <Avatar className="h-5 w-5 rounded-sm">
+                                <AvatarImage
+                                  src={team.image_uri || image_uri}
+                                  alt={team.name ?? ""}
+                                />
+                                <AvatarFallback>{initials}</AvatarFallback>
+                              </Avatar>
+                              <span className="cursor-pointer overflow-x-auto overflow-ellipsis whitespace-nowrap">
+                                {team.name}
+                              </span>
                               <Link
                                 href="#"
                                 className={cn(
@@ -190,23 +190,23 @@ export function TeamList({ items, teams, rootPath }: TeamListProps) {
                                     variant: "ghost",
                                     size: "icon",
                                   }),
-                                  " h-7 w-7",
+                                  "order-last ml-auto h-7 w-7",
                                 )}
                               >
                                 <Icons.dotsHorizontal className="h-4 w-4" />
                               </Link>
-                            </div>
-                            <AccordionContent key={team.id}>
-                              <span className="ml-1 flex gap-1">
+                            </AccordionTrigger>
+                            <AccordionContent key={team.id} className="pt-1">
+                              <div className="ml-3 flex gap-1">
                                 <Separator
                                   orientation="vertical"
-                                  className="h-auto bg-primary"
+                                  className="h-auto "
                                 />
                                 <Nav
                                   rootPath={`${rootPath}/${team.identity}`}
                                   items={items}
                                 />
-                              </span>
+                              </div>
                             </AccordionContent>
                           </AccordionItem>
                         );

@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/accordion";
 import { Separator } from "@/components/ui/separator";
 import { useSidebar } from "@/lib/store";
+import { usePathname } from "next/navigation";
 
 interface NavProps extends React.HTMLAttributes<HTMLDivElement> {
   items: NavItem[];
@@ -29,6 +30,7 @@ interface NavProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function Nav({ items, size, className, rootPath }: NavProps) {
   const isCollapsed = useSidebar()((state) => state.isCollapsed);
+  const pathname = usePathname();
 
   return (
     <div
@@ -50,8 +52,6 @@ export function Nav({ items, size, className, rootPath }: NavProps) {
                       size: "icon",
                     }),
                     "h-8 w-8",
-                    item.variant === "default" &&
-                      "dark:bg-muted dark:text-muted-foreground",
                   )}
                 >
                   {Icon && <Icon className="h-4 w-4" />}
@@ -76,8 +76,6 @@ export function Nav({ items, size, className, rootPath }: NavProps) {
                       variant: item.variant || "ghost",
                       size: size || "sm",
                     }),
-                    item.variant === "default" &&
-                      "dark:bg-muted dark:text-white",
                     "justify-between",
                   )}
                 >
@@ -111,25 +109,17 @@ export function Nav({ items, size, className, rootPath }: NavProps) {
               href={href}
               className={cn(
                 buttonVariants({
-                  variant: item.variant || "ghost",
+                  variant:
+                    pathname === href ? "secondary" : item.variant || "ghost",
                   size: size || "sm",
                 }),
-                item.variant === "default" && "dark:bg-muted dark:text-white",
                 "justify-start",
               )}
             >
               {Icon && <Icon className="mr-2 h-4 w-4" aria-hidden="true" />}
               {item.title}
               {item.label && (
-                <span
-                  className={cn(
-                    "ml-auto",
-                    item.variant === "default" &&
-                      "text-background dark:text-white",
-                  )}
-                >
-                  {item.label}
-                </span>
+                <span className={cn("ml-auto")}>{item.label}</span>
               )}
             </Link>
           );
