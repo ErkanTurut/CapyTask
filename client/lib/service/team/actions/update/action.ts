@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { TUpdateTeam, ReturnType } from "./types";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { createSafeAction } from "@/lib/safe-action";
 import { ZUpdateTeam } from "./schema";
 import { redirect } from "next/navigation";
@@ -35,7 +35,7 @@ const handler = async (data: TUpdateTeam): Promise<ReturnType> => {
       error: error.message,
     };
   }
-  revalidatePath(`/dashboard/`);
+  revalidateTag(`${session?.user.id}-${team.workspace_id}-teams`);
 
   return {
     data: team,

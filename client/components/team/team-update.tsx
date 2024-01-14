@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { notFound, useRouter } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -65,7 +65,8 @@ const UpdateTeamForm: FC<UpdateTeamFormProps> = ({ identity, className }) => {
   });
 
   async function onSubmit(data: TUpdateTeam) {
-    run({
+    if (!team) return notFound();
+    await run({
       name: data.name,
       identity: data.identity,
       id: team.id,
