@@ -23,10 +23,10 @@ export async function getUser(user_id: string) {
     async () => {
       return await supabase.from("user").select("*").eq("id", user_id).single();
     },
-    [`${user_id}-metadata`],
+    [`${user_id}-user`],
     {
       revalidate: 60,
-      tags: [`${user_id}-metadata`],
+      tags: [`${user_id}-user`],
     },
   )();
 }
