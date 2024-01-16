@@ -11,11 +11,10 @@ import { Database } from "@/types/supabase.types";
 export interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   url_key: string;
   workspace: Database["public"]["Tables"]["workspace"]["Row"];
+  teams: Database["public"]["Tables"]["team"]["Row"][] | null;
 }
 
-export async function Sidebar({ url_key, workspace }: SidebarProps) {
-  const { data: teams } = await getTeams(workspace.id);
-
+export async function Sidebar({ url_key, workspace, teams }: SidebarProps) {
   return (
     <aside className="group/sidebar hidden max-h-[100vh] w-[230px] shrink-0  overflow-y-hidden border-r p-2 backdrop-blur-[1px] lg:sticky lg:top-28 lg:block">
       <TooltipProvider delayDuration={0}>

@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 
-import { getTeams, getTeamsByUrlKey } from "@/lib/service/team/fetch";
+import { getTeams } from "@/lib/service/team/fetch";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 import Resizable from "./_components/rezisable";
@@ -24,6 +24,7 @@ import { Separator } from "@/components/ui/separator";
 import { redirect } from "next/navigation";
 import { getWorkspaces } from "@/lib/service/workspace/fetch";
 import { Shell } from "@/components/shells";
+import { createClient } from "@/lib/supabase/server";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -38,6 +39,8 @@ export default async function DashboardLayout({
   params,
   modal,
 }: DashboardLayoutProps) {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
   const layout = cookies().get("react-resizable-panels:layout");
   const collapsed = cookies().get("react-resizable-panels:collapsed");
   const defaultLayout = layout
@@ -47,7 +50,8 @@ export default async function DashboardLayout({
     ? (JSON.parse(collapsed.value) as boolean)
     : undefined;
 
-  const { data: workspaces } = await getWorkspaces();
+  const { data: workspaces } = await getWorkspaces(supabase);
+
   if (!workspaces) {
     redirect("/create");
   }
@@ -58,17 +62,16 @@ export default async function DashboardLayout({
   if (!workspace) {
     redirect("/create");
   }
-  // const { data: teams } = await getTeamsByUrlKey(params.url_key);
-  const { data: teams } = await getTeams(workspace.id);
+  const { data: teams } = await getTeams(workspace.id, supabase);
 
   const {
     data: { session },
     error,
-  } = await getSession();
+  } = await getSession(supabase);
   if (!session || error) {
     redirect("/login");
   }
-  const { data: user } = await getUser(session.user.id);
+  const { data: user } = await getUser(session.user.id, supabase);
   if (!user) {
     redirect("/login");
   }

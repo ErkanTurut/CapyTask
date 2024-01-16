@@ -18,17 +18,21 @@ import {
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/components/page-header";
+import { cookies } from "next/headers";
+import { createClient } from "@/lib/supabase/server";
 
 interface profilePageProps {}
 
 export default async function profilePage({}: profilePageProps) {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
   const {
     data: { session },
-  } = await getSession();
+  } = await getSession(supabase);
   if (!session || !session.user) {
     redirect("/login");
   }
-  const { data: user } = await getUser(session.user.id);
+  const { data: user } = await getUser(session.user.id, supabase);
   if (!user) {
     redirect("/login");
   }

@@ -1,10 +1,10 @@
 "use client";
 
-import React, { PropsWithChildren } from "react";
 import { ResizableHandle, ResizablePanel } from "@/components/ui/resizable";
 import { cn } from "@/lib/utils";
+import React from "react";
 
-import { SidebarProvider, useSidebar } from "@/lib/store";
+import { useSidebar } from "@/lib/store";
 import { unstable_batchedUpdates } from "react-dom";
 
 export interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
