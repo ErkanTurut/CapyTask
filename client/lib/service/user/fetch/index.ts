@@ -1,12 +1,7 @@
 import "server-only";
 
-import {
-  unstable_noStore as noStore,
-  unstable_cache as cache,
-  revalidateTag,
-} from "next/cache";
-import { createClient } from "@/lib/supabase/server";
-import { cookies } from "next/headers";
+import { unstable_cache as cache } from "next/cache";
+import { SupabaseClient } from "@/lib/supabase/server";
 
 // export const getUser = async (user_id: string) => {
 //   const cookieStore = cookies();
@@ -15,10 +10,7 @@ import { cookies } from "next/headers";
 //   return await supabase.from("user").select("*").eq("id", user_id).single();
 // };
 
-export async function getUser(user_id: string) {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
-
+export async function getUser(user_id: string, supabase: SupabaseClient) {
   return await cache(
     async () => {
       return await supabase.from("user").select("*").eq("id", user_id).single();

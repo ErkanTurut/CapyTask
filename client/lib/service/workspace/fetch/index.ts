@@ -1,15 +1,13 @@
 import "server-only";
 
-import {
-  unstable_noStore as noStore,
-  unstable_cache as cache,
-} from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { SupabaseClient, createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
+import { unstable_cache as cache } from "next/cache";
 
-export const getWorkspace = async (url_key: string) => {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+export const getWorkspace = async (
+  url_key: string,
+  supabase: SupabaseClient,
+) => {
   return await supabase
     .from("workspace")
     .select("*")
@@ -17,9 +15,7 @@ export const getWorkspace = async (url_key: string) => {
     .single();
 };
 
-// export const getWorkspaces = async () => {
-//   const cookieStore = cookies();
-//   const supabase = createClient(cookieStore);
+// export const getWorkspaces = async (supabase: SupabaseClient) => {
 //   return await supabase.from("workspace").select("*");
 // };
 
@@ -41,9 +37,10 @@ export const getWorkspaces = async () => {
   )();
 };
 
-export const getUserWorkspace = async (user_id: string) => {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+export const getUserWorkspace = async (
+  user_id: string,
+  supabase: SupabaseClient,
+) => {
   const { data: workspace, error } = await supabase
     .from("user_workspace")
     .select(`workspace!inner(*)`)

@@ -1,10 +1,7 @@
 import "server-only";
 
-import { createClient } from "@/lib/supabase/server";
-import { cookies } from "next/headers";
+import { SupabaseClient } from "@/lib/supabase/server";
 
-export const getSession = async () => {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+export const getSession = async (supabase: SupabaseClient) => {
   return supabase.auth.getSession();
 };

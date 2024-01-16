@@ -1,18 +1,16 @@
 import "server-only";
 
-import {
-  unstable_noStore as noStore,
-  unstable_cache as cache,
-} from "next/cache";
-import { createClient } from "@/lib/supabase/server";
-import { cookies } from "next/headers";
+import { unstable_cache as cache } from "next/cache";
+import { SupabaseClient } from "@/lib/supabase/server";
 
-export const getTeams = async (workspace_id: string) => {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+export const getTeams = async (
+  workspace_id: string,
+  supabase: SupabaseClient,
+) => {
   const {
     data: { session },
   } = await supabase.auth.getSession();
+
   return await cache(
     async () => {
       return await supabase
@@ -28,9 +26,10 @@ export const getTeams = async (workspace_id: string) => {
   )();
 };
 
-export const getTeamsByUrlKey = async (url_key: string) => {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+export const getTeamsByUrlKey = async (
+  url_key: string,
+  supabase: SupabaseClient,
+) => {
   const {
     data: { session },
   } = await supabase.auth.getSession();
