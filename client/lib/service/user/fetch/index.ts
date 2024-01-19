@@ -2,6 +2,7 @@ import "server-only";
 
 import { unstable_cache as cache } from "next/cache";
 import { SupabaseClient } from "@/lib/supabase/server";
+import { sleep } from "@/lib/utils";
 
 // export const getUser = async (user_id: string) => {
 //   const cookieStore = cookies();
@@ -11,6 +12,7 @@ import { SupabaseClient } from "@/lib/supabase/server";
 // };
 
 export async function getUser(user_id: string, supabase: SupabaseClient) {
+  await sleep(5000);
   return await cache(
     async () => {
       return await supabase.from("user").select("*").eq("id", user_id).single();

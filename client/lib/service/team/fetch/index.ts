@@ -2,6 +2,8 @@ import "server-only";
 
 import { unstable_cache as cache } from "next/cache";
 import { SupabaseClient } from "@/lib/supabase/server";
+import { sleep } from "@/lib/utils";
+// import { cache } from "react";
 
 export const getTeams = async (
   workspace_id: string,
@@ -10,7 +12,11 @@ export const getTeams = async (
   const {
     data: { session },
   } = await supabase.auth.getSession();
-
+  await sleep(5000);
+  return await supabase
+    .from("team")
+    .select("*")
+    .eq("workspace_id", workspace_id);
   return await cache(
     async () => {
       return await supabase

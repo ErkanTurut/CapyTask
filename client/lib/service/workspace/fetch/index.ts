@@ -3,6 +3,7 @@ import "server-only";
 import { SupabaseClient, createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import { unstable_cache as cache } from "next/cache";
+import { sleep } from "@/lib/utils";
 
 export const getWorkspace = async (
   url_key: string,
@@ -15,16 +16,11 @@ export const getWorkspace = async (
     .single();
 };
 
-// export const getWorkspaces = async (supabase: SupabaseClient) => {
-//   return await supabase.from("workspace").select("*");
-// };
-
-export const getWorkspaces = async () => {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+export const getWorkspaces = async (supabase: SupabaseClient) => {
   const {
     data: { session },
   } = await supabase.auth.getSession();
+
   return await cache(
     async () => {
       return await supabase.from("workspace").select("*");
