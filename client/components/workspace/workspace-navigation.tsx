@@ -2,11 +2,10 @@
 import React, { FC, useEffect, useState } from "react";
 
 import { cn, generateAvatar } from "@/lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Button } from "../ui/button";
-import { unstable_batchedUpdates } from "react-dom"; // or 'react-native'
+import { Avatar, AvatarFallback, AvatarImage } from "@/ui/avatar";
+import { Button } from "@/ui/button";
 
-import { Icons } from "../icons";
+import { Icons } from "@/components/icons";
 import {
   Command,
   CommandEmpty,
@@ -21,27 +20,22 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { useSidebar, useWorkspace } from "@/lib/store";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import { Database } from "@/types/supabase.types";
 
-interface WorkspaceNavProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface WorkspaceNavProps extends React.HTMLAttributes<HTMLDivElement> {
+  workspaces: Database["public"]["Tables"]["workspace"]["Row"][];
+  workspace: Database["public"]["Tables"]["workspace"]["Row"];
+}
 
-const WorkspaceNav: FC<WorkspaceNavProps> = ({ className }) => {
+const WorkspaceNav: FC<WorkspaceNavProps> = ({
+  className,
+  workspaces,
+  workspace,
+}) => {
   const [open, setOpen] = useState(false);
+  const [selectedWorkspace, setSelectedWorkspace] = useState(workspace);
   const router = useRouter();
-  const { url_key } = useParams();
-
   const isCollapsed = useSidebar()((state) => state.isCollapsed);
-
-  const workspaces = useWorkspace()((state) => state.workspaceList)!;
-  const selectedWorkspace = useWorkspace()((state) => state.workspace);
-  const setSelectedWorkspace = useWorkspace()((state) => state.setWorkspace);
-
-  useEffect(() => {
-    setSelectedWorkspace(
-      workspaces.find((workspace) => workspace?.url_key === url_key) ??
-        workspaces?.[0],
-    );
-  }, [url_key, workspaces, setSelectedWorkspace]);
-
   const groups = [
     {
       label: "Workspaces",
