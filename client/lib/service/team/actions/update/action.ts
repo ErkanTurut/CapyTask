@@ -36,7 +36,6 @@ const handler = async (data: TUpdateTeam): Promise<ReturnType> => {
     };
   }
   revalidateTag(`${session?.user.id}-${team.workspace_id}-teams`);
-
   return {
     data: team,
   };
