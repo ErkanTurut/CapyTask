@@ -19,6 +19,8 @@ import {
 import { getWorkspace } from "@/lib/service/workspace/fetch";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { generateAvatar } from "@/lib/utils";
+import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
 
 interface workspaceGeneralProps {
   params: {
@@ -30,7 +32,9 @@ interface workspaceGeneralProps {
 export default async function workspaceGeneralPage({
   params,
 }: workspaceGeneralProps) {
-  const { data: workspace } = await getWorkspace(params.url_key);
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+  const { data: workspace } = await getWorkspace(params.url_key, supabase);
   if (!workspace) {
     redirect("/404");
   }
