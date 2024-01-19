@@ -20,9 +20,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { Nav } from "@/components/layouts/side-navigation/nav";
 import { useSidebar } from "@/lib/store/sidebar-provider";
-import { useTeam } from "@/lib/store";
-import { useEffect } from "react";
-import { useParams, usePathname } from "next/navigation";
+
+import { useParams } from "next/navigation";
 
 interface TeamListProps {
   items: NavItem[];
@@ -33,14 +32,8 @@ interface TeamListProps {
 
 export function TeamList({ items, teams, rootPath }: TeamListProps) {
   const isCollapsed = useSidebar()((state) => state.isCollapsed);
-  const setTeam = useTeam()((state) => state.setTeamList);
   const { team_identity }: { url_key: string; team_identity: string } =
     useParams();
-
-  useEffect(() => {
-    setTeam(teams);
-  }, [teams]);
-
   return (
     <div data-collapsed={isCollapsed} className=" group flex flex-col gap-4 ">
       <nav className="gap-1">

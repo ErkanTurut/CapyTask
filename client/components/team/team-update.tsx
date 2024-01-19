@@ -40,6 +40,7 @@ const UpdateTeamForm: FC<UpdateTeamFormProps> = ({ identity, className }) => {
   if (!teams) return null;
   const team = teams.find((t) => t.identity === identity);
   if (!team) return notFound();
+  const update = useTeam()((state) => state.updateTeam);
 
   const { run, isLoading } = useAction(updateTeam, {
     onSuccess: (data) => {
