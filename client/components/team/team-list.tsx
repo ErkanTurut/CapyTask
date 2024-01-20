@@ -129,7 +129,7 @@ export function TeamList({ items, teams, rootPath }: TeamListProps) {
                       "items-center  justify-between gap-1 py-0 underline",
                     )}
                   >
-                    <span>All Teams</span>
+                    <span>Your Teams</span>
                     <Link
                       href={`${rootPath}/create`}
                       className={cn(
