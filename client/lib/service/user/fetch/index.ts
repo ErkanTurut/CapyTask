@@ -12,7 +12,6 @@ import { sleep } from "@/lib/utils";
 // };
 
 export async function getUser(user_id: string, supabase: SupabaseClient) {
-  await sleep(5000);
   return await cache(
     async () => {
       return await supabase.from("user").select("*").eq("id", user_id).single();

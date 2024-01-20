@@ -5,10 +5,13 @@ import { cookies } from "next/headers";
 import { unstable_cache as cache } from "next/cache";
 import { sleep } from "@/lib/utils";
 
-export const getWorkspace = async (
-  url_key: string,
-  supabase: SupabaseClient,
-) => {
+export const getWorkspace = async ({
+  url_key,
+  supabase,
+}: {
+  url_key: string;
+  supabase: SupabaseClient;
+}) => {
   return await supabase
     .from("workspace")
     .select("*")
@@ -16,7 +19,11 @@ export const getWorkspace = async (
     .single();
 };
 
-export const getWorkspaces = async (supabase: SupabaseClient) => {
+export const getWorkspaces = async ({
+  supabase,
+}: {
+  supabase: SupabaseClient;
+}) => {
   const {
     data: { session },
   } = await supabase.auth.getSession();
