@@ -22,6 +22,8 @@ import { getUser } from "@/lib/service/user/fetch";
 import { getWorkspaces } from "@/lib/service/workspace/fetch";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import TeamListSkeleton from "@/components/team/team-list-skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface sidebarProps {
   params: {
@@ -48,7 +50,7 @@ const Sidebar: FC<sidebarProps> = async ({ params }) => {
     redirect("/login");
   }
 
-  const { data: workspaces } = await getWorkspaces(supabase);
+  const { data: workspaces } = await getWorkspaces({ supabase });
 
   if (!workspaces) {
     redirect("/create");
@@ -75,9 +77,12 @@ const Sidebar: FC<sidebarProps> = async ({ params }) => {
           <Separator />
         </SidebarHeader>
         <SidebarBody className="px-2">
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<TeamListSkeleton />}>
             {(async () => {
-              const { data: teams } = await getTeams(workspace.id, supabase);
+              const { data: teams } = await getTeams({
+                supabase,
+                workspace_id: workspace.id,
+              });
               return (
                 <TeamList
                   rootPath={`/${params.url_key}/team`}
@@ -112,7 +117,13 @@ const Sidebar: FC<sidebarProps> = async ({ params }) => {
         <Separator />
         <Nav rootPath={`/${params.url_key}`} items={appNavItems.footer} />
         <Separator />
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense
+          fallback={
+            <Skeleton
+              className={"flex h-9 w-full items-center justify-center"}
+            />
+          }
+        >
           {(async () => {
             const { data: user } = await getUser(session.user.id, supabase);
             if (!user) {

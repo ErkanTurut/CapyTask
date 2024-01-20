@@ -6,6 +6,7 @@ import React from "react";
 
 import { useSidebar } from "@/lib/store";
 import { unstable_batchedUpdates } from "react-dom";
+import UserAccountNavSkeleton from "@/components/user/user-account-nav-skeletton";
 
 export interface SidebarLayoutProps
   extends React.HTMLAttributes<HTMLDivElement> {
