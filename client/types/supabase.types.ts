@@ -101,6 +101,142 @@ export interface Database {
         }
         Relationships: []
       }
+      inspection: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          created_by_id: string | null
+          id: string
+          plan_snapshot_id: string
+          updated_at: string
+          userId: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          created_by_id?: string | null
+          id?: string
+          plan_snapshot_id: string
+          updated_at?: string
+          userId?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          created_by_id?: string | null
+          id?: string
+          plan_snapshot_id?: string
+          updated_at?: string
+          userId?: string | null
+        }
+        Relationships: []
+      }
+      inspection_task: {
+        Row: {
+          created_at: string
+          created_by_id: string | null
+          description: string | null
+          id: string
+          inspectionId: string | null
+          name: string
+          parent_task_id: string | null
+          plan_id: string
+          priority: Database["public"]["Enums"]["Priority"]
+          status: Database["public"]["Enums"]["Status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by_id?: string | null
+          description?: string | null
+          id?: string
+          inspectionId?: string | null
+          name: string
+          parent_task_id?: string | null
+          plan_id: string
+          priority: Database["public"]["Enums"]["Priority"]
+          status: Database["public"]["Enums"]["Status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by_id?: string | null
+          description?: string | null
+          id?: string
+          inspectionId?: string | null
+          name?: string
+          parent_task_id?: string | null
+          plan_id?: string
+          priority?: Database["public"]["Enums"]["Priority"]
+          status?: Database["public"]["Enums"]["Status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inspection_task_created_by_id_fkey"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inspection_task_inspectionId_fkey"
+            columns: ["inspectionId"]
+            isOneToOne: false
+            referencedRelation: "inspection"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inspection_task_parent_task_id_fkey"
+            columns: ["parent_task_id"]
+            isOneToOne: false
+            referencedRelation: "inspection_task"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inspection_task_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "plan"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      plan: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          team_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          team_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          team_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "plan_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "team"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       Post: {
         Row: {
           content: string | null
@@ -157,41 +293,6 @@ export interface Database {
             columns: ["userId"]
             isOneToOne: false
             referencedRelation: "User"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      project: {
-        Row: {
-          created_at: string
-          description: string | null
-          id: string
-          name: string
-          team_id: string
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          description?: string | null
-          id?: string
-          name: string
-          team_id: string
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          description?: string | null
-          id?: string
-          name?: string
-          team_id?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "project_team_id_fkey"
-            columns: ["team_id"]
-            isOneToOne: false
-            referencedRelation: "team"
             referencedColumns: ["id"]
           }
         ]
@@ -310,9 +411,7 @@ export interface Database {
           id: string
           name: string
           parent_task_id: string | null
-          priority: Database["public"]["Enums"]["TaskPriority"]
-          project_id: string
-          status: Database["public"]["Enums"]["TaskStatus"]
+          plan_id: string
           updated_at: string
         }
         Insert: {
@@ -322,9 +421,7 @@ export interface Database {
           id?: string
           name: string
           parent_task_id?: string | null
-          priority?: Database["public"]["Enums"]["TaskPriority"]
-          project_id: string
-          status: Database["public"]["Enums"]["TaskStatus"]
+          plan_id: string
           updated_at?: string
         }
         Update: {
@@ -334,9 +431,7 @@ export interface Database {
           id?: string
           name?: string
           parent_task_id?: string | null
-          priority?: Database["public"]["Enums"]["TaskPriority"]
-          project_id?: string
-          status?: Database["public"]["Enums"]["TaskStatus"]
+          plan_id?: string
           updated_at?: string
         }
         Relationships: [
@@ -355,10 +450,10 @@ export interface Database {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "task_project_id_fkey"
-            columns: ["project_id"]
+            foreignKeyName: "task_plan_id_fkey"
+            columns: ["plan_id"]
             isOneToOne: false
-            referencedRelation: "project"
+            referencedRelation: "plan"
             referencedColumns: ["id"]
           }
         ]
@@ -472,46 +567,6 @@ export interface Database {
           username?: string | null
         }
         Relationships: []
-      }
-      user_project: {
-        Row: {
-          project_id: string
-          role_id: string
-          user_id: string
-        }
-        Insert: {
-          project_id: string
-          role_id: string
-          user_id: string
-        }
-        Update: {
-          project_id?: string
-          role_id?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_project_project_id_fkey"
-            columns: ["project_id"]
-            isOneToOne: false
-            referencedRelation: "project"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_project_role_id_fkey"
-            columns: ["role_id"]
-            isOneToOne: false
-            referencedRelation: "role"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_project_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user"
-            referencedColumns: ["id"]
-          }
-        ]
       }
       user_team: {
         Row: {
@@ -666,6 +721,7 @@ export interface Database {
         | "CAN_COMMENT"
         | "CAN_VIEW"
         | "NO_ACCESS"
+      Priority: "LOW" | "MEDIUM" | "HIGH"
       Role:
         | "ADMIN"
         | "MANAGER"
@@ -675,8 +731,7 @@ export interface Database {
         | "QUALITY_INSPECTOR"
         | "OPERATOR"
         | "OTHER"
-      TaskPriority: "LOW" | "MEDIUM" | "HIGH"
-      TaskStatus: "OPEN" | "IN_PROGRESS" | "COMPLETED" | "ON_HOLD" | "CANCELED"
+      Status: "OPEN" | "IN_PROGRESS" | "COMPLETED" | "ON_HOLD" | "CANCELED"
     }
     CompositeTypes: {
       [_ in never]: never
