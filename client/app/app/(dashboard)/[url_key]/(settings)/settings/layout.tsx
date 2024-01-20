@@ -1,6 +1,6 @@
 import { Shell } from "@/components/shells";
 import { Sidebar } from "./_components/sidebar";
-import { getWorkspace, getWorkspaces } from "@/lib/service/workspace/fetch";
+import { getWorkspace } from "@/lib/service/workspace/fetch";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
@@ -19,11 +19,17 @@ export default async function SettingsLayout({
 }: SettingsLayoutProps) {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
-  const { data: workspace } = await getWorkspace(params.url_key, supabase);
+  const { data: workspace } = await getWorkspace({
+    url_key: params.url_key,
+    supabase,
+  });
   if (!workspace) {
     redirect("/create");
   }
-  const { data: teams } = await getTeams(workspace.id, supabase);
+  const { data: teams } = await getTeams({
+    workspace_id: workspace.id,
+    supabase,
+  });
 
   return (
     <div className="relative mx-auto flex min-h-screen w-full flex-col items-center justify-center">

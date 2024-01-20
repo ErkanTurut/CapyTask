@@ -34,7 +34,10 @@ export default async function workspaceGeneralPage({
 }: workspaceGeneralProps) {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
-  const { data: workspace } = await getWorkspace(params.url_key, supabase);
+  const { data: workspace } = await getWorkspace({
+    url_key: params.url_key,
+    supabase,
+  });
   if (!workspace) {
     redirect("/404");
   }

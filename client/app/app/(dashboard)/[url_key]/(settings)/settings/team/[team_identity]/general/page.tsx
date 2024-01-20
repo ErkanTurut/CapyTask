@@ -12,6 +12,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { getTeamByUrlKey } from "@/lib/service/team/fetch";
+import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
 import { Suspense } from "react";
 
 interface generalPageProps {
@@ -21,7 +24,14 @@ interface generalPageProps {
   };
 }
 
-export default function generalPage({ params }: generalPageProps) {
+export default async function generalPage({ params }: generalPageProps) {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+  const team = await getTeamByUrlKey({
+    indentity: params.team_identity,
+    url_key: params.url_key,
+    supabase,
+  });
   return (
     <div>
       general page
