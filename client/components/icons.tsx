@@ -30,7 +30,7 @@ import {
   RocketIcon,
   DotsHorizontalIcon,
 } from "@radix-ui/react-icons";
-import { Loader2, Banknote, PanelRightOpen } from "lucide-react";
+import { Loader2, Banknote, Route } from "lucide-react";
 
 type logoProps = {
   // color: "light" | "dark";
@@ -89,6 +89,7 @@ export const Icons = {
   check: CheckIcon,
   rocket: RocketIcon,
   dotsHorizontal: DotsHorizontalIcon,
+  route: Route,
   logo: (props: LucideProps & logoProps) => {
     const { size, className } = props;
 
