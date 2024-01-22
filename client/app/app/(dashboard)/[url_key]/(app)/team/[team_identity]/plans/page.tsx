@@ -1,47 +1,64 @@
-import { Payment, columns } from "@/components/team/table/columns";
-import { DataTable } from "@/components/team/table/data-table";
+import { columns } from "@/components/plan/table/columns";
+import { DataTable } from "@/components/plan/table/data-table";
 import {
   PageHeader,
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/components/page-header";
 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+import { cookies } from "next/headers";
+import { createClient } from "@/lib/supabase/server";
+import { getTeamByIdentity } from "@/lib/service/team/fetch";
+import { redirect } from "next/navigation";
+import { getPlans } from "@/lib/service/plan/fetch";
+import { Shell } from "@/components/shells";
 interface DashboardLayoutProps {
   params: {
     team_identity: string;
   };
+  searchParams: { [key: string]: string | string[] | undefined };
 }
 
-async function getData(): Promise<Payment[]> {
-  // Fetch data from your API here.
-  return [
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    // ...
-  ];
-}
+export default async function DashboardPage({
+  params,
+  searchParams,
+}: DashboardLayoutProps) {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+  const { data: team } = await getTeamByIdentity({
+    identity: params.team_identity,
+    supabase,
+  });
+  if (!team) return redirect("/404");
 
-export default async function DashboardPage({ params }: DashboardLayoutProps) {
-  const data = await getData();
+  const page = searchParams["page"]
+    ? parseInt(searchParams["page"] as string)
+    : 1;
+  const limit = searchParams["limit"]
+    ? parseInt(searchParams["limit"] as string)
+    : 10;
+  const offset = (page - 1) * limit;
+
+  const {
+    data: plans,
+    error,
+    count,
+  } = await getPlans({
+    team_id: team.id,
+    supabase,
+    range: { start: offset, end: offset + limit * 2 },
+  });
 
   return (
-    <>
+    <Shell>
       <PageHeader
         className="pt-10"
         id="account-header"
@@ -54,7 +71,9 @@ export default async function DashboardPage({ params }: DashboardLayoutProps) {
           List of your inspection Plans
         </PageHeaderDescription>
       </PageHeader>
-      <DataTable columns={columns} data={data} />
-    </>
+      <Shell variant="dashboard">
+        <DataTable columns={columns} count={count || 0} data={plans || []} />
+      </Shell>
+    </Shell>
   );
 }
