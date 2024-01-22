@@ -9,6 +9,8 @@ import { SidebarProvider } from "@/lib/store";
 
 import { Shell } from "@/components/shells";
 import Sidebar from "./_components/sidebar";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import DotPattern from "@/components/dot-pattern";
 interface DashboardLayoutProps {
   children: React.ReactNode;
   modal: React.ReactNode;
@@ -33,17 +35,23 @@ export default async function DashboardLayout({
 
   return (
     <SidebarProvider isCollapsed={defaultCollapsed || false}>
-      <div className="min-h-screen">
-        {modal}
-        <TooltipProvider delayDuration={0}>
-          <ResizableGroup>
-            <Sidebar params={params} />
-            <Resizable defaultLayout={defaultLayout}>
-              <Shell>{children}</Shell>
-            </Resizable>
-          </ResizableGroup>
-        </TooltipProvider>
-      </div>
+      <DotPattern className="absolute top-0 z-[-2] h-screen w-screen bg-background [mask-image:radial-gradient(ellipse_70%_50%_at_50%_50%,#000_70%,transparent_100%)] ">
+        <div className="min-h-screen">
+          {modal}
+          <TooltipProvider delayDuration={0}>
+            <ResizableGroup>
+              <Sidebar params={params} />
+
+              <Resizable defaultLayout={defaultLayout}>
+                <ScrollArea className="h-screen ">{children}</ScrollArea>
+              </Resizable>
+            </ResizableGroup>
+          </TooltipProvider>
+        </div>
+      </DotPattern>
     </SidebarProvider>
   );
+}
+{
+  /* <div class="absolute top-0 z-[-2] h-screen w-screen bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px]"></div> */
 }

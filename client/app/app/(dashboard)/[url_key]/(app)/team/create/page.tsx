@@ -12,6 +12,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { getWorkspace } from "@/lib/service/workspace/fetch";
+import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 interface createTeamProps {
@@ -20,7 +24,15 @@ interface createTeamProps {
   };
 }
 
-export default function createTeam({ params }: createTeamProps) {
+export default async function createTeam({ params }: createTeamProps) {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+  const { data: workspace } = await getWorkspace({
+    url_key: params.url_key,
+    supabase,
+  });
+  if (!workspace) redirect("/create");
+
   return (
     <Shell variant="markdown" className="gap-2">
       <PageHeader
@@ -36,7 +48,6 @@ export default function createTeam({ params }: createTeamProps) {
           information below.
         </PageHeaderDescription>
       </PageHeader>
-
       <Card>
         <CardHeader>
           <CardTitle>Team information</CardTitle>
@@ -47,7 +58,10 @@ export default function createTeam({ params }: createTeamProps) {
         </CardHeader>
         <CardContent>
           <Suspense fallback="loading...">
-            <CreateTeamForm workspace_id={params.url_key} />
+            <CreateTeamForm
+              url_key={params.url_key}
+              workspace_id={workspace.id}
+            />
           </Suspense>
         </CardContent>
       </Card>
@@ -60,7 +74,10 @@ export default function createTeam({ params }: createTeamProps) {
         </CardHeader>
         <CardContent>
           <Suspense fallback="loading...">
-            {/* <CreateTeamForm workspace_id={params.url_key} /> */}
+            <CreateTeamForm
+              workspace_id={workspace.id}
+              url_key={params.url_key}
+            />
           </Suspense>
           {/* i will add team invitation section here with form */}
         </CardContent>
