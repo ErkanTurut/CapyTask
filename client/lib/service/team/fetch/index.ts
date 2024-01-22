@@ -16,6 +16,11 @@ export const getTeams = async ({
     data: { session },
   } = await supabase.auth.getSession();
 
+  return await supabase
+    .from("team")
+    .select("*")
+    .eq("workspace_id", workspace_id);
+
   return await cache(
     async () => {
       return await supabase
@@ -75,6 +80,32 @@ export const getTeam = async ({
     {
       revalidate: 60,
       tags: [`${session?.user.id}-${team_id}-team`],
+    },
+  )();
+};
+
+export const getTeamByIdentity = async ({
+  identity,
+  supabase,
+}: {
+  identity: string;
+  supabase: SupabaseClient;
+}) => {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  return await cache(
+    async () => {
+      return await supabase
+        .from("team")
+        .select("*")
+        .eq("identity", identity)
+        .single();
+    },
+    [`${session?.user.id}-${identity}-team`],
+    {
+      revalidate: 60,
+      tags: [`${session?.user.id}-${identity}-team`],
     },
   )();
 };
