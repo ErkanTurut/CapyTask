@@ -33,8 +33,8 @@ import { useTeam, useUser, useWorkspace } from "@/lib/store";
 import { revalidateTag } from "next/cache";
 
 interface CreateTeamFormProps extends React.HTMLAttributes<HTMLFormElement> {
-  workspace_id?: string;
-  url_key?: string;
+  workspace_id: string;
+  url_key: string;
 }
 
 const CreateTeamForm: FC<CreateTeamFormProps> = ({
@@ -42,13 +42,6 @@ const CreateTeamForm: FC<CreateTeamFormProps> = ({
   workspace_id,
   className,
 }) => {
-  const workspaces = useWorkspace()((state) => state.workspaceList);
-  const defaultWorkspace = useWorkspace()((state) => state.workspace);
-  const currentWorkspace =
-    (url_key && workspaces.find((w) => w.url_key === url_key)) ||
-    (workspace_id && workspaces.find((w) => w.id === workspace_id));
-  const workspace = currentWorkspace || defaultWorkspace;
-
   const { run, isLoading } = useAction(createTeam, {
     onSuccess: (data) => {
       toast.success("Team created successfully");
@@ -65,7 +58,7 @@ const CreateTeamForm: FC<CreateTeamFormProps> = ({
     defaultValues: {
       name: "",
       identity: "",
-      workspace_id: workspace.id,
+      workspace_id: workspace_id,
     },
   });
 
@@ -73,7 +66,7 @@ const CreateTeamForm: FC<CreateTeamFormProps> = ({
     run({
       name: data.name,
       identity: data.identity,
-      workspace_id: workspace.id,
+      workspace_id: workspace_id,
     });
   }
 
