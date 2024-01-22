@@ -11,7 +11,7 @@ export const config = {
      * 3. /_static (inside /public)
      * 4. all root files inside /public (e.g. /favicon.ico)
      */
-    "/((?!api/|_next/|_static/|_vercel|[\\w-]+\\.\\w+).*)",
+    "/((?!api|_next/static|_next/image|home|public|favicon.ico).*)",
   ],
 };
 
@@ -48,10 +48,11 @@ export default async function middleware(req: NextRequest) {
       error,
     } = await supabase.auth.getSession();
     if (
-      !session &&
-      path !== "/login" &&
-      path !== "/signup" &&
-      path !== "/logout"
+      (!session &&
+        path !== "/login" &&
+        path !== "/signup" &&
+        path !== "/logout") ||
+      (session && path === "/signup")
     ) {
       return NextResponse.redirect(new URL("/login", req.url), {
         headers: response.headers,
