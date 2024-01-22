@@ -1,5 +1,4 @@
-import type { Metadata } from "next";
-
+import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,22 +7,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  PageHeader,
-  PageHeaderDescription,
-  PageHeaderHeading,
-} from "@/components/page-header";
-import { Shell } from "@/components/shells";
+import { CreateWorspaceForm } from "@/components/workspace/workspace-create";
+import { getSession } from "@/lib/service/auth/fetch";
+import { createClient } from "@/lib/supabase/server";
+import { cn } from "@/lib/utils";
+import { cookies } from "next/headers";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { CreateWorspaceForm } from "@/components/workspace/workspace-create";
-import Link from "next/link";
-import { getSession } from "@/lib/service/auth/fetch";
-import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
-
 export default async function CreatePage() {
-  const { data } = await getSession();
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+  const { data } = await getSession(supabase);
 
   if (!data.session) {
     redirect("/login");
