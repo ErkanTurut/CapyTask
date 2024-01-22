@@ -29,6 +29,7 @@ export function SignInForm() {
   const { run, fieldErrors, isLoading } = useAction(signin, {
     onSuccess: (data) => {
       toast.success("Signed in successfully");
+      router.push("/");
     },
     onError: (err) => {
       catchError(new Error(err));

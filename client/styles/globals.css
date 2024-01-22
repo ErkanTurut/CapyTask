@@ -57,3 +57,14 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer base {
+  .mask-image-radial-gradient-blur {
+    filter: blur(10px);
+    mask-image: radial-gradient(
+      ellipse(60% 60% at 50% 50%),
+      #000 70%,
+      transparent 100%
+    );
+  }
+}
