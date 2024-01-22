@@ -32,6 +32,9 @@ export const createClient = cache((cookieStore: ReturnType<typeof cookies>) => {
           }
         },
       },
+      auth: {
+        autoRefreshToken: false,
+      },
     },
   );
 });

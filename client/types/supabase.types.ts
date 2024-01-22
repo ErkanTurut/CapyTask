@@ -107,29 +107,47 @@ export interface Database {
           created_at: string
           created_by_id: string | null
           id: string
-          plan_snapshot_id: string
+          plan_id: string
+          priority: Database["public"]["Enums"]["Priority"]
+          status: Database["public"]["Enums"]["Status"]
           updated_at: string
-          userId: string | null
         }
         Insert: {
           completed_at?: string | null
           created_at?: string
           created_by_id?: string | null
           id?: string
-          plan_snapshot_id: string
+          plan_id: string
+          priority?: Database["public"]["Enums"]["Priority"]
+          status?: Database["public"]["Enums"]["Status"]
           updated_at?: string
-          userId?: string | null
         }
         Update: {
           completed_at?: string | null
           created_at?: string
           created_by_id?: string | null
           id?: string
-          plan_snapshot_id?: string
+          plan_id?: string
+          priority?: Database["public"]["Enums"]["Priority"]
+          status?: Database["public"]["Enums"]["Status"]
           updated_at?: string
-          userId?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "inspection_created_by_id_fkey"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inspection_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "plan"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       inspection_task: {
         Row: {
@@ -137,7 +155,7 @@ export interface Database {
           created_by_id: string | null
           description: string | null
           id: string
-          inspectionId: string | null
+          inspection_id: string | null
           name: string
           parent_task_id: string | null
           plan_id: string
@@ -150,7 +168,7 @@ export interface Database {
           created_by_id?: string | null
           description?: string | null
           id?: string
-          inspectionId?: string | null
+          inspection_id?: string | null
           name: string
           parent_task_id?: string | null
           plan_id: string
@@ -163,7 +181,7 @@ export interface Database {
           created_by_id?: string | null
           description?: string | null
           id?: string
-          inspectionId?: string | null
+          inspection_id?: string | null
           name?: string
           parent_task_id?: string | null
           plan_id?: string
@@ -180,8 +198,8 @@ export interface Database {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "inspection_task_inspectionId_fkey"
-            columns: ["inspectionId"]
+            foreignKeyName: "inspection_task_inspection_id_fkey"
+            columns: ["inspection_id"]
             isOneToOne: false
             referencedRelation: "inspection"
             referencedColumns: ["id"]

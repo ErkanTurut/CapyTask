@@ -14,33 +14,34 @@ datasource db {
 // User model representing individuals in the system
 model user {
   id              String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  image_uri       String? // URL for user's image
-  email           String            @unique // User's email (unique)
-  first_name      String? // User's first name
-  last_name       String? // User's last name
-  createdAt       DateTime          @default(now()) @db.Timestamptz(6) // Timestamp of user creation
-  updatedAt       DateTime          @default(now()) @updatedAt @db.Timestamptz(6) // Timestamp of last update
-  external_id     String?           @unique @db.Uuid // External identifier for user
-  tasks           task[] // Tasks associated with the user
-  user_team       user_team[] // User's team memberships
-  user_workspace  user_workspace[] // User's workspace memberships
-  workspaces      workspace[] // Workspaces associated with the user
-  inspection_task inspection_task[] // Inspection tasks assigned to the user
+  image_uri       String?
+  email           String            @unique
+  first_name      String?
+  last_name       String?
+  createdAt       DateTime          @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime          @default(now()) @updatedAt @db.Timestamptz(6)
+  external_id     String?           @unique @db.Uuid
+  tasks           task[]
+  user_team       user_team[]
+  user_workspace  user_workspace[]
+  workspaces      workspace[]
+  inspection_task inspection_task[]
+  inspection      inspection[]
 }
 
 // Team model representing organizational groups
 model team {
   id           String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name         String // Team name
-  description  String? // Team description
-  image_uri    String? // URL for team's image
-  identity     String // Team identity
-  created_at   DateTime    @default(now()) @db.Timestamptz(6) // Timestamp of team creation
-  updated_at   DateTime    @default(now()) @updatedAt @db.Timestamptz(6) // Timestamp of last update
-  workspace_id String      @db.Uuid // Reference to the associated workspace
-  plans        plan[] // Plans associated with the team
-  workspace    workspace   @relation(fields: [workspace_id], references: [id], onDelete: Cascade) // Relationship with workspace
-  users        user_team[] // Users belonging to the team
+  name         String
+  description  String?
+  image_uri    String?
+  identity     String
+  created_at   DateTime    @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime    @default(now()) @updatedAt @db.Timestamptz(6)
+  workspace_id String      @db.Uuid
+  plans        plan[]
+  workspace    workspace   @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
+  users        user_team[]
 
   @@unique([identity, workspace_id])
   @@unique([name, workspace_id])
@@ -50,31 +51,32 @@ model team {
 // Role model representing user roles in the system
 model role {
   id             String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name           Role // Role name
-  description    String // Role description
-  permissions    Permission[]     @default([]) // Permissions associated with the role
-  user_team      user_team[] // User-team relationships with this role
-  user_workspace user_workspace[] // User-workspace relationships with this role
+  name           Role
+  description    String
+  permissions    Permission[]     @default([])
+  user_team      user_team[]
+  user_workspace user_workspace[]
 }
 
 // Plan model representing templates for asset inspections
 model plan {
   id            String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name          String // Plan name
-  description   String? // Plan description
-  created_at    DateTime          @default(now()) @db.Timestamptz(6) // Timestamp of plan creation
-  updated_at    DateTime          @default(now()) @updatedAt @db.Timestamptz(6) // Timestamp of last update
-  team_id       String            @db.Uuid // Reference to the associated team
-  team          team              @relation(fields: [team_id], references: [id], onDelete: Cascade) // Relationship with team
-  tasks         task[] // Tasks associated with the plan
-  task_snapshot inspection_task[] // Snapshot of inspection tasks associated with the plan
+  name          String
+  description   String?
+  created_at    DateTime          @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime          @default(now()) @updatedAt @db.Timestamptz(6)
+  team_id       String            @db.Uuid
+  team          team              @relation(fields: [team_id], references: [id], onDelete: Cascade)
+  tasks         task[]
+  task_snapshot inspection_task[]
+  inspection    inspection[]
 
   @@index([team_id])
 }
 
 // Task model representing individual tasks within plans
 model task {
-  id             String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id             String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Text
   name           String // Task name
   description    String? // Task description
   created_at     DateTime @default(now()) @db.Timestamptz(6) // Timestamp of task creation
@@ -94,12 +96,12 @@ model task {
 
 // User-team model representing user memberships in teams with roles
 model user_team {
-  user_id String  @db.Uuid // Reference to the user
-  team_id String  @db.Uuid // Reference to the team
-  role_id String? @db.Uuid // Reference to the role
-  role    role?   @relation(fields: [role_id], references: [id]) // Relationship with role
-  team    team    @relation(fields: [team_id], references: [id]) // Relationship with team
-  user    user    @relation(fields: [user_id], references: [id]) // Relationship with user
+  user_id String  @db.Uuid
+  team_id String  @db.Uuid
+  role_id String? @db.Uuid
+  role    role?   @relation(fields: [role_id], references: [id])
+  team    team    @relation(fields: [team_id], references: [id])
+  user    user    @relation(fields: [user_id], references: [id])
 
   @@id([user_id, team_id])
   @@index([team_id])
@@ -109,12 +111,12 @@ model user_team {
 
 // User-workspace model representing user memberships in workspaces with roles
 model user_workspace {
-  user_id      String    @db.Uuid // Reference to the user
-  workspace_id String    @db.Uuid // Reference to the workspace
-  role_id      String?   @db.Uuid // Reference to the role
-  role         role?     @relation(fields: [role_id], references: [id]) // Relationship with role
-  user         user      @relation(fields: [user_id], references: [id]) // Relationship with user
-  workspace    workspace @relation(fields: [workspace_id], references: [id]) // Relationship with workspace
+  user_id      String    @db.Uuid
+  workspace_id String    @db.Uuid
+  role_id      String?   @db.Uuid
+  role         role?     @relation(fields: [role_id], references: [id])
+  user         user      @relation(fields: [user_id], references: [id])
+  workspace    workspace @relation(fields: [workspace_id], references: [id])
 
   @@id([user_id, workspace_id])
   @@index([user_id])
@@ -125,50 +127,55 @@ model user_workspace {
 // Workspace model representing organizational spaces
 model workspace {
   id             String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name           String // Workspace name
-  description    String? // Workspace description
-  created_at     DateTime         @default(now()) @db.Timestamptz(6) // Timestamp of workspace creation
-  updated_at     DateTime         @default(now()) @updatedAt @db.Timestamptz(6) // Timestamp of last update
-  url_key        String           @unique // URL key for the workspace
-  created_by     String           @db.Uuid // Reference to the user who created the workspace
-  image_uri      String? // URL for workspace's image
-  team           team[] // Teams associated with the workspace
-  user_workspace user_workspace[] // User-workspace relationships associated with the workspace
-  user           user             @relation(fields: [created_by], references: [id]) // Relationship with user who created the workspace
+  name           String
+  description    String?
+  created_at     DateTime         @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime         @default(now()) @updatedAt @db.Timestamptz(6)
+  url_key        String           @unique
+  created_by     String           @db.Uuid
+  image_uri      String?
+  team           team[]
+  user_workspace user_workspace[]
+  user           user             @relation(fields: [created_by], references: [id])
 
   @@index([url_key])
 }
 
 // Inspection model representing instances of inspections
 model inspection {
-  id               String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  created_at       DateTime          @default(now()) @db.Timestamptz(6) // Timestamp of inspection creation
-  updated_at       DateTime          @default(now()) @updatedAt @db.Timestamptz(6) // Timestamp of last update
-  completed_at     DateTime? // Timestamp of inspection completion
-  created_by_id    String?           @db.Uuid // Reference to the user who created the inspection
-  plan_snapshot_id String            @db.Uuid // Reference to the associated plan snapshot
-  tasks            inspection_task[] // Inspection tasks associated with the inspection
-  userId           String?           @db.Uuid // Reference to the user assigned to the inspection
+  id            String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created_at    DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
+  plan_id       String    @db.Uuid
+  completed_at  DateTime?
+  created_by_id String?   @db.Uuid
+  status        Status    @default(OPEN)
+  priority      Priority  @default(LOW)
+
+  inspection_task inspection_task[]
+  user            user?             @relation(fields: [created_by_id], references: [id])
+  plan            plan              @relation(fields: [plan_id], references: [id], onDelete: Cascade)
 }
 
 // Inspection task model representing individual tasks within inspections
 model inspection_task {
-  id             String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name           String // Inspection task name
-  description    String? // Inspection task description
-  created_at     DateTime          @default(now()) @db.Timestamptz(6) // Timestamp of task creation
-  updated_at     DateTime          @default(now()) @updatedAt @db.Timestamptz(6) // Timestamp of last update
-  parent_task_id String?           @db.Uuid // Reference to the parent task
-  created_by_id  String?           @db.Uuid // Reference to the user who created the task
-  plan_id        String            @db.Uuid // Reference to the associated plan
-  status         Status // Status of the inspection task
-  priority       Priority // Priority of the inspection task
-  plan           plan              @relation(fields: [plan_id], references: [id], onDelete: Cascade) // Relationship with plan
-  created_by     user?             @relation(fields: [created_by_id], references: [id]) // Relationship with user who created the task
-  parent_task    inspection_task?  @relation("task_sub_tasks", fields: [parent_task_id], references: [id], onDelete: Cascade) // Relationship with parent task
-  sub_tasks      inspection_task[] @relation("task_sub_tasks") // Subtasks associated with this task
-  inspection     inspection?       @relation(fields: [inspectionId], references: [id]) // Relationship with inspection
-  inspectionId   String?           @db.Uuid // Reference to the associated inspection
+  id             String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name           String
+  description    String?
+  created_at     DateTime @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  parent_task_id String?  @db.Uuid
+  created_by_id  String?  @db.Uuid
+  plan_id        String   @db.Uuid
+  inspection_id  String?  @db.Uuid
+
+  status      Status
+  priority    Priority
+  plan        plan              @relation(fields: [plan_id], references: [id], onDelete: Cascade)
+  created_by  user?             @relation(fields: [created_by_id], references: [id])
+  parent_task inspection_task?  @relation("task_sub_tasks", fields: [parent_task_id], references: [id], onDelete: Cascade)
+  sub_tasks   inspection_task[] @relation("task_sub_tasks")
+  inspection  inspection?       @relation(fields: [inspection_id], references: [id])
 
   @@index([parent_task_id])
   @@index([created_by_id])
@@ -209,6 +216,12 @@ enum Priority {
   LOW
   MEDIUM
   HIGH
+}
+
+enum PlanType {
+  INSPECTION
+  MAINTENANCE
+  OTHER
 }
 
 model User {
