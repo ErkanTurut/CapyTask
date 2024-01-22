@@ -6,7 +6,17 @@ import React from "react";
 
 import { useSidebar } from "@/lib/store";
 import { unstable_batchedUpdates } from "react-dom";
-import UserAccountNavSkeleton from "@/components/user/user-account-nav-skeletton";
+import useWindowSize from "@/lib/hooks/use-window-size";
+
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+  SheetClose,
+} from "@/components/ui/sheet";
 
 export interface SidebarLayoutProps
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -25,6 +35,7 @@ export function SidebarLayout({
 }: SidebarLayoutProps) {
   const setIsCollapsed = useSidebar()((state) => state.setIsCollapsed);
   const isCollapsed = useSidebar()((state) => state.isCollapsed);
+
   const handlePanelChange = (collapsed: boolean) => {
     unstable_batchedUpdates(() => {
       setIsCollapsed(collapsed);
@@ -34,6 +45,8 @@ export function SidebarLayout({
     )};path=/`;
   };
 
+  const { isMobile } = useWindowSize();
+  console.log();
   return (
     <>
       <ResizablePanel
@@ -45,7 +58,7 @@ export function SidebarLayout({
         onCollapse={() => handlePanelChange(true)}
         onExpand={() => handlePanelChange(false)}
         className={cn(
-          "flex min-w-[120px] flex-col justify-between",
+          " flex h-screen min-w-[120px] flex-col justify-between",
           isCollapsed && "min-w-[50px] transition-all duration-300 ease-in-out",
           className,
         )}

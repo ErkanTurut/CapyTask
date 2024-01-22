@@ -67,6 +67,7 @@ const Sidebar: FC<sidebarProps> = async ({ params }) => {
     <SidebarLayout
       defaultLayout={defaultLayout}
       defaultCollapsed={defaultCollapsed}
+      className="h-screen bg-background "
     >
       <div>
         <SidebarHeader className="grid gap-1 p-2">
@@ -117,15 +118,12 @@ const Sidebar: FC<sidebarProps> = async ({ params }) => {
         <Separator />
         <Nav rootPath={`/${params.url_key}`} items={appNavItems.footer} />
         <Separator />
-        <Suspense
-          fallback={
-            <Skeleton
-              className={"flex h-9 w-full items-center justify-center"}
-            />
-          }
-        >
+        <Suspense fallback={<Skeleton className="h-8 w-full" />}>
           {(async () => {
-            const { data: user } = await getUser(session.user.id, supabase);
+            const { data: user } = await getUser({
+              user_id: session.user.id,
+              supabase,
+            });
             if (!user) {
               redirect("/login");
             }
@@ -138,3 +136,7 @@ const Sidebar: FC<sidebarProps> = async ({ params }) => {
 };
 
 export default Sidebar;
+
+{
+  /* <div class="relative h-full w-full bg-white"><div class="absolute h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div></div> */
+}
