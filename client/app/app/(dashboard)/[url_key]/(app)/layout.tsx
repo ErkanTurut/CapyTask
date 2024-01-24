@@ -11,6 +11,7 @@ import { Shell } from "@/components/shells";
 import Sidebar from "./_components/sidebar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import DotPattern from "@/components/dot-pattern";
+import { Breadcrumb } from "@/components/layouts/breadcrumb";
 interface DashboardLayoutProps {
   children: React.ReactNode;
   modal: React.ReactNode;
@@ -35,15 +36,20 @@ export default async function DashboardLayout({
 
   return (
     <SidebarProvider isCollapsed={defaultCollapsed || false}>
-      <DotPattern className="absolute top-0 z-[-2] h-screen w-screen bg-background [mask-image:radial-gradient(ellipse_70%_50%_at_50%_50%,#000_70%,transparent_100%)] ">
+      <DotPattern className="absolute top-0 z-[-2] h-screen w-screen bg-background  ">
         <div className="min-h-screen">
           {modal}
           <TooltipProvider delayDuration={0}>
             <ResizableGroup>
               <Sidebar params={params} />
-
               <Resizable defaultLayout={defaultLayout}>
-                <ScrollArea className="h-screen ">{children}</ScrollArea>
+                <ScrollArea className="h-screen ">
+                  <div className="flex h-11 items-center border-b bg-background/30 p-2 backdrop-blur-[2px]">
+                    <Breadcrumb />
+                  </div>
+
+                  {children}
+                </ScrollArea>
               </Resizable>
             </ResizableGroup>
           </TooltipProvider>
