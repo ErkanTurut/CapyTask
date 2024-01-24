@@ -1,19 +1,13 @@
 "use client";
 
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { Database } from "@/types/supabase.types";
 import { ColumnDef } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { DotsVerticalIcon } from "@radix-ui/react-icons";
-import { DataTableRowActions } from "./data-table-row-actions";
+import Link from "next/link";
 import { DataTableColumnHeader } from "./data-table-column-header";
+import { DataTableRowActions } from "./data-table-row-actions";
+import { usePathname } from "next/navigation";
 
 export interface tableProps {
   columns: Database["public"]["Tables"]["plan"]["Row"][];
@@ -26,6 +20,21 @@ export const columns: ColumnDef<Database["public"]["Tables"]["plan"]["Row"]>[] =
       header: ({ column }) => {
         return <DataTableColumnHeader column={column} title="Title" />;
       },
+      cell: ({ row }) => {
+        const pathname = usePathname();
+        return (
+          <Link
+            href={`${pathname}/${row.original.id}`}
+            className={cn(
+              buttonVariants({ variant: "link", size: "sm" }),
+              "underline",
+            )}
+          >
+            {row.original.name}
+          </Link>
+        );
+      },
+      enableHiding: false,
     },
     {
       accessorKey: "description",

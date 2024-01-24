@@ -51,7 +51,6 @@ export function DataTable<TData, TValue>({
   const limit = searchParams.get("limit")
     ? parseInt(searchParams.get("limit") as string)
     : 10;
-  const offset = (page - 1) * limit;
 
   const createQueryString = React.useCallback(
     (params: Record<string, string | number | null>) => {
@@ -81,8 +80,6 @@ export function DataTable<TData, TValue>({
     pageIndex: page - 1,
     pageSize: limit,
   });
-
-  console.log({ pageIndex, pageSize });
 
   const table = useReactTable({
     data,
