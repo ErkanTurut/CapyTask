@@ -12,6 +12,7 @@ import Sidebar from "./_components/sidebar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import DotPattern from "@/components/dot-pattern";
 import { Breadcrumb } from "@/components/layouts/breadcrumb";
+import useCookie from "@/lib/hooks/use-cookie";
 interface DashboardLayoutProps {
   children: React.ReactNode;
   modal: React.ReactNode;
