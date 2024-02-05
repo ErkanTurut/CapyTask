@@ -122,7 +122,10 @@ export function TeamList({ items, teams, rootPath }: TeamListProps) {
               collapsible
             >
               {teams && teams.length > 0 ? (
-                <AccordionItem value="all" className="flex flex-col gap-1">
+                <AccordionItem
+                  value="all"
+                  className="flex flex-col gap-1 border-0"
+                >
                   <AccordionTrigger
                     className={cn(
                       buttonVariants({ variant: "ghost", size: "sm" }),
@@ -162,9 +165,10 @@ export function TeamList({ items, teams, rootPath }: TeamListProps) {
                                   variant: "ghost",
                                   size: "sm",
                                 }),
-                                "flex w-full justify-start gap-1 py-0",
+                                "flex w-full justify-start gap-1 py-1",
                               )}
                               key={index}
+                              draggable
                             >
                               <Avatar className="h-5 w-5 rounded-sm">
                                 <AvatarImage

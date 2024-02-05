@@ -29,19 +29,13 @@ import { useAction } from "@/lib/hooks/use-actions";
 import { Button } from "@/components/ui/button";
 
 import { FC } from "react";
-import { useTeam } from "@/lib/store";
+import { Database } from "@/types/supabase.types";
 
 interface UpdateTeamFormProps extends React.HTMLAttributes<HTMLFormElement> {
-  identity: string;
+  team: Database["public"]["Tables"]["team"]["Row"];
 }
 
-const UpdateTeamForm: FC<UpdateTeamFormProps> = ({ identity, className }) => {
-  const teams = useTeam()((state) => state.teamList);
-  if (!teams) return null;
-  const team = teams.find((t) => t.identity === identity);
-  if (!team) return notFound();
-  const update = useTeam()((state) => state.updateTeam);
-
+const UpdateTeamForm: FC<UpdateTeamFormProps> = ({ team, className }) => {
   const { run, isLoading } = useAction(updateTeam, {
     onSuccess: (data) => {
       toast.success("Team created successfully");
