@@ -149,7 +149,7 @@ export interface Database {
           }
         ]
       }
-      inspection_task: {
+      inspection_step: {
         Row: {
           created_at: string
           created_by_id: string | null
@@ -157,7 +157,7 @@ export interface Database {
           id: string
           inspection_id: string | null
           name: string
-          parent_task_id: string | null
+          parent_step_id: string | null
           plan_id: string
           priority: Database["public"]["Enums"]["Priority"]
           status: Database["public"]["Enums"]["Status"]
@@ -170,7 +170,7 @@ export interface Database {
           id?: string
           inspection_id?: string | null
           name: string
-          parent_task_id?: string | null
+          parent_step_id?: string | null
           plan_id: string
           priority: Database["public"]["Enums"]["Priority"]
           status: Database["public"]["Enums"]["Status"]
@@ -183,7 +183,7 @@ export interface Database {
           id?: string
           inspection_id?: string | null
           name?: string
-          parent_task_id?: string | null
+          parent_step_id?: string | null
           plan_id?: string
           priority?: Database["public"]["Enums"]["Priority"]
           status?: Database["public"]["Enums"]["Status"]
@@ -191,28 +191,28 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "inspection_task_created_by_id_fkey"
+            foreignKeyName: "inspection_step_created_by_id_fkey"
             columns: ["created_by_id"]
             isOneToOne: false
             referencedRelation: "user"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "inspection_task_inspection_id_fkey"
+            foreignKeyName: "inspection_step_inspection_id_fkey"
             columns: ["inspection_id"]
             isOneToOne: false
             referencedRelation: "inspection"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "inspection_task_parent_task_id_fkey"
-            columns: ["parent_task_id"]
+            foreignKeyName: "inspection_step_parent_step_id_fkey"
+            columns: ["parent_step_id"]
             isOneToOne: false
-            referencedRelation: "inspection_task"
+            referencedRelation: "inspection_step"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "inspection_task_plan_id_fkey"
+            foreignKeyName: "inspection_step_plan_id_fkey"
             columns: ["plan_id"]
             isOneToOne: false
             referencedRelation: "plan"
@@ -421,14 +421,15 @@ export interface Database {
           }
         ]
       }
-      task: {
+      step: {
         Row: {
           created_at: string
           created_by_id: string | null
           description: string | null
           id: string
           name: string
-          parent_task_id: string | null
+          order: number | null
+          parent_step_id: string | null
           plan_id: string
           updated_at: string
         }
@@ -438,7 +439,8 @@ export interface Database {
           description?: string | null
           id?: string
           name: string
-          parent_task_id?: string | null
+          order?: number | null
+          parent_step_id?: string | null
           plan_id: string
           updated_at?: string
         }
@@ -448,27 +450,28 @@ export interface Database {
           description?: string | null
           id?: string
           name?: string
-          parent_task_id?: string | null
+          order?: number | null
+          parent_step_id?: string | null
           plan_id?: string
           updated_at?: string
         }
         Relationships: [
           {
-            foreignKeyName: "task_created_by_id_fkey"
+            foreignKeyName: "step_created_by_id_fkey"
             columns: ["created_by_id"]
             isOneToOne: false
             referencedRelation: "user"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "task_parent_task_id_fkey"
-            columns: ["parent_task_id"]
+            foreignKeyName: "step_parent_step_id_fkey"
+            columns: ["parent_step_id"]
             isOneToOne: false
-            referencedRelation: "task"
+            referencedRelation: "step"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "task_plan_id_fkey"
+            foreignKeyName: "step_plan_id_fkey"
             columns: ["plan_id"]
             isOneToOne: false
             referencedRelation: "plan"
@@ -739,6 +742,7 @@ export interface Database {
         | "CAN_COMMENT"
         | "CAN_VIEW"
         | "NO_ACCESS"
+      PlanType: "INSPECTION" | "MAINTENANCE" | "OTHER"
       Priority: "LOW" | "MEDIUM" | "HIGH"
       Role:
         | "ADMIN"

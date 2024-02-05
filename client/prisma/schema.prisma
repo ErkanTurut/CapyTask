@@ -1,17 +1,13 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  // directUrl = env("DIRECT_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
-// User model representing individuals in the system
 model user {
   id              String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   image_uri       String?
@@ -21,24 +17,23 @@ model user {
   createdAt       DateTime          @default(now()) @db.Timestamptz(6)
   updatedAt       DateTime          @default(now()) @updatedAt @db.Timestamptz(6)
   external_id     String?           @unique @db.Uuid
-  tasks           task[]
+  inspection      inspection[]
+  inspection_step inspection_step[]
+  steps           step[]
   user_team       user_team[]
   user_workspace  user_workspace[]
   workspaces      workspace[]
-  inspection_task inspection_task[]
-  inspection      inspection[]
 }
 
-// Team model representing organizational groups
 model team {
   id           String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name         String
   description  String?
   image_uri    String?
-  identity     String
   created_at   DateTime    @default(now()) @db.Timestamptz(6)
   updated_at   DateTime    @default(now()) @updatedAt @db.Timestamptz(6)
   workspace_id String      @db.Uuid
+  identity     String
   plans        plan[]
   workspace    workspace   @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
   users        user_team[]
@@ -48,7 +43,6 @@ model team {
   @@index([workspace_id])
 }
 
-// Role model representing user roles in the system
 model role {
   id             String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name           Role
@@ -58,7 +52,6 @@ model role {
   user_workspace user_workspace[]
 }
 
-// Plan model representing templates for asset inspections
 model plan {
   id            String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name          String
@@ -66,35 +59,34 @@ model plan {
   created_at    DateTime          @default(now()) @db.Timestamptz(6)
   updated_at    DateTime          @default(now()) @updatedAt @db.Timestamptz(6)
   team_id       String            @db.Uuid
-  team          team              @relation(fields: [team_id], references: [id], onDelete: Cascade)
-  tasks         task[]
-  task_snapshot inspection_task[]
   inspection    inspection[]
+  step_snapshot inspection_step[]
+  team          team              @relation(fields: [team_id], references: [id], onDelete: Cascade)
+  steps         step[]
 
   @@index([team_id])
 }
 
-// Task model representing individual tasks within plans
-model task {
-  id             String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Text
-  name           String // Task name
-  description    String? // Task description
-  created_at     DateTime @default(now()) @db.Timestamptz(6) // Timestamp of task creation
-  updated_at     DateTime @default(now()) @updatedAt @db.Timestamptz(6) // Timestamp of last update
-  parent_task_id String?  @db.Uuid // Reference to the parent task
-  created_by_id  String?  @db.Uuid // Reference to the user who created the task
-  plan_id        String   @db.Uuid // Reference to the associated plan
+model step {
+  id             String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name           String
+  description    String?
+  plan_id        String   @db.Uuid
+  created_at     DateTime @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  parent_step_id String?  @db.Uuid
+  created_by_id  String?  @db.Uuid
+  order          Int?
+  created_by     user?    @relation(fields: [created_by_id], references: [id])
+  parent_step    step?    @relation("step_sub_steps", fields: [parent_step_id], references: [id], onDelete: Cascade)
+  sub_steps      step[]   @relation("step_sub_steps")
+  plan           plan     @relation(fields: [plan_id], references: [id], onDelete: Cascade)
 
-  plan        plan   @relation(fields: [plan_id], references: [id], onDelete: Cascade) // Relationship with plan
-  created_by  user?  @relation(fields: [created_by_id], references: [id]) // Relationship with user who created the task
-  parent_task task?  @relation("task_sub_tasks", fields: [parent_task_id], references: [id], onDelete: Cascade) // Relationship with parent task
-  sub_tasks   task[] @relation("task_sub_tasks") // Subtasks associated with this task
-
-  @@index([parent_task_id])
+  @@unique([plan_id, order, id])
+  @@index([parent_step_id])
   @@index([created_by_id])
 }
 
-// User-team model representing user memberships in teams with roles
 model user_team {
   user_id String  @db.Uuid
   team_id String  @db.Uuid
@@ -109,7 +101,6 @@ model user_team {
   @@index([user_id])
 }
 
-// User-workspace model representing user memberships in workspaces with roles
 model user_workspace {
   user_id      String    @db.Uuid
   workspace_id String    @db.Uuid
@@ -124,7 +115,6 @@ model user_workspace {
   @@index([role_id])
 }
 
-// Workspace model representing organizational spaces
 model workspace {
   id             String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name           String
@@ -141,93 +131,45 @@ model workspace {
   @@index([url_key])
 }
 
-// Inspection model representing instances of inspections
 model inspection {
-  id            String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  created_at    DateTime  @default(now()) @db.Timestamptz(6)
-  updated_at    DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
-  plan_id       String    @db.Uuid
-  completed_at  DateTime?
-  created_by_id String?   @db.Uuid
-  status        Status    @default(OPEN)
-  priority      Priority  @default(LOW)
-
-  inspection_task inspection_task[]
+  id              String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created_at      DateTime          @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime          @default(now()) @updatedAt @db.Timestamptz(6)
+  completed_at    DateTime?
+  created_by_id   String?           @db.Uuid
+  plan_id         String            @db.Uuid
+  priority        Priority          @default(LOW)
+  status          Status            @default(OPEN)
   user            user?             @relation(fields: [created_by_id], references: [id])
   plan            plan              @relation(fields: [plan_id], references: [id], onDelete: Cascade)
+  inspection_step inspection_step[]
 }
 
-// Inspection task model representing individual tasks within inspections
-model inspection_task {
-  id             String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+model inspection_step {
+  id             String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name           String
   description    String?
-  created_at     DateTime @default(now()) @db.Timestamptz(6)
-  updated_at     DateTime @default(now()) @updatedAt @db.Timestamptz(6)
-  parent_task_id String?  @db.Uuid
-  created_by_id  String?  @db.Uuid
-  plan_id        String   @db.Uuid
-  inspection_id  String?  @db.Uuid
+  created_at     DateTime          @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime          @default(now()) @updatedAt @db.Timestamptz(6)
+  parent_step_id String?           @db.Uuid
+  created_by_id  String?           @db.Uuid
+  plan_id        String            @db.Uuid
+  status         Status
+  priority       Priority
+  inspection_id  String?           @db.Uuid
+  created_by     user?             @relation(fields: [created_by_id], references: [id])
+  inspection     inspection?       @relation(fields: [inspection_id], references: [id])
+  parent_step    inspection_step?  @relation("step_sub_steps", fields: [parent_step_id], references: [id], onDelete: Cascade)
+  sub_steps      inspection_step[] @relation("step_sub_steps")
+  plan           plan              @relation(fields: [plan_id], references: [id], onDelete: Cascade)
 
-  status      Status
-  priority    Priority
-  plan        plan              @relation(fields: [plan_id], references: [id], onDelete: Cascade)
-  created_by  user?             @relation(fields: [created_by_id], references: [id])
-  parent_task inspection_task?  @relation("task_sub_tasks", fields: [parent_task_id], references: [id], onDelete: Cascade)
-  sub_tasks   inspection_task[] @relation("task_sub_tasks")
-  inspection  inspection?       @relation(fields: [inspection_id], references: [id])
-
-  @@index([parent_task_id])
+  @@index([parent_step_id])
   @@index([created_by_id])
-}
-
-// Enum for task status
-enum Status {
-  OPEN
-  IN_PROGRESS
-  COMPLETED
-  ON_HOLD
-  CANCELED
-}
-
-// Enum for user roles
-enum Role {
-  ADMIN
-  MANAGER
-  SUPERVISOR
-  TECHNICIAN
-  ENGINEER
-  QUALITY_INSPECTOR
-  OPERATOR
-  OTHER
-}
-
-// Enum for permissions
-enum Permission {
-  FULL_ACCESS
-  CAN_EDIT
-  CAN_COMMENT
-  CAN_VIEW
-  NO_ACCESS
-}
-
-// Enum for task priority
-enum Priority {
-  LOW
-  MEDIUM
-  HIGH
-}
-
-enum PlanType {
-  INSPECTION
-  MAINTENANCE
-  OTHER
 }
 
 model User {
   id            String    @id @default(cuid())
   name          String?
-  // if you are using Github OAuth, you can get rid of the username attribute (that is for Twitter OAuth)
   username      String?
   gh_username   String?
   email         String?   @unique
@@ -236,9 +178,9 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   accounts      Account[]
+  posts         Post[]
   sessions      Session[]
   sites         Site[]
-  posts         Post[]
 }
 
 model Account {
@@ -257,8 +199,7 @@ model Account {
   session_state            String?
   oauth_token_secret       String?
   oauth_token              String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@index([userId])
@@ -284,19 +225,19 @@ model VerificationToken {
 
 model Post {
   id            String   @id @default(cuid())
-  title         String?  @db.Text
-  description   String?  @db.Text
-  content       String?  @db.Text
+  title         String?
+  description   String?
+  content       String?
   slug          String   @default(cuid())
-  image         String?  @default("https://public.blob.vercel-storage.com/eEZHAoPTOBSYGBE3/hxfcV5V-eInX3jbVUhjAt1suB7zB88uGd1j20b.png") @db.Text
-  imageBlurhash String?  @default("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAhCAYAAACbffiEAAAACXBIWXMAABYlAAAWJQFJUiTwAAABfUlEQVR4nN3XyZLDIAwE0Pz/v3q3r55JDlSBplsIEI49h76k4opexCK/juP4eXjOT149f2Tf9ySPgcjCc7kdpBTgDPKByKK2bTPFEdMO0RDrusJ0wLRBGCIuelmWJAjkgPGDSIQEMBDCfA2CEPM80+Qwl0JkNxBimiaYGOTUlXYI60YoehzHJDEm7kxjV3whOQTD3AaCuhGKHoYhyb+CBMwjIAFz647kTqyapdV4enGINuDJMSScPmijSwjCaHeLcT77C7EC0C1ugaCTi2HYfAZANgj6Z9A8xY5eiYghDMNQBJNCWhASot0jGsSCUiHWZcSGQjaWWCDaGMOWnsCcn2QhVkRuxqqNxMSdUSElCDbp1hbNOsa6Ugxh7xXauF4DyM1m5BLtCylBXgaxvPXVwEoOBjeIFVODtW74oj1yBQah3E8tyz3SkpolKS9Geo9YMD1QJR1Go4oJkgO1pgbNZq0AOUPChyjvh7vlXaQa+X1UXwKxgHokB2XPxbX+AnijwIU4ahazAAAAAElFTkSuQmCC") @db.Text
+  image         String?  @default("https://public.blob.vercel-storage.com/eEZHAoPTOBSYGBE3/hxfcV5V-eInX3jbVUhjAt1suB7zB88uGd1j20b.png")
+  imageBlurhash String?  @default("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAhCAYAAACbffiEAAAACXBIWXMAABYlAAAWJQFJUiTwAAABfUlEQVR4nN3XyZLDIAwE0Pz/v3q3r55JDlSBplsIEI49h76k4opexCK/juP4eXjOT149f2Tf9ySPgcjCc7kdpBTgDPKByKK2bTPFEdMO0RDrusJ0wLRBGCIuelmWJAjkgPGDSIQEMBDCfA2CEPM80+Qwl0JkNxBimiaYGOTUlXYI60YoehzHJDEm7kxjV3whOQTD3AaCuhGKHoYhyb+CBMwjIAFz647kTqyapdV4enGINuDJMSScPmijSwjCaHeLcT77C7EC0C1ugaCTi2HYfAZANgj6Z9A8xY5eiYghDMNQBJNCWhASot0jGsSCUiHWZcSGQjaWWCDaGMOWnsCcn2QhVkRuxqqNxMSdUSElCDbp1hbNOsa6Ugxh7xXauF4DyM1m5BLtCylBXgaxvPXVwEoOBjeIFVODtW74oj1yBQah3E8tyz3SkpolKS9Geo9YMD1QJR1Go4oJkgO1pgbNZq0AOUPChyjvh7vlXaQa+X1UXwKxgHokB2XPxbX+AnijwIU4ahazAAAAAElFTkSuQmCC")
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   published     Boolean  @default(false)
-  site          Site?    @relation(fields: [siteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   siteId        String?
-  user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId        String?
+  site          Site?    @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([slug, siteId])
   @@index([siteId])
@@ -306,19 +247,19 @@ model Post {
 model Site {
   id            String   @id @default(cuid())
   name          String?
-  description   String?  @db.Text
-  logo          String?  @default("https://public.blob.vercel-storage.com/eEZHAoPTOBSYGBE3/JRajRyC-PhBHEinQkupt02jqfKacBVHLWJq7Iy.png") @db.Text
+  description   String?
+  logo          String?  @default("https://public.blob.vercel-storage.com/eEZHAoPTOBSYGBE3/JRajRyC-PhBHEinQkupt02jqfKacBVHLWJq7Iy.png")
   font          String   @default("font-cal")
-  image         String?  @default("https://public.blob.vercel-storage.com/eEZHAoPTOBSYGBE3/hxfcV5V-eInX3jbVUhjAt1suB7zB88uGd1j20b.png") @db.Text
-  imageBlurhash String?  @default("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAhCAYAAACbffiEAAAACXBIWXMAABYlAAAWJQFJUiTwAAABfUlEQVR4nN3XyZLDIAwE0Pz/v3q3r55JDlSBplsIEI49h76k4opexCK/juP4eXjOT149f2Tf9ySPgcjCc7kdpBTgDPKByKK2bTPFEdMO0RDrusJ0wLRBGCIuelmWJAjkgPGDSIQEMBDCfA2CEPM80+Qwl0JkNxBimiaYGOTUlXYI60YoehzHJDEm7kxjV3whOQTD3AaCuhGKHoYhyb+CBMwjIAFz647kTqyapdV4enGINuDJMSScPmijSwjCaHeLcT77C7EC0C1ugaCTi2HYfAZANgj6Z9A8xY5eiYghDMNQBJNCWhASot0jGsSCUiHWZcSGQjaWWCDaGMOWnsCcn2QhVkRuxqqNxMSdUSElCDbp1hbNOsa6Ugxh7xXauF4DyM1m5BLtCylBXgaxvPXVwEoOBjeIFVODtW74oj1yBQah3E8tyz3SkpolKS9Geo9YMD1QJR1Go4oJkgO1pgbNZq0AOUPChyjvh7vlXaQa+X1UXwKxgHokB2XPxbX+AnijwIU4ahazAAAAAElFTkSuQmCC") @db.Text
+  image         String?  @default("https://public.blob.vercel-storage.com/eEZHAoPTOBSYGBE3/hxfcV5V-eInX3jbVUhjAt1suB7zB88uGd1j20b.png")
+  imageBlurhash String?  @default("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAhCAYAAACbffiEAAAACXBIWXMAABYlAAAWJQFJUiTwAAABfUlEQVR4nN3XyZLDIAwE0Pz/v3q3r55JDlSBplsIEI49h76k4opexCK/juP4eXjOT149f2Tf9ySPgcjCc7kdpBTgDPKByKK2bTPFEdMO0RDrusJ0wLRBGCIuelmWJAjkgPGDSIQEMBDCfA2CEPM80+Qwl0JkNxBimiaYGOTUlXYI60YoehzHJDEm7kxjV3whOQTD3AaCuhGKHoYhyb+CBMwjIAFz647kTqyapdV4enGINuDJMSScPmijSwjCaHeLcT77C7EC0C1ugaCTi2HYfAZANgj6Z9A8xY5eiYghDMNQBJNCWhASot0jGsSCUiHWZcSGQjaWWCDaGMOWnsCcn2QhVkRuxqqNxMSdUSElCDbp1hbNOsa6Ugxh7xXauF4DyM1m5BLtCylBXgaxvPXVwEoOBjeIFVODtW74oj1yBQah3E8tyz3SkpolKS9Geo9YMD1QJR1Go4oJkgO1pgbNZq0AOUPChyjvh7vlXaQa+X1UXwKxgHokB2XPxbX+AnijwIU4ahazAAAAAElFTkSuQmCC")
   subdomain     String?  @unique
   customDomain  String?  @unique
-  message404    String?  @default("Blimey! You've found a page that doesn't exist.") @db.Text
+  message404    String?  @default("Blimey! You've found a page that doesn't exist.")
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-  user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId        String?
   posts         Post[]
+  user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
@@ -326,9 +267,48 @@ model Site {
 model Example {
   id            Int     @id @default(autoincrement())
   name          String?
-  description   String? @db.Text
+  description   String?
   domainCount   Int?
   url           String?
-  image         String? @db.Text
-  imageBlurhash String? @db.Text
+  image         String?
+  imageBlurhash String?
+}
+
+enum Status {
+  OPEN
+  IN_PROGRESS
+  COMPLETED
+  ON_HOLD
+  CANCELED
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  SUPERVISOR
+  TECHNICIAN
+  ENGINEER
+  QUALITY_INSPECTOR
+  OPERATOR
+  OTHER
+}
+
+enum Permission {
+  FULL_ACCESS
+  CAN_EDIT
+  CAN_COMMENT
+  CAN_VIEW
+  NO_ACCESS
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum PlanType {
+  INSPECTION
+  MAINTENANCE
+  OTHER
 }
