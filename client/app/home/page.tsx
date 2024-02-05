@@ -1,18 +1,18 @@
+import {
+  PageHeader,
+  PageHeaderDescription,
+  PageHeaderHeading,
+} from "@/components/page-header";
 import { Shell } from "@/components/shells";
+import { Button } from "@/components/ui/button";
+import Hero from "./_components/hero";
+import { BentoCard, BentoGrid } from "@/components/bento-grid";
+import { Icons } from "@/components/icons";
 
 export default async function Home() {
   return (
-    <Shell as="div" className="gap-12">
-      <section>Home </section>
-      {Array.from({ length: 30 }).map((_, index) => (
-        <p key={index}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-          voluptate, voluptatum, quidem, quas accusantium voluptates doloremque
-          quae fugiat voluptatibus doloribus magnam. Quisquam voluptate,
-          voluptatum, quidem, quas accusantium voluptates doloremque quae fugiat
-          voluptatibus doloribus magnam.
-        </p>
-      ))}
+    <Shell variant="markdown" className="max-w-5xl">
+      <Hero />
     </Shell>
   );
 }
