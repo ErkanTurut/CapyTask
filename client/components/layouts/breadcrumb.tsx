@@ -56,7 +56,6 @@ export function Breadcrumb() {
               .map((segment, index, array) => {
                 if (index === 0) return;
                 const isLastSegment = index === array.length - 1;
-                console.log(`/${array.slice(0, index + 1).join("/")}`);
                 return (
                   <React.Fragment key={segment}>
                     <Link
