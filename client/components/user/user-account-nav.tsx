@@ -42,7 +42,7 @@ const UserAccountNav: FC<UserAccountNavProps> = ({ className, user }) => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          variant="outline"
+          variant="ghost"
           size={isCollapsed ? "icon" : "default"}
           className={cn(
             "flex items-center justify-start gap-1",
