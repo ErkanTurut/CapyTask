@@ -1,7 +1,8 @@
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
-import { ReactNode } from "react";
+import Link from "next/link";
+import { HtmlHTMLAttributes, ReactNode } from "react";
 
 const BentoGrid = ({
   children,
@@ -29,6 +30,7 @@ const BentoCard = ({
   Icon,
   description,
   href,
+  className,
 }: {
   name: string;
   span: string;
@@ -36,6 +38,7 @@ const BentoCard = ({
   Icon: any;
   description: string;
   href: string;
+  className?: string;
 }) => (
   <div
     key={name}
@@ -46,32 +49,35 @@ const BentoCard = ({
       // dark styles
       "dark:bg-transparent dark:backdrop-blur-md dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset]",
       span,
+      className,
     )}
   >
     <div>{background}</div>
     <div className="pointer-events-none z-10 flex flex-col gap-1 p-6 transition-all duration-300 group-hover:-translate-y-10">
       <Icon className="h-12 w-12 text-neutral-700 transition-all duration-300 ease-in-out group-hover:h-9 group-hover:w-9" />
-      <h3 className="text-xl font-semibold text-neutral-700 dark:text-neutral-300">
-        {name}
-      </h3>
-      <p className="max-w-lg text-neutral-400">{description}</p>
+      <h3 className="text-xl font-semibold ">{name}</h3>
+      <p className="max-w-lg text-muted">{description}</p>
     </div>
 
     <div
       className={cn(
-        "pointer-events-none flex flex-row items-center p-4 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100",
+        "pointer-events-none flex flex-row items-center p-4 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 ",
         "translate-y-10 opacity-0",
-        "absolute bottom-0 w-full",
+        "absolute bottom-0 z-50 w-full",
       )}
     >
-      <Button variant="ghost" asChild size="sm" className="pointer-events-auto">
-        <a href={href}>
-          Learn more
-          <ArrowRightIcon className="ml-2 h-4 w-4" />
-        </a>
-      </Button>
+      <Link
+        className={buttonVariants({
+          variant: "link",
+          className: "pointer-events-auto ",
+        })}
+        href={href}
+      >
+        Learn more
+        <ArrowRightIcon className="ml-2 h-4 w-4" />
+      </Link>
     </div>
-    <div className="pointer-events-none absolute inset-0 transition-all duration-300 group-hover:bg-black/[.03] group-hover:dark:bg-neutral-800/10" />
+    <div className="pointer-events-none absolute inset-0 transition-all duration-300 group-hover:bg-black/[.03] group-hover:bg-gradient-to-t group-hover:dark:bg-neutral-800/10 " />
   </div>
 );
 
