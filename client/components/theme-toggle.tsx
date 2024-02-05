@@ -2,7 +2,7 @@
 
 import { useTheme } from "next-themes";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
 
@@ -20,11 +20,15 @@ export interface ThemeToggleProps extends React.HTMLAttributes<HTMLDivElement> {
   toggle?: boolean;
 }
 
-export default function ThemeToggle({ className, ...props }: ThemeToggleProps) {
+export default function ThemeToggle({
+  className,
+  toggle,
+  ...props
+}: ThemeToggleProps) {
   const { theme, setTheme } = useTheme();
   const themes = ["light", "dark", "system"];
 
-  return props.toggle ? (
+  return toggle ? (
     <Button
       variant="ghost"
       size="icon"

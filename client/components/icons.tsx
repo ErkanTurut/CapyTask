@@ -30,6 +30,7 @@ import {
   RocketIcon,
   DotsHorizontalIcon,
   Cross2Icon,
+  ArrowRightIcon,
 } from "@radix-ui/react-icons";
 import { Loader2, Banknote, Route } from "lucide-react";
 
@@ -92,6 +93,7 @@ export const Icons = {
   dotsHorizontal: DotsHorizontalIcon,
   route: Route,
   cross: Cross2Icon,
+  arrowRight: ArrowRightIcon,
   logo: (props: LucideProps & logoProps) => {
     const { size, className } = props;
 
