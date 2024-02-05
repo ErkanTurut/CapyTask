@@ -58,7 +58,7 @@ export default async function DashboardPage({
   });
 
   return (
-    <Shell>
+    <>
       <PageHeader
         className="pt-10"
         id="account-header"
@@ -74,6 +74,6 @@ export default async function DashboardPage({
       <Shell variant="dashboard">
         <DataTable columns={columns} count={count || 0} data={plans || []} />
       </Shell>
-    </Shell>
+    </>
   );
 }
