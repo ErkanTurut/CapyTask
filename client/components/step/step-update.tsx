@@ -1,11 +1,8 @@
 "use client";
-import { FC } from "react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { Database } from "@/types/supabase.types";
-import React, { useState } from "react";
-import { notFound } from "next/navigation";
+import React, { FC, useEffect } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -17,57 +14,58 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription,
 } from "@/components/ui/form";
 
-import { toast } from "sonner";
 import { catchError, cn } from "@/lib/utils";
+import { toast } from "sonner";
 
-import {
-  updateTeam,
-  TUpdateTeam,
-  ZUpdateTeam,
-} from "@/lib/service/team/actions/update";
 import { useAction } from "@/lib/hooks/use-actions";
+import {
+  TUpdateStep,
+  ZUpdateStep,
+  updateStep,
+} from "@/lib/service/step/actions/update";
 
 interface StepUpdateFormProps extends React.HTMLAttributes<HTMLFormElement> {
   step: Database["public"]["Tables"]["step"]["Row"];
 }
 
 const StepUpdateForm: FC<StepUpdateFormProps> = ({ step, className }) => {
-  return null;
+  const { run, isLoading } = useAction(updateStep, {
+    onSuccess: (data) => {
+      toast.success("Team created successfully");
+      form.reset({
+        name: data.name,
+        description: data.description || "",
+        id: data.id,
+      });
+    },
+    onError: (err) => {
+      catchError(new Error(err));
+    },
+  });
 
-  // const { run, isLoading } = useAction(updateTeam, {
-  //   onSuccess: (data) => {
-  //     toast.success("Team created successfully");
-  //     form.reset({
-  //       name: data.name,
-  //       identity: data.identity,
-  //     });
-  //   },
-  //   onError: (err) => {
-  //     catchError(new Error(err));
-  //   },
-  // });
+  // react-hook-form
+  const form = useForm<TUpdateStep>({
+    resolver: zodResolver(ZUpdateStep),
+    defaultValues: {
+      name: step.name,
+      description: step.description || "",
+      id: step.id,
+    },
+  });
 
-  // // react-hook-form
-  // const form = useForm<TUpdateTeam>({
-  //   resolver: zodResolver(ZUpdateTeam),
-  //   defaultValues: {
-  //     name: team.name,
-  //     identity: team.identity,
-  //     id: team.id,
-  //   },
-  // });
+  async function onSubmit(data: TUpdateStep) {
+    await run(data);
+  }
 
-  // async function onSubmit(data: TUpdateTeam) {
-  //   if (!team) return notFound();
-  //   await run({
-  //     name: data.name,
-  //     identity: data.identity,
-  //     id: team.id,
-  //   });
-  // }
+  useEffect(() => {
+    form.reset({
+      name: step.name,
+      description: step.description || "",
+      id: step.id,
+    });
+  }, [step]);
 
   return (
     <Form {...form}>
@@ -90,34 +88,32 @@ const StepUpdateForm: FC<StepUpdateFormProps> = ({ step, className }) => {
         />
         <FormField
           control={form.control}
-          name="identity"
+          name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Identifier</FormLabel>
-              <FormDescription>
-                The identifier is used to create a unique URL for your team.
-              </FormDescription>
+              <FormLabel>Team name</FormLabel>
               <FormControl>
-                <Input
-                  placeholder={isGenerating ? "Loading..." : "example"}
-                  maxLength={
-                    //@ts-ignore
-                    ZUpdateTeam["shape"]["identity"]["_def"]["checks"].find(
-                      (check) => check.kind === "max",
-                      // @ts-ignore
-                    ).value || 0
-                  }
-                  {...field}
-                />
+                <Input placeholder="example" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="id"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input type="hidden" placeholder={step.id} {...field} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
         {form.formState.isDirty && (
           <Button isLoading={isLoading}>
-            Create now
-            <span className="sr-only">Create now</span>
+            Update now
+            <span className="sr-only">Update now</span>
           </Button>
         )}
       </form>
