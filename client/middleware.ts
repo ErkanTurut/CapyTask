@@ -44,38 +44,57 @@ export default async function middleware(req: NextRequest) {
   // rewrites for app pages
   if (hostname == `app.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
     const {
-      data: { session },
+      data: { user },
       error,
-    } = await supabase.auth.getSession();
+    } = await supabase.auth.getUser();
     if (
-      (!session &&
+      (!user &&
         path !== "/login" &&
         path !== "/signup" &&
         path !== "/logout") ||
-      (session && path === "/signup")
+      (user && path === "/signup")
     ) {
       return NextResponse.redirect(new URL("/login", req.url), {
         headers: response.headers,
       });
-    } else if (session && path == "/login") {
-      const { data: workspaces } = await supabase.from("workspace").select("*");
-      if (!workspaces || workspaces.length < 1) {
+    } else if (user && path == "/login") {
+      const { data: user_workspaces } = await supabase
+        .from("user_workspace")
+        .select("*")
+        .eq("user_id", user.id);
+
+      if (!user_workspaces || user_workspaces.length < 1) {
         return NextResponse.redirect(new URL("/create", req.url), {
           headers: response.headers,
         });
       }
+
       let stored_workspace: { url_key: string } | null;
       try {
         stored_workspace = JSON.parse(
-          req.cookies.get("gembuddy:workspace_url_key")?.value || "null",
+          req.cookies.get("workspace_url_key")?.value as string,
         );
       } catch (error) {
         stored_workspace = null;
       }
-      const workspace =
-        workspaces.find(
-          (workspace) => workspace.url_key === stored_workspace?.url_key,
-        ) || workspaces[0];
+
+      const user_workspace =
+        user_workspaces.find(
+          (user_workspace) =>
+            user_workspace.workspace_id === stored_workspace?.url_key,
+        ) || user_workspaces[0];
+
+      const { data: workspace } = await supabase
+        .from("workspace")
+        .select("*")
+        .eq("id", user_workspace.workspace_id)
+        .single();
+
+      if (!workspace) {
+        return NextResponse.redirect(new URL("/create", req.url), {
+          headers: response.headers,
+        });
+      }
 
       return NextResponse.redirect(new URL(`/${workspace.url_key}`, req.url), {
         headers: response.headers,
