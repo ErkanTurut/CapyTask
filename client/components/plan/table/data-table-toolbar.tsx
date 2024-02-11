@@ -21,7 +21,6 @@ export function DataTableToolbar<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
-  // console.log(table.getState());
   const pathname = usePathname();
 
   return (
