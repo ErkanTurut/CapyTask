@@ -13,16 +13,26 @@ import { sleep } from "@/lib/utils";
 
 export async function getPlans({
   team_id,
-  supabase,
+  client,
   range,
 }: {
   team_id: string;
-  supabase: SupabaseClient;
+  client: SupabaseClient;
   range: { start: number; end: number };
 }) {
-  return await supabase
+  return await client
     .from("plan")
     .select("*", { count: "estimated" })
     .eq("team_id", team_id)
     .range(range.start, range.end);
+}
+
+export async function getPlan({
+  plan_id,
+  client,
+}: {
+  plan_id: string;
+  client: SupabaseClient;
+}) {
+  return await client.from("plan").select("*").eq("id", plan_id).single();
 }
