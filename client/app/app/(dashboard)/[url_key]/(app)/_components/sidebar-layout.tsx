@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 import React from "react";
 
 import { useSidebar } from "@/lib/store";
-import { unstable_batchedUpdates } from "react-dom";
 import useWindowSize from "@/lib/hooks/use-window-size";
 
 import {
@@ -37,16 +36,12 @@ export function SidebarLayout({
   const isCollapsed = useSidebar()((state) => state.isCollapsed);
 
   const handlePanelChange = (collapsed: boolean) => {
-    unstable_batchedUpdates(() => {
-      setIsCollapsed(collapsed);
-    });
+    setIsCollapsed(collapsed);
     document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
       collapsed,
     )};path=/`;
   };
 
-  const { isMobile } = useWindowSize();
-  console.log();
   return (
     <>
       <ResizablePanel

@@ -67,7 +67,7 @@ const Sidebar: FC<sidebarProps> = async ({ params }) => {
     <SidebarLayout
       defaultLayout={defaultLayout}
       defaultCollapsed={defaultCollapsed}
-      className="h-screen bg-background "
+      className="hidden h-screen bg-background md:flex"
     >
       <div>
         <SidebarHeader className="grid gap-1 p-2">
