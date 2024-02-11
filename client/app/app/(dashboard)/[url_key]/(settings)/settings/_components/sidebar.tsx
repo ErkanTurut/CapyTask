@@ -5,7 +5,6 @@ import { Nav } from "./nav";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { settingsNavItems } from "@/config/dashboard.config";
 import { TeamList } from "./team-list";
-import { getTeams, getTeamsByUrlKey } from "@/lib/service/team/fetch";
 import { Database } from "@/types/supabase.types";
 
 export interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
