@@ -132,7 +132,6 @@ export function TeamList({ items, teams, rootPath }: TeamListProps) {
                       "items-center  justify-between gap-1 py-0 underline",
                     )}
                   >
-                    <span>Your Teams</span>
                     <Link
                       href={`${rootPath}/create`}
                       className={cn(
@@ -140,11 +139,12 @@ export function TeamList({ items, teams, rootPath }: TeamListProps) {
                           variant: "ghost",
                           size: "icon",
                         }),
-                        "order-last ml-auto h-7 w-7",
+                        " h-7 w-7",
                       )}
                     >
                       <Icons.plusCircled className="h-4 w-4" />
                     </Link>
+                    <span>Your Teams</span>
                   </AccordionTrigger>
 
                   <AccordionContent>
@@ -165,7 +165,7 @@ export function TeamList({ items, teams, rootPath }: TeamListProps) {
                                   variant: "ghost",
                                   size: "sm",
                                 }),
-                                "flex w-full justify-start gap-1 py-1",
+                                "justify-between py-1",
                               )}
                               key={index}
                               draggable
@@ -180,18 +180,6 @@ export function TeamList({ items, teams, rootPath }: TeamListProps) {
                               <span className="cursor-pointer overflow-x-auto overflow-ellipsis whitespace-nowrap">
                                 {team.name}
                               </span>
-                              <Link
-                                href="#"
-                                className={cn(
-                                  buttonVariants({
-                                    variant: "ghost",
-                                    size: "icon",
-                                  }),
-                                  "order-last ml-auto h-7 w-7",
-                                )}
-                              >
-                                <Icons.dotsHorizontal className="h-4 w-4" />
-                              </Link>
                             </AccordionTrigger>
                             <AccordionContent key={team.id} className="pt-1">
                               <div className="ml-3 flex gap-1">
