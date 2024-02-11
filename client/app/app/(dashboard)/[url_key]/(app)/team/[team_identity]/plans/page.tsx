@@ -1,25 +1,17 @@
-import { columns } from "@/components/plan/table/columns";
-import { DataTable } from "@/components/plan/table/data-table";
 import {
   PageHeader,
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/components/page-header";
+import { columns } from "@/components/plan/table/columns";
+import { DataTable } from "@/components/plan/table/data-table";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-
-import { cookies } from "next/headers";
-import { createClient } from "@/lib/supabase/server";
-import { getTeamByIdentity } from "@/lib/service/team/fetch";
-import { redirect } from "next/navigation";
-import { getPlans } from "@/lib/service/plan/fetch";
 import { Shell } from "@/components/shells";
+import { getPlans } from "@/lib/service/plan/fetch";
+import { getTeamByIdentity } from "@/lib/service/team/fetch";
+import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 interface DashboardLayoutProps {
   params: {
     team_identity: string;
@@ -53,7 +45,7 @@ export default async function DashboardPage({
     count,
   } = await getPlans({
     team_id: team.id,
-    supabase,
+    client: supabase,
     range: { start: offset, end: offset + limit * 2 },
   });
 
