@@ -45,9 +45,9 @@ export default async function DashboardLayout({
               <Sidebar params={params} />
               <Resizable defaultLayout={defaultLayout}>
                 <ScrollArea className="h-screen ">
-                  <div className="flex h-11 items-center border-b bg-background/30 p-2 backdrop-blur-[2px]">
+                  {/* <div className="flex h-11 items-center border-b bg-background/30 p-2 backdrop-blur-[2px]">
                     <Breadcrumb />
-                  </div>
+                  </div> */}
 
                   {children}
                 </ScrollArea>
@@ -58,7 +58,4 @@ export default async function DashboardLayout({
       </DotPattern>
     </SidebarProvider>
   );
-}
-{
-  /* <div class="absolute top-0 z-[-2] h-screen w-screen bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px]"></div> */
 }
