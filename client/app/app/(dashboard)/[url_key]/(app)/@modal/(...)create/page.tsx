@@ -1,5 +1,5 @@
 "use client";
-import { FC } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -8,27 +8,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 import { CreateWorspaceForm } from "@/components/workspace/workspace-create";
-
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-import useWindowSize from "@/lib/hooks/use-window-size";
+import { useRouter } from "next/navigation";
+import { FC } from "react";
 
 interface pageProps {}
 
 const CreateWorkspaceModal: FC<pageProps> = ({}) => {
   const router = useRouter();
-  const { isMobile } = useWindowSize();
 
   return (
     <Dialog defaultOpen={true} modal={true} onOpenChange={() => router.back()}>
