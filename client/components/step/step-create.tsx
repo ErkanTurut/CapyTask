@@ -33,7 +33,13 @@ const StepCreate: FC<StepCreateProps> = ({ plan_id, className }) => {
   const { run, isLoading } = useAction(createStep, {
     onSuccess: (data) => {
       toast.success("Team created successfully");
-      form.reset();
+      form.reset({
+        description: "",
+        name: "",
+        order: undefined,
+        parent_id: undefined,
+        plan_id: plan_id,
+      });
       router.refresh();
     },
     onError: (err) => {
@@ -45,7 +51,7 @@ const StepCreate: FC<StepCreateProps> = ({ plan_id, className }) => {
   const form = useForm<TCreateStep>({
     resolver: zodResolver(ZCreateStep),
     defaultValues: {
-      description: undefined,
+      description: "",
       name: "",
       order: undefined,
       parent_id: undefined,
