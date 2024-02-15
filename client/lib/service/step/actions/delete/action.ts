@@ -4,22 +4,19 @@ import { createSafeAction } from "@/lib/safe-action";
 import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { ZCreateStep } from "./schema";
-import { ReturnType, TCreateStep } from "./types";
+import { ZDeleteStep } from "./schema";
+import { ReturnType, TDeleteStep } from "./types";
 
-const handler = async (data: TCreateStep): Promise<ReturnType> => {
+const handler = async (data: TDeleteStep): Promise<ReturnType> => {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  if (!session) {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
     return redirect("/login");
   }
-  const { data: steps, error } = await supabase
-    .from("step")
-    .insert(data)
-    .select("*");
+  const { error } = await supabase.from("step").delete().eq("id", data.id);
 
   if (error) {
     return {
@@ -29,8 +26,10 @@ const handler = async (data: TCreateStep): Promise<ReturnType> => {
   // revalidateTag(`${data.plan_id}-steps`);
 
   return {
-    data: steps,
+    data: {
+      success: true,
+    },
   };
 };
 
-export const createStep = createSafeAction(ZCreateStep, handler);
+export const deleteStep = createSafeAction(ZDeleteStep, handler);
