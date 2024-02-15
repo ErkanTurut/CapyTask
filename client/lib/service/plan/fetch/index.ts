@@ -13,26 +13,42 @@ import { sleep } from "@/lib/utils";
 
 export async function getPlans({
   team_id,
-  client,
+  db,
   range,
 }: {
   team_id: string;
-  client: SupabaseClient;
+  db: SupabaseClient;
   range: { start: number; end: number };
 }) {
-  return await client
+  return await db
     .from("plan")
     .select("*", { count: "estimated" })
     .eq("team_id", team_id)
     .range(range.start, range.end);
 }
 
+export async function getPlansByIdentity({
+  team_identity,
+  db,
+  range,
+}: {
+  team_identity: string;
+  db: SupabaseClient;
+  range: { start: number; end: number };
+}) {
+  return await db
+    .from("plan")
+    .select("*, team!inner(*)")
+    .eq("team.identity", team_identity)
+    .range(range.start, range.end);
+}
+
 export async function getPlan({
   plan_id,
-  client,
+  db,
 }: {
   plan_id: string;
-  client: SupabaseClient;
+  db: SupabaseClient;
 }) {
-  return await client.from("plan").select("*").eq("id", plan_id).single();
+  return await db.from("plan").select("*").eq("id", plan_id).single();
 }
