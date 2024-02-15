@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ResponsiveCard } from "../_components/responsive-card";
+import { ResponsiveCard } from "@/components/responsive-card";
 
 interface CreatePageProps {
   params: {
@@ -26,7 +26,6 @@ export default async function CreatePage({
         <CardTitle>Create step</CardTitle>
         <CardDescription>Create step</CardDescription>
       </CardHeader>
-
       <CardContent>
         <StepCreate plan_id={params.plan_id} />
       </CardContent>
