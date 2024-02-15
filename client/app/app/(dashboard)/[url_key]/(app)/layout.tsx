@@ -15,7 +15,6 @@ import { Breadcrumb } from "@/components/layouts/breadcrumb";
 import useCookie from "@/lib/hooks/use-cookie";
 interface DashboardLayoutProps {
   children: React.ReactNode;
-  modal: React.ReactNode;
   params: {
     url_key: string;
   };
@@ -24,7 +23,6 @@ interface DashboardLayoutProps {
 export default async function DashboardLayout({
   children,
   params,
-  modal,
 }: DashboardLayoutProps) {
   const layout = cookies().get("react-resizable-panels:layout");
   const collapsed = cookies().get("react-resizable-panels:collapsed");
@@ -39,7 +37,6 @@ export default async function DashboardLayout({
     <SidebarProvider isCollapsed={defaultCollapsed || false}>
       <DotPattern className="absolute top-0 z-[-2] h-screen w-screen bg-background  ">
         <div className="min-h-screen">
-          {modal}
           <TooltipProvider delayDuration={0}>
             <ResizableGroup>
               <Sidebar params={params} />
