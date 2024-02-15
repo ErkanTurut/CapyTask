@@ -30,9 +30,8 @@ export async function GET(request: Request) {
 
     const { error, data } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
-      return NextResponse.redirect(`${origin}${next}`);
+      return NextResponse.redirect(`http://app.localhost:3000${next}`);
     }
-    return NextResponse.json(error);
   }
 
   // return the user to an error page with instructions
