@@ -7,11 +7,13 @@ import { columns } from "@/components/plan/table/columns";
 import { DataTable } from "@/components/plan/table/data-table";
 
 import { Shell } from "@/components/shells";
-import { getPlans } from "@/lib/service/plan/fetch";
+import { getPlans, getPlansByIdentity } from "@/lib/service/plan/fetch";
 import { getTeamByIdentity } from "@/lib/service/team/fetch";
 import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import prisma from "@/lib/prisma";
+
 interface DashboardLayoutProps {
   params: {
     team_identity: string;
@@ -25,11 +27,6 @@ export default async function DashboardPage({
 }: DashboardLayoutProps) {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
-  const { data: team } = await getTeamByIdentity({
-    identity: params.team_identity,
-    supabase,
-  });
-  if (!team) return redirect("/404");
 
   const page = searchParams["page"]
     ? parseInt(searchParams["page"] as string)
@@ -39,13 +36,9 @@ export default async function DashboardPage({
     : 10;
   const offset = (page - 1) * limit;
 
-  const {
-    data: plans,
-    error,
-    count,
-  } = await getPlans({
-    team_id: team.id,
-    client: supabase,
+  const { data: plans, count } = await getPlansByIdentity({
+    team_identity: params.team_identity,
+    db: supabase,
     range: { start: offset, end: offset + limit * 2 },
   });
 
