@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 // import { type Product } from "@/db/schema"
 
 import { cn } from "@/lib/utils";
-import { useDebounce } from "@/lib/hooks/use-debounce";
+import useDebounce from "@/lib/hooks/use-debounce";
 import { Button } from "@/components/ui/button";
 import {
   CommandDialog,
