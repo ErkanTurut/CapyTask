@@ -20,7 +20,6 @@ import { Icons } from "@/components/icons";
 import { Input } from "@/components/ui/input";
 import StepList from "@/components/step/step-list";
 import { getSteps } from "@/lib/service/step/fetch";
-import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import CardSkeleton from "@/components/skeletons/card-skeleton";
 
@@ -41,12 +40,6 @@ export default async function layoutPage({
 }: layoutProps) {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
-  const { data: plan } = await getPlan({
-    plan_id: params.plan_id,
-    db: supabase,
-  });
-
-  // redirect(`./${steps[0].id}`);
 
   return (
     <>
@@ -71,10 +64,6 @@ export default async function layoutPage({
               plan_id: params.plan_id,
               client: supabase,
             });
-
-            if (!plan) {
-              return notFound();
-            }
 
             return (
               <Card className="sticky top-4 h-min">
