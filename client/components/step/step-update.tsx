@@ -33,7 +33,7 @@ interface StepUpdateFormProps extends React.HTMLAttributes<HTMLFormElement> {
 const StepUpdateForm: FC<StepUpdateFormProps> = ({ step, className }) => {
   const { run, isLoading } = useAction(updateStep, {
     onSuccess: (data) => {
-      toast.success("Team created successfully");
+      toast.success("Step created successfully");
       form.reset({
         name: data.name,
         description: data.description || "",
