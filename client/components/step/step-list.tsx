@@ -58,6 +58,7 @@ const StepList: React.FC<StepListProps> = ({ steps }) => {
       });
     },
     3000,
+    {},
   );
 
   useEffect(() => {
