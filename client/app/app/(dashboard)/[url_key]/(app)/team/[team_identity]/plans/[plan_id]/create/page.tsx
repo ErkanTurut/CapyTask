@@ -16,10 +16,7 @@ interface CreatePageProps {
   searchParams: { [key: string]: string | string[] | undefined };
 }
 
-export default async function CreatePage({
-  params,
-  searchParams,
-}: CreatePageProps) {
+export default async function CreatePage({ params }: CreatePageProps) {
   return (
     <ResponsiveCard>
       <CardHeader>
