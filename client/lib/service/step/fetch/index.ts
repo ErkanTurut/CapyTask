@@ -14,7 +14,11 @@ export async function getSteps({
   plan_id: string;
   client: SupabaseClient;
 }) {
-  return await client.from("step").select("*").eq("plan_id", plan_id);
+  return await client
+    .from("step")
+    .select("*")
+    .order("order")
+    .eq("plan_id", plan_id);
 }
 
 export async function getStep({
