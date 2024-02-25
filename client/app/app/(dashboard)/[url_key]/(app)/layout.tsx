@@ -13,6 +13,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import DotPattern from "@/components/dot-pattern";
 import { Breadcrumb } from "@/components/layouts/breadcrumb";
 import useCookie from "@/lib/hooks/use-cookie";
+import Toolbar from "@/components/layouts/toolbar/top-toolbar";
 interface DashboardLayoutProps {
   children: React.ReactNode;
   params: {
@@ -42,9 +43,7 @@ export default async function DashboardLayout({
               <Sidebar params={params} />
               <Resizable defaultLayout={defaultLayout}>
                 <ScrollArea className="h-screen ">
-                  {/* <div className="flex h-11 items-center border-b bg-background/30 p-2 backdrop-blur-[2px]">
-                    <Breadcrumb />
-                  </div> */}
+                  <Toolbar />
 
                   {children}
                 </ScrollArea>

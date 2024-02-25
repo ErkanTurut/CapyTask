@@ -6,7 +6,7 @@ import WorkspaceNav from "@/components/workspace/workspace-navigation";
 import WorkspaceSkeleton from "@/components/workspace/workspace-skeleton";
 import { appNavItems } from "@/config/dashboard.config";
 import { cookies } from "next/headers";
-import { FC, Suspense } from "react";
+import { FC, Suspense, useId } from "react";
 import {
   SidebarBody,
   SidebarFooter,
@@ -24,6 +24,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import TeamListSkeleton from "@/components/team/team-list-skeleton";
 import { Skeleton } from "@/components/ui/skeleton";
+import { generateAvatar } from "@/lib/utils";
 
 interface sidebarProps {
   params: {
@@ -36,6 +37,7 @@ const Sidebar: FC<sidebarProps> = async ({ params }) => {
   const supabase = createClient(cookieStore);
   const layout = cookies().get("react-resizable-panels:layout");
   const collapsed = cookies().get("react-resizable-panels:collapsed");
+
   const defaultLayout = layout
     ? (JSON.parse(layout.value) as number[])
     : undefined;
@@ -70,44 +72,41 @@ const Sidebar: FC<sidebarProps> = async ({ params }) => {
       className="hidden h-screen bg-background md:flex"
     >
       <div>
-        <SidebarHeader className="grid gap-1 p-2">
+        <SidebarHeader className="flex flex-col gap-2 p-2">
           <Suspense fallback={<WorkspaceSkeleton />}>
             <WorkspaceNav workspaces={workspaces} workspace={workspace} />
           </Suspense>
           <Nav rootPath={`/${params.url_key}`} items={appNavItems.header} />
           <Separator />
         </SidebarHeader>
-        <SidebarBody className="px-2">
+        <SidebarBody className="flex flex-col gap-2 overflow-x-auto overflow-ellipsis whitespace-nowrap	 p-2	">
           <Suspense fallback={<TeamListSkeleton />}>
             {(async () => {
               const { data: teams } = await getTeams({
                 supabase,
                 workspace_id: workspace.id,
               });
+
               return (
-                <TeamList
-                  rootPath={`/${params.url_key}/team`}
+                <Nav
+                  size={"sm"}
                   items={[
                     {
-                      title: "Members",
-                      icon: "user",
-                      variant: "ghost",
-                      href: "/members",
-                    },
-                    {
-                      title: "Plans",
-                      icon: "route",
-                      variant: "ghost",
-                      href: "/plans",
-                    },
-                    {
-                      title: "Repports",
-                      icon: "fileText",
-                      variant: "ghost",
-                      href: "/repports",
+                      title: "Teams",
+                      icon: "plusCircled",
+                      id: "all",
+                      items: teams?.map((team) => ({
+                        image_url: generateAvatar({
+                          name: team.name,
+                        }).image_url,
+                        title: team.name,
+                        href: `/${team.identity}`,
+                        items: appNavItems.teamNav,
+                        id: team.id,
+                      })),
                     },
                   ]}
-                  teams={teams}
+                  rootPath={`/${params.url_key}/team`}
                 />
               );
             })()}
