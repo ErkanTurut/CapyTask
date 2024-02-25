@@ -29,7 +29,7 @@ interface UserAccountNavProps
 }
 
 const UserAccountNav: FC<UserAccountNavProps> = ({ className, user }) => {
-  const { image_uri, initials } = generateAvatar({
+  const { image_url, initials } = generateAvatar({
     first_name: user.first_name,
     last_name: user.last_name,
     email: user.email,
@@ -53,7 +53,7 @@ const UserAccountNav: FC<UserAccountNavProps> = ({ className, user }) => {
         >
           <Avatar className={cn("h-6 w-6")}>
             <AvatarImage
-              src={user.image_uri || image_uri}
+              src={user.image_uri || image_url}
               alt={user.first_name ?? ""}
             />
             <AvatarFallback>{initials}</AvatarFallback>
