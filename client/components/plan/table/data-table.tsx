@@ -25,14 +25,14 @@ import {
   TableRow,
 } from "@/ui/table";
 
-import { DataTablePagination } from "./data-table-pagination";
+import { DataTablePagination } from "@/components/table/data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { Database } from "@/types/supabase.types";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<Database["public"]["Tables"]["plan"]["Row"], TValue>[];
-  data: Database["public"]["Tables"]["plan"]["Row"][];
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
   count: number;
 }
 

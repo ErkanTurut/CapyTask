@@ -5,7 +5,7 @@ import { Icons } from "@/components/icons";
 
 import { Button, buttonVariants } from "@/ui/button";
 import { Input } from "@/ui/input";
-import { DataTableViewOptions } from "./data-table-view-options";
+import { DataTableViewOptions } from "@/components/table/data-table-view-options";
 
 import { priorities, statuses } from "./data";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
@@ -14,7 +14,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 interface DataTableToolbarProps<TData> {
-  table: Table<Database["public"]["Tables"]["plan"]["Row"]>;
+  table: Table<TData>;
 }
 
 export function DataTableToolbar<TData>({

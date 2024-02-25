@@ -5,13 +5,9 @@ import { cn } from "@/lib/utils";
 import { Database } from "@/types/supabase.types";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
-import { DataTableColumnHeader } from "./data-table-column-header";
-import { DataTableRowActions } from "./data-table-row-actions";
+import { DataTableColumnHeader } from "@/components/table/data-table-column-header";
+import { DataTableRowActions } from "@/components/table/data-table-row-actions";
 import { usePathname } from "next/navigation";
-
-export interface tableProps {
-  columns: Database["public"]["Tables"]["plan"]["Row"][];
-}
 
 export const columns: ColumnDef<Database["public"]["Tables"]["plan"]["Row"]>[] =
   [
@@ -38,7 +34,10 @@ export const columns: ColumnDef<Database["public"]["Tables"]["plan"]["Row"]>[] =
     },
     {
       accessorKey: "description",
-      header: "Description",
+      header: ({ column }) => {
+        return <DataTableColumnHeader column={column} title="Description" />;
+      },
+      enableSorting: false,
     },
     {
       accessorKey: "created_at",
