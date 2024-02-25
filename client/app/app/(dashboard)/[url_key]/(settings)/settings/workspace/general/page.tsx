@@ -41,7 +41,7 @@ export default async function workspaceGeneralPage({
   if (!workspace) {
     redirect("/404");
   }
-  const { image_uri, initials } = generateAvatar({
+  const { image_url, initials } = generateAvatar({
     name: workspace.name,
   });
   return (
@@ -57,7 +57,7 @@ export default async function workspaceGeneralPage({
         <PageHeaderHeading size="sm" className="flex items-center gap-1">
           <Avatar className="h-10 w-10 rounded-sm  border-primary">
             <AvatarImage
-              src={workspace.image_uri || image_uri}
+              src={workspace.image_uri || image_url}
               alt={workspace.url_key}
             />
             <AvatarFallback className="h-5 w-5 rounded-sm">
