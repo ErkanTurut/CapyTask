@@ -24,10 +24,10 @@ import { createStep } from "@/lib/service/step/actions";
 import { TCreateStep, ZCreateStep } from "@/lib/service/step/actions/create";
 import { useRouter } from "next/navigation";
 interface StepCreateProps extends React.HTMLAttributes<HTMLFormElement> {
-  plan_id: string;
+  team_id: string;
 }
 
-const StepCreate: FC<StepCreateProps> = ({ plan_id, className }) => {
+const CreateStepForm: FC<StepCreateProps> = ({ team_id, className }) => {
   const router = useRouter();
 
   const { run, isLoading } = useAction(createStep, {
@@ -38,7 +38,7 @@ const StepCreate: FC<StepCreateProps> = ({ plan_id, className }) => {
         name: "",
         order: undefined,
         parent_id: undefined,
-        plan_id: plan_id,
+        team_id: team_id,
       });
       router.refresh();
     },
@@ -55,7 +55,7 @@ const StepCreate: FC<StepCreateProps> = ({ plan_id, className }) => {
       name: "",
       order: undefined,
       parent_id: undefined,
-      plan_id: plan_id,
+      team_id: team_id,
     },
   });
 
@@ -75,7 +75,7 @@ const StepCreate: FC<StepCreateProps> = ({ plan_id, className }) => {
             <FormItem>
               <FormLabel>Step name</FormLabel>
               <FormControl>
-                <Input placeholder="example" {...field} />
+                <Input autoFocus placeholder="example" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -96,27 +96,13 @@ const StepCreate: FC<StepCreateProps> = ({ plan_id, className }) => {
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="plan_id"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input type="hidden" {...field} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-
-        {form.formState.isDirty && (
-          <Button isLoading={isLoading}>
-            Create now
-            <span className="sr-only">Create now</span>
-          </Button>
-        )}
+        <Button isLoading={isLoading}>
+          Create now
+          <span className="sr-only">Create now</span>
+        </Button>
       </form>
     </Form>
   );
 };
 
-export default StepCreate;
+export default CreateStepForm;

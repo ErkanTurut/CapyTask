@@ -24,9 +24,14 @@ import { useRouter } from "next/navigation";
 
 interface StepDeleteFormProps extends React.HTMLAttributes<HTMLFormElement> {
   step: Database["public"]["Tables"]["step"]["Row"];
+  size?: "default" | "icon";
 }
 
-const StepDeleteForm: FC<StepDeleteFormProps> = ({ step, className }) => {
+const StepDeleteForm: FC<StepDeleteFormProps> = ({
+  step,
+  className,
+  size = "default",
+}) => {
   const router = useRouter();
 
   const { run, isLoading } = useAction(deleteStep, {
@@ -78,9 +83,9 @@ const StepDeleteForm: FC<StepDeleteFormProps> = ({ step, className }) => {
             </FormItem>
           )}
         />
-        <Button variant={"destructive"} isLoading={isLoading}>
+        <Button size={size} variant={"destructive"} isLoading={isLoading}>
           <Icons.trash />
-          Delete the step
+          {size === "default" && "Delete the step"}
           <span className="sr-only"> Delete the step </span>
         </Button>
       </form>

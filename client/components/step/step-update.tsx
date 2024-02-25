@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Database } from "@/types/supabase.types";
-import React, { FC, useEffect } from "react";
+import React, { FC, use, useEffect } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -31,6 +31,14 @@ interface StepUpdateFormProps extends React.HTMLAttributes<HTMLFormElement> {
 }
 
 const StepUpdateForm: FC<StepUpdateFormProps> = ({ step, className }) => {
+  useEffect(() => {
+    form.reset({
+      name: step.name,
+      description: step.description || "",
+      id: step.id,
+    });
+  }, [step]);
+
   const { run, isLoading } = useAction(updateStep, {
     onSuccess: (data) => {
       toast.success("Step created successfully");
@@ -59,14 +67,6 @@ const StepUpdateForm: FC<StepUpdateFormProps> = ({ step, className }) => {
     await run(data);
   }
 
-  useEffect(() => {
-    form.reset({
-      name: step.name,
-      description: step.description || "",
-      id: step.id,
-    });
-  }, [step]);
-
   return (
     <Form {...form}>
       <form
@@ -91,7 +91,7 @@ const StepUpdateForm: FC<StepUpdateFormProps> = ({ step, className }) => {
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Team name</FormLabel>
+              <FormLabel>Team description</FormLabel>
               <FormControl>
                 <Input placeholder="example" {...field} />
               </FormControl>
@@ -110,6 +110,7 @@ const StepUpdateForm: FC<StepUpdateFormProps> = ({ step, className }) => {
             </FormItem>
           )}
         />
+
         {form.formState.isDirty && (
           <Button isLoading={isLoading}>
             Update now
