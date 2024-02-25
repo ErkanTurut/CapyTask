@@ -189,9 +189,9 @@ export function generateAvatar({
     initials = `${first_name.charAt(0) ?? ""}${last_name.charAt(0) ?? ""}`;
   }
 
-  let image_uri = `https://avatar.vercel.sh/${input}.svg${
+  let image_url = `https://avatar.vercel.sh/${input}.svg${
     withFallback ? `?text=${initials}` : ""
   }${size ? `&size=${size}` : ""}`;
 
-  return { image_uri, initials };
+  return { image_url, initials };
 }
