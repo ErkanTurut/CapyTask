@@ -30,6 +30,9 @@ const handler = async (data: TUpdateStep): Promise<ReturnType> => {
       error: error.message,
     };
   }
+
+  revalidatePath("/app/team/[team_identity]/templates/steps/[step_id]");
+
   return {
     data: step,
   };

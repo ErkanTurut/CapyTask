@@ -23,5 +23,5 @@ export const ZUpdateStep = z.object({
       message: "Description must be less than 500 characters long",
     })
     .optional(),
-  order: z.number().optional(),
+  order: z.number().positive().nullish(),
 });
