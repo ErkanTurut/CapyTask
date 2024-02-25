@@ -7,7 +7,7 @@ import { createSafeAction } from "@/lib/safe-action";
 import { ZUpsertStep } from "./schema";
 import { redirect } from "next/navigation";
 
-const handler = async (data: TUpsertStep[]): Promise<ReturnType> => {
+const handler = async (data: TUpsertStep): Promise<ReturnType> => {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
   const {
