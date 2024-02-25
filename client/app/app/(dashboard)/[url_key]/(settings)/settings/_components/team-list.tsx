@@ -67,7 +67,7 @@ export function TeamList({
               {teams &&
                 teams.length > 0 &&
                 teams.map((team, index) => {
-                  const { image_uri, initials } = generateAvatar({
+                  const { image_url, initials } = generateAvatar({
                     name: team.name,
                   });
                   return (
@@ -86,7 +86,7 @@ export function TeamList({
                         >
                           <Avatar className={cn("h-5 w-5 rounded-sm")}>
                             <AvatarImage
-                              src={team.image_uri || image_uri}
+                              src={team.image_uri || image_url}
                               alt={team.name ?? ""}
                             />
                             <AvatarFallback>{initials}</AvatarFallback>
@@ -138,7 +138,7 @@ export function TeamList({
                   <AccordionContent>
                     <Accordion type="single" collapsible>
                       {teams.map((team, index) => {
-                        const { image_uri, initials } = generateAvatar({
+                        const { image_url, initials } = generateAvatar({
                           name: team.name,
                         });
                         return (
@@ -155,7 +155,7 @@ export function TeamList({
                             >
                               <Avatar className="h-5 w-5 rounded-sm">
                                 <AvatarImage
-                                  src={team.image_uri || image_uri}
+                                  src={team.image_uri || image_url}
                                   alt={team.name ?? ""}
                                 />
                                 <AvatarFallback>{initials}</AvatarFallback>
