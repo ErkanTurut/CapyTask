@@ -23,7 +23,7 @@ const buttonVariants = cva(
       },
       size: {
         default: "h-9 px-4 py-2",
-        sm: "h-7 rounded-sm px-3 text-xs",
+        sm: "h-7 rounded-sm px-3 py-1 text-xs",
         lg: "h-10 rounded-md px-8",
         icon: "h-9 w-9",
       },
@@ -63,7 +63,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={isLoading}
         {...props}
       >
-        {isLoading ? (
+        {isLoading && size !== "icon" ? (
           <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
         ) : null}
         {children}
