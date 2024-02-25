@@ -1,6 +1,7 @@
 import { type SidebarNavItem, type SettingsNavItem } from "@/types";
 import { Database } from "@/types/supabase.types";
 import { NavItem } from "@/types";
+import { useId } from "react";
 
 export interface TDashboardConfig {
   sidebarNav: {
@@ -22,6 +23,7 @@ export const appNavItems: {
   header: NavItem[];
   main: NavItem[];
   footer: NavItem[];
+  teamNav: NavItem[];
 } = {
   isCollapsed: false,
   header: [
@@ -29,24 +31,65 @@ export const appNavItems: {
       title: "Research",
       href: "/research",
       icon: "search",
+      id: "research",
     },
     {
       title: "Account",
       href: "/account",
       icon: "user",
+      id: "account",
     },
   ],
   main: [],
+  teamNav: [
+    {
+      title: "Members",
+      icon: "user",
+      variant: "ghost",
+      href: "/members",
+      id: "members",
+    },
+    {
+      title: "Templates",
+      icon: "dashboard",
+      variant: "ghost",
+      href: "/templates",
+      id: "templates",
+      items: [
+        {
+          title: "Work plans",
+          href: "/plans",
+          variant: "ghost",
+          id: "plans",
+        },
+        {
+          title: "Steps",
+          href: "/steps",
+          variant: "ghost",
+          id: "steps",
+        },
+      ],
+    },
+    {
+      title: "Repports",
+      icon: "fileText",
+      variant: "ghost",
+      href: "/repports",
+      id: "repports",
+    },
+  ],
   footer: [
     {
       title: "Notifications",
       href: "/",
       icon: "bell",
+      id: "notifications",
     },
     {
       title: "Back to website",
       href: "/",
       icon: "externalLink",
+      id: "back-to-website",
     },
   ],
 };
@@ -61,6 +104,7 @@ export const settingsNavItems: {
       title: "Settings",
       icon: "chevronLeft",
       href: "/",
+      id: "settings",
     },
   ],
   main: [
@@ -68,218 +112,60 @@ export const settingsNavItems: {
       title: "Account",
       icon: "user",
       href: "/account",
+      id: "account",
       items: [
         {
           title: "Profile",
           href: "/profile",
+          id: "profile",
         },
         {
           title: "Security",
           href: "/security",
+          id: "security",
         },
         {
           title: "Preferences",
           href: "/preferences",
+          id: "preferences",
         },
       ],
     },
     {
       title: "Your teams",
       href: "/team",
+      id: "team",
       items: [
         {
           title: "Your teams",
           href: "/all",
+          id: "all",
         },
         {
           title: "Create a team",
           icon: "plusCircled",
           href: "/create",
+          id: "create",
         },
       ],
     },
     {
       title: "Workspace",
       href: "/workspace",
+      id: "workspace",
       items: [
         {
           title: "General",
           href: "/general",
+          id: "general",
         },
         {
           title: "Billing",
           href: "/billing",
+          id: "billing",
         },
       ],
     },
   ],
   footer: [],
 };
-
-export const dashboardConfig: TDashboardConfig = {
-  sidebarNav: {
-    isCollapsed: false,
-    header: [
-      {
-        title: "Research",
-        href: "/research",
-        icon: "search",
-        items: [],
-        variant: "ghost",
-      },
-      {
-        title: "Account",
-        href: "/account/settings",
-        icon: "user",
-        items: [],
-        variant: "ghost",
-      },
-    ],
-    main: [
-      {
-        label: "Teams",
-        title: "Your teams",
-        icon: "moon",
-        items: [],
-        variant: "ghost",
-      },
-    ],
-    footer: [
-      {
-        title: "Notifications",
-        href: "/",
-        icon: "bell",
-        items: [],
-        variant: "ghost",
-      },
-      {
-        title: "Back to website",
-        href: "/",
-        icon: "externalLink",
-        items: [],
-        variant: "ghost",
-      },
-    ],
-  },
-
-  // settingsNav: {
-  //   isCollapsed: false,
-  //   items: [
-  //     {
-  //       title: "Account",
-  //       href: "/account/settings",
-  //       items: [],
-  //       variant: "ghost",
-  //     },
-  //   ],
-  // },
-};
-
-// sidebarNav: {
-//   header: [
-//     {
-//       items: [
-//         {
-//           title: "Research",
-//           href: "/research",
-//           icon: "search",
-//           items: [],
-//         },
-//         {
-//           title: "Account",
-//           href: "/account/settings",
-//           icon: "user",
-//           items: [],
-//         },
-//       ],
-//     },
-//   ],
-//   main: [
-//     {
-//       label: "Your teams",
-//       items: [],
-//     },
-//   ],
-//   footer: [
-//     {
-//       items: [
-//         {
-//           title: "Notifications",
-//           href: "/",
-//           icon: "bell",
-//           items: [],
-//         },
-//         {
-//           title: "Back to website",
-//           href: "/",
-//           icon: "externalLink",
-//           items: [],
-//         },
-//       ],
-//     },
-//   ],
-// },
-// settingsNav: {
-//   header: [
-//     {
-//       label: "Settings",
-//       icon: "chevronLeft",
-//       href: "/",
-//       items: [],
-//     },
-//   ],
-//   main: [
-//     {
-//       label: "Account",
-//       href: "/settings/account",
-//       items: [
-//         {
-//           title: "Profile",
-//           href: "/settings/account/profile",
-//           items: [],
-//         },
-//         {
-//           title: "Security",
-//           href: "/settings/account/security",
-//           items: [],
-//         },
-//         {
-//           title: "Preferences",
-//           href: "/settings/account/preferences",
-//           items: [],
-//         },
-//       ],
-//     },
-//     {
-//       label: "Teams",
-//       items: [
-//         {
-//           title: "Your teams",
-//           href: "/settings/teams",
-//           items: [],
-//         },
-//         {
-//           title: "Create a team",
-//           icon: "plusCircled",
-//           href: "/settings/teams/create",
-//           items: [],
-//         },
-//       ],
-//     },
-//     {
-//       label: "Workspace",
-//       items: [
-//         {
-//           title: "General",
-//           href: "/settings/workspace/general",
-//           items: [],
-//         },
-//         {
-//           title: "Billing",
-//           href: "/settings/workspace/billing",
-//           items: [],
-//         },
-//       ],
-//     },
-//   ],
-// },
