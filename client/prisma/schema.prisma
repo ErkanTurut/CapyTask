@@ -9,20 +9,18 @@ datasource db {
 }
 
 model user {
-  id              String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  image_uri       String?
-  email           String            @unique
-  first_name      String?
-  last_name       String?
-  createdAt       DateTime          @default(now()) @db.Timestamptz(6)
-  updatedAt       DateTime          @default(now()) @updatedAt @db.Timestamptz(6)
-  external_id     String?           @unique @db.Uuid
-  inspection      inspection[]
-  inspection_step inspection_step[]
-  steps           step[]
-  user_team       user_team[]
-  user_workspace  user_workspace[]
-  workspaces      workspace[]
+  id             String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  image_uri      String?
+  email          String           @unique
+  first_name     String?
+  last_name      String?
+  createdAt      DateTime         @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime         @default(now()) @updatedAt @db.Timestamptz(6)
+  external_id    String?          @unique @db.Uuid
+  steps          step[]
+  user_team      user_team[]
+  user_workspace user_workspace[]
+  workspaces     workspace[]
 }
 
 model team {
@@ -37,54 +35,27 @@ model team {
   plans        plan[]
   workspace    workspace   @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
   users        user_team[]
+  step         step[]
 
   @@unique([identity, workspace_id])
   @@unique([name, workspace_id])
   @@index([workspace_id])
 }
 
-model role {
+model workspace {
   id             String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name           Role
-  description    String
-  permissions    Permission[]     @default([])
-  user_team      user_team[]
-  user_workspace user_workspace[]
-}
-
-model plan {
-  id            String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name          String
-  description   String?
-  created_at    DateTime          @default(now()) @db.Timestamptz(6)
-  updated_at    DateTime          @default(now()) @updatedAt @db.Timestamptz(6)
-  team_id       String            @db.Uuid
-  inspection    inspection[]
-  step_snapshot inspection_step[]
-  team          team              @relation(fields: [team_id], references: [id], onDelete: Cascade)
-  steps         step[]
-
-  @@index([team_id])
-}
-
-model step {
-  id             String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name           String
   description    String?
-  plan_id        String   @db.Uuid
-  created_at     DateTime @default(now()) @db.Timestamptz(6)
-  updated_at     DateTime @default(now()) @updatedAt @db.Timestamptz(6)
-  parent_step_id String?  @db.Uuid
-  created_by_id  String?  @db.Uuid
-  order          Int?
-  created_by     user?    @relation(fields: [created_by_id], references: [id])
-  parent_step    step?    @relation("step_sub_steps", fields: [parent_step_id], references: [id], onDelete: Cascade)
-  sub_steps      step[]   @relation("step_sub_steps")
-  plan           plan     @relation(fields: [plan_id], references: [id], onDelete: Cascade)
+  created_at     DateTime         @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime         @default(now()) @updatedAt @db.Timestamptz(6)
+  url_key        String           @unique
+  created_by     String           @db.Uuid
+  image_uri      String?
+  team           team[]
+  user_workspace user_workspace[]
+  user           user             @relation(fields: [created_by], references: [id])
 
-  @@unique([plan_id, order, id])
-  @@index([parent_step_id])
-  @@index([created_by_id])
+  @@index([url_key])
 }
 
 model user_team {
@@ -115,57 +86,65 @@ model user_workspace {
   @@index([role_id])
 }
 
-model workspace {
+model role {
   id             String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name           String
-  description    String?
-  created_at     DateTime         @default(now()) @db.Timestamptz(6)
-  updated_at     DateTime         @default(now()) @updatedAt @db.Timestamptz(6)
-  url_key        String           @unique
-  created_by     String           @db.Uuid
-  image_uri      String?
-  team           team[]
+  name           Role
+  description    String
+  permissions    Permission[]     @default([])
+  user_team      user_team[]
   user_workspace user_workspace[]
-  user           user             @relation(fields: [created_by], references: [id])
-
-  @@index([url_key])
 }
 
-model inspection {
-  id              String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  created_at      DateTime          @default(now()) @db.Timestamptz(6)
-  updated_at      DateTime          @default(now()) @updatedAt @db.Timestamptz(6)
-  completed_at    DateTime?
-  created_by_id   String?           @db.Uuid
-  plan_id         String            @db.Uuid
-  priority        Priority          @default(LOW)
-  status          Status            @default(OPEN)
-  user            user?             @relation(fields: [created_by_id], references: [id])
-  plan            plan              @relation(fields: [plan_id], references: [id], onDelete: Cascade)
-  inspection_step inspection_step[]
+model plan {
+  id          String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name        String
+  description String?
+  created_at  DateTime    @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime    @default(now()) @updatedAt @db.Timestamptz(6)
+  team_id     String      @db.Uuid
+  team        team        @relation(fields: [team_id], references: [id], onDelete: Cascade)
+  plan_step   plan_step[]
+
+  @@index([team_id])
 }
 
-model inspection_step {
-  id             String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+model step {
+  id             String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name           String
   description    String?
-  created_at     DateTime          @default(now()) @db.Timestamptz(6)
-  updated_at     DateTime          @default(now()) @updatedAt @db.Timestamptz(6)
-  parent_step_id String?           @db.Uuid
-  created_by_id  String?           @db.Uuid
-  plan_id        String            @db.Uuid
-  status         Status
-  priority       Priority
-  inspection_id  String?           @db.Uuid
-  created_by     user?             @relation(fields: [created_by_id], references: [id])
-  inspection     inspection?       @relation(fields: [inspection_id], references: [id])
-  parent_step    inspection_step?  @relation("step_sub_steps", fields: [parent_step_id], references: [id], onDelete: Cascade)
-  sub_steps      inspection_step[] @relation("step_sub_steps")
-  plan           plan              @relation(fields: [plan_id], references: [id], onDelete: Cascade)
+  created_at     DateTime @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  parent_step_id String?  @db.Uuid
+  created_by_id  String?  @db.Uuid
+  team_id        String   @db.Uuid
+  team           team     @relation(fields: [team_id], references: [id], onDelete: Cascade)
+
+  created_by  user?       @relation(fields: [created_by_id], references: [id])
+  parent_step step?       @relation("step_sub_steps", fields: [parent_step_id], references: [id], onDelete: Cascade)
+  sub_steps   step[]      @relation("step_sub_steps")
+  plan_step   plan_step[]
 
   @@index([parent_step_id])
   @@index([created_by_id])
+  @@index([team_id])
 }
+
+model plan_step {
+  id         String   @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  plan_id    String   @db.Uuid
+  step_id    String   @db.Uuid
+  order      Int?
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  plan       plan     @relation(fields: [plan_id], references: [id], onDelete: Cascade)
+  step       step     @relation(fields: [step_id], references: [id], onDelete: Cascade)
+
+  @@id([plan_id, step_id])
+  @@index([step_id])
+  @@index([plan_id])
+}
+
+//useless part will be removed 
 
 model User {
   id            String    @id @default(cuid())

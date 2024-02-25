@@ -6,7 +6,7 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
-export interface Database {
+export type Database = {
   public: {
     Tables: {
       Account: {
@@ -101,125 +101,6 @@ export interface Database {
         }
         Relationships: []
       }
-      inspection: {
-        Row: {
-          completed_at: string | null
-          created_at: string
-          created_by_id: string | null
-          id: string
-          plan_id: string
-          priority: Database["public"]["Enums"]["Priority"]
-          status: Database["public"]["Enums"]["Status"]
-          updated_at: string
-        }
-        Insert: {
-          completed_at?: string | null
-          created_at?: string
-          created_by_id?: string | null
-          id?: string
-          plan_id: string
-          priority?: Database["public"]["Enums"]["Priority"]
-          status?: Database["public"]["Enums"]["Status"]
-          updated_at?: string
-        }
-        Update: {
-          completed_at?: string | null
-          created_at?: string
-          created_by_id?: string | null
-          id?: string
-          plan_id?: string
-          priority?: Database["public"]["Enums"]["Priority"]
-          status?: Database["public"]["Enums"]["Status"]
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "inspection_created_by_id_fkey"
-            columns: ["created_by_id"]
-            isOneToOne: false
-            referencedRelation: "user"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "inspection_plan_id_fkey"
-            columns: ["plan_id"]
-            isOneToOne: false
-            referencedRelation: "plan"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      inspection_step: {
-        Row: {
-          created_at: string
-          created_by_id: string | null
-          description: string | null
-          id: string
-          inspection_id: string | null
-          name: string
-          parent_step_id: string | null
-          plan_id: string
-          priority: Database["public"]["Enums"]["Priority"]
-          status: Database["public"]["Enums"]["Status"]
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          created_by_id?: string | null
-          description?: string | null
-          id?: string
-          inspection_id?: string | null
-          name: string
-          parent_step_id?: string | null
-          plan_id: string
-          priority: Database["public"]["Enums"]["Priority"]
-          status: Database["public"]["Enums"]["Status"]
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          created_by_id?: string | null
-          description?: string | null
-          id?: string
-          inspection_id?: string | null
-          name?: string
-          parent_step_id?: string | null
-          plan_id?: string
-          priority?: Database["public"]["Enums"]["Priority"]
-          status?: Database["public"]["Enums"]["Status"]
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "inspection_step_created_by_id_fkey"
-            columns: ["created_by_id"]
-            isOneToOne: false
-            referencedRelation: "user"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "inspection_step_inspection_id_fkey"
-            columns: ["inspection_id"]
-            isOneToOne: false
-            referencedRelation: "inspection"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "inspection_step_parent_step_id_fkey"
-            columns: ["parent_step_id"]
-            isOneToOne: false
-            referencedRelation: "inspection_step"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "inspection_step_plan_id_fkey"
-            columns: ["plan_id"]
-            isOneToOne: false
-            referencedRelation: "plan"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
       plan: {
         Row: {
           created_at: string
@@ -251,6 +132,48 @@ export interface Database {
             columns: ["team_id"]
             isOneToOne: false
             referencedRelation: "team"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      plan_step: {
+        Row: {
+          created_at: string
+          id: string
+          order: number | null
+          plan_id: string
+          step_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          order?: number | null
+          plan_id: string
+          step_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          order?: number | null
+          plan_id?: string
+          step_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "plan_step_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "plan"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "plan_step_step_id_fkey"
+            columns: ["step_id"]
+            isOneToOne: false
+            referencedRelation: "step"
             referencedColumns: ["id"]
           }
         ]
@@ -428,9 +351,8 @@ export interface Database {
           description: string | null
           id: string
           name: string
-          order: number | null
           parent_step_id: string | null
-          plan_id: string
+          team_id: string
           updated_at: string
         }
         Insert: {
@@ -439,9 +361,8 @@ export interface Database {
           description?: string | null
           id?: string
           name: string
-          order?: number | null
           parent_step_id?: string | null
-          plan_id: string
+          team_id: string
           updated_at?: string
         }
         Update: {
@@ -450,9 +371,8 @@ export interface Database {
           description?: string | null
           id?: string
           name?: string
-          order?: number | null
           parent_step_id?: string | null
-          plan_id?: string
+          team_id?: string
           updated_at?: string
         }
         Relationships: [
@@ -471,10 +391,10 @@ export interface Database {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "step_plan_id_fkey"
-            columns: ["plan_id"]
+            foreignKeyName: "step_team_id_fkey"
+            columns: ["team_id"]
             isOneToOne: false
-            referencedRelation: "plan"
+            referencedRelation: "team"
             referencedColumns: ["id"]
           }
         ]
