@@ -10,6 +10,7 @@ import { ReturnType, TDeleteStep } from "./types";
 const handler = async (data: TDeleteStep): Promise<ReturnType> => {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
