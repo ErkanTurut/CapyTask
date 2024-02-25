@@ -9,12 +9,14 @@ export interface NavItem {
   disabled?: boolean;
   external?: boolean;
   icon?: keyof typeof Icons;
+  image_url?: string;
   label?: string;
   description?: string;
   badge?: string;
   badgeColor?: string;
   variant?: ButtonProps["variant"];
   items?: NavItem[];
+  id: string;
 }
 
 export interface NavItemWithChildren extends NavItem {
