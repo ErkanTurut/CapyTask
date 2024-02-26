@@ -60,3 +60,15 @@ export async function getStep({
 }) {
   return await client.from("step").select("*").eq("id", id).single();
 }
+
+export async function searchSteps({
+  q,
+  client,
+}: {
+  q: string;
+  client: SupabaseClient;
+}) {
+  return await client.from("step").select().textSearch("name", q, {
+    type: "websearch",
+  });
+}
