@@ -1,7 +1,4 @@
-import { Icons } from "@/components/icons";
-import { buttonVariants } from "@/ui/button";
-import Link from "next/link";
-
+import { StepSearch } from "@/components/step/step-search";
 import {
   Card,
   CardContent,
@@ -9,12 +6,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { getSteps, getStepsByPlan } from "@/lib/service/step/fetch";
+import { getStepsByPlan } from "@/lib/service/step/fetch";
 import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
-import StepList from "./steps-list";
 import { Suspense } from "react";
+import StepList from "./steps-list";
 interface StepsContainerProps {
   params: {
     url_key: string;
@@ -31,7 +27,7 @@ const StepsContainer: React.FC<StepsContainerProps> = async ({ params }) => {
       <CardHeader>
         <CardTitle>Inspection Plan</CardTitle>
         <CardDescription>List of steps for the inspection plan</CardDescription>
-        <div className=" flex items-center gap-4">
+        {/* <div className=" flex items-center gap-4">
           <Input placeholder="Add a new task" type="text" />
           <Link
             href={`/${params.url_key}/team/${params.team_identity}/plans/${params.plan_id}/create`}
@@ -42,7 +38,7 @@ const StepsContainer: React.FC<StepsContainerProps> = async ({ params }) => {
             Add Step
             <Icons.plusCircled className="h-4 w-4" />
           </Link>
-        </div>
+        </div> */}
       </CardHeader>
 
       <CardContent>
