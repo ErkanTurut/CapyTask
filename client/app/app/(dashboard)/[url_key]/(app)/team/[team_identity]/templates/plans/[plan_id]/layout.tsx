@@ -6,6 +6,8 @@ import {
 import CardSkeleton from "@/components/skeletons/card-skeleton";
 import { Suspense } from "react";
 import StepsContainer from "./_components/steps-container";
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
 
 interface layoutProps {
   children: React.ReactNode;
@@ -34,6 +36,12 @@ export default async function layoutPage({ children, params }: layoutProps) {
 
       <div className={"grid grid-cols-1 gap-4 lg:grid-cols-2"}>
         <Suspense fallback={<CardSkeleton />}>
+          <Link
+            className={buttonVariants({ variant: "outline" })}
+            href={{ pathname: "../steps/search", query: { q: "" } }}
+          >
+            oue
+          </Link>
           <StepsContainer params={params} />
         </Suspense>
         <Suspense fallback={<CardSkeleton />}>{children}</Suspense>
