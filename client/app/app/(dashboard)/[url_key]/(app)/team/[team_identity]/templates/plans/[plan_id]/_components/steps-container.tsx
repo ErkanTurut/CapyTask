@@ -43,7 +43,7 @@ const StepsContainer: React.FC<StepsContainerProps> = async ({ params }) => {
 
       <CardContent>
         <Suspense fallback={<div>Loading...</div>}>
-          {(async () => {
+          {/* {(async () => {
             const { data } = await getStepsByPlan({
               client: supabase,
               plan_id: params.plan_id,
@@ -59,7 +59,7 @@ const StepsContainer: React.FC<StepsContainerProps> = async ({ params }) => {
               );
             }
             return <StepList data={data} />;
-          })()}
+          })()} */}
         </Suspense>
       </CardContent>
     </Card>
