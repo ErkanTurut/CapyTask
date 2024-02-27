@@ -10,6 +10,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
+  CommandSeparator,
 } from "@/components/ui/command";
 import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import { useMediaQuery } from "@/lib/hooks/use-media-query";
@@ -17,33 +18,12 @@ import Link from "next/link";
 
 import { useRouter } from "next/navigation";
 import { Database } from "@/types/supabase.types";
+import { Icons } from "@/components/icons";
+import { useDebouncedCallback } from "use-debounce";
 type Status = {
   value: string;
   label: string;
 };
-
-const statuses: Status[] = [
-  {
-    value: "backlog",
-    label: "Backlog",
-  },
-  {
-    value: "todo",
-    label: "Todo",
-  },
-  {
-    value: "in progress",
-    label: "In Progress",
-  },
-  {
-    value: "done",
-    label: "Done",
-  },
-  {
-    value: "canceled",
-    label: "Canceled",
-  },
-];
 
 interface SearchStepProps {
   searchParams: {
@@ -54,40 +34,13 @@ interface SearchStepProps {
 
 export function SearchStep({ searchParams, steps }: SearchStepProps) {
   const router = useRouter();
-  console.log(steps);
-
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [value, setValue] = useState(searchParams.q ?? "");
-  const [filteredSteps, setFilteredSteps] = useState<
-    Database["public"]["Tables"]["step"]["Row"][]
-  >([]);
-
-  useEffect(() => {
-    setFilteredSteps(steps);
-  }, [steps]);
-
-  useEffect(() => {
-    router.push(`?q=${encodeURIComponent(value)}`);
-  }, [value]);
-
-  useEffect(() => {
-    // check for focus and if not, focus
-    if (inputRef.current && document.activeElement !== inputRef.current) {
-      // focus at the end of the text
-      inputRef.current.focus();
-      inputRef.current.setSelectionRange(
-        inputRef.current.value.length,
-        inputRef.current.value.length,
-      );
-    }
-  }, []);
 
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   if (isDesktop) {
     return (
       <CommandDialog open={true} onOpenChange={() => router.back()}>
-        <StatusList steps={filteredSteps} setValue={setValue} />
+        <StatusList steps={steps} />
       </CommandDialog>
     );
   }
@@ -96,7 +49,7 @@ export function SearchStep({ searchParams, steps }: SearchStepProps) {
     <Drawer open={true} onClose={() => router.back()}>
       <DrawerContent>
         <div className="mt-4 border-t">
-          <StatusList steps={filteredSteps} setValue={setValue} />
+          <StatusList steps={steps} />
         </div>
       </DrawerContent>
     </Drawer>
@@ -104,37 +57,45 @@ export function SearchStep({ searchParams, steps }: SearchStepProps) {
 }
 
 export function StatusList({
-  setValue,
   steps,
 }: {
-  setValue: (e: string) => void;
   steps: Database["public"]["Tables"]["step"]["Row"][];
 }) {
   const router = useRouter();
-  console.log(steps);
 
+  const debouncedValue = useDebouncedCallback((value: string) => {
+    router.push(`?q=${encodeURIComponent(value)}`);
+  }, 2000);
   return (
     <Command shouldFilter={false}>
       <CommandInput
-        onValueChange={(e) => setValue(e)}
-        placeholder="Filter status..."
+        onValueChange={(e) => {
+          debouncedValue(e);
+        }}
+        placeholder="Search for a step..."
       />
-      <CommandList className="w-full">
-        <CommandEmpty>No results found.</CommandEmpty>
+      <CommandList>
         <CommandGroup>
+          <CommandItem>
+            <Icons.plusCircled className="mr-2 h-4 w-4" />
+            <Link href={`./create`}>Create a new step</Link>
+          </CommandItem>
+        </CommandGroup>
+        <CommandSeparator alwaysRender />
+        <CommandEmpty>no found</CommandEmpty>
+        <CommandGroup heading="Or use an existing one">
           {steps.map((step) => (
-            <Link href={`/`}>
-              <CommandItem
-                className="cursor-pointer"
-                key={step.id}
-                value={step.id}
-                onClick={() => {
-                  router.back();
-                }}
-              >
-                {step.name}
-              </CommandItem>
-            </Link>
+            <CommandItem
+              className="cursor-pointer"
+              key={step.id}
+              value={step.id}
+              onSelect={() => {
+                console.log("clicked", step.id);
+              }}
+            >
+              <Icons.user className="mr-2 h-4 w-4" />
+              <span>{step.name}</span>
+            </CommandItem>
           ))}
         </CommandGroup>
       </CommandList>
