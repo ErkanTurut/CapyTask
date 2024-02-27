@@ -35,13 +35,13 @@ export default async function layoutPage({ children, params }: layoutProps) {
       </PageHeader>
 
       <div className={"grid grid-cols-1 gap-4 lg:grid-cols-2"}>
+        <Link
+          className={buttonVariants({ variant: "outline" })}
+          href={{ pathname: "../steps/search", query: { q: "" } }}
+        >
+          oue
+        </Link>
         <Suspense fallback={<CardSkeleton />}>
-          <Link
-            className={buttonVariants({ variant: "outline" })}
-            href={{ pathname: "../steps/search", query: { q: "" } }}
-          >
-            oue
-          </Link>
           <StepsContainer params={params} />
         </Suspense>
         <Suspense fallback={<CardSkeleton />}>{children}</Suspense>
