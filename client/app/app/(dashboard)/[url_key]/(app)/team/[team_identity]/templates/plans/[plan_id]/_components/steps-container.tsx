@@ -11,6 +11,10 @@ import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
 import StepList from "./steps-list";
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
+import { Icons } from "@/components/icons";
+import { cn } from "@/lib/utils";
 interface StepsContainerProps {
   params: {
     url_key: string;
@@ -27,6 +31,20 @@ const StepsContainer: React.FC<StepsContainerProps> = async ({ params }) => {
       <CardHeader>
         <CardTitle>Inspection Plan</CardTitle>
         <CardDescription>List of steps for the inspection plan</CardDescription>
+        <Link
+          className={cn(
+            buttonVariants({ variant: "outline" }),
+            "relative w-full justify-start rounded-[0.5rem] bg-background text-sm font-normal text-muted-foreground shadow-none ",
+          )}
+          href={{ pathname: `./${params.plan_id}/search`, query: { q: "" } }}
+        >
+          <Icons.search className="h-4 w-4 xl:mr-2" aria-hidden="true" />
+          <span>Search or create a step...</span>
+          <span className="sr-only">Search steps</span>
+          <kbd className="pointer-events-none absolute right-1.5 top-1.5 hidden h-6 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 md:flex">
+            <span className="text-xs">Ctrl</span>K
+          </kbd>
+        </Link>
         {/* <div className=" flex items-center gap-4">
           <Input placeholder="Add a new task" type="text" />
           <Link
@@ -43,13 +61,12 @@ const StepsContainer: React.FC<StepsContainerProps> = async ({ params }) => {
 
       <CardContent>
         <Suspense fallback={<div>Loading...</div>}>
-          {/* {(async () => {
-            const { data } = await getStepsByPlan({
+          {(async () => {
+            const { data: steps } = await getStepsByPlan({
               client: supabase,
               plan_id: params.plan_id,
             });
-
-            if (!data || data.step.length === 0) {
+            if (!steps || steps.length === 0) {
               return (
                 <div className="flex h-40 items-center justify-center">
                   <p className="text-muted-foreground">
@@ -58,8 +75,8 @@ const StepsContainer: React.FC<StepsContainerProps> = async ({ params }) => {
                 </div>
               );
             }
-            return <StepList data={data} />;
-          })()} */}
+            return <StepList steps={steps} />;
+          })()}
         </Suspense>
       </CardContent>
     </Card>
