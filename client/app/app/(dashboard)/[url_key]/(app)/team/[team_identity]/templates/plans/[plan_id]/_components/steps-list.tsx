@@ -1,7 +1,10 @@
 "use client";
 import { Icons } from "@/components/icons";
 import { Item } from "@/components/ui/item";
+import { Separator } from "@/components/ui/separator";
 import { useAction } from "@/lib/hooks/use-actions";
+import { upsertStep } from "@/lib/service/step/actions";
+import { getStepsByPlan } from "@/lib/service/step/fetch";
 import { catchError, cn } from "@/lib/utils";
 import { Database } from "@/types/supabase.types";
 import {
@@ -12,20 +15,12 @@ import {
 } from "@hello-pangea/dnd";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect, useOptimistic, useState } from "react";
+import { startTransition, useOptimistic, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { upsertStep } from "@/lib/service/step/actions";
-import { getStepsByPlan } from "@/lib/service/step/fetch";
+import { QueryResult, QueryData, QueryError } from "@supabase/supabase-js";
 
 interface StepListProps {
-  data: Awaited<ReturnType<typeof getStepsByPlan>>["data"];
-}
-
-function reorder<T>(list: T[], startIndex: number, endIndex: number): T[] {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-  return result;
+  steps: NonNullable<Awaited<ReturnType<typeof getStepsByPlan>>["data"]>;
 }
 
 // function getDifference(
@@ -35,19 +30,24 @@ function reorder<T>(list: T[], startIndex: number, endIndex: number): T[] {
 //   return newSteps.filter((newStep, index) => newStep.id !== oldSteps[index].id);
 // }
 
-const StepList: React.FC<StepListProps> = ({ data }) => {
-  if (!data) return null;
+export default function StepList({ steps }: StepListProps) {
+  if (!steps) return null;
   const pathname = usePathname().replace("/create", "");
-  const current_step_id = useSearchParams().get("step_id");
+  // const [stepsList, setStepsList] = useState<StepListProps["steps"]>(steps);
 
-  // const [orderedData, setOrderedData] = useState<
-  //   Awaited<ReturnType<typeof getStepsByPlan>>["data"] | null
-  // >(data);
+  function reorder<T>(list: T[], startIndex: number, endIndex: number): T[] {
+    const result = Array.from(list);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+    return result;
+  }
 
-  const [steps, setSteps] = useOptimistic(
-    data as Awaited<ReturnType<typeof getStepsByPlan>>["data"],
+  const [stepsList, setStepsList] = useOptimistic(
+    steps as StepListProps["steps"],
+    (state, newState) => newState as StepListProps["steps"],
   );
 
+  console.log(stepsList);
   const { run, isLoading } = useAction(upsertStep, {
     onSuccess(data) {
       console.log(data);
@@ -78,15 +78,19 @@ const StepList: React.FC<StepListProps> = ({ data }) => {
     if (result.destination.index === result.source.index) {
       return;
     }
-    // if (result.type === "list") {
-    //   const items = reorder(
-    //     orderedData!,
-    //     result.source.index,
-    //     result.destination.index,
-    //   ).map((item, index) => ({ ...item, order: index }));
-    //   setOrderedData(items);
-    //   debouncedValue(getDifference(orderedData!, items));
-    // }
+    if (result.type === "list") {
+      const items = reorder(
+        stepsList,
+        result.source.index,
+        result.destination.index,
+      ).map((item, index) => ({ ...item, order: index }));
+      console.log("items", items);
+
+      startTransition(() => {
+        setStepsList(items);
+      });
+      // debouncedValue(getDifference(orderedData!, items));
+    }
   };
 
   return (
@@ -97,55 +101,61 @@ const StepList: React.FC<StepListProps> = ({ data }) => {
             <ul
               {...provided.droppableProps}
               ref={provided.innerRef}
-              className="grid w-full gap-1"
+              className="flex w-full flex-col gap-1"
             >
-              {data.step?.map((step, index) => (
-                <Draggable key={step.id} draggableId={step.id} index={index}>
-                  {(provided, { isDragging }) => (
-                    <li
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      ref={provided.innerRef}
-                      key={step.id}
-                    >
-                      <Item
-                        size={"lg"}
-                        // variant={
-                        //   step.id === current_step_id ? "outline" : "ghost"
-                        // }
-                        className={cn(
-                          "group flex w-full items-center  justify-between p-0 ",
-                          isDragging &&
-                            "border border-border bg-accent/40  backdrop-blur-[2px]",
-                        )}
-                      >
-                        <Link
-                          className="flex w-full items-center justify-between p-4"
-                          href={{
-                            query: { step_id: step.id },
-                            pathname,
-                          }}
+              {stepsList.map((data, index) => {
+                if (!data.step) return null;
+
+                return (
+                  <Draggable
+                    key={data.step.id}
+                    draggableId={data.step.id}
+                    index={index}
+                  >
+                    {(provided, { isDragging }) => {
+                      if (!data.step) return null;
+                      return (
+                        <li
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          ref={provided.innerRef}
+                          key={data.step.id}
                         >
-                          <div className="flex items-center gap-2">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-full border border-border p-2">
-                              {index + 1}
-                            </div>
-                            <div>
-                              <h2>{step.name}</h2>
-                              <p className="text-muted-foreground">
-                                {step.description}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="ml-1 transition group-hover:translate-x-1">
-                            <Icons.arrowRight className="h-4 w-4" />
-                          </div>
-                        </Link>
-                      </Item>
-                    </li>
-                  )}
-                </Draggable>
-              ))}
+                          <Link
+                            href={{
+                              query: { step_id: data.step.id },
+                              pathname,
+                            }}
+                          >
+                            <Item
+                              size={"lg"}
+                              className={cn(
+                                "group",
+                                isDragging &&
+                                  "border border-border bg-background/40 backdrop-blur-[2px]",
+                              )}
+                            >
+                              <div className="overflow-ellipsi flex h-5 w-full grow-0 items-center space-x-2 overflow-hidden text-sm">
+                                <div className="flex h-4 w-4 items-center justify-center rounded-full border border-border p-2 text-xs">
+                                  {index + 1}
+                                </div>
+                                <h3 className="w-20 shrink-0 overflow-hidden overflow-ellipsis">
+                                  {data.step.name}
+                                </h3>
+                                <Separator orientation="vertical" />
+                                <p className="overflow-x-auto overflow-ellipsis whitespace-nowrap  text-muted-foreground">
+                                  {data.step.description}
+                                </p>
+                              </div>
+                              <Icons.arrowRight className="ml-1 h-4 w-4 transition group-hover:translate-x-1" />
+                            </Item>
+                          </Link>
+                        </li>
+                      );
+                    }}
+                  </Draggable>
+                );
+              })}
               {provided.placeholder}
             </ul>
           )}
@@ -153,6 +163,4 @@ const StepList: React.FC<StepListProps> = ({ data }) => {
       </DragDropContext>
     </>
   );
-};
-
-export default StepList;
+}
