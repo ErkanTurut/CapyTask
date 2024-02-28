@@ -16,11 +16,17 @@ interface layoutProps {
     team_identity: string;
     plan_id: string;
   };
+  modal: React.ReactNode;
 }
 
-export default async function layoutPage({ children, params }: layoutProps) {
+export default async function layoutPage({
+  children,
+  params,
+  modal,
+}: layoutProps) {
   return (
     <>
+      {modal}
       <PageHeader
         className="pt-10"
         id="account-header"
@@ -35,12 +41,6 @@ export default async function layoutPage({ children, params }: layoutProps) {
       </PageHeader>
 
       <div className={"grid grid-cols-1 gap-4 lg:grid-cols-2"}>
-        <Link
-          className={buttonVariants({ variant: "outline" })}
-          href={{ pathname: "../steps/search", query: { q: "" } }}
-        >
-          oue
-        </Link>
         <Suspense fallback={<CardSkeleton />}>
           <StepsContainer params={params} />
         </Suspense>
