@@ -48,7 +48,10 @@ const Item = React.forwardRef<HTMLButtonElement, ListItemProps>(
     const Comp = asChild ? Slot : "div";
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(
+          " flex w-full items-center justify-between rounded-md  border border-background px-4 py-2 transition-all hover:border-border",
+          className,
+        )}
         {...props}
       >
         {children}
