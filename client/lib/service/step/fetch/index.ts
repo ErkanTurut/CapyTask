@@ -21,6 +21,20 @@ export async function getSteps({
     .eq("plan_id", plan_id);
 }
 
+// export async function getStepsByPlan({
+//   plan_id,
+//   client,
+// }: {
+//   plan_id: string;
+//   client: SupabaseClient;
+// }) {
+//   return await client
+//     .from("plan")
+//     .select("*, step!inner(*), plan_step!inner(*)")
+//     .eq("id", plan_id)
+//     .single();
+// }
+
 export async function getStepsByPlan({
   plan_id,
   client,
@@ -29,10 +43,10 @@ export async function getStepsByPlan({
   client: SupabaseClient;
 }) {
   return await client
-    .from("plan")
-    .select("*, step!inner(*)")
-    .eq("id", plan_id)
-    .single();
+    .from("plan_step")
+    .select("*, step!inner(*), plan!inner(*)")
+    .eq("plan_id", plan_id)
+    .order("order");
 }
 
 export async function getStepsByIdentity({
@@ -68,7 +82,7 @@ export async function searchSteps({
   q: string;
   client: SupabaseClient;
 }) {
-  return await client.from("step").select().textSearch("name", q, {
+  return await client.from("step").select("*, plan(id)").textSearch("name", q, {
     type: "websearch",
   });
 }
