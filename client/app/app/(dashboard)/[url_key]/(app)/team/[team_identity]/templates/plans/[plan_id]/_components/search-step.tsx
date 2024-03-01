@@ -21,7 +21,7 @@ import { Database } from "@/types/supabase.types";
 import { Icons } from "@/components/icons";
 import { useDebouncedCallback } from "use-debounce";
 import { useAction } from "@/lib/hooks/use-actions";
-import { insertPlanStep } from "@/lib/service/plan/actions/insert";
+import { insertPlanStep } from "@/lib/service/plan_step/actions/create";
 type Status = {
   value: string;
   label: string;

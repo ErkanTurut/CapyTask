@@ -5,7 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { useAction } from "@/lib/hooks/use-actions";
 import { upsertStep } from "@/lib/service/step/actions";
 import { getStepsByPlan } from "@/lib/service/step/fetch";
-import { catchError, cn } from "@/lib/utils";
+import { catchError, cn, sleep } from "@/lib/utils";
 import { Database } from "@/types/supabase.types";
 import {
   DragDropContext,
@@ -15,41 +15,40 @@ import {
 } from "@hello-pangea/dnd";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { startTransition, useOptimistic, useState } from "react";
+import { startTransition, useEffect, useOptimistic, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { QueryResult, QueryData, QueryError } from "@supabase/supabase-js";
+import { upsertPlanStep } from "@/lib/service/plan_step/actions/upsert";
 
 interface StepListProps {
   steps: NonNullable<Awaited<ReturnType<typeof getStepsByPlan>>["data"]>;
 }
 
-// function getDifference(
-//   oldSteps: Database["public"]["Tables"]["step"]["Row"][],
-//   newSteps: Database["public"]["Tables"]["step"]["Row"][],
-// ): Database["public"]["Tables"]["step"]["Row"][] {
-//   return newSteps.filter((newStep, index) => newStep.id !== oldSteps[index].id);
-// }
+function getDifference(
+  oldSteps: StepListProps["steps"],
+  newSteps: StepListProps["steps"],
+): StepListProps["steps"] {
+  return newSteps.filter((newStep, index) => newStep.id !== oldSteps[index].id);
+}
+
+function reorder<T>(list: T[], startIndex: number, endIndex: number): T[] {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+  return result;
+}
 
 export default function StepList({ steps }: StepListProps) {
   if (!steps) return null;
-  const pathname = usePathname().replace("/create", "");
-  // const [stepsList, setStepsList] = useState<StepListProps["steps"]>(steps);
-
-  function reorder<T>(list: T[], startIndex: number, endIndex: number): T[] {
-    const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
-    return result;
-  }
-
+  const pathname = usePathname();
   const [stepsList, setStepsList] = useOptimistic(
-    steps as StepListProps["steps"],
+    steps,
     (state, newState) => newState as StepListProps["steps"],
   );
 
-  console.log(stepsList);
-  const { run, isLoading } = useAction(upsertStep, {
+  const { run, isLoading } = useAction(upsertPlanStep, {
     onSuccess(data) {
+      return data;
       console.log(data);
     },
     onError: (err) => {
@@ -60,18 +59,18 @@ export default function StepList({ steps }: StepListProps) {
     },
   });
 
-  // const debouncedValue = useDebouncedCallback(
-  //   (data: Database["public"]["Tables"]["step"]["Row"][]) => {
-  //     run(data);
-  //   },
-  //   3000,
-  // );
+  const debouncedValue = useDebouncedCallback(
+    async (data: StepListProps["steps"]) => {
+      await run(data);
+    },
+    3000,
+  );
 
   // useEffect(() => {
   //   setOrderedData(steps);
   // }, [steps]);
 
-  const onDragEnd = (result: DropResult) => {
+  function onDragEnd(result: DropResult) {
     if (!result.destination || !result.source || !result) {
       return;
     }
@@ -84,14 +83,20 @@ export default function StepList({ steps }: StepListProps) {
         result.source.index,
         result.destination.index,
       ).map((item, index) => ({ ...item, order: index }));
-      console.log("items", items);
 
       startTransition(() => {
         setStepsList(items);
+        // try {
+        //   debouncedValue(getDifference(stepsList!, items));
+        // } catch (error) {
+        //   console.error(error);
+        // }
+        // debouncedValue(getDifference(stepsList!, items));
       });
-      // debouncedValue(getDifference(orderedData!, items));
     }
-  };
+  }
+
+  console.log(stepsList, "stepsList");
 
   return (
     <>
@@ -105,7 +110,6 @@ export default function StepList({ steps }: StepListProps) {
             >
               {stepsList.map((data, index) => {
                 if (!data.step) return null;
-
                 return (
                   <Draggable
                     key={data.step.id}

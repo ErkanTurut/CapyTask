@@ -1,4 +1,5 @@
-import { StepSearch } from "@/components/step/step-search";
+import { Icons } from "@/components/icons";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -6,15 +7,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getStepsByPlan } from "@/lib/service/step/fetch";
+import { getPlanSteps } from "@/lib/service/plan_step/fetch";
 import { createClient } from "@/lib/supabase/server";
+import { cn } from "@/lib/utils";
 import { cookies } from "next/headers";
+import Link from "next/link";
 import { Suspense } from "react";
 import StepList from "./steps-list";
-import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
-import { Icons } from "@/components/icons";
-import { cn } from "@/lib/utils";
 interface StepsContainerProps {
   params: {
     url_key: string;
@@ -62,7 +61,7 @@ const StepsContainer: React.FC<StepsContainerProps> = async ({ params }) => {
       <CardContent>
         <Suspense fallback={<div>Loading...</div>}>
           {(async () => {
-            const { data: steps } = await getStepsByPlan({
+            const { data: steps } = await getPlanSteps({
               client: supabase,
               plan_id: params.plan_id,
             });
