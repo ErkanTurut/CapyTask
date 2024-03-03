@@ -18,10 +18,12 @@ export const siteConfig = {
   ogImage: "https://skateshop.sadmn.com/opengraph-image.png",
   mainNav: [
     {
+      id: "home",
       title: "Home",
       variant: "default",
       items: [
         {
+          id: "products",
           title: "Products",
           href: "/products",
           description: "All the products we have to offer.",
@@ -29,6 +31,7 @@ export const siteConfig = {
           variant: "ghost",
         },
         {
+          id: "build-a-board",
           title: "Build a Board",
           href: "/build-a-board",
           description: "Build your own custom skateboard.",
@@ -36,6 +39,7 @@ export const siteConfig = {
           variant: "ghost",
         },
         {
+          id: "blog",
           title: "Blog",
           href: "/blog",
           description: "Read our latest blog posts.",
@@ -45,10 +49,12 @@ export const siteConfig = {
       ],
     },
     {
+      id: "about",
       title: "About",
       variant: "ghost",
       items: [
         {
+          id: "about-us",
           title: "About Us",
           href: "/about",
           description: "Learn more about us.",
@@ -56,6 +62,7 @@ export const siteConfig = {
           variant: "ghost",
         },
         {
+          id: "contact",
           title: "Contact",
           href: "/contact",
           description: "Get in touch with us.",
@@ -65,10 +72,12 @@ export const siteConfig = {
       ],
     },
     {
+      id: "blog",
       title: "Blog",
       variant: "ghost",
       items: [
         {
+          id: "blog",
           title: "Blog",
           href: "/blog",
           description: "Read our latest blog posts.",

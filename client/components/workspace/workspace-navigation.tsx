@@ -1,5 +1,5 @@
 "use client";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useState } from "react";
 
 import { cn, generateAvatar } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/ui/avatar";
@@ -17,10 +17,10 @@ import {
 } from "../ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
-import { useSidebar, useWorkspace } from "@/lib/store";
-import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useSidebar } from "@/lib/store";
 import { Database } from "@/types/supabase.types";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface WorkspaceNavProps extends React.HTMLAttributes<HTMLDivElement> {
   workspaces: Database["public"]["Tables"]["workspace"]["Row"][];

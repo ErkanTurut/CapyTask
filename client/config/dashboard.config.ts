@@ -43,10 +43,10 @@ export const appNavItems: {
   main: [],
   teamNav: [
     {
-      title: "Members",
-      icon: "user",
+      title: "Team Settings",
+      icon: "gear",
       variant: "ghost",
-      href: "/members",
+      href: "/settings",
       id: "members",
     },
     {
@@ -71,11 +71,31 @@ export const appNavItems: {
       ],
     },
     {
-      title: "Repports",
-      icon: "fileText",
+      title: "Inspections",
+      icon: "checkCircled",
       variant: "ghost",
-      href: "/repports",
-      id: "repports",
+      href: "/inspections",
+      id: "inspections",
+      items: [
+        {
+          title: "Work orders",
+          href: "/work-orders",
+          variant: "ghost",
+          id: "work-orders",
+        },
+        {
+          title: "Reports",
+          href: "/reports",
+          variant: "ghost",
+          id: "reports",
+        },
+        {
+          title: "Schedules",
+          href: "/schedules",
+          variant: "ghost",
+          id: "schedules",
+        },
+      ],
     },
   ],
   footer: [

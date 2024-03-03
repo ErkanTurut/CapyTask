@@ -49,7 +49,7 @@ const Item = React.forwardRef<HTMLButtonElement, ListItemProps>(
     return (
       <Comp
         className={cn(
-          " flex w-full items-center justify-between rounded-md  border border-background px-4 py-2 transition-all hover:border-border",
+          " flex w-full items-center justify-between rounded-md  border border-background px-4 py-2 hover:border-border",
           className,
         )}
         {...props}
@@ -60,20 +60,6 @@ const Item = React.forwardRef<HTMLButtonElement, ListItemProps>(
   },
 );
 Item.displayName = "Item";
-
-const ItemStart = React.forwardRef<HTMLButtonElement, ListItemProps>(
-  ({ className, variant, size, children, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "div";
-    return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
-        {...props}
-      >
-        {children}
-      </Comp>
-    );
-  },
-);
 
 export { Item };
 // <Link className={className} {...props}>
