@@ -1,5 +1,8 @@
 import "@/styles/globals.css";
 import { cal, inter } from "@/styles/fonts";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
+
 import { Providers } from "./providers";
 import { Metadata } from "next";
 import { cn } from "@/lib/utils";
@@ -29,8 +32,10 @@ export default function RootLayout({
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
-          cal.variable,
-          inter.variable,
+          // cal.variable,
+          // inter.variable,
+          GeistSans.variable,
+          GeistMono.variable,
         )}
       >
         <Providers>
