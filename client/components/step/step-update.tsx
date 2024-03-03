@@ -25,23 +25,17 @@ import {
   ZUpdateStep,
   updateStep,
 } from "@/lib/service/step/actions/update";
+import { Textarea } from "@/ui/textarea";
+import { revalidateTag } from "next/cache";
 
 interface StepUpdateFormProps extends React.HTMLAttributes<HTMLFormElement> {
   step: Database["public"]["Tables"]["step"]["Row"];
 }
 
 const StepUpdateForm: FC<StepUpdateFormProps> = ({ step, className }) => {
-  useEffect(() => {
-    form.reset({
-      name: step.name,
-      description: step.description || "",
-      id: step.id,
-    });
-  }, [step]);
-
   const { run, isLoading } = useAction(updateStep, {
     onSuccess: (data) => {
-      toast.success("Step created successfully");
+      toast.success("Step updated successfully");
       form.reset({
         name: data.name,
         description: data.description || "",
@@ -78,7 +72,7 @@ const StepUpdateForm: FC<StepUpdateFormProps> = ({ step, className }) => {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Team name</FormLabel>
+              <FormLabel>Step name</FormLabel>
               <FormControl>
                 <Input placeholder="example" {...field} />
               </FormControl>
@@ -91,9 +85,13 @@ const StepUpdateForm: FC<StepUpdateFormProps> = ({ step, className }) => {
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Team description</FormLabel>
+              <FormLabel>Step description</FormLabel>
               <FormControl>
-                <Input placeholder="example" {...field} />
+                <Textarea
+                  placeholder="Describe your step here..."
+                  className="max-h-32 resize-y"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

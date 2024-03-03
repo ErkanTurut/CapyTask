@@ -40,6 +40,7 @@ const CreateStepForm: FC<StepCreateProps> = ({ team_id, className }) => {
         parent_id: undefined,
         team_id: team_id,
       });
+      router.back();
       router.refresh();
     },
     onError: (err) => {

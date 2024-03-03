@@ -37,7 +37,7 @@ const StepDeleteForm: FC<StepDeleteFormProps> = ({
   const { run, isLoading } = useAction(deleteStep, {
     onSuccess: (data) => {
       toast.success("Step deleted successfully");
-      router.push(`./${step.plan_id}`);
+      router.push(`./steps`);
     },
     onError: (err) => {
       catchError(new Error(err));
@@ -57,14 +57,6 @@ const StepDeleteForm: FC<StepDeleteFormProps> = ({
   async function onSubmit(data: TUpdateStep) {
     await run(data);
   }
-
-  useEffect(() => {
-    form.reset({
-      name: step.name,
-      description: step.description || "",
-      id: step.id,
-    });
-  }, [step]);
 
   return (
     <Form {...form}>
