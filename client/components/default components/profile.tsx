@@ -3,12 +3,18 @@ import Link from "next/link";
 import Image from "next/image";
 import LogoutButton from "./logout-button";
 import { getSession } from "@/lib/service/auth/fetch";
+import { cookies } from "next/headers";
+import { createClient } from "@/lib/supabase/server";
 
 export default async function Profile() {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+
   const {
     data: { session },
-  } = await getSession();
-  if (!session?.user) {
+    error,
+  } = await getSession(supabase);
+  if (!session || error) {
     redirect("/login");
   }
 

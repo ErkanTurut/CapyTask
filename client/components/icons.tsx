@@ -32,6 +32,7 @@ import {
   ArrowRightIcon,
   TrashIcon,
   DashboardIcon,
+  UpdateIcon,
 } from "@radix-ui/react-icons";
 import { Loader2, Banknote, Route } from "lucide-react";
 
@@ -62,7 +63,7 @@ const sizes = {
 
 export const Icons = {
   user: PersonIcon,
-  spinner: Loader2,
+  spinner: UpdateIcon,
   view: EyeOpenIcon,
   hide: EyeClosedIcon,
   mix: MixIcon,
