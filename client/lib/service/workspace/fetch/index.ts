@@ -1,9 +1,7 @@
 import "server-only";
 
-import { SupabaseClient, createClient } from "@/lib/supabase/server";
-import { cookies } from "next/headers";
+import { SupabaseClient } from "@/lib/supabase/server";
 import { unstable_cache as cache } from "next/cache";
-import { sleep } from "@/lib/utils";
 
 export const getWorkspace = async ({
   url_key,
@@ -19,23 +17,45 @@ export const getWorkspace = async ({
     .single();
 };
 
-export const getWorkspaces = async ({
-  supabase,
-}: {
-  supabase: SupabaseClient;
-}) => {
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+// export async function getWorkspaces({
+//   team_identity,
+//   client,
+//   range,
+// }: {
+//   team_identity: string;
+//   client: SupabaseClient;
+//   range: { start: number; end: number };
+// }) {
+//   const {data: user, error} = await client.auth.getUser();
+//   if (!user.user) {
+//     return error;
+//   }
+//   return await client
+//     .from("workspace")
+//     .select("*, user!inner(*)")
+//     .eq("user.id", user.user.id )
+//     .range(range.start, range.end);
+// }
 
+export const getWorkspaces = async ({ client }: { client: SupabaseClient }) => {
+  const {
+    data: { user },
+    error,
+  } = await client.auth.getUser();
+  if (!user) {
+    return { data: null, error };
+  }
   return await cache(
     async () => {
-      return await supabase.from("workspace").select("*");
+      return await client
+        .from("workspace")
+        .select("*, user_workspace!inner(*)")
+        .eq("user_workspace.user_id", user.id);
     },
-    [`${session?.user.id}-workspaces`],
+    [`${user.id}-workspaces`],
     {
       revalidate: 60,
-      tags: [`${session?.user.id}-workspaces`],
+      tags: [`${user.id}-workspaces`],
     },
   )();
 };

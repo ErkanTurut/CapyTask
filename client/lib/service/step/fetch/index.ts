@@ -1,11 +1,7 @@
 import "server-only";
 
-import {
-  unstable_cache as cache,
-  unstable_noStore as noStore,
-} from "next/cache";
 import { SupabaseClient } from "@/lib/supabase/server";
-import { QueryResult, QueryData, QueryError } from "@supabase/supabase-js";
+import { unstable_cache as cache } from "next/cache";
 
 export async function getSteps({
   plan_id,
@@ -72,17 +68,32 @@ export async function getStep({
   id: string;
   client: SupabaseClient;
 }) {
-  return await client.from("step").select("*").eq("id", id).single();
+  return await cache(
+    async () => {
+      return await client.from("step").select("*").eq("id", id).single();
+    },
+    [`${id}-step`],
+    {
+      revalidate: 60,
+      tags: [`${id}-step`],
+    },
+  )();
 }
 
 export async function searchSteps({
   q,
+  team_identity,
   client,
 }: {
   q: string;
+  team_identity: string;
   client: SupabaseClient;
 }) {
-  return await client.from("step").select("*, plan(id)").textSearch("name", q, {
-    type: "websearch",
-  });
+  return await client
+    .from("step")
+    .select("*, plan(id), team!inner(*)")
+    .eq("team.identity", team_identity)
+    .textSearch("name", q, {
+      type: "websearch",
+    });
 }
