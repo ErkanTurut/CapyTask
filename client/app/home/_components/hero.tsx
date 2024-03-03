@@ -1,15 +1,11 @@
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { FC } from "react";
-import Image from "next/image";
-import Link from "next/link";
 import { Icons } from "@/components/icons";
 import {
   PageHeader,
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/components/page-header";
-import { Shell } from "@/components/shells";
 import { Button } from "@/components/ui/button";
+import { FC } from "react";
 interface heroProps {}
 
 const Hero: FC<heroProps> = ({}) => {
