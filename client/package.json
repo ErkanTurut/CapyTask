@@ -1,13 +1,13 @@
 {
   "private": true,
   "scripts": {
-    "dev": "prisma generate && next dev",
+    "dev": "next dev --turbo",
     "build": "prisma generate && prisma db push && next build",
     "format:write": "prettier --write \"**/*.{css,js,json,jsx,ts,tsx}\"",
     "format": "prettier \"**/*.{css,js,json,jsx,ts,tsx}\"",
     "start": "next start",
     "lint": "next lint",
-    "db": "npx prisma db push && npx supabase gen types typescript --project-id hxhaycanqkhkuppkvcoy --schema public > types/supabase.types.ts && npx prisma generate"
+    "db": "prisma db push && supabase gen types typescript --project-id hxhaycanqkhkuppkvcoy --schema public > types/supabase.types.ts && prisma generate"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^16.5.0",
@@ -51,9 +51,11 @@
     "dayjs": "^1.11.10",
     "focus-trap-react": "^10.2.3",
     "framer-motion": "^10.16.4",
+    "geist": "^1.2.2",
     "gray-matter": "^4.0.3",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.292.0",
+    "mini-svg-data-uri": "^1.4.4",
     "nanoid": "^4.0.2",
     "next": "^14.1.1",
     "next-auth": "4.24.5",

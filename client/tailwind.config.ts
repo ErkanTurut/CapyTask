@@ -1,3 +1,5 @@
+import svgToDataUri from "mini-svg-data-uri";
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
@@ -31,8 +33,8 @@ module.exports = {
           foreground: "hsl(var(--secondary-foreground))",
         },
         destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
+          DEFAULT: "hsl(var(--destructive) / <alpha-value>)",
+          foreground: "hsl(var(--destructive-foreground) / <alpha-value>)",
         },
         muted: {
           DEFAULT: "hsl(var(--muted))",
@@ -52,9 +54,14 @@ module.exports = {
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
+        xl: `calc(var(--radius) + 4px)`,
+        lg: `var(--radius)`,
+        md: `calc(var(--radius) - 2px)`,
         sm: "calc(var(--radius) - 4px)",
+      },
+      fontFamily: {
+        sans: ["var(--font-geist-sans)"],
+        mono: ["var(--font-geist-mono)"],
       },
       keyframes: {
         "accordion-down": {
@@ -83,6 +90,22 @@ module.exports = {
             transform: "translateX(0)",
           },
         },
+        "fade-in": {
+          from: {
+            opacity: "0",
+          },
+          to: {
+            opacity: "1",
+          },
+        },
+        "fade-out": {
+          from: {
+            opacity: "1",
+          },
+          to: {
+            opacity: "0",
+          },
+        },
       },
       animation: {
         "fade-in-right": "fade-in-right 0.6s ease-in-out",
@@ -90,6 +113,8 @@ module.exports = {
         "accordion-up": "accordion-up 0.2s ease-out",
         "background-shine": "background-shine 4s linear infinite",
         "text-shimmer": "background-shine 2.5s ease-out infinite alternate",
+        "fade-in": "fade-in 0.6s ease-in",
+        "fade-out": "fade-out 0.6s ease-out",
       },
     },
   },
