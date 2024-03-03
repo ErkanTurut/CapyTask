@@ -7,13 +7,10 @@ import Resizable from "./_components/rezisable";
 
 import { SidebarProvider } from "@/lib/store";
 
-import { Shell } from "@/components/shells";
-import Sidebar from "./_components/sidebar";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import DotPattern from "@/components/dot-pattern";
-import { Breadcrumb } from "@/components/layouts/breadcrumb";
-import useCookie from "@/lib/hooks/use-cookie";
 import Toolbar from "@/components/layouts/toolbar/top-toolbar";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import Sidebar from "./_components/sidebar";
 interface DashboardLayoutProps {
   children: React.ReactNode;
   params: {
@@ -37,20 +34,18 @@ export default async function DashboardLayout({
   return (
     <SidebarProvider isCollapsed={defaultCollapsed || false}>
       <DotPattern className="absolute top-0 z-[-2] h-screen w-screen bg-background  ">
-        <div className="min-h-screen">
-          <TooltipProvider delayDuration={0}>
-            <ResizableGroup>
-              <Sidebar params={params} />
-              <Resizable defaultLayout={defaultLayout}>
-                <ScrollArea className="h-screen ">
-                  <Toolbar />
+        <TooltipProvider delayDuration={0}>
+          <ResizableGroup>
+            <Sidebar params={params} />
+            <Resizable defaultLayout={defaultLayout}>
+              <ScrollArea className="h-screen ">
+                <Toolbar />
 
-                  {children}
-                </ScrollArea>
-              </Resizable>
-            </ResizableGroup>
-          </TooltipProvider>
-        </div>
+                {children}
+              </ScrollArea>
+            </Resizable>
+          </ResizableGroup>
+        </TooltipProvider>
       </DotPattern>
     </SidebarProvider>
   );

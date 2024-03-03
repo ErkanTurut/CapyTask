@@ -1,6 +1,5 @@
 "use client";
 
-import { ModalProvider } from "@/components/modal/provider";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 
