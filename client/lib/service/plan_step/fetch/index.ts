@@ -18,9 +18,18 @@ export async function getPlanSteps({
   plan_id: string;
   client: SupabaseClient;
 }) {
-  return await client
-    .from("plan_step")
-    .select("*, step!inner(*), plan!inner(*)")
-    .eq("plan_id", plan_id)
-    .order("order");
+  return await cache(
+    async () => {
+      return await client
+        .from("plan_step")
+        .select("*, step!inner(*), plan!inner(*)")
+        .eq("plan_id", plan_id)
+        .order("order");
+    },
+    [`${plan_id}-steps`],
+    {
+      revalidate: 60,
+      tags: [`${plan_id}-steps`],
+    },
+  )();
 }

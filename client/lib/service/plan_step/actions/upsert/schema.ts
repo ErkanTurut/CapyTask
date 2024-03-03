@@ -20,8 +20,8 @@ export const ZUpsertPlanStep = z
       })
       .uuid({ message: "Step ID must be a valid UUID" }),
     order: z.number().nullable(),
-    created_at: z.string().nullable(),
-    updated_at: z.string().nullable(),
+    created_at: z.string(),
+    updated_at: z.string(),
   })
   .array();
 

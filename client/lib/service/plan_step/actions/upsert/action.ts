@@ -7,6 +7,7 @@ import { createSafeAction } from "@/lib/safe-action";
 import { ZUpsertPlanStep } from "./schema";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { sleep } from "@/lib/utils";
 
 const handler = async (data: TUpsertPlanStep): Promise<ReturnType> => {
   const cookieStore = cookies();
@@ -21,7 +22,7 @@ const handler = async (data: TUpsertPlanStep): Promise<ReturnType> => {
   const { data: step, error } = await supabase
     .from("plan_step")
     .upsert(data)
-    .select("*");
+    .select();
 
   revalidatePath("/app/team/[team_identity]/templates/plans/[plan_id]");
 
