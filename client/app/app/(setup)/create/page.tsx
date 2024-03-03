@@ -18,9 +18,11 @@ import { redirect } from "next/navigation";
 export default async function CreatePage() {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
-  const { data } = await getSession(supabase);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  if (!data.session) {
+  if (!user) {
     redirect("/login");
   }
 

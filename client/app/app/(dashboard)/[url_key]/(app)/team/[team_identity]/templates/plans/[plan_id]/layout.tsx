@@ -7,7 +7,6 @@ import CardSkeleton from "@/components/skeletons/card-skeleton";
 import { Suspense } from "react";
 import StepsContainer from "./_components/steps-container";
 import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
 
 interface layoutProps {
   children: React.ReactNode;
@@ -16,17 +15,11 @@ interface layoutProps {
     team_identity: string;
     plan_id: string;
   };
-  modal: React.ReactNode;
 }
 
-export default async function layoutPage({
-  children,
-  params,
-  modal,
-}: layoutProps) {
+export default async function layoutPage({ children, params }: layoutProps) {
   return (
     <>
-      {modal}
       <PageHeader
         className="pt-10"
         id="account-header"

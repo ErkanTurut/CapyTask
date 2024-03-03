@@ -3,8 +3,8 @@ import {
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/components/page-header";
-import { columns } from "@/components/plan/table/columns";
-import { DataTable } from "@/components/plan/table/data-table";
+import { columns } from "./_components/columns";
+import { DataTable } from "@/components/table/data-table";
 
 import { Shell } from "@/components/shells";
 import { getPlansByIdentity } from "@/lib/service/plan/fetch";
