@@ -1,12 +1,11 @@
 import { Nav } from "@/components/layouts/side-navigation/nav";
-import { TeamList } from "@/components/team/team-list";
 import { Separator } from "@/components/ui/separator";
 import UserAccountNav from "@/components/user/user-account-nav";
 import WorkspaceNav from "@/components/workspace/workspace-navigation";
 import WorkspaceSkeleton from "@/components/workspace/workspace-skeleton";
 import { appNavItems } from "@/config/dashboard.config";
 import { cookies } from "next/headers";
-import { FC, Suspense, useId } from "react";
+import { FC, Suspense } from "react";
 import {
   SidebarBody,
   SidebarFooter,
@@ -19,12 +18,12 @@ import { getTeams } from "@/lib/service/team/fetch";
 import { getSession } from "@/lib/service/auth/fetch";
 import { getUser } from "@/lib/service/user/fetch";
 
-import { getWorkspaces } from "@/lib/service/workspace/fetch";
-import { createClient } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
 import TeamListSkeleton from "@/components/team/team-list-skeleton";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getWorkspaces } from "@/lib/service/workspace/fetch";
+import { createClient } from "@/lib/supabase/server";
 import { generateAvatar } from "@/lib/utils";
+import { redirect } from "next/navigation";
 
 interface sidebarProps {
   params: {
@@ -52,7 +51,7 @@ const Sidebar: FC<sidebarProps> = async ({ params }) => {
     redirect("/login");
   }
 
-  const { data: workspaces } = await getWorkspaces({ supabase });
+  const { data: workspaces } = await getWorkspaces({ client: supabase });
 
   if (!workspaces) {
     redirect("/create");
@@ -102,7 +101,7 @@ const Sidebar: FC<sidebarProps> = async ({ params }) => {
                         title: team.name,
                         href: `/${team.identity}`,
                         items: appNavItems.teamNav,
-                        id: team.id,
+                        id: team.identity,
                       })),
                     },
                   ]}

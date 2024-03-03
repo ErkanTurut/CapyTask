@@ -5,17 +5,6 @@ import { cn } from "@/lib/utils";
 import React from "react";
 
 import { useSidebar } from "@/lib/store";
-import useWindowSize from "@/lib/hooks/use-window-size";
-
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-  SheetClose,
-} from "@/components/ui/sheet";
 
 export interface SidebarLayoutProps
   extends React.HTMLAttributes<HTMLDivElement> {
