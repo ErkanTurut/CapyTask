@@ -23,6 +23,7 @@ export default async function Page({ searchParams, params }: pageProps) {
   const { data: steps } = await searchSteps({
     client: supabase,
     q: searchParams.q,
+    team_identity: params.team_identity,
   });
 
   return (

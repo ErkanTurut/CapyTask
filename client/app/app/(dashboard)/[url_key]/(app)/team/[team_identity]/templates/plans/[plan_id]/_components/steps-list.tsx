@@ -3,10 +3,9 @@ import { Icons } from "@/components/icons";
 import { Item } from "@/components/ui/item";
 import { Separator } from "@/components/ui/separator";
 import { useAction } from "@/lib/hooks/use-actions";
-import { upsertStep } from "@/lib/service/step/actions";
+import { upsertPlanStep } from "@/lib/service/plan_step/actions/upsert";
 import { getStepsByPlan } from "@/lib/service/step/fetch";
-import { catchError, cn, sleep } from "@/lib/utils";
-import { Database } from "@/types/supabase.types";
+import { catchError, cn } from "@/lib/utils";
 import {
   DragDropContext,
   Draggable,
@@ -14,11 +13,7 @@ import {
   Droppable,
 } from "@hello-pangea/dnd";
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
-import { startTransition, useEffect, useOptimistic, useState } from "react";
-import { useDebouncedCallback } from "use-debounce";
-import { QueryResult, QueryData, QueryError } from "@supabase/supabase-js";
-import { upsertPlanStep } from "@/lib/service/plan_step/actions/upsert";
+import { startTransition, useOptimistic } from "react";
 
 interface StepListProps {
   steps: NonNullable<Awaited<ReturnType<typeof getStepsByPlan>>["data"]>;
@@ -39,8 +34,6 @@ function reorder<T>(list: T[], startIndex: number, endIndex: number): T[] {
 }
 
 export default function StepList({ steps }: StepListProps) {
-  if (!steps) return null;
-  const pathname = usePathname();
   const [stepsList, setStepsList] = useOptimistic(
     steps,
     (state, newState) => newState as StepListProps["steps"],
@@ -49,26 +42,11 @@ export default function StepList({ steps }: StepListProps) {
   const { run, isLoading } = useAction(upsertPlanStep, {
     onSuccess(data) {
       return data;
-      console.log(data);
     },
     onError: (err) => {
       catchError(new Error(err));
     },
-    onComplete() {
-      console.log("completed");
-    },
   });
-
-  const debouncedValue = useDebouncedCallback(
-    async (data: StepListProps["steps"]) => {
-      await run(data);
-    },
-    3000,
-  );
-
-  // useEffect(() => {
-  //   setOrderedData(steps);
-  // }, [steps]);
 
   function onDragEnd(result: DropResult) {
     if (!result.destination || !result.source || !result) {
@@ -86,20 +64,18 @@ export default function StepList({ steps }: StepListProps) {
 
       startTransition(() => {
         setStepsList(items);
-        // try {
-        //   debouncedValue(getDifference(stepsList!, items));
-        // } catch (error) {
-        //   console.error(error);
-        // }
-        // debouncedValue(getDifference(stepsList!, items));
+        run(getDifference(stepsList!, items));
       });
     }
   }
-
-  console.log(stepsList, "stepsList");
-
   return (
-    <>
+    <div>
+      {/* <Icons.spinner
+        className={cn(
+          "absolute right-0 top-1 mr-10 animate-spin  text-muted-foreground",
+          true ? "block" : "hidden",
+        )}
+      /> */}
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="list" type="list" direction="vertical">
           {(provided) => (
@@ -127,8 +103,10 @@ export default function StepList({ steps }: StepListProps) {
                         >
                           <Link
                             href={{
-                              query: { step_id: data.step.id },
-                              pathname,
+                              pathname: "",
+                              query: {
+                                step_id: data.step.id,
+                              },
                             }}
                           >
                             <Item
@@ -141,7 +119,21 @@ export default function StepList({ steps }: StepListProps) {
                             >
                               <div className="overflow-ellipsi flex h-5 w-full grow-0 items-center space-x-2 overflow-hidden text-sm">
                                 <div className="flex h-4 w-4 items-center justify-center rounded-full border border-border p-2 text-xs">
-                                  {index + 1}
+                                  <span className="animate-fade-in">
+                                    {index + 1}
+                                  </span>
+
+                                  {index !== stepsList.length - 1 && (
+                                    <Separator
+                                      orientation="vertical"
+                                      className={cn(
+                                        "delay-250 absolute mt-11 h-4 transition-opacity ease-in-out",
+                                        isDragging
+                                          ? "opacity-0"
+                                          : "opacity-100",
+                                      )}
+                                    />
+                                  )}
                                 </div>
                                 <h3 className="w-20 shrink-0 overflow-hidden overflow-ellipsis">
                                   {data.step.name}
@@ -165,6 +157,6 @@ export default function StepList({ steps }: StepListProps) {
           )}
         </Droppable>
       </DragDropContext>
-    </>
+    </div>
   );
 }

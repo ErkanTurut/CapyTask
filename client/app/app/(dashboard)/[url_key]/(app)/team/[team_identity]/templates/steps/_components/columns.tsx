@@ -7,7 +7,6 @@ import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { DataTableColumnHeader } from "@/components/table/data-table-column-header";
 import { DataTableRowActions } from "@/components/table/data-table-row-actions";
-import { usePathname } from "next/navigation";
 
 export const columns: ColumnDef<Database["public"]["Tables"]["plan"]["Row"]>[] =
   [
@@ -17,10 +16,9 @@ export const columns: ColumnDef<Database["public"]["Tables"]["plan"]["Row"]>[] =
         return <DataTableColumnHeader column={column} title="Title" />;
       },
       cell: ({ row }) => {
-        const pathname = usePathname();
         return (
           <Link
-            href={`${pathname}/${row.original.id}`}
+            href={`./steps/${row.original.id}`}
             className={cn(
               buttonVariants({ variant: "link", size: "sm" }),
               "underline",

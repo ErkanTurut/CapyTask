@@ -12,7 +12,6 @@ import { createClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
 import { cookies } from "next/headers";
 import Link from "next/link";
-import { Suspense } from "react";
 import StepList from "./steps-list";
 interface StepsContainerProps {
   params: {
@@ -24,6 +23,10 @@ interface StepsContainerProps {
 const StepsContainer: React.FC<StepsContainerProps> = async ({ params }) => {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
+  const { data: steps } = await getPlanSteps({
+    client: supabase,
+    plan_id: params.plan_id,
+  });
 
   return (
     <Card className="sticky top-4 h-min">
@@ -44,39 +47,18 @@ const StepsContainer: React.FC<StepsContainerProps> = async ({ params }) => {
             <span className="text-xs">Ctrl</span>K
           </kbd>
         </Link>
-        {/* <div className=" flex items-center gap-4">
-          <Input placeholder="Add a new task" type="text" />
-          <Link
-            href={`/${params.url_key}/team/${params.team_identity}/plans/${params.plan_id}/create`}
-            className={buttonVariants({
-              className: "shrink-0 gap-1",
-            })}
-          >
-            Add Step
-            <Icons.plusCircled className="h-4 w-4" />
-          </Link>
-        </div> */}
       </CardHeader>
 
       <CardContent>
-        <Suspense fallback={<div>Loading...</div>}>
-          {(async () => {
-            const { data: steps } = await getPlanSteps({
-              client: supabase,
-              plan_id: params.plan_id,
-            });
-            if (!steps || steps.length === 0) {
-              return (
-                <div className="flex h-40 items-center justify-center">
-                  <p className="text-muted-foreground">
-                    No steps found for this inspection plan
-                  </p>
-                </div>
-              );
-            }
-            return <StepList steps={steps} />;
-          })()}
-        </Suspense>
+        {!steps || steps.length === 0 ? (
+          <div className="flex h-40 items-center justify-center">
+            <p className="text-muted-foreground">
+              No steps found for this inspection plan
+            </p>
+          </div>
+        ) : (
+          <StepList steps={steps} />
+        )}
       </CardContent>
     </Card>
   );

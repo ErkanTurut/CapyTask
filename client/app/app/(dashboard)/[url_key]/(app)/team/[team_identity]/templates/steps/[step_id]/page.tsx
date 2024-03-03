@@ -1,7 +1,5 @@
-import { Icons } from "@/components/icons";
 import { Shell } from "@/components/shells";
 import StepUpdateForm from "@/components/step/step-update";
-import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -9,11 +7,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { getStep } from "@/lib/service/step/fetch";
 import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 interface PageProps {

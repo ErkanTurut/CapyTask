@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState, FormEvent } from "react";
+import { useState } from "react";
 
 import {
   Command,
@@ -16,16 +16,12 @@ import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import { useMediaQuery } from "@/lib/hooks/use-media-query";
 import Link from "next/link";
 
-import { useRouter } from "next/navigation";
-import { Database } from "@/types/supabase.types";
 import { Icons } from "@/components/icons";
-import { useDebouncedCallback } from "use-debounce";
 import { useAction } from "@/lib/hooks/use-actions";
 import { insertPlanStep } from "@/lib/service/plan_step/actions/create";
-type Status = {
-  value: string;
-  label: string;
-};
+import { Database } from "@/types/supabase.types";
+import { useRouter } from "next/navigation";
+import { useDebouncedCallback } from "use-debounce";
 
 interface SearchStepProps {
   searchParams: {
@@ -41,7 +37,7 @@ export function SearchStep({ searchParams, steps, plan_id }: SearchStepProps) {
 
   const debouncedValue = useDebouncedCallback((value: string) => {
     router.push(`?q=${encodeURIComponent(value)}`);
-  }, 2000);
+  }, 1000);
 
   if (isDesktop) {
     return (
