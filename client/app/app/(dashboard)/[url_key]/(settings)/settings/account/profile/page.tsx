@@ -32,7 +32,7 @@ export default async function profilePage({}: profilePageProps) {
   if (!session || !session.user) {
     redirect("/login");
   }
-  const { data: user } = await getUser(session.user.id, supabase);
+  const { data: user } = await getUser({ supabase, user_id: session.user.id });
   if (!user) {
     redirect("/login");
   }

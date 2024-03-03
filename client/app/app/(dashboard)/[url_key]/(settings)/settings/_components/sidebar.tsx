@@ -36,10 +36,12 @@ export async function Sidebar({ url_key, workspace, teams }: SidebarProps) {
             isCollapsed={false}
             items={[
               {
+                id: "general",
                 title: "General",
                 href: "/general",
               },
               {
+                id: "members",
                 title: "Members",
                 href: "/members",
               },

@@ -3,7 +3,6 @@ import {
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/components/page-header";
-import CreateTeamForm from "@/components/team/team-create";
 import UpdateTeamForm from "@/components/team/team-update";
 import {
   Card,
@@ -15,6 +14,7 @@ import {
 import { getTeamByUrlKey } from "@/lib/service/team/fetch";
 import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
+import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 interface generalPageProps {
@@ -27,11 +27,12 @@ interface generalPageProps {
 export default async function generalPage({ params }: generalPageProps) {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
-  const team = await getTeamByUrlKey({
+  const { data: team } = await getTeamByUrlKey({
     indentity: params.team_identity,
     url_key: params.url_key,
     supabase,
   });
+  if (!team) return notFound();
   return (
     <div>
       general page
@@ -59,7 +60,7 @@ export default async function generalPage({ params }: generalPageProps) {
         </CardHeader>
         <CardContent>
           <Suspense fallback="loading...">
-            <UpdateTeamForm identity={params.team_identity} />
+            <UpdateTeamForm team={team} />
           </Suspense>
         </CardContent>
       </Card>

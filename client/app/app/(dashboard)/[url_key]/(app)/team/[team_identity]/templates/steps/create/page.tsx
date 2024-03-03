@@ -18,7 +18,6 @@ import CreateStepForm from "@/components/step/step-create";
 import { getTeamByIdentity } from "@/lib/service/team/fetch";
 import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
-import { Button } from "@/components/ui/button";
 
 interface createPageProps {
   params: {
@@ -46,7 +45,7 @@ export default async function createPage({ params }: createPageProps) {
           Create a new step template for {team.name}
         </PageHeaderHeading>
         <PageHeaderDescription size="sm">
-          Create a new step template that can be used across your team's plans.
+          {`Create a new step template that can be used across your team's plans.`}
         </PageHeaderDescription>
       </PageHeader>
 
