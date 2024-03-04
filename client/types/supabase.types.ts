@@ -136,48 +136,6 @@ export type Database = {
           }
         ]
       }
-      plan_step: {
-        Row: {
-          created_at: string
-          id: string
-          order: number | null
-          plan_id: string
-          step_id: string
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          order?: number | null
-          plan_id: string
-          step_id: string
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          order?: number | null
-          plan_id?: string
-          step_id?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "plan_step_plan_id_fkey"
-            columns: ["plan_id"]
-            isOneToOne: false
-            referencedRelation: "plan"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "plan_step_step_id_fkey"
-            columns: ["step_id"]
-            isOneToOne: false
-            referencedRelation: "step"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
       Post: {
         Row: {
           content: string | null
@@ -351,8 +309,9 @@ export type Database = {
           description: string | null
           id: string
           name: string
+          order: number | null
           parent_step_id: string | null
-          team_id: string
+          plan_id: string
           updated_at: string
         }
         Insert: {
@@ -361,8 +320,9 @@ export type Database = {
           description?: string | null
           id?: string
           name: string
+          order?: number | null
           parent_step_id?: string | null
-          team_id: string
+          plan_id: string
           updated_at?: string
         }
         Update: {
@@ -371,8 +331,9 @@ export type Database = {
           description?: string | null
           id?: string
           name?: string
+          order?: number | null
           parent_step_id?: string | null
-          team_id?: string
+          plan_id?: string
           updated_at?: string
         }
         Relationships: [
@@ -391,10 +352,10 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "step_team_id_fkey"
-            columns: ["team_id"]
+            foreignKeyName: "step_plan_id_fkey"
+            columns: ["plan_id"]
             isOneToOne: false
-            referencedRelation: "team"
+            referencedRelation: "plan"
             referencedColumns: ["id"]
           }
         ]

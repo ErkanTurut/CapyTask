@@ -35,7 +35,6 @@ model team {
   plans        plan[]
   workspace    workspace   @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
   users        user_team[]
-  step         step[]
 
   @@unique([identity, workspace_id])
   @@unique([name, workspace_id])
@@ -96,14 +95,14 @@ model role {
 }
 
 model plan {
-  id          String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id          String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name        String
   description String?
-  created_at  DateTime    @default(now()) @db.Timestamptz(6)
-  updated_at  DateTime    @default(now()) @updatedAt @db.Timestamptz(6)
-  team_id     String      @db.Uuid
-  team        team        @relation(fields: [team_id], references: [id], onDelete: Cascade)
-  plan_step   plan_step[]
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  team_id     String   @db.Uuid
+  team        team     @relation(fields: [team_id], references: [id], onDelete: Cascade)
+  step        step[]
 
   @@index([team_id])
 }
@@ -116,33 +115,34 @@ model step {
   updated_at     DateTime @default(now()) @updatedAt @db.Timestamptz(6)
   parent_step_id String?  @db.Uuid
   created_by_id  String?  @db.Uuid
-  team_id        String   @db.Uuid
-  team           team     @relation(fields: [team_id], references: [id], onDelete: Cascade)
+  order          Int?
 
-  created_by  user?       @relation(fields: [created_by_id], references: [id])
-  parent_step step?       @relation("step_sub_steps", fields: [parent_step_id], references: [id], onDelete: Cascade)
-  sub_steps   step[]      @relation("step_sub_steps")
-  plan_step   plan_step[]
+  plan_id String @db.Uuid
+  plan    plan   @relation(fields: [plan_id], references: [id], onDelete: Cascade)
+
+  created_by  user?  @relation(fields: [created_by_id], references: [id])
+  parent_step step?  @relation("step_sub_steps", fields: [parent_step_id], references: [id], onDelete: Cascade)
+  sub_steps   step[] @relation("step_sub_steps")
 
   @@index([parent_step_id])
   @@index([created_by_id])
-  @@index([team_id])
-}
-
-model plan_step {
-  id         String   @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  plan_id    String   @db.Uuid
-  step_id    String   @db.Uuid
-  order      Int?
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-  updated_at DateTime @default(now()) @updatedAt @db.Timestamptz(6)
-  plan       plan     @relation(fields: [plan_id], references: [id], onDelete: Cascade)
-  step       step     @relation(fields: [step_id], references: [id], onDelete: Cascade)
-
-  @@id([plan_id, step_id])
-  @@index([step_id])
   @@index([plan_id])
 }
+
+// model plan_step {
+//   id         String   @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+//   plan_id    String   @db.Uuid
+//   step_id    String   @db.Uuid
+//   order      Int?
+//   created_at DateTime @default(now()) @db.Timestamptz(6)
+//   updated_at DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+//   plan       plan     @relation(fields: [plan_id], references: [id], onDelete: Cascade)
+//   step       step     @relation(fields: [step_id], references: [id], onDelete: Cascade)
+
+//   @@id([plan_id, step_id])
+//   @@index([step_id])
+//   @@index([plan_id])
+// }
 
 //useless part will be removed 
 
