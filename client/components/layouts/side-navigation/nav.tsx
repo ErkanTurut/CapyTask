@@ -40,7 +40,7 @@ export function Nav({ items, size, className, rootPath, level = 0 }: NavProps) {
   return (
     <nav
       data-collapsed={isCollapsed}
-      className={cn("group  flex w-full flex-col gap-1", className)}
+      className={cn("group flex w-full flex-col gap-1", className)}
     >
       {items.map((item, index) => {
         const Icon = item.icon ? Icons[item.icon] : null;
@@ -91,7 +91,7 @@ export function Nav({ items, size, className, rootPath, level = 0 }: NavProps) {
                     "justify-between",
                   )}
                 >
-                  <span className="flex justify-start">
+                  <span className="flex w-full justify-start ">
                     {item.image_url && (
                       <Avatar className="mr-2 h-5 w-5 rounded-md">
                         <AvatarImage
@@ -107,6 +107,7 @@ export function Nav({ items, size, className, rootPath, level = 0 }: NavProps) {
                       />
                     )}
                     {item.title}
+
                     {item.label && (
                       <span
                         className={cn(

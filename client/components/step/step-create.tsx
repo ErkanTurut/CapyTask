@@ -20,14 +20,17 @@ import { toast } from "sonner";
 
 import { useAction } from "@/lib/hooks/use-actions";
 
-import { createStep } from "@/lib/service/step/actions";
-import { TCreateStep, ZCreateStep } from "@/lib/service/step/actions/create";
+import {
+  TCreateStep,
+  ZCreateStep,
+  createStep,
+} from "@/lib/service/step/actions/create";
 import { useRouter } from "next/navigation";
 interface StepCreateProps extends React.HTMLAttributes<HTMLFormElement> {
-  team_id: string;
+  plan_id: string;
 }
 
-const CreateStepForm: FC<StepCreateProps> = ({ team_id, className }) => {
+const CreateStepForm: FC<StepCreateProps> = ({ plan_id, className }) => {
   const router = useRouter();
 
   const { run, isLoading } = useAction(createStep, {
@@ -38,9 +41,8 @@ const CreateStepForm: FC<StepCreateProps> = ({ team_id, className }) => {
         name: "",
         order: undefined,
         parent_id: undefined,
-        team_id: team_id,
+        plan_id,
       });
-      router.back();
       router.refresh();
     },
     onError: (err) => {
@@ -56,7 +58,7 @@ const CreateStepForm: FC<StepCreateProps> = ({ team_id, className }) => {
       name: "",
       order: undefined,
       parent_id: undefined,
-      team_id: team_id,
+      plan_id,
     },
   });
 
