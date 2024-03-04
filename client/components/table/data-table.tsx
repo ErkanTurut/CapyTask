@@ -28,7 +28,7 @@ import {
 
 import { DataTablePagination } from "@/components/table/data-table-pagination";
 import { useSearchParams } from "next/navigation";
-import { DataTableToolbar } from "../../app/app/(dashboard)/[url_key]/(app)/team/[team_identity]/templates/steps/_components/data-table-toolbar";
+import { DataTableToolbar } from "./data-table-toolbar";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
