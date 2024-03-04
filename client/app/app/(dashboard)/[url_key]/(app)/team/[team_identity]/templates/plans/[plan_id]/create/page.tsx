@@ -1,0 +1,66 @@
+import {
+  PageHeader,
+  PageHeaderDescription,
+  PageHeaderHeading,
+} from "@/components/page-header";
+import { Shell } from "@/components/shells";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+import { Suspense } from "react";
+
+import CreateStepForm from "@/components/step/step-create";
+import { getTeamByIdentity } from "@/lib/service/team/fetch";
+import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
+
+interface createPageProps {
+  params: {
+    team_identity: string;
+    url_key: string;
+    plan_id: string;
+    team_id: string;
+  };
+}
+
+export default async function createPage({ params }: createPageProps) {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+
+  return (
+    <Shell variant="markdown">
+      <PageHeader
+        className="pb-4"
+        id="account-header"
+        aria-labelledby="account-header-heading"
+      >
+        <PageHeaderHeading size="sm" className="flex items-center gap-1">
+          Create a new step template for
+        </PageHeaderHeading>
+        <PageHeaderDescription size="sm">
+          {`Create a new step template that can be used across your team's plans.`}
+        </PageHeaderDescription>
+      </PageHeader>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Plan information</CardTitle>
+          <CardDescription>
+            Fill in the details below to create your new plan. This information
+            will be displayed to your team members.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Suspense fallback="loading...">
+            <CreateStepForm plan_id={params.plan_id} />
+          </Suspense>
+        </CardContent>
+      </Card>
+    </Shell>
+  );
+}
