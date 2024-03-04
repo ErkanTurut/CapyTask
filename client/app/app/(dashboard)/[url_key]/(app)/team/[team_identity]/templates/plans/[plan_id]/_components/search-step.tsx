@@ -18,7 +18,6 @@ import Link from "next/link";
 
 import { Icons } from "@/components/icons";
 import { useAction } from "@/lib/hooks/use-actions";
-import { insertPlanStep } from "@/lib/service/plan_step/actions/create";
 import { Database } from "@/types/supabase.types";
 import { useRouter } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
@@ -80,14 +79,14 @@ export function StepCommand({
   plan_id: string;
 }) {
   const [searchValue, setSearchValue] = useState(query || "");
-  const { run } = useAction(insertPlanStep, {
-    onSuccess: () => {
-      console.log("success");
-    },
-    onError: () => {
-      console.log("error");
-    },
-  });
+  // const { run } = useAction(insertPlanStep, {
+  //   onSuccess: () => {
+  //     console.log("success");
+  //   },
+  //   onError: () => {
+  //     console.log("error");
+  //   },
+  // });
   return (
     <Command shouldFilter={false}>
       <CommandInput
@@ -102,7 +101,7 @@ export function StepCommand({
         <CommandGroup>
           <CommandItem>
             <Icons.plusCircled className="mr-2 h-4 w-4" />
-            <Link href={`../../steps/create`}>Create a new step</Link>
+            <Link href={`./create`}>Create a new step</Link>
           </CommandItem>
         </CommandGroup>
         <CommandSeparator alwaysRender />
@@ -114,11 +113,11 @@ export function StepCommand({
               key={step.id}
               value={step.id}
               onSelect={() => {
-                run({
-                  step_id: step.id,
-                  plan_id: plan_id,
-                  order: null,
-                });
+                // run({
+                //   step_id: step.id,
+                //   plan_id: plan_id,
+                //   order: null,
+                // });
               }}
             >
               <Icons.user className="mr-2 h-4 w-4" />

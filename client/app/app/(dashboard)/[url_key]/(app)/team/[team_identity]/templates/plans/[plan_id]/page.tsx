@@ -8,8 +8,6 @@ import {
 
 interface PageProps {
   searchParams: {
-    team_identity: string | null;
-    plan_id: string | null;
     step_id: string | null;
   };
   params: {

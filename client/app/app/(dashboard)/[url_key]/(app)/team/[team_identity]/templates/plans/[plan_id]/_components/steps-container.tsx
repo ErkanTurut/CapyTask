@@ -7,12 +7,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getPlanSteps } from "@/lib/service/plan_step/fetch";
 import { createClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import StepList from "./steps-list";
+import { getStepsByPlan } from "@/lib/service/step/fetch";
 interface StepsContainerProps {
   params: {
     url_key: string;
@@ -23,7 +23,8 @@ interface StepsContainerProps {
 const StepsContainer: React.FC<StepsContainerProps> = async ({ params }) => {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
-  const { data: steps } = await getPlanSteps({
+
+  const { data: steps } = await getStepsByPlan({
     client: supabase,
     plan_id: params.plan_id,
   });
@@ -38,7 +39,10 @@ const StepsContainer: React.FC<StepsContainerProps> = async ({ params }) => {
             buttonVariants({ variant: "outline" }),
             "relative w-full justify-start rounded-[0.5rem] bg-background text-sm font-normal text-muted-foreground shadow-none ",
           )}
-          href={{ pathname: `./${params.plan_id}/search`, query: { q: "" } }}
+          href={{
+            pathname: `/${params.url_key}/team/${params.team_identity}/templates/plans/${params.plan_id}/search`,
+            query: { q: "" },
+          }}
         >
           <Icons.search className="h-4 w-4 xl:mr-2" aria-hidden="true" />
           <span>Search or create a step...</span>
