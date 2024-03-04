@@ -94,6 +94,7 @@ const Sidebar: FC<sidebarProps> = async ({ params }) => {
                       title: "Teams",
                       icon: "plusCircled",
                       id: "all",
+                      variant: "default",
                       items: teams?.map((team) => ({
                         image_url: generateAvatar({
                           name: team.name,

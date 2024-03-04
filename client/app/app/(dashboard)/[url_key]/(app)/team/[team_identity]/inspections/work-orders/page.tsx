@@ -17,10 +17,10 @@ export default function Page({}: PageProps) {
         aria-labelledby="account-header-heading"
       >
         <PageHeaderHeading size="sm" className="flex items-center gap-1">
-          Your Plans
+          Work Orders
         </PageHeaderHeading>
         <PageHeaderDescription size="sm">
-          List of your inspection Plans
+          View and manage your work orders
         </PageHeaderDescription>
       </PageHeader>
       <Shell variant={"dashboard"}>
