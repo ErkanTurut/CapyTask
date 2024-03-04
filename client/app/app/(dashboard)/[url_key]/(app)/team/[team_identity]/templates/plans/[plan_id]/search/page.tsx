@@ -20,7 +20,7 @@ export default async function Page({ searchParams, params }: pageProps) {
 
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
-  const { data: steps } = await searchSteps({
+  const { data: steps, error } = await searchSteps({
     client: supabase,
     q: searchParams.q,
     team_identity: params.team_identity,
