@@ -18,6 +18,7 @@ import CreatePlanForm from "@/components/plan/plan-create";
 import { getTeamByIdentity } from "@/lib/service/team/fetch";
 import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
+import { Modal } from "@/components/modal";
 
 interface createPageProps {
   params: {
@@ -35,21 +36,7 @@ export default async function createPage({ params }: createPageProps) {
   });
   if (!team) return null;
   return (
-    <Shell variant="markdown">
-      <PageHeader
-        className="pb-4"
-        id="account-header"
-        aria-labelledby="account-header-heading"
-      >
-        <PageHeaderHeading size="sm" className="flex items-center gap-1">
-          Create a new plan
-        </PageHeaderHeading>
-        <PageHeaderDescription size="sm">
-          Create a new inspection plan that your team members can use to inspect
-          your assets.
-        </PageHeaderDescription>
-      </PageHeader>
-
+    <Shell variant={"markdown"}>
       <Card>
         <CardHeader>
           <CardTitle>Plan information</CardTitle>
