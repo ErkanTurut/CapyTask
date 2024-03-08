@@ -33,8 +33,8 @@ export default async function DashboardLayout({
 
   return (
     <SidebarProvider isCollapsed={defaultCollapsed || false}>
-      <DotPattern className="absolute top-0 z-[-2] h-screen w-screen bg-background  ">
-        <TooltipProvider delayDuration={0}>
+      <TooltipProvider delayDuration={0}>
+        <DotPattern className="absolute top-0 z-[-2] h-screen w-screen bg-background  ">
           <ResizableGroup>
             <Sidebar params={params} />
             <Resizable defaultLayout={defaultLayout}>
@@ -45,8 +45,8 @@ export default async function DashboardLayout({
               </ScrollArea>
             </Resizable>
           </ResizableGroup>
-        </TooltipProvider>
-      </DotPattern>
+        </DotPattern>{" "}
+      </TooltipProvider>
     </SidebarProvider>
   );
 }

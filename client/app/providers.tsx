@@ -17,14 +17,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const { isMobile } = useWindowSize();
   return (
     <NextThemesProvider attribute="class" defaultTheme="system" enableSystem>
-      <ModalProvider>
-        <TailwindIndicator />
-        {children}
-        <Toaster
-          closeButton
-          position={isMobile ? "top-center" : "bottom-right"}
-        />
-      </ModalProvider>
+      <TailwindIndicator />
+      {children}
+      <Toaster
+        closeButton
+        position={isMobile ? "top-center" : "bottom-right"}
+      />
     </NextThemesProvider>
   );
 }
