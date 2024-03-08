@@ -1,5 +1,4 @@
-import svgToDataUri from "mini-svg-data-uri";
-
+/*eslint-env node*/
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
