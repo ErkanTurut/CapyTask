@@ -1,3 +1,6 @@
+import { Modal } from "@/components/modal";
+import { ResponsiveCard } from "@/components/responsive-card";
+import StepUpdateForm from "@/components/step/step-update";
 import {
   Card,
   CardContent,
@@ -5,6 +8,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { getStep } from "@/lib/service/step/fetch";
+import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
+import { headers as dynamic } from "next/headers";
 
 interface PageProps {
   searchParams: {
@@ -18,6 +25,22 @@ interface PageProps {
 }
 
 export default async function Page({ searchParams, params }: PageProps) {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+
+  if (searchParams.step_id) {
+    const { data: step } = await getStep({
+      client: supabase,
+      id: searchParams.step_id,
+    });
+    if (!step) return null;
+    return (
+      <ResponsiveCard>
+        <StepUpdateForm step={step} />
+      </ResponsiveCard>
+    );
+  }
+
   return (
     <Card className="sticky top-4 h-min">
       <CardHeader>

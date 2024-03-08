@@ -10,6 +10,8 @@ import { Shell } from "@/components/shells";
 import { getPlansByIdentity } from "@/lib/service/plan/fetch";
 import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
+import { Suspense } from "react";
+import TableSkeleton from "@/components/skeletons/table-skeleton";
 
 interface DashboardLayoutProps {
   params: {
@@ -33,12 +35,6 @@ export default async function DashboardPage({
     : 10;
   const offset = (page - 1) * limit;
 
-  const { data: plans, count } = await getPlansByIdentity({
-    team_identity: params.team_identity,
-    db: supabase,
-    range: { start: offset, end: offset + limit * 2 },
-  });
-
   return (
     <>
       <PageHeader
@@ -54,7 +50,23 @@ export default async function DashboardPage({
         </PageHeaderDescription>
       </PageHeader>
       <Shell variant="dashboard">
-        <DataTable columns={columns} count={count || 0} data={plans || []} />
+        <Suspense fallback={<TableSkeleton />}>
+          {(async () => {
+            const { data: plans, count } = await getPlansByIdentity({
+              team_identity: params.team_identity,
+              db: supabase,
+              range: { start: offset, end: offset + limit * 2 },
+            });
+
+            return (
+              <DataTable
+                columns={columns}
+                count={count || 0}
+                data={plans || []}
+              />
+            );
+          })()}
+        </Suspense>
       </Shell>
     </>
   );

@@ -15,11 +15,17 @@ interface layoutProps {
     team_identity: string;
     plan_id: string;
   };
+  command: React.ReactNode;
 }
 
-export default async function layoutPage({ children, params }: layoutProps) {
+export default async function layoutPage({
+  children,
+  params,
+  command,
+}: layoutProps) {
   return (
     <>
+      {command}
       <PageHeader
         className="pt-10"
         id="account-header"
