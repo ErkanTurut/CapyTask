@@ -17,7 +17,6 @@ import { useMediaQuery } from "@/lib/hooks/use-media-query";
 import Link from "next/link";
 
 import { Icons } from "@/components/icons";
-import { useAction } from "@/lib/hooks/use-actions";
 import { Database } from "@/types/supabase.types";
 import { useRouter } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
@@ -35,12 +34,12 @@ export function SearchStep({ searchParams, steps, plan_id }: SearchStepProps) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   const debouncedValue = useDebouncedCallback((value: string) => {
-    router.push(`?q=${encodeURIComponent(value)}`);
+    router.replace(`?q=${encodeURIComponent(value)}`);
   }, 1000);
 
   if (isDesktop) {
     return (
-      <CommandDialog open={true} onOpenChange={() => router.replace("./")}>
+      <CommandDialog open={true} onOpenChange={() => router.back()}>
         <StepCommand
           onSearch={debouncedValue}
           query={searchParams.q}
@@ -52,7 +51,7 @@ export function SearchStep({ searchParams, steps, plan_id }: SearchStepProps) {
   }
 
   return (
-    <Drawer open={true} onClose={() => router.replace("./")}>
+    <Drawer open={true} onClose={() => router.back()}>
       <DrawerContent>
         <div className="mt-4 border-t">
           <StepCommand

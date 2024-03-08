@@ -3,6 +3,7 @@
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Drawer, DrawerContent } from "@/components/ui/drawer";
+import useTailwindBreakpoint from "@/lib/hooks/use-tailwind-breakpoint";
 import useWindowSize from "@/lib/hooks/use-window-size";
 import { useRouter } from "next/navigation";
 interface ResponsiveCardProps {
@@ -11,6 +12,7 @@ interface ResponsiveCardProps {
 
 export function ResponsiveCard({ children }: ResponsiveCardProps) {
   const { isDesktop, isMobile, isTablet } = useWindowSize();
+
   const router = useRouter();
 
   if (isMobile) {
