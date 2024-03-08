@@ -62,12 +62,6 @@ export const appNavItems: {
           variant: "ghost",
           id: "plans",
         },
-        {
-          title: "Steps",
-          href: "/steps",
-          variant: "ghost",
-          id: "steps",
-        },
       ],
     },
     {
