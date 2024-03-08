@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import resolveConfig from "tailwindcss/resolveConfig";
-
-// Update the path to your Tailwind config file
+// @ts-expect-error
 import tailwindConfig from "@/tailwind.config";
 
 const useTailwindBreakpoint = ({
@@ -11,7 +10,6 @@ const useTailwindBreakpoint = ({
   onBreakpointChange?: (breakpoint: string) => void;
 } = {}): string => {
   const fullConfig = resolveConfig(tailwindConfig);
-  //@ts-expect-error
   const breakpoints: { [key: string]: string } = fullConfig.theme.screens;
 
   // Sort breakpoints by size and get the smallest one
@@ -57,7 +55,7 @@ const useTailwindBreakpoint = ({
       window.removeEventListener("resize", debouncedCheckBreakpoint);
       clearTimeout(debounceTimeout);
     };
-  }, [breakpoints, currentBreakpoint, onBreakpointChange, smallestBreakpoint]);
+  }, [breakpoints, currentBreakpoint, onBreakpointChange]);
 
   return currentBreakpoint;
 };
