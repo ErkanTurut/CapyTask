@@ -30,17 +30,18 @@ export async function getPlans({
 export async function getPlansByIdentity({
   team_identity,
   db,
-  range,
+  range = { start: 0, end: 10 },
 }: {
   team_identity: string;
   db: SupabaseClient;
-  range: { start: number; end: number };
+  range?: { start: number; end: number };
 }) {
   return await db
     .from("plan")
-    .select("*, team!inner(*)")
+    .select("*, team!inner(*)", { count: "estimated" })
     .eq("team.identity", team_identity)
-    .range(range.start, range.end);
+    .range(range.start, range.end)
+    .order("updated_at", { ascending: false });
 }
 
 export async function getPlan({
@@ -51,4 +52,22 @@ export async function getPlan({
   db: SupabaseClient;
 }) {
   return await db.from("plan").select("*").eq("id", plan_id).single();
+}
+
+export async function searchPlan({
+  q,
+  team_identity,
+  client,
+}: {
+  q: string;
+  team_identity: string;
+  client: SupabaseClient;
+}) {
+  return await client
+    .from("plan")
+    .select("*, team!inner(*)")
+    .eq("team.identity", team_identity)
+    .textSearch("name", q, {
+      type: "websearch",
+    });
 }
