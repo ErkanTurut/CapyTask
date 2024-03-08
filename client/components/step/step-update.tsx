@@ -47,6 +47,14 @@ const StepUpdateForm: FC<StepUpdateFormProps> = ({ step, className }) => {
     },
   });
 
+  useEffect(() => {
+    form.reset({
+      name: step.name,
+      description: step.description || "",
+      id: step.id,
+    });
+  }, [step]);
+
   // react-hook-form
   const form = useForm<TUpdateStep>({
     resolver: zodResolver(ZUpdateStep),
