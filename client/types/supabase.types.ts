@@ -9,98 +9,6 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      Account: {
-        Row: {
-          access_token: string | null
-          expires_at: number | null
-          id: string
-          id_token: string | null
-          oauth_token: string | null
-          oauth_token_secret: string | null
-          provider: string
-          providerAccountId: string
-          refresh_token: string | null
-          refresh_token_expires_in: number | null
-          scope: string | null
-          session_state: string | null
-          token_type: string | null
-          type: string
-          userId: string
-        }
-        Insert: {
-          access_token?: string | null
-          expires_at?: number | null
-          id: string
-          id_token?: string | null
-          oauth_token?: string | null
-          oauth_token_secret?: string | null
-          provider: string
-          providerAccountId: string
-          refresh_token?: string | null
-          refresh_token_expires_in?: number | null
-          scope?: string | null
-          session_state?: string | null
-          token_type?: string | null
-          type: string
-          userId: string
-        }
-        Update: {
-          access_token?: string | null
-          expires_at?: number | null
-          id?: string
-          id_token?: string | null
-          oauth_token?: string | null
-          oauth_token_secret?: string | null
-          provider?: string
-          providerAccountId?: string
-          refresh_token?: string | null
-          refresh_token_expires_in?: number | null
-          scope?: string | null
-          session_state?: string | null
-          token_type?: string | null
-          type?: string
-          userId?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Account_userId_fkey"
-            columns: ["userId"]
-            isOneToOne: false
-            referencedRelation: "User"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      Example: {
-        Row: {
-          description: string | null
-          domainCount: number | null
-          id: number
-          image: string | null
-          imageBlurhash: string | null
-          name: string | null
-          url: string | null
-        }
-        Insert: {
-          description?: string | null
-          domainCount?: number | null
-          id?: number
-          image?: string | null
-          imageBlurhash?: string | null
-          name?: string | null
-          url?: string | null
-        }
-        Update: {
-          description?: string | null
-          domainCount?: number | null
-          id?: number
-          image?: string | null
-          imageBlurhash?: string | null
-          name?: string | null
-          url?: string | null
-        }
-        Relationships: []
-      }
       plan: {
         Row: {
           created_at: string
@@ -136,66 +44,6 @@ export type Database = {
           }
         ]
       }
-      Post: {
-        Row: {
-          content: string | null
-          createdAt: string
-          description: string | null
-          id: string
-          image: string | null
-          imageBlurhash: string | null
-          published: boolean
-          siteId: string | null
-          slug: string
-          title: string | null
-          updatedAt: string
-          userId: string | null
-        }
-        Insert: {
-          content?: string | null
-          createdAt?: string
-          description?: string | null
-          id: string
-          image?: string | null
-          imageBlurhash?: string | null
-          published?: boolean
-          siteId?: string | null
-          slug: string
-          title?: string | null
-          updatedAt: string
-          userId?: string | null
-        }
-        Update: {
-          content?: string | null
-          createdAt?: string
-          description?: string | null
-          id?: string
-          image?: string | null
-          imageBlurhash?: string | null
-          published?: boolean
-          siteId?: string | null
-          slug?: string
-          title?: string | null
-          updatedAt?: string
-          userId?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Post_siteId_fkey"
-            columns: ["siteId"]
-            isOneToOne: false
-            referencedRelation: "Site"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Post_userId_fkey"
-            columns: ["userId"]
-            isOneToOne: false
-            referencedRelation: "User"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
       role: {
         Row: {
           description: string
@@ -216,91 +64,6 @@ export type Database = {
           permissions?: Database["public"]["Enums"]["Permission"][] | null
         }
         Relationships: []
-      }
-      Session: {
-        Row: {
-          expires: string
-          id: string
-          sessionToken: string
-          userId: string
-        }
-        Insert: {
-          expires: string
-          id: string
-          sessionToken: string
-          userId: string
-        }
-        Update: {
-          expires?: string
-          id?: string
-          sessionToken?: string
-          userId?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Session_userId_fkey"
-            columns: ["userId"]
-            isOneToOne: false
-            referencedRelation: "User"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      Site: {
-        Row: {
-          createdAt: string
-          customDomain: string | null
-          description: string | null
-          font: string
-          id: string
-          image: string | null
-          imageBlurhash: string | null
-          logo: string | null
-          message404: string | null
-          name: string | null
-          subdomain: string | null
-          updatedAt: string
-          userId: string | null
-        }
-        Insert: {
-          createdAt?: string
-          customDomain?: string | null
-          description?: string | null
-          font?: string
-          id: string
-          image?: string | null
-          imageBlurhash?: string | null
-          logo?: string | null
-          message404?: string | null
-          name?: string | null
-          subdomain?: string | null
-          updatedAt: string
-          userId?: string | null
-        }
-        Update: {
-          createdAt?: string
-          customDomain?: string | null
-          description?: string | null
-          font?: string
-          id?: string
-          image?: string | null
-          imageBlurhash?: string | null
-          logo?: string | null
-          message404?: string | null
-          name?: string | null
-          subdomain?: string | null
-          updatedAt?: string
-          userId?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Site_userId_fkey"
-            columns: ["userId"]
-            isOneToOne: false
-            referencedRelation: "User"
-            referencedColumns: ["id"]
-          }
-        ]
       }
       step: {
         Row: {
@@ -434,42 +197,6 @@ export type Database = {
         }
         Relationships: []
       }
-      User: {
-        Row: {
-          createdAt: string
-          email: string | null
-          emailVerified: string | null
-          gh_username: string | null
-          id: string
-          image: string | null
-          name: string | null
-          updatedAt: string
-          username: string | null
-        }
-        Insert: {
-          createdAt?: string
-          email?: string | null
-          emailVerified?: string | null
-          gh_username?: string | null
-          id: string
-          image?: string | null
-          name?: string | null
-          updatedAt: string
-          username?: string | null
-        }
-        Update: {
-          createdAt?: string
-          email?: string | null
-          emailVerified?: string | null
-          gh_username?: string | null
-          id?: string
-          image?: string | null
-          name?: string | null
-          updatedAt?: string
-          username?: string | null
-        }
-        Relationships: []
-      }
       user_team: {
         Row: {
           role_id: string | null
@@ -549,24 +276,6 @@ export type Database = {
             referencedColumns: ["id"]
           }
         ]
-      }
-      VerificationToken: {
-        Row: {
-          expires: string
-          identifier: string
-          token: string
-        }
-        Insert: {
-          expires: string
-          identifier: string
-          token: string
-        }
-        Update: {
-          expires?: string
-          identifier?: string
-          token?: string
-        }
-        Relationships: []
       }
       workspace: {
         Row: {

@@ -24,17 +24,18 @@ model user {
 }
 
 model team {
-  id           String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id           String       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name         String
   description  String?
   image_uri    String?
-  created_at   DateTime    @default(now()) @db.Timestamptz(6)
-  updated_at   DateTime    @default(now()) @updatedAt @db.Timestamptz(6)
-  workspace_id String      @db.Uuid
+  created_at   DateTime     @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime     @default(now()) @updatedAt @db.Timestamptz(6)
+  workspace_id String       @db.Uuid
   identity     String
   plans        plan[]
-  workspace    workspace   @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
+  workspace    workspace    @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
   users        user_team[]
+  work_order   work_order[]
 
   @@unique([identity, workspace_id])
   @@unique([name, workspace_id])
@@ -129,129 +130,128 @@ model step {
   @@index([plan_id])
 }
 
-// model plan_step {
-//   id         String   @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-//   plan_id    String   @db.Uuid
-//   step_id    String   @db.Uuid
-//   order      Int?
-//   created_at DateTime @default(now()) @db.Timestamptz(6)
-//   updated_at DateTime @default(now()) @updatedAt @db.Timestamptz(6)
-//   plan       plan     @relation(fields: [plan_id], references: [id], onDelete: Cascade)
-//   step       step     @relation(fields: [step_id], references: [id], onDelete: Cascade)
+model work_order {
+  id          String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name        String
+  description String?
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  work_plan   Json     @db.JsonB
+  team_id     String   @db.Uuid
+  team        team     @relation(fields: [team_id], references: [id], onDelete: Cascade)
+  status      Status   @default(OPEN)
 
-//   @@id([plan_id, step_id])
-//   @@index([step_id])
-//   @@index([plan_id])
-// }
+  @@index([team_id])
+}
 
 //useless part will be removed 
 
-model User {
-  id            String    @id @default(cuid())
-  name          String?
-  username      String?
-  gh_username   String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  accounts      Account[]
-  posts         Post[]
-  sessions      Session[]
-  sites         Site[]
-}
+// model User {
+//   id            String    @id @default(cuid())
+//   name          String?
+//   username      String?
+//   gh_username   String?
+//   email         String?   @unique
+//   emailVerified DateTime?
+//   image         String?
+//   createdAt     DateTime  @default(now())
+//   updatedAt     DateTime  @updatedAt
+//   accounts      Account[]
+//   posts         Post[]
+//   sessions      Session[]
+//   sites         Site[]
+// }
 
-model Account {
-  id                       String  @id @default(cuid())
-  userId                   String
-  type                     String
-  provider                 String
-  providerAccountId        String
-  refresh_token            String?
-  refresh_token_expires_in Int?
-  access_token             String?
-  expires_at               Int?
-  token_type               String?
-  scope                    String?
-  id_token                 String?
-  session_state            String?
-  oauth_token_secret       String?
-  oauth_token              String?
-  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+// model Account {
+//   id                       String  @id @default(cuid())
+//   userId                   String
+//   type                     String
+//   provider                 String
+//   providerAccountId        String
+//   refresh_token            String?
+//   refresh_token_expires_in Int?
+//   access_token             String?
+//   expires_at               Int?
+//   token_type               String?
+//   scope                    String?
+//   id_token                 String?
+//   session_state            String?
+//   oauth_token_secret       String?
+//   oauth_token              String?
+//   user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([provider, providerAccountId])
-  @@index([userId])
-}
+//   @@unique([provider, providerAccountId])
+//   @@index([userId])
+// }
 
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+// model Session {
+//   id           String   @id @default(cuid())
+//   sessionToken String   @unique
+//   userId       String
+//   expires      DateTime
+//   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([userId])
-}
+//   @@index([userId])
+// }
 
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
+// model VerificationToken {
+//   identifier String
+//   token      String   @unique
+//   expires    DateTime
 
-  @@unique([identifier, token])
-}
+//   @@unique([identifier, token])
+// }
 
-model Post {
-  id            String   @id @default(cuid())
-  title         String?
-  description   String?
-  content       String?
-  slug          String   @default(cuid())
-  image         String?  @default("https://public.blob.vercel-storage.com/eEZHAoPTOBSYGBE3/hxfcV5V-eInX3jbVUhjAt1suB7zB88uGd1j20b.png")
-  imageBlurhash String?  @default("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAhCAYAAACbffiEAAAACXBIWXMAABYlAAAWJQFJUiTwAAABfUlEQVR4nN3XyZLDIAwE0Pz/v3q3r55JDlSBplsIEI49h76k4opexCK/juP4eXjOT149f2Tf9ySPgcjCc7kdpBTgDPKByKK2bTPFEdMO0RDrusJ0wLRBGCIuelmWJAjkgPGDSIQEMBDCfA2CEPM80+Qwl0JkNxBimiaYGOTUlXYI60YoehzHJDEm7kxjV3whOQTD3AaCuhGKHoYhyb+CBMwjIAFz647kTqyapdV4enGINuDJMSScPmijSwjCaHeLcT77C7EC0C1ugaCTi2HYfAZANgj6Z9A8xY5eiYghDMNQBJNCWhASot0jGsSCUiHWZcSGQjaWWCDaGMOWnsCcn2QhVkRuxqqNxMSdUSElCDbp1hbNOsa6Ugxh7xXauF4DyM1m5BLtCylBXgaxvPXVwEoOBjeIFVODtW74oj1yBQah3E8tyz3SkpolKS9Geo9YMD1QJR1Go4oJkgO1pgbNZq0AOUPChyjvh7vlXaQa+X1UXwKxgHokB2XPxbX+AnijwIU4ahazAAAAAElFTkSuQmCC")
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  published     Boolean  @default(false)
-  siteId        String?
-  userId        String?
-  site          Site?    @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+// model Post {
+//   id            String   @id @default(cuid())
+//   title         String?
+//   description   String?
+//   content       String?
+//   slug          String   @default(cuid())
+//   image         String?  @default("https://public.blob.vercel-storage.com/eEZHAoPTOBSYGBE3/hxfcV5V-eInX3jbVUhjAt1suB7zB88uGd1j20b.png")
+//   imageBlurhash String?  @default("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAhCAYAAACbffiEAAAACXBIWXMAABYlAAAWJQFJUiTwAAABfUlEQVR4nN3XyZLDIAwE0Pz/v3q3r55JDlSBplsIEI49h76k4opexCK/juP4eXjOT149f2Tf9ySPgcjCc7kdpBTgDPKByKK2bTPFEdMO0RDrusJ0wLRBGCIuelmWJAjkgPGDSIQEMBDCfA2CEPM80+Qwl0JkNxBimiaYGOTUlXYI60YoehzHJDEm7kxjV3whOQTD3AaCuhGKHoYhyb+CBMwjIAFz647kTqyapdV4enGINuDJMSScPmijSwjCaHeLcT77C7EC0C1ugaCTi2HYfAZANgj6Z9A8xY5eiYghDMNQBJNCWhASot0jGsSCUiHWZcSGQjaWWCDaGMOWnsCcn2QhVkRuxqqNxMSdUSElCDbp1hbNOsa6Ugxh7xXauF4DyM1m5BLtCylBXgaxvPXVwEoOBjeIFVODtW74oj1yBQah3E8tyz3SkpolKS9Geo9YMD1QJR1Go4oJkgO1pgbNZq0AOUPChyjvh7vlXaQa+X1UXwKxgHokB2XPxbX+AnijwIU4ahazAAAAAElFTkSuQmCC")
+//   createdAt     DateTime @default(now())
+//   updatedAt     DateTime @updatedAt
+//   published     Boolean  @default(false)
+//   siteId        String?
+//   userId        String?
+//   site          Site?    @relation(fields: [siteId], references: [id], onDelete: Cascade)
+//   user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([slug, siteId])
-  @@index([siteId])
-  @@index([userId])
-}
+//   @@unique([slug, siteId])
+//   @@index([siteId])
+//   @@index([userId])
+// }
 
-model Site {
-  id            String   @id @default(cuid())
-  name          String?
-  description   String?
-  logo          String?  @default("https://public.blob.vercel-storage.com/eEZHAoPTOBSYGBE3/JRajRyC-PhBHEinQkupt02jqfKacBVHLWJq7Iy.png")
-  font          String   @default("font-cal")
-  image         String?  @default("https://public.blob.vercel-storage.com/eEZHAoPTOBSYGBE3/hxfcV5V-eInX3jbVUhjAt1suB7zB88uGd1j20b.png")
-  imageBlurhash String?  @default("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAhCAYAAACbffiEAAAACXBIWXMAABYlAAAWJQFJUiTwAAABfUlEQVR4nN3XyZLDIAwE0Pz/v3q3r55JDlSBplsIEI49h76k4opexCK/juP4eXjOT149f2Tf9ySPgcjCc7kdpBTgDPKByKK2bTPFEdMO0RDrusJ0wLRBGCIuelmWJAjkgPGDSIQEMBDCfA2CEPM80+Qwl0JkNxBimiaYGOTUlXYI60YoehzHJDEm7kxjV3whOQTD3AaCuhGKHoYhyb+CBMwjIAFz647kTqyapdV4enGINuDJMSScPmijSwjCaHeLcT77C7EC0C1ugaCTi2HYfAZANgj6Z9A8xY5eiYghDMNQBJNCWhASot0jGsSCUiHWZcSGQjaWWCDaGMOWnsCcn2QhVkRuxqqNxMSdUSElCDbp1hbNOsa6Ugxh7xXauF4DyM1m5BLtCylBXgaxvPXVwEoOBjeIFVODtW74oj1yBQah3E8tyz3SkpolKS9Geo9YMD1QJR1Go4oJkgO1pgbNZq0AOUPChyjvh7vlXaQa+X1UXwKxgHokB2XPxbX+AnijwIU4ahazAAAAAElFTkSuQmCC")
-  subdomain     String?  @unique
-  customDomain  String?  @unique
-  message404    String?  @default("Blimey! You've found a page that doesn't exist.")
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  userId        String?
-  posts         Post[]
-  user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+// model Site {
+//   id            String   @id @default(cuid())
+//   name          String?
+//   description   String?
+//   logo          String?  @default("https://public.blob.vercel-storage.com/eEZHAoPTOBSYGBE3/JRajRyC-PhBHEinQkupt02jqfKacBVHLWJq7Iy.png")
+//   font          String   @default("font-cal")
+//   image         String?  @default("https://public.blob.vercel-storage.com/eEZHAoPTOBSYGBE3/hxfcV5V-eInX3jbVUhjAt1suB7zB88uGd1j20b.png")
+//   imageBlurhash String?  @default("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAhCAYAAACbffiEAAAACXBIWXMAABYlAAAWJQFJUiTwAAABfUlEQVR4nN3XyZLDIAwE0Pz/v3q3r55JDlSBplsIEI49h76k4opexCK/juP4eXjOT149f2Tf9ySPgcjCc7kdpBTgDPKByKK2bTPFEdMO0RDrusJ0wLRBGCIuelmWJAjkgPGDSIQEMBDCfA2CEPM80+Qwl0JkNxBimiaYGOTUlXYI60YoehzHJDEm7kxjV3whOQTD3AaCuhGKHoYhyb+CBMwjIAFz647kTqyapdV4enGINuDJMSScPmijSwjCaHeLcT77C7EC0C1ugaCTi2HYfAZANgj6Z9A8xY5eiYghDMNQBJNCWhASot0jGsSCUiHWZcSGQjaWWCDaGMOWnsCcn2QhVkRuxqqNxMSdUSElCDbp1hbNOsa6Ugxh7xXauF4DyM1m5BLtCylBXgaxvPXVwEoOBjeIFVODtW74oj1yBQah3E8tyz3SkpolKS9Geo9YMD1QJR1Go4oJkgO1pgbNZq0AOUPChyjvh7vlXaQa+X1UXwKxgHokB2XPxbX+AnijwIU4ahazAAAAAElFTkSuQmCC")
+//   subdomain     String?  @unique
+//   customDomain  String?  @unique
+//   message404    String?  @default("Blimey! You've found a page that doesn't exist.")
+//   createdAt     DateTime @default(now())
+//   updatedAt     DateTime @updatedAt
+//   userId        String?
+//   posts         Post[]
+//   user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([userId])
-}
+//   @@index([userId])
+// }
 
-model Example {
-  id            Int     @id @default(autoincrement())
-  name          String?
-  description   String?
-  domainCount   Int?
-  url           String?
-  image         String?
-  imageBlurhash String?
-}
+// model Example {
+//   id            Int     @id @default(autoincrement())
+//   name          String?
+//   description   String?
+//   domainCount   Int?
+//   url           String?
+//   image         String?
+//   imageBlurhash String?
+// }
 
 enum Status {
   OPEN
