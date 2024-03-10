@@ -8,24 +8,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { CreateWorspaceForm } from "@/components/workspace/workspace-create";
-import { getSession } from "@/lib/service/auth/fetch";
-import { createClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
-import { cookies } from "next/headers";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
 export default async function CreatePage() {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/login");
-  }
-
   return (
     <div className="grid min-h-screen">
       <div className="container my-auto max-w-3xl ">

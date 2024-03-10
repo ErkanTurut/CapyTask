@@ -21,9 +21,9 @@ module.exports = {
       { hostname: "images.unsplash.com" },
     ],
   },
-  logging: {
-    fetches: {
-      fullUrl: true,
-    },
-  },
+  // logging: {
+  //   fetches: {
+  //     fullUrl: true,
+  //   },
+  // },
 };
