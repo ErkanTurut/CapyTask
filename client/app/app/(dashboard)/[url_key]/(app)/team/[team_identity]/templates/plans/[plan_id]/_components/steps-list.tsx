@@ -13,7 +13,6 @@ import {
   Droppable,
 } from "@hello-pangea/dnd";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
 import { startTransition, useOptimistic } from "react";
 import { toast } from "sonner";
 

@@ -3,15 +3,12 @@ import {
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/components/page-header";
-import { columns } from "./_components/columns";
-import { DataTable } from "@/components/table/data-table";
 
 import { Shell } from "@/components/shells";
-import { getPlansByIdentity } from "@/lib/service/plan/fetch";
-import { createClient } from "@/lib/supabase/server";
-import { cookies } from "next/headers";
-import { Suspense } from "react";
 import TableSkeleton from "@/components/skeletons/table-skeleton";
+import { trpc } from "@/trpc/server";
+import { Suspense } from "react";
+import PlansTable from "./_components/plans-table";
 
 interface DashboardLayoutProps {
   params: {
@@ -24,9 +21,6 @@ export default async function DashboardPage({
   params,
   searchParams,
 }: DashboardLayoutProps) {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
-
   const page = searchParams["page"]
     ? parseInt(searchParams["page"] as string)
     : 1;
@@ -51,21 +45,7 @@ export default async function DashboardPage({
       </PageHeader>
       <Shell variant="dashboard">
         <Suspense fallback={<TableSkeleton />}>
-          {(async () => {
-            const { data: plans, count } = await getPlansByIdentity({
-              team_identity: params.team_identity,
-              db: supabase,
-              range: { start: offset, end: offset + limit * 2 },
-            });
-
-            return (
-              <DataTable
-                columns={columns}
-                count={count || 0}
-                data={plans || []}
-              />
-            );
-          })()}
+          <PlansTable props={{ offset, limit, page }} params={params} />
         </Suspense>
       </Shell>
     </>

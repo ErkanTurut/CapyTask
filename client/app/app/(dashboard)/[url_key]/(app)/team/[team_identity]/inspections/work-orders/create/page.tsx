@@ -1,9 +1,5 @@
-import { getPlansByIdentity, searchPlan } from "@/lib/service/plan/fetch";
-import { createClient } from "@/lib/supabase/server";
-import { cookies } from "next/headers";
+import { trpc } from "@/trpc/server";
 import { WorkPlanSelector } from "./work-plan-selector";
-import { searchSteps } from "@/lib/service/step/fetch";
-import { headers as dynamic } from "next/headers";
 
 interface PageProps {
   params: {
@@ -15,20 +11,12 @@ interface PageProps {
 }
 
 export default async function Page({ params, searchParams }: PageProps) {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
-  // if (searchParams.q) {
-  //   const { data: plans } = await searchPlan({
-  //     client: supabase,
-  //     q: searchParams.q,
-  //     team_identity: params.team_identity,
-  //   });
-  //   return <WorkPlanSelector data={plans} searchParams={searchParams} />;
-  // }
-
-  const { data: plans } = await getPlansByIdentity({
+  const { data: plans } = await trpc.db.plan.getPlansByIdentity.query({
     team_identity: params.team_identity,
-    db: supabase,
+    range: {
+      start: 0,
+      end: 10,
+    },
   });
 
   return <WorkPlanSelector data={plans} searchParams={searchParams} />;

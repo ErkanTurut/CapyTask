@@ -6,7 +6,6 @@ import {
 import CardSkeleton from "@/components/skeletons/card-skeleton";
 import { Suspense } from "react";
 import StepsContainer from "./_components/steps-container";
-import Link from "next/link";
 
 interface layoutProps {
   children: React.ReactNode;
