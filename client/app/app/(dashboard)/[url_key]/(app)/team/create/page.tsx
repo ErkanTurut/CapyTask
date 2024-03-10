@@ -12,9 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getWorkspace } from "@/lib/service/workspace/fetch";
-import { createClient } from "@/lib/supabase/server";
-import { cookies } from "next/headers";
+import { trpc } from "@/trpc/server";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
@@ -25,11 +23,8 @@ interface createTeamProps {
 }
 
 export default async function createTeam({ params }: createTeamProps) {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
-  const { data: workspace } = await getWorkspace({
+  const { data: workspace } = await trpc.db.workspace.getByUrlKey.query({
     url_key: params.url_key,
-    supabase,
   });
   if (!workspace) redirect("/create");
 

@@ -13,16 +13,11 @@ import {
   SidebarLayout,
 } from "./sidebar-layout";
 
-import { getTeams } from "@/lib/service/team/fetch";
-
-import { getSession } from "@/lib/service/auth/fetch";
-import { getUser } from "@/lib/service/user/fetch";
-
 import TeamListSkeleton from "@/components/team/team-list-skeleton";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getWorkspaces } from "@/lib/service/workspace/fetch";
 import { createClient } from "@/lib/supabase/server";
 import { generateAvatar } from "@/lib/utils";
+import { trpc } from "@/trpc/server";
 import { redirect } from "next/navigation";
 
 interface sidebarProps {
@@ -36,7 +31,6 @@ const Sidebar: FC<sidebarProps> = async ({ params }) => {
   const supabase = createClient(cookieStore);
   const layout = cookies().get("react-resizable-panels:layout");
   const collapsed = cookies().get("react-resizable-panels:collapsed");
-
   const defaultLayout = layout
     ? (JSON.parse(layout.value) as number[])
     : undefined;
@@ -44,14 +38,16 @@ const Sidebar: FC<sidebarProps> = async ({ params }) => {
     ? (JSON.parse(collapsed.value) as boolean)
     : undefined;
   const {
-    data: { session },
+    data: { user },
     error,
-  } = await getSession(supabase);
-  if (!session || error) {
+  } = await supabase.auth.getUser();
+  if (!user || error) {
     redirect("/login");
   }
 
-  const { data: workspaces } = await getWorkspaces({ client: supabase });
+  const { data: workspaces } = await trpc.db.workspace.getByUser.query({
+    user_id: user.id,
+  });
 
   if (!workspaces) {
     redirect("/create");
@@ -81,11 +77,10 @@ const Sidebar: FC<sidebarProps> = async ({ params }) => {
         <SidebarBody className="flex flex-col gap-2 overflow-x-auto overflow-ellipsis whitespace-nowrap	 p-2	">
           <Suspense fallback={<TeamListSkeleton />}>
             {(async () => {
-              const { data: teams } = await getTeams({
-                supabase,
-                workspace_id: workspace.id,
-              });
-
+              const { data: teams } =
+                await trpc.db.team.getByWorkspaceUrlKey.query({
+                  url_key: params.url_key,
+                });
               return (
                 <Nav
                   size={"sm"}
@@ -119,14 +114,13 @@ const Sidebar: FC<sidebarProps> = async ({ params }) => {
         <Separator />
         <Suspense fallback={<Skeleton className="h-8 w-full" />}>
           {(async () => {
-            const { data: user } = await getUser({
-              user_id: session.user.id,
-              supabase,
+            const { data } = await trpc.db.user.get.query({
+              id: user.id,
             });
-            if (!user) {
+            if (!data) {
               redirect("/login");
             }
-            return <UserAccountNav className="w-full" user={user} />;
+            return <UserAccountNav className="w-full" user={data} />;
           })()}
         </Suspense>
       </SidebarFooter>
