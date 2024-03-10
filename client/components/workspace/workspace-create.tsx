@@ -18,38 +18,37 @@ import { Input } from "@/components/ui/input";
 import { catchError } from "@/lib/utils";
 import { toast } from "sonner";
 
-import { useAction } from "@/lib/hooks/use-actions";
-import {
-  createWorkspace,
-  TCreateWorkspace,
-  ZCreateWorkspace,
-} from "@/lib/service/workspace/actions/create";
 import { Button } from "../ui/button";
+import { trpc } from "@/trpc/client";
+import {
+  TCreateWorkspaceSchema,
+  ZCreateWorkspaceSchema,
+} from "@/trpc/routes/workspace/create.schema";
 
 export function CreateWorspaceForm() {
   const router = useRouter();
-  const { run, isLoading } = useAction(createWorkspace, {
-    onSuccess: (data) => {
+  const { mutate, isPending } = trpc.db.workspace.create.useMutation({
+    onSuccess: (data, variables) => {
       toast.success("Workspace created successfully");
-      router.refresh();
-      router.push(`/${data.url_key}`);
+      router.push(`/${variables.url_key}`);
     },
     onError: (err) => {
-      catchError(new Error(err));
+      console.log(err);
+      catchError(new Error(err.message));
     },
   });
 
-  // react-hook-form
-  const form = useForm<TCreateWorkspace>({
-    resolver: zodResolver(ZCreateWorkspace),
+  const form = useForm<TCreateWorkspaceSchema>({
+    resolver: zodResolver(ZCreateWorkspaceSchema),
     defaultValues: {
       name: "",
       url_key: "",
     },
   });
 
-  async function onSubmit(data: TCreateWorkspace) {
-    run({ name: data.name, url_key: data.url_key });
+  async function onSubmit(data: TCreateWorkspaceSchema) {
+    // test({ name: data.name });
+    mutate({ name: data.name, url_key: data.url_key });
   }
 
   return (
@@ -88,7 +87,7 @@ export function CreateWorspaceForm() {
             </FormItem>
           )}
         />
-        <Button isLoading={isLoading}>
+        <Button isLoading={isPending}>
           Create now
           <span className="sr-only">Create now</span>
         </Button>
