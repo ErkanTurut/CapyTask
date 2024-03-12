@@ -89,7 +89,7 @@ export function WorkPlanSelector({
           />
           {/* {loading && <CommandLoading>Loading...</CommandLoading>} */}
           <CommandEmpty>No framework found.</CommandEmpty>
-          <CommandList onSubmit={() => console.log("ee")}>
+          <CommandList>
             <CommandGroup heading="Create a new plan">
               <CommandItem>
                 <Link href="/app/teams/create">Create a new plan</Link>

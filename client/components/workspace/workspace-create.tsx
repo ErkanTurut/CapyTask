@@ -30,7 +30,7 @@ export function CreateWorspaceForm() {
   const { mutate, isPending } = trpc.db.workspace.create.useMutation({
     onSuccess: (data, variables) => {
       toast.success("Workspace created successfully");
-      router.push(`/${variables.url_key}`);
+      router.replace(`/${variables.url_key}`);
     },
     onError: (err) => {
       console.log(err);

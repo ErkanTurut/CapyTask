@@ -1,6 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
-import { publicProcedure, router } from "@/trpc/trpc";
+import { protectedProcedure, router } from "@/trpc/trpc";
 import { cookies } from "next/headers";
+import { createStepHandler } from "./create.handler";
+import { ZCreatePlanSchema } from "./create.schema";
 import {
   getPlanHandler,
   getPlansByIdentityHandler,
@@ -8,16 +10,16 @@ import {
   searchPlanHandler,
 } from "./get.handler";
 import { ZGetPlanSchema } from "./get.schema";
-import { ZCreatePlanSchema } from "./create.schema";
-import { createStepHandler } from "./create.handler";
+import { ZDeletePlanSchema } from "./delete.schema";
+import { deletePlanHandler } from "./delete.handler";
 
 export const plan = router({
-  get: publicProcedure
+  get: protectedProcedure
     .input(ZGetPlanSchema.pick({ id: true }))
     .query(async ({ ctx, input }) => {
       return await getPlanHandler({ input, db: createClient(cookies()) });
     }),
-  getPlansByTeamId: publicProcedure
+  getPlansByTeamId: protectedProcedure
     .input(ZGetPlanSchema.pick({ team_id: true, range: true }))
     .query(async ({ ctx, input }) => {
       return await getPlansByTeamIdHandler({
@@ -25,7 +27,7 @@ export const plan = router({
         db: createClient(cookies()),
       });
     }),
-  getPlansByIdentity: publicProcedure
+  getPlansByIdentity: protectedProcedure
     .input(ZGetPlanSchema.pick({ team_identity: true, range: true }))
     .query(async ({ ctx, input }) => {
       return await getPlansByIdentityHandler({
@@ -33,7 +35,7 @@ export const plan = router({
         db: createClient(cookies()),
       });
     }),
-  searchPlan: publicProcedure
+  searchPlan: protectedProcedure
     .input(ZGetPlanSchema.pick({ q: true, team_identity: true }))
     .query(async ({ ctx, input }) => {
       return await searchPlanHandler({
@@ -42,9 +44,14 @@ export const plan = router({
       });
     }),
 
-  create: publicProcedure
+  create: protectedProcedure
     .input(ZCreatePlanSchema)
     .mutation(async ({ ctx, input }) => {
       return await createStepHandler({ input, db: createClient(cookies()) });
+    }),
+  delete: protectedProcedure
+    .input(ZDeletePlanSchema)
+    .mutation(async ({ ctx, input }) => {
+      return await deletePlanHandler({ input, db: createClient(cookies()) });
     }),
 });

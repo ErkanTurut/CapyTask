@@ -6,6 +6,7 @@ import { useAction } from "@/lib/hooks/use-actions";
 import { upsertStep } from "@/lib/service/step/actions/upsert";
 import { getStepsByPlan } from "@/lib/service/step/fetch";
 import { catchError, cn } from "@/lib/utils";
+import { trpc } from "@/trpc/client";
 import {
   DragDropContext,
   Draggable,
@@ -46,6 +47,15 @@ export default function StepList({ steps }: StepListProps) {
     },
     onError: (err) => {
       catchError(new Error(err));
+    },
+  });
+
+  const { mutate } = trpc.db.step.upsert.useMutation({
+    onSuccess(data) {
+      toast.success("Step updated successfully");
+    },
+    onError: (err) => {
+      catchError(new Error(err.message));
     },
   });
 

@@ -17,7 +17,7 @@ export const trpc = experimental_createTRPCNextAppDirServer<AppRouter>({
         experimental_nextHttpLink({
           batch: true,
           url: process.env.NEXT_PUBLIC_ROOT_DOMAIN + "/api/trpc",
-          // transformer: superjson,
+          transformer: superjson,
           headers() {
             return {
               cookie: cookies().toString(),

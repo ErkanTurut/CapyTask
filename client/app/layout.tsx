@@ -27,7 +27,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  console.log("===W", headers());
   return (
     <html lang="en" suppressHydrationWarning>
       <body

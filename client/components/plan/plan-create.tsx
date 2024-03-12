@@ -41,17 +41,8 @@ const CreatePlanForm: FC<CreatePlanFormProps> = ({
   team,
   className,
 }) => {
-  // const { run, isLoading } = useAction(createPlan, {
-  //   onSuccess: (data) => {
-  //     toast.success("Team created successfully");
-  //     form.reset();
-  //   },
-  //   onError: (err) => {
-  //     catchError(new Error(err));
-  //   },
-  // });
   const { mutate, isPending } = trpc.db.plan.create.useMutation({
-    onSuccess: (data) => {
+    onSuccess: (data, variables) => {
       toast.success("Team created successfully");
       form.reset();
     },

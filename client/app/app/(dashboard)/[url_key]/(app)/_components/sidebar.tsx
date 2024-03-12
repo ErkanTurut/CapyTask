@@ -15,7 +15,6 @@ import {
 
 import TeamListSkeleton from "@/components/team/team-list-skeleton";
 import { Skeleton } from "@/components/ui/skeleton";
-import { createClient } from "@/lib/supabase/server";
 import { generateAvatar } from "@/lib/utils";
 import { trpc } from "@/trpc/server";
 import { redirect } from "next/navigation";
@@ -27,8 +26,6 @@ interface sidebarProps {
 }
 
 const Sidebar: FC<sidebarProps> = async ({ params }) => {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
   const layout = cookies().get("react-resizable-panels:layout");
   const collapsed = cookies().get("react-resizable-panels:collapsed");
   const defaultLayout = layout
@@ -37,17 +34,8 @@ const Sidebar: FC<sidebarProps> = async ({ params }) => {
   const defaultCollapsed = collapsed
     ? (JSON.parse(collapsed.value) as boolean)
     : undefined;
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
-  if (!user || error) {
-    redirect("/login");
-  }
 
-  const { data: workspaces } = await trpc.db.workspace.getByUser.query({
-    user_id: user.id,
-  });
+  const { data: workspaces } = await trpc.db.workspace.getByCurrentUser.query();
 
   if (!workspaces) {
     redirect("/create");
@@ -114,13 +102,11 @@ const Sidebar: FC<sidebarProps> = async ({ params }) => {
         <Separator />
         <Suspense fallback={<Skeleton className="h-8 w-full" />}>
           {(async () => {
-            const { data } = await trpc.db.user.get.query({
-              id: user.id,
-            });
-            if (!data) {
+            const { data: user } = await trpc.db.user.getCurrentUser.query();
+            if (!user) {
               redirect("/login");
             }
-            return <UserAccountNav className="w-full" user={data} />;
+            return <UserAccountNav className="w-full" user={user} />;
           })()}
         </Suspense>
       </SidebarFooter>

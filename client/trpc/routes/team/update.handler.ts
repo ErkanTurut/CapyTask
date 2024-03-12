@@ -14,5 +14,6 @@ export const updateTeamHandler = async ({ input, db }: opts) => {
     .update(input)
     .eq("id", input.id)
     .select("*")
-    .single();
+    .single()
+    .throwOnError();
 };

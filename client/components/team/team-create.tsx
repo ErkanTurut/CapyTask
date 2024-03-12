@@ -20,32 +20,26 @@ import { catchError, cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import { useAction } from "@/lib/hooks/use-actions";
-import {
-  createTeam,
-  TCreateTeam,
-  ZCreateTeam,
-} from "@/lib/service/team/actions/create";
+import { TCreateTeam, ZCreateTeam } from "@/lib/service/team/actions/create";
 
+import { trpc } from "@/trpc/client";
 import { FC } from "react";
 
 interface CreateTeamFormProps extends React.HTMLAttributes<HTMLFormElement> {
   workspace_id: string;
-  url_key: string;
 }
 
 const CreateTeamForm: FC<CreateTeamFormProps> = ({
-  url_key,
   workspace_id,
   className,
 }) => {
-  const { run, isLoading } = useAction(createTeam, {
-    onSuccess: (data) => {
+  const { mutate, isPending } = trpc.db.team.create.useMutation({
+    onSuccess: () => {
       toast.success("Team created successfully");
       form.reset();
     },
     onError: (err) => {
-      catchError(new Error(err));
+      catchError(new Error(err.message));
     },
   });
 
@@ -60,11 +54,7 @@ const CreateTeamForm: FC<CreateTeamFormProps> = ({
   });
 
   async function onSubmit(data: TCreateTeam) {
-    run({
-      name: data.name,
-      identity: data.identity,
-      workspace_id: workspace_id,
-    });
+    mutate(data);
   }
 
   const [isGenerating, setIsGenerating] = useState(false);
@@ -132,7 +122,7 @@ const CreateTeamForm: FC<CreateTeamFormProps> = ({
         />
 
         {form.formState.isDirty && (
-          <Button isLoading={isLoading}>
+          <Button isLoading={isPending}>
             Create now
             <span className="sr-only">Create now</span>
           </Button>

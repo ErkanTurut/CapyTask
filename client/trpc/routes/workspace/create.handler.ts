@@ -4,12 +4,13 @@ import { SupabaseClient } from "@/lib/supabase/server";
 
 import { TCreateWorkspaceSchema } from "./create.schema";
 import type { Session } from "@supabase/supabase-js";
-import { Context } from "@/trpc/context";
 
 type opts = {
   input: TCreateWorkspaceSchema;
   db: SupabaseClient;
-  ctx: Context;
+  ctx: {
+    session: Session;
+  };
 };
 
 export const createWorkspaceHandler = async ({ input, db, ctx }: opts) => {
@@ -18,7 +19,7 @@ export const createWorkspaceHandler = async ({ input, db, ctx }: opts) => {
     .insert({
       name: input.name,
       url_key: input.url_key,
-      created_by: ctx.session?.user.id,
+      created_by: ctx.session.user.id,
     })
     .throwOnError();
 };

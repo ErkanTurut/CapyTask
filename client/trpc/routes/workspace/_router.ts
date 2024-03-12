@@ -1,20 +1,18 @@
-import { publicProcedure, router } from "@/trpc/trpc";
+import { protectedProcedure, router } from "@/trpc/trpc";
 
 import { createClient } from "@/lib/supabase/server";
 
 import { cookies } from "next/headers";
-import { TRPCClientError } from "@trpc/client";
-import { ZCreateWorkspaceSchema } from "./create.schema";
 import { createWorkspaceHandler } from "./create.handler";
-import { ZGetWorkspaceSchema } from "./get.schema";
+import { ZCreateWorkspaceSchema } from "./create.schema";
 import {
-  getWorkspaceByUserHandler,
   getWorkspaceByUrlKeyHandler,
+  getWorkspaceByUserHandler,
 } from "./get.handler";
-import { z } from "zod";
+import { ZGetWorkspaceSchema } from "./get.schema";
 
 export const workspace = router({
-  create: publicProcedure
+  create: protectedProcedure
     .input(ZCreateWorkspaceSchema)
     .mutation(async ({ input, ctx }) => {
       return await createWorkspaceHandler({
@@ -23,7 +21,7 @@ export const workspace = router({
         ctx,
       });
     }),
-  getByUrlKey: publicProcedure
+  getByUrlKey: protectedProcedure
     .input(ZGetWorkspaceSchema.pick({ url_key: true }))
     .query(async ({ input }) => {
       return await getWorkspaceByUrlKeyHandler({
@@ -31,7 +29,7 @@ export const workspace = router({
         db: createClient(cookies()),
       });
     }),
-  getByUser: publicProcedure
+  getByUser: protectedProcedure
     .input(ZGetWorkspaceSchema.pick({ user_id: true }))
     .query(async ({ input }) => {
       return await getWorkspaceByUserHandler({
@@ -39,4 +37,10 @@ export const workspace = router({
         input,
       });
     }),
+  getByCurrentUser: protectedProcedure.query(async ({ ctx }) => {
+    return await getWorkspaceByUserHandler({
+      db: createClient(cookies()),
+      input: { user_id: ctx.session.user.id },
+    });
+  }),
 });

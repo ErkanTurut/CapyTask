@@ -1,4 +1,4 @@
-import { publicProcedure, router } from "@/trpc/trpc";
+import { publicProcedure, protectedProcedure, router } from "@/trpc/trpc";
 
 import { createClient } from "@/lib/supabase/server";
 
@@ -16,7 +16,7 @@ import { ZCreateTeamSchema } from "./create.schema";
 import { createTeamHandler } from "./create.handler";
 
 export const team = router({
-  create: publicProcedure
+  create: protectedProcedure
     .input(ZCreateTeamSchema)
     .mutation(async ({ ctx, input }) => {
       return await createTeamHandler({
@@ -25,7 +25,7 @@ export const team = router({
       });
     }),
 
-  update: publicProcedure
+  update: protectedProcedure
     .input(ZUpdateTeamSchema)
     .mutation(async ({ ctx, input }) => {
       return await updateTeamHandler({
@@ -34,12 +34,12 @@ export const team = router({
       });
     }),
 
-  get: publicProcedure
+  get: protectedProcedure
     .input(ZGetTeamSchema.pick({ id: true }))
     .query(async ({ ctx, input }) => {
       return await getTeamHandler({ input, db: createClient(cookies()) });
     }),
-  getByIdentity: publicProcedure
+  getByIdentity: protectedProcedure
     .input(ZGetTeamSchema.pick({ identity: true }))
     .query(async ({ ctx, input }) => {
       return await getTeamByIdentityHandler({
@@ -47,7 +47,7 @@ export const team = router({
         db: createClient(cookies()),
       });
     }),
-  getByWorkspaceUrlKey: publicProcedure
+  getByWorkspaceUrlKey: protectedProcedure
     .input(ZGetTeamSchema.pick({ url_key: true }))
     .query(async ({ ctx, input }) => {
       return await getTeamsByWorkspaceUrlKeyHandler({

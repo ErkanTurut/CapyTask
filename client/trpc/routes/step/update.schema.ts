@@ -3,8 +3,8 @@ import * as z from "zod";
 export const ZUpdateStepSchema = z.object({
   id: z
     .string({
-      invalid_type_error: "Plan ID must be a string",
-      required_error: "Plan ID is required",
+      invalid_type_error: "Step ID must be a string",
+      required_error: "Step ID is required",
     })
     .uuid({ message: "Plan ID must be a valid UUID" }),
   name: z
@@ -24,6 +24,11 @@ export const ZUpdateStepSchema = z.object({
       message: "Description must be less than 500 characters long",
     })
     .optional(),
-  order: z.number().positive().nullish(),
+  order: z.number().nonnegative().nullish(),
+  plan_id: z.string(),
+  parent_step_id: z.string().nullable(),
+  created_at: z.string(),
+  updated_at: z.string(),
+  created_by_id: z.string().nullable(),
 });
 export type TUpdateStepSchema = z.infer<typeof ZUpdateStepSchema>;
