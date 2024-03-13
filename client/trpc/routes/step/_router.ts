@@ -33,10 +33,11 @@ export const step = router({
   getStepsByPlan: protectedProcedure
     .input(ZGetStepSchema.pick({ plan_id: true }))
     .query(async ({ ctx, input }) => {
-      return await getStepsByPlanHandler({
+      const { data } = await getStepsByPlanHandler({
         input,
         db: createClient(cookies()),
       });
+      return data;
     }),
 
   getStepsByIdentity: protectedProcedure
