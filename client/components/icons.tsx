@@ -33,6 +33,7 @@ import {
   TrashIcon,
   DashboardIcon,
   UpdateIcon,
+  ExclamationTriangleIcon,
 } from "@radix-ui/react-icons";
 import { Loader2, Banknote, Route } from "lucide-react";
 
@@ -98,6 +99,8 @@ export const Icons = {
   arrowRight: ArrowRightIcon,
   trash: TrashIcon,
   dashboard: DashboardIcon,
+  exlamationTriangle: ExclamationTriangleIcon,
+
   logo: (props: LucideProps & logoProps) => {
     const { size, className } = props;
 
