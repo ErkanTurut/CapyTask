@@ -22,7 +22,6 @@ import { ZPlanSchema } from "@/trpc/routes/plan/plan.schema";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { catchError } from "@/lib/utils";
-import { revalidatePath } from "next/cache";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -33,22 +32,23 @@ export function DataTableRowActions<TData>({
 }: DataTableRowActionsProps<TData>) {
   const plan = ZPlanSchema.parse(row.original);
   const router = useRouter();
-  // const { mutate: remove } = trpc.db.plan.delete.mutate({
-  //   onSuccess: (data) => {
-  //     toast.success("Team created successfully");
-  //   },
-  //   onError: (err) => {
-  //     catchError(new Error(err.message));
-  //   },
-  //   onSettled: () => {
-  //     router.refresh();
-  //   },
-  // });
-  const onDelete = async (id: string) => {
-    await trpc.db.plan.delete.mutate({ id });
-    toast.success("Plan deleted successfully");
-    router.refresh();
-  };
+
+  const { mutate: remove } = trpc.db.plan.delete.useMutation({
+    onSuccess: (data) => {
+      toast.success("Team created successfully");
+    },
+    onError: (err) => {
+      catchError(new Error(err.message));
+    },
+    onSettled: () => {
+      router.refresh();
+    },
+  });
+  // const onDelete = async (id: string) => {
+
+  //   toast.success("Plan deleted successfully");
+  //   router.refresh();
+  // };
 
   return (
     <DropdownMenu>
@@ -79,7 +79,7 @@ export function DataTableRowActions<TData>({
           </DropdownMenuSubContent>
         </DropdownMenuSub> */}
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => onDelete(plan.id)}>
+        <DropdownMenuItem onClick={() => remove({ id: plan.id })}>
           Delete
           <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
         </DropdownMenuItem>

@@ -19,7 +19,7 @@ interface StepsContainerProps {
   };
 }
 const StepsContainer: React.FC<StepsContainerProps> = async ({ params }) => {
-  const { data: steps } = await trpc.db.step.getStepsByPlan.query({
+  const steps = await trpc.db.step.getStepsByPlan.query({
     plan_id: params.plan_id,
   });
 
@@ -55,8 +55,9 @@ const StepsContainer: React.FC<StepsContainerProps> = async ({ params }) => {
             </p>
           </div>
         ) : (
-          <StepList steps={steps} />
+          <StepList initialData={steps} plan_id={params.plan_id} />
         )}
+        {/* <StepList initialData={steps} plan_id={params.plan_id} /> */}
       </CardContent>
     </Card>
   );

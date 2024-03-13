@@ -7,6 +7,7 @@ import { upsertStep } from "@/lib/service/step/actions/upsert";
 import { getStepsByPlan } from "@/lib/service/step/fetch";
 import { catchError, cn } from "@/lib/utils";
 import { trpc } from "@/trpc/client";
+import { trpc as server } from "@/trpc/server";
 import {
   DragDropContext,
   Draggable,
@@ -17,14 +18,10 @@ import Link from "next/link";
 import { startTransition, useOptimistic } from "react";
 import { toast } from "sonner";
 
-interface StepListProps {
-  steps: NonNullable<Awaited<ReturnType<typeof getStepsByPlan>>["data"]>;
-}
-
 function getDifference(
-  oldSteps: StepListProps["steps"],
-  newSteps: StepListProps["steps"],
-): StepListProps["steps"] {
+  oldSteps: StepListProps["initialData"],
+  newSteps: StepListProps["initialData"],
+): StepListProps["initialData"] {
   return newSteps.filter((newStep, index) => newStep.id !== oldSteps[index].id);
 }
 
@@ -35,27 +32,41 @@ function reorder<T>(list: T[], startIndex: number, endIndex: number): T[] {
   return result;
 }
 
-export default function StepList({ steps }: StepListProps) {
-  const [stepsList, setStepsList] = useOptimistic(
-    steps,
-    (state, newState) => newState as StepListProps["steps"],
+interface StepListProps {
+  // steps: NonNullable<Awaited<ReturnType<typeof getStepsByPlan>>["data"]>;
+  initialData: NonNullable<
+    Awaited<
+      ReturnType<(typeof server)["db"]["step"]["getStepsByPlan"]["query"]>
+    >
+  >;
+  plan_id: string;
+}
+
+export default function StepList({ initialData, plan_id }: StepListProps) {
+  const [stepsList] = trpc.db.step.getStepsByPlan.useSuspenseQuery(
+    { plan_id },
+    {
+      initialData,
+    },
   );
+  const utils = trpc.useUtils();
 
-  const { run } = useAction(upsertStep, {
+  const { mutate, isPending, isError } = trpc.db.step.upsert.useMutation({
+    onMutate: async (newData) => {
+      await utils.db.step.getStepsByPlan.cancel({ plan_id });
+      const oldData = utils.db.step.getStepsByPlan.getData({ plan_id });
+      utils.db.step.getStepsByPlan.setData({ plan_id }, newData);
+      return { oldData };
+    },
     onSuccess(data) {
       toast.success("Step updated successfully");
     },
-    onError: (err) => {
-      catchError(new Error(err));
-    },
-  });
-
-  const { mutate } = trpc.db.step.upsert.useMutation({
-    onSuccess(data) {
-      toast.success("Step updated successfully");
-    },
-    onError: (err) => {
+    onError: (err, variables, ctx) => {
       catchError(new Error(err.message));
+      utils.db.step.getStepsByPlan.setData({ plan_id }, ctx?.oldData);
+    },
+    onSettled: () => {
+      utils.db.step.getStepsByPlan.invalidate({ plan_id });
     },
   });
 
@@ -72,21 +83,23 @@ export default function StepList({ steps }: StepListProps) {
         result.source.index,
         result.destination.index,
       ).map((item, index) => ({ ...item, order: index }));
-
-      startTransition(() => {
-        setStepsList(items);
-        run(getDifference(stepsList!, items));
-      });
+      mutate(items);
     }
   }
   return (
     <div>
-      {/* <Icons.spinner
-        className={cn(
-          "absolute right-0 top-1 mr-10 animate-spin  text-muted-foreground",
-          true ? "block" : "hidden",
-        )}
-      /> */}
+      <div className="flex w-full items-center justify-end px-4">
+        <Icons.exlamationTriangle
+          className={cn(" text-muted-foreground", isError ? "" : "hidden")}
+        />
+        <Icons.spinner
+          className={cn(
+            "  animate-spin  text-muted-foreground",
+            isPending ? "" : "hidden",
+          )}
+        />
+      </div>
+
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="list" type="list" direction="vertical">
           {(provided) => (
@@ -96,11 +109,9 @@ export default function StepList({ steps }: StepListProps) {
               className="flex w-full flex-col gap-1"
             >
               {stepsList.map((step, index) => {
-                if (!step) return null;
                 return (
                   <Draggable key={step.id} draggableId={step.id} index={index}>
                     {(provided, { isDragging }) => {
-                      if (!step) return null;
                       return (
                         <li
                           {...provided.draggableProps}
