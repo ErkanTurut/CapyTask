@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
-import { notFound } from "next/navigation";
+import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -9,66 +8,60 @@ import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import { toast } from "sonner";
 import { catchError, cn } from "@/lib/utils";
+import { toast } from "sonner";
 
-import {
-  updateTeam,
-  TUpdateTeam,
-  ZUpdateTeam,
-} from "@/lib/service/team/actions/update";
-import { useAction } from "@/lib/hooks/use-actions";
 import { Button } from "@/components/ui/button";
+import { TUpdateTeam, ZUpdateTeam } from "@/lib/service/team/actions/update";
 
-import { FC } from "react";
+import { api } from "@/trpc/client";
 import { Database } from "@/types/supabase.types";
+import { FC } from "react";
 
 interface UpdateTeamFormProps extends React.HTMLAttributes<HTMLFormElement> {
   team: Database["public"]["Tables"]["team"]["Row"];
 }
 
 const UpdateTeamForm: FC<UpdateTeamFormProps> = ({ team, className }) => {
-  const { run, isLoading } = useAction(updateTeam, {
-    onSuccess: (data) => {
+  const { isPending, mutate } = api.db.team.update.useMutation({
+    onSuccess: ({ data }) => {
+      if (!data) return;
       toast.success("Team created successfully");
       form.reset({
         name: data.name,
         identity: data.identity,
+        id: data.id,
+        description: data.description || "",
+        image_uri: data.image_uri || "",
       });
     },
     onError: (err) => {
-      catchError(new Error(err));
+      catchError(new Error(err.message));
     },
   });
 
-  // react-hook-form
   const form = useForm<TUpdateTeam>({
     resolver: zodResolver(ZUpdateTeam),
     defaultValues: {
       name: team.name,
       identity: team.identity,
       id: team.id,
+      description: team.description || "",
+      image_uri: team.image_uri || "",
     },
   });
 
   async function onSubmit(data: TUpdateTeam) {
-    if (!team) return notFound();
-    await run({
-      name: data.name,
-      identity: data.identity,
-      id: team.id,
-    });
+    mutate(data);
   }
-
-  const [isGenerating, setIsGenerating] = useState(false);
 
   return (
     <Form {...form}>
@@ -100,7 +93,7 @@ const UpdateTeamForm: FC<UpdateTeamFormProps> = ({ team, className }) => {
               </FormDescription>
               <FormControl>
                 <Input
-                  placeholder={isGenerating ? "Loading..." : "example"}
+                  placeholder={"example"}
                   maxLength={
                     //@ts-ignore
                     ZUpdateTeam["shape"]["identity"]["_def"]["checks"].find(
@@ -116,7 +109,7 @@ const UpdateTeamForm: FC<UpdateTeamFormProps> = ({ team, className }) => {
           )}
         />
         {form.formState.isDirty && (
-          <Button isLoading={isLoading}>
+          <Button isLoading={isPending}>
             Create now
             <span className="sr-only">Create now</span>
           </Button>

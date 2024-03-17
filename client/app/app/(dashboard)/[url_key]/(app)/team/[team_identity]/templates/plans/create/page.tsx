@@ -1,8 +1,3 @@
-import {
-  PageHeader,
-  PageHeaderDescription,
-  PageHeaderHeading,
-} from "@/components/page-header";
 import { Shell } from "@/components/shells";
 import {
   Card,
@@ -15,10 +10,7 @@ import {
 import { Suspense } from "react";
 
 import CreatePlanForm from "@/components/plan/plan-create";
-import { getTeamByIdentity } from "@/lib/service/team/fetch";
-import { createClient } from "@/lib/supabase/server";
-import { cookies } from "next/headers";
-import { Modal } from "@/components/modal";
+import { trpc } from "@/trpc/server";
 
 interface createPageProps {
   params: {
@@ -28,11 +20,8 @@ interface createPageProps {
 }
 
 export default async function createPage({ params }: createPageProps) {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
-  const { data: team } = await getTeamByIdentity({
+  const { data: team } = await trpc.db.team.getByIdentity.query({
     identity: params.team_identity,
-    supabase,
   });
   if (!team) return null;
   return (

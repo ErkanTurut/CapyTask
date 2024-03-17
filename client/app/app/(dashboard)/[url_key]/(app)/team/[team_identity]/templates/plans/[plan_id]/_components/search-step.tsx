@@ -78,14 +78,7 @@ export function StepCommand({
   plan_id: string;
 }) {
   const [searchValue, setSearchValue] = useState(query || "");
-  // const { run } = useAction(insertPlanStep, {
-  //   onSuccess: () => {
-  //     console.log("success");
-  //   },
-  //   onError: () => {
-  //     console.log("error");
-  //   },
-  // });
+
   return (
     <Command shouldFilter={false}>
       <CommandInput

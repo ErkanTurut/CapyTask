@@ -1,8 +1,6 @@
-import { searchSteps } from "@/lib/service/step/fetch";
-import { SearchStep } from "../../_components/search-step";
-import { cookies } from "next/headers";
-import { createClient } from "@/lib/supabase/server";
+import { trpc } from "@/trpc/server";
 import { headers as dynamic } from "next/headers";
+import { SearchStep } from "../../_components/search-step";
 
 interface pageProps {
   searchParams: {
@@ -18,10 +16,7 @@ interface pageProps {
 export default async function Page({ searchParams, params }: pageProps) {
   dynamic();
 
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
-  const { data: steps, error } = await searchSteps({
-    client: supabase,
+  const { data: steps, error } = await trpc.db.step.searchSteps.query({
     q: searchParams.q,
     team_identity: params.team_identity,
   });

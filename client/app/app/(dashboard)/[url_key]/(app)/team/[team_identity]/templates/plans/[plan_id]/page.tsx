@@ -1,4 +1,3 @@
-import { Modal } from "@/components/modal";
 import { ResponsiveCard } from "@/components/responsive-card";
 import StepUpdateForm from "@/components/step/step-update";
 import {
@@ -8,10 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getStep } from "@/lib/service/step/fetch";
-import { createClient } from "@/lib/supabase/server";
-import { cookies } from "next/headers";
-import { headers as dynamic } from "next/headers";
+import { trpc } from "@/trpc/server";
 
 interface PageProps {
   searchParams: {
@@ -25,12 +21,11 @@ interface PageProps {
 }
 
 export default async function Page({ searchParams, params }: PageProps) {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
-
+  const { data } = await trpc.db.plan.get.withSteps.query({
+    id: params.plan_id,
+  });
   if (searchParams.step_id) {
-    const { data: step } = await getStep({
-      client: supabase,
+    const { data: step } = await trpc.db.step.get.query({
       id: searchParams.step_id,
     });
     if (!step) return null;

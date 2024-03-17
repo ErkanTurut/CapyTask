@@ -21,6 +21,7 @@ import {
 import { Icons } from "@/components/icons";
 import { deleteStep } from "@/lib/service/step/actions/delete";
 import { useRouter } from "next/navigation";
+import { api } from "@/trpc/client";
 
 interface StepDeleteFormProps extends React.HTMLAttributes<HTMLFormElement> {
   step: Database["public"]["Tables"]["step"]["Row"];
@@ -34,13 +35,13 @@ const StepDeleteForm: FC<StepDeleteFormProps> = ({
 }) => {
   const router = useRouter();
 
-  const { run, isLoading } = useAction(deleteStep, {
-    onSuccess: (data) => {
+  const { mutate, isPending } = api.db.step.delete.useMutation({
+    onSuccess: () => {
       toast.success("Step deleted successfully");
-      router.push(`./steps`);
+      router.refresh();
     },
     onError: (err) => {
-      catchError(new Error(err));
+      catchError(new Error(err.message));
     },
   });
 
@@ -55,7 +56,7 @@ const StepDeleteForm: FC<StepDeleteFormProps> = ({
   });
 
   async function onSubmit(data: TUpdateStep) {
-    await run(data);
+    mutate(data);
   }
 
   return (
@@ -75,7 +76,7 @@ const StepDeleteForm: FC<StepDeleteFormProps> = ({
             </FormItem>
           )}
         />
-        <Button size={size} variant={"destructive"} isLoading={isLoading}>
+        <Button size={size} variant={"destructive"} isLoading={isPending}>
           <Icons.trash />
           {size === "default" && "Delete the step"}
           <span className="sr-only"> Delete the step </span>

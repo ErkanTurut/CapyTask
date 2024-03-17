@@ -40,7 +40,6 @@ export default async function DashboardLayout({
             <Resizable defaultLayout={defaultLayout}>
               <ScrollArea className="h-screen ">
                 <Toolbar />
-
                 {children}
               </ScrollArea>
             </Resizable>
