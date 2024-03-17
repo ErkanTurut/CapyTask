@@ -90,7 +90,7 @@ export function CreateWorkOrderForm({
     defaultValues: {
       description: "",
       name: "",
-      plan_id: "",
+      inspection_template_id: "",
       team_id: team.id,
     },
   });
@@ -138,7 +138,7 @@ export function CreateWorkOrderForm({
 
         <FormField
           control={form.control}
-          name="plan_id"
+          name="inspection_template_id"
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel>Plan template</FormLabel>
@@ -174,7 +174,7 @@ export function CreateWorkOrderForm({
                           value={plan.name}
                           key={plan.id}
                           onSelect={() => {
-                            form.setValue("plan_id", plan.id);
+                            form.setValue("inspection_template_id", plan.id);
                           }}
                         >
                           {plan.name}
@@ -198,7 +198,10 @@ export function CreateWorkOrderForm({
                               key={plan.id}
                               value={plan.name}
                               onSelect={() => {
-                                form.setValue("plan_id", plan.id);
+                                form.setValue(
+                                  "inspection_template_id",
+                                  plan.id,
+                                );
                               }}
                             >
                               {plan.name}

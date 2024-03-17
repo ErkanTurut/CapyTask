@@ -27,7 +27,9 @@ import { useDebouncedCallback } from "use-debounce";
 interface WorkPlanSelectorProps {
   initialData: NonNullable<
     Awaited<
-      ReturnType<(typeof trpc)["db"]["plan"]["getPlansByIdentity"]["query"]>
+      ReturnType<
+        (typeof trpc)["db"]["work_order"]["getInspectionsByIdentity"]["query"]
+      >
     >
   >;
 
@@ -42,9 +44,9 @@ export function WorkPlanSelector({
 }: WorkPlanSelectorProps) {
   const {
     mutate,
-    data: searchPlans,
+    data: searchInspection,
     isPending,
-  } = api.db.plan.searchPlan.useMutation();
+  } = api.db.template.inspection.searchInspection.useMutation();
   if (!plans) {
     return (
       <Link
@@ -93,29 +95,31 @@ export function WorkPlanSelector({
                 <Link href="/app/teams/create">Create a new plan</Link>
               </CommandItem>
             </CommandGroup>
-            {searchPlans && searchPlans.data && searchPlans.data.length > 0 && (
-              <CommandGroup heading="Research">
-                {searchPlans?.data?.map((plan) => (
-                  <CommandItem
-                    key={plan.id}
-                    value={plan.name}
-                    onSelect={() => {
-                      setValue(plan.id);
-                      setOpen(false);
-                    }}
-                  >
-                    {plan.name}
-                    <CheckIcon
-                      className={cn(
-                        "ml-auto h-4 w-4",
+            {searchInspection &&
+              searchInspection.data &&
+              searchInspection.data.length > 0 && (
+                <CommandGroup heading="Research">
+                  {searchInspection?.data?.map((inspection) => (
+                    <CommandItem
+                      key={inspection.id}
+                      value={inspection.name}
+                      onSelect={() => {
+                        setValue(plan.id);
+                        setOpen(false);
+                      }}
+                    >
+                      {plan.name}
+                      <CheckIcon
+                        className={cn(
+                          "ml-auto h-4 w-4",
 
-                        value === plan.id ? "opacity-100" : "opacity-0",
-                      )}
-                    />
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            )}
+                          value === plan.id ? "opacity-100" : "opacity-0",
+                        )}
+                      />
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              )}
 
             <CommandGroup heading="Recent">
               {plans.map((plan) => (
