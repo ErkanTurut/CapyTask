@@ -1,11 +1,11 @@
 import "server-only";
 
 import { SupabaseClient } from "@/lib/supabase/server";
-import { TCreatePlanSchema } from "./create.schema";
+import { TCreateInspectionSchema } from "./create.schema";
 // import { cache } from "react";
 
 type opts = {
-  input: TCreatePlanSchema;
+  input: TCreateInspectionSchema;
   db: SupabaseClient;
 };
 

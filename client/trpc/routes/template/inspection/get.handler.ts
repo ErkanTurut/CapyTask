@@ -3,16 +3,16 @@ import "server-only";
 import { unstable_cache as cache } from "next/cache";
 import { SupabaseClient } from "@/lib/supabase/server";
 import { sleep } from "@/lib/utils";
-import { TGetPlanSchema } from "./get.schema";
+import { TGetInspectionSchema } from "./get.schema";
 // import { cache } from "react";
 
-export async function getPlansByTeamIdHandler({
+export async function getInspectionsByTeamIdHandler({
   input,
   db,
 }: {
   input: {
-    team_id: TGetPlanSchema["team_id"];
-    range: TGetPlanSchema["range"];
+    team_id: TGetInspectionSchema["team_id"];
+    range: TGetInspectionSchema["range"];
   };
   db: SupabaseClient;
 }) {
@@ -23,13 +23,13 @@ export async function getPlansByTeamIdHandler({
     .range(input.range.start, input.range.end);
 }
 
-export async function getPlansByIdentityHandler({
+export async function getInspectionsByIdentityHandler({
   db,
   input,
 }: {
   input: {
-    team_identity: TGetPlanSchema["team_identity"];
-    range: TGetPlanSchema["range"];
+    team_identity: TGetInspectionSchema["team_identity"];
+    range: TGetInspectionSchema["range"];
   };
   db: SupabaseClient;
 }) {
@@ -42,12 +42,12 @@ export async function getPlansByIdentityHandler({
     .throwOnError();
 }
 
-export async function getPlanHandler({
+export async function getInspectionHandler({
   input,
   db,
 }: {
   input: {
-    id: TGetPlanSchema["id"];
+    id: TGetInspectionSchema["id"];
   };
   db: SupabaseClient;
 }) {
@@ -58,30 +58,30 @@ export async function getPlanHandler({
     .single();
 }
 
-export async function getPlanStepsHandler({
+export async function getInspectionStepsHandler({
   input,
   db,
 }: {
   input: {
-    id: TGetPlanSchema["id"];
+    id: TGetInspectionSchema["id"];
   };
   db: SupabaseClient;
 }) {
   return await db
     .from("inspection_template")
-    .select("*, inspection_step_template!inner(*) ")
+    .select("*, step_template!inner(*) ")
     .eq("id", input.id)
     .single()
     .throwOnError();
 }
 
-export async function searchPlanHandler({
+export async function searchInspectionHandler({
   input,
   db,
 }: {
   input: {
-    q: TGetPlanSchema["q"];
-    team_identity: TGetPlanSchema["team_identity"];
+    q: TGetInspectionSchema["q"];
+    team_identity: TGetInspectionSchema["team_identity"];
   };
 
   db: SupabaseClient;

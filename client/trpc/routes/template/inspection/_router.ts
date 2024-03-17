@@ -2,64 +2,67 @@ import { createClient } from "@/lib/supabase/server";
 import { protectedProcedure, router } from "@/trpc/trpc";
 import { cookies } from "next/headers";
 import { createStepHandler } from "./create.handler";
-import { ZCreatePlanSchema } from "./create.schema";
+import { ZCreateInspectionSchema } from "./create.schema";
 import {
-  getPlanHandler,
-  getPlanStepsHandler,
-  getPlansByIdentityHandler,
-  getPlansByTeamIdHandler,
-  searchPlanHandler,
+  getInspectionHandler,
+  getInspectionStepsHandler,
+  getInspectionsByIdentityHandler,
+  getInspectionsByTeamIdHandler,
+  searchInspectionHandler,
 } from "./get.handler";
-import { ZGetPlanSchema } from "./get.schema";
-import { ZDeletePlanSchema } from "./delete.schema";
-import { deletePlanHandler } from "./delete.handler";
+import { ZGetInspectionSchema } from "./get.schema";
+import { ZDeleteInspectionSchema } from "./delete.schema";
+import { deleteinspectionHandler } from "./delete.handler";
 
-export const inspection_template = router({
+export const inspection = router({
   // get: protectedProcedure
-  //   .input(ZGetPlanSchema.pick({ id: true }))
+  //   .input(ZGetInspectionSchema.pick({ id: true }))
   //   .query(async ({ ctx, input }) => {
-  //     return await getPlanHandler({ input, db: createClient(cookies()) });
+  //     return await getinspectionHandler({ input, db: createClient(cookies()) });
   //   }),
 
   get: router({
     byId: protectedProcedure
-      .input(ZGetPlanSchema.pick({ id: true }))
+      .input(ZGetInspectionSchema.pick({ id: true }))
       .query(async ({ ctx, input }) => {
-        return await getPlanHandler({ input, db: createClient(cookies()) });
+        return await getInspectionHandler({
+          input,
+          db: createClient(cookies()),
+        });
       }),
     withSteps: protectedProcedure
-      .input(ZGetPlanSchema.pick({ id: true }))
+      .input(ZGetInspectionSchema.pick({ id: true }))
       .query(async ({ ctx, input }) => {
-        return await getPlanStepsHandler({
+        return await getInspectionStepsHandler({
           input,
           db: createClient(cookies()),
         });
       }),
   }),
 
-  getPlansByTeamId: protectedProcedure
-    .input(ZGetPlanSchema.pick({ team_id: true, range: true }))
+  getInspectionsByTeamId: protectedProcedure
+    .input(ZGetInspectionSchema.pick({ team_id: true, range: true }))
     .query(async ({ ctx, input }) => {
-      return await getPlansByTeamIdHandler({
+      return await getInspectionsByTeamIdHandler({
         input,
         db: createClient(cookies()),
       });
     }),
 
-  getPlansByIdentity: protectedProcedure
-    .input(ZGetPlanSchema.pick({ team_identity: true, range: true }))
+  getInspectionsByIdentity: protectedProcedure
+    .input(ZGetInspectionSchema.pick({ team_identity: true, range: true }))
     .query(async ({ ctx, input }) => {
-      const { data, count } = await getPlansByIdentityHandler({
+      const { data, count } = await getInspectionsByIdentityHandler({
         input,
         db: createClient(cookies()),
       });
       return { data, count };
     }),
 
-  searchPlan: protectedProcedure
-    .input(ZGetPlanSchema.pick({ q: true, team_identity: true }))
+  searchInspection: protectedProcedure
+    .input(ZGetInspectionSchema.pick({ q: true, team_identity: true }))
     .mutation(async ({ ctx, input }) => {
-      const { data, count } = await searchPlanHandler({
+      const { data, count } = await searchInspectionHandler({
         input,
         db: createClient(cookies()),
       });
@@ -67,13 +70,16 @@ export const inspection_template = router({
     }),
 
   create: protectedProcedure
-    .input(ZCreatePlanSchema)
+    .input(ZCreateInspectionSchema)
     .mutation(async ({ ctx, input }) => {
       return await createStepHandler({ input, db: createClient(cookies()) });
     }),
   delete: protectedProcedure
-    .input(ZDeletePlanSchema)
+    .input(ZDeleteInspectionSchema)
     .mutation(async ({ ctx, input }) => {
-      return await deletePlanHandler({ input, db: createClient(cookies()) });
+      return await deleteinspectionHandler({
+        input,
+        db: createClient(cookies()),
+      });
     }),
 });
