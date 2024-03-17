@@ -43,7 +43,7 @@ const CreatePlanForm: FC<CreatePlanFormProps> = ({
   className,
 }) => {
   const router = useRouter();
-  const { mutate, isPending } = api.db.plan.create.useMutation({
+  const { mutate, isPending } = api.db.template.inspection.create.useMutation({
     onSuccess: (data, variables) => {
       toast.success("Team created successfully");
       form.reset();

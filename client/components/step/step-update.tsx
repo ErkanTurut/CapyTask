@@ -19,18 +19,26 @@ import {
 import { catchError, cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-import { TUpdateStep, ZUpdateStep } from "@/lib/service/step/actions/update";
+import {
+  TUpdateStepSchema,
+  ZUpdateStepSchema,
+} from "@/trpc/routes/template/step/update.schema";
 import { api } from "@/trpc/client";
 import { Textarea } from "@/ui/textarea";
 import { useRouter } from "next/navigation";
+import { trpc } from "@/trpc/server";
 
 interface StepUpdateFormProps extends React.HTMLAttributes<HTMLFormElement> {
-  step: Database["public"]["Tables"]["step"]["Row"];
+  step: NonNullable<
+    Awaited<
+      ReturnType<(typeof trpc)["db"]["template"]["step"]["get"]["query"]>
+    >["data"]
+  >;
 }
 
 const StepUpdateForm: FC<StepUpdateFormProps> = ({ step, className }) => {
   const router = useRouter();
-  const { mutate, isPending } = api.db.step.update.useMutation({
+  const { mutate, isPending } = api.db.template.step.update.useMutation({
     onSuccess: ({ data }) => {
       if (!data) return;
       toast.success("Step updated successfully");
@@ -55,8 +63,8 @@ const StepUpdateForm: FC<StepUpdateFormProps> = ({ step, className }) => {
   }, [step]);
 
   // react-hook-form
-  const form = useForm<TUpdateStep>({
-    resolver: zodResolver(ZUpdateStep),
+  const form = useForm<TUpdateStepSchema>({
+    resolver: zodResolver(ZUpdateStepSchema),
     defaultValues: {
       name: step.name,
       description: step.description || "",
@@ -64,7 +72,8 @@ const StepUpdateForm: FC<StepUpdateFormProps> = ({ step, className }) => {
     },
   });
 
-  async function onSubmit(data: TUpdateStep) {
+  async function onSubmit(data: TUpdateStepSchema) {
+    console.log(data);
     mutate(data);
   }
 

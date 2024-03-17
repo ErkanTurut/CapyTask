@@ -1,8 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Database } from "@/types/supabase.types";
-import React, { FC, useEffect } from "react";
+import React, { FC } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -12,19 +11,22 @@ import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { catchError, cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-import { useAction } from "@/lib/hooks/use-actions";
-import {
-  TUpdateStep,
-  ZUpdateStep,
-  updateStep,
-} from "@/lib/service/step/actions/update";
 import { Icons } from "@/components/icons";
-import { deleteStep } from "@/lib/service/step/actions/delete";
-import { useRouter } from "next/navigation";
 import { api } from "@/trpc/client";
+import {
+  TUpdateStepSchema,
+  ZUpdateStepSchema,
+} from "@/trpc/routes/template/step/update.schema";
+import { useRouter } from "next/navigation";
+import { trpc } from "@/trpc/server";
 
 interface StepDeleteFormProps extends React.HTMLAttributes<HTMLFormElement> {
-  step: Database["public"]["Tables"]["step"]["Row"];
+  step: NonNullable<
+    Awaited<
+      ReturnType<(typeof trpc)["db"]["template"]["step"]["get"]["query"]>
+    >["data"]
+  >;
+
   size?: "default" | "icon";
 }
 
@@ -35,7 +37,7 @@ const StepDeleteForm: FC<StepDeleteFormProps> = ({
 }) => {
   const router = useRouter();
 
-  const { mutate, isPending } = api.db.step.delete.useMutation({
+  const { mutate, isPending } = api.db.template.step.delete.useMutation({
     onSuccess: () => {
       toast.success("Step deleted successfully");
       router.refresh();
@@ -46,8 +48,8 @@ const StepDeleteForm: FC<StepDeleteFormProps> = ({
   });
 
   // react-hook-form
-  const form = useForm<TUpdateStep>({
-    resolver: zodResolver(ZUpdateStep),
+  const form = useForm<TUpdateStepSchema>({
+    resolver: zodResolver(ZUpdateStepSchema),
     defaultValues: {
       name: step.name,
       description: step.description || "",
@@ -55,7 +57,7 @@ const StepDeleteForm: FC<StepDeleteFormProps> = ({
     },
   });
 
-  async function onSubmit(data: TUpdateStep) {
+  async function onSubmit(data: TUpdateStepSchema) {
     mutate(data);
   }
 

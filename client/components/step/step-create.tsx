@@ -18,17 +18,23 @@ import {
 import { catchError, cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-import { TCreateStep, ZCreateStep } from "@/lib/service/step/actions/create";
+import {
+  TCreateStepSchema,
+  ZCreateStepSchema,
+} from "@/trpc/routes/template/step/create.schema";
 import { api } from "@/trpc/client";
 import { useRouter } from "next/navigation";
 interface StepCreateProps extends React.HTMLAttributes<HTMLFormElement> {
-  plan_id: string;
+  inspection_template_id: string;
 }
 
-const CreateStepForm: FC<StepCreateProps> = ({ plan_id, className }) => {
+const CreateStepForm: FC<StepCreateProps> = ({
+  inspection_template_id,
+  className,
+}) => {
   const router = useRouter();
 
-  const { mutate, isPending } = api.db.step.create.useMutation({
+  const { mutate, isPending } = api.db.template.step.create.useMutation({
     onSuccess: (data) => {
       toast.success("Team created successfully");
       form.reset({
@@ -36,7 +42,7 @@ const CreateStepForm: FC<StepCreateProps> = ({ plan_id, className }) => {
         name: "",
         order: undefined,
         parent_id: undefined,
-        plan_id,
+        inspection_template_id,
       });
       router.refresh();
     },
@@ -46,18 +52,18 @@ const CreateStepForm: FC<StepCreateProps> = ({ plan_id, className }) => {
   });
 
   // react-hook-form
-  const form = useForm<TCreateStep>({
-    resolver: zodResolver(ZCreateStep),
+  const form = useForm<TCreateStepSchema>({
+    resolver: zodResolver(ZCreateStepSchema),
     defaultValues: {
       description: "",
       name: "",
       order: undefined,
       parent_id: undefined,
-      plan_id,
+      inspection_template_id,
     },
   });
 
-  async function onSubmit(data: TCreateStep) {
+  async function onSubmit(data: TCreateStepSchema) {
     mutate(data);
   }
   return (
