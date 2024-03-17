@@ -8,7 +8,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import { PropsWithChildren, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { trpc } from "@/trpc/client";
+import { api } from "@/trpc/client";
 import superjson from "superjson";
 import {
   httpBatchLink,
@@ -33,31 +33,16 @@ export function Providers({
         },
       }),
   );
-  // const [trpcClient] = useState(() =>
-  //   trpc.createClient({
-  //     links: [
-  //       httpBatchLink({
-  //         // transformer: superjson,
-  //         url: `${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/api/trpc`,
-  //         fetch(url, options) {
-  //           return fetch(url, {
-  //             ...options,
-  //             credentials: "include",
-  //           });
-  //         },
-  //       }),
-  //     ],
-  //   }),
-  // );
 
   const [trpcClient] = useState(() =>
-    trpc.createClient({
+    api.createClient({
       links: [
-        // loggerLink({
-        //   enabled: (opts) =>
-        //     process.env.NODE_ENV === "development" ||
-        //     (opts.direction === "down" && opts.result instanceof Error),
-        // }),
+        loggerLink({
+          colorMode: "css",
+          enabled: (opts) =>
+            process.env.NODE_ENV === "development" ||
+            (opts.direction === "down" && opts.result instanceof Error),
+        }),
         unstable_httpBatchStreamLink({
           transformer: superjson,
           url: `${process.env.NEXT_PUBLIC_APP_ROOT_DOMAIN}/api/trpc`,
@@ -71,41 +56,9 @@ export function Providers({
     }),
   );
 
-  // const [trpcClient] = useState(() =>
-  //   trpc.createClient({
-  //     // transformer,
-  //     links: [
-  //       unstable_httpBatchStreamLink({
-  //         transformer: superjson,
-  //         url: `${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/api/trpc`,
-  //         headers() {
-  //           const header = new Map(headers);
-  //           return Object.fromEntries(header);
-  //         },
-  //       }),
-  //     ],
-  //   }),
-  // );
-
-  // const [trpcClient] = useState(() =>
-  //   trpc.createClient({
-  //     links: [
-  //       httpBatchLink({
-  //         url: `${process.env.NEXT_PUBLIC_APP_ROOT_DOMAIN}/api/trpc`,
-  //         fetch(url, options) {
-  //           return fetch(url, {
-  //             ...options,
-  //             credentials: "include",
-  //           });
-  //         },
-  //       }),
-  //     ],
-  //   }),
-  // );
-
   const { isMobile } = useWindowSize();
   return (
-    <trpc.Provider client={trpcClient} queryClient={queryClient}>
+    <api.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         <ReactQueryStreamedHydration transformer={superjson}>
           <NextThemesProvider
@@ -123,6 +76,6 @@ export function Providers({
           <ReactQueryDevtools initialIsOpen={false} />
         </ReactQueryStreamedHydration>
       </QueryClientProvider>
-    </trpc.Provider>
+    </api.Provider>
   );
 }

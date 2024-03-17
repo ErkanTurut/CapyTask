@@ -9,7 +9,198 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      plan: {
+      _prisma_migrations: {
+        Row: {
+          applied_steps_count: number
+          checksum: string
+          finished_at: string | null
+          id: string
+          logs: string | null
+          migration_name: string
+          rolled_back_at: string | null
+          started_at: string
+        }
+        Insert: {
+          applied_steps_count?: number
+          checksum: string
+          finished_at?: string | null
+          id: string
+          logs?: string | null
+          migration_name: string
+          rolled_back_at?: string | null
+          started_at?: string
+        }
+        Update: {
+          applied_steps_count?: number
+          checksum?: string
+          finished_at?: string | null
+          id?: string
+          logs?: string | null
+          migration_name?: string
+          rolled_back_at?: string | null
+          started_at?: string
+        }
+        Relationships: []
+      }
+      inspection: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          inspection_snapshot_id: string | null
+          name: string
+          status: Database["public"]["Enums"]["Status"]
+          team_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          inspection_snapshot_id?: string | null
+          name: string
+          status?: Database["public"]["Enums"]["Status"]
+          team_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          inspection_snapshot_id?: string | null
+          name?: string
+          status?: Database["public"]["Enums"]["Status"]
+          team_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inspection_inspection_snapshot_id_fkey"
+            columns: ["inspection_snapshot_id"]
+            isOneToOne: false
+            referencedRelation: "inspection_template_snapshot"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inspection_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "team"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      inspection_step: {
+        Row: {
+          created_at: string
+          id: string
+          inspection_id: string
+          status: Database["public"]["Enums"]["Status"]
+          step_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          inspection_id: string
+          status?: Database["public"]["Enums"]["Status"]
+          step_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          inspection_id?: string
+          status?: Database["public"]["Enums"]["Status"]
+          step_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inspection_step_inspection_id_fkey"
+            columns: ["inspection_id"]
+            isOneToOne: false
+            referencedRelation: "inspection"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inspection_step_step_id_fkey"
+            columns: ["step_id"]
+            isOneToOne: false
+            referencedRelation: "inspection_step_template"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      inspection_step_template: {
+        Row: {
+          created_at: string
+          created_by_id: string | null
+          description: string | null
+          id: string
+          inspection_template_id: string
+          inspection_template_snapshot_id: string | null
+          name: string
+          order: number | null
+          parent_step_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by_id?: string | null
+          description?: string | null
+          id?: string
+          inspection_template_id: string
+          inspection_template_snapshot_id?: string | null
+          name: string
+          order?: number | null
+          parent_step_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by_id?: string | null
+          description?: string | null
+          id?: string
+          inspection_template_id?: string
+          inspection_template_snapshot_id?: string | null
+          name?: string
+          order?: number | null
+          parent_step_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inspection_step_template_created_by_id_fkey"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inspection_step_template_inspection_template_id_fkey"
+            columns: ["inspection_template_id"]
+            isOneToOne: false
+            referencedRelation: "inspection_template"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inspection_step_template_inspection_template_snapshot_id_fkey"
+            columns: ["inspection_template_snapshot_id"]
+            isOneToOne: false
+            referencedRelation: "inspection_template_snapshot"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inspection_step_template_parent_step_id_fkey"
+            columns: ["parent_step_id"]
+            isOneToOne: false
+            referencedRelation: "inspection_step_template"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      inspection_template: {
         Row: {
           created_at: string
           description: string | null
@@ -36,10 +227,48 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "plan_team_id_fkey"
+            foreignKeyName: "inspection_template_team_id_fkey"
             columns: ["team_id"]
             isOneToOne: false
             referencedRelation: "team"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      inspection_template_snapshot: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          inspection_template_id: string
+          name: string
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          inspection_template_id: string
+          name: string
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          inspection_template_id?: string
+          name?: string
+          updated_at?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inspection_template_snapshot_inspection_template_id_fkey"
+            columns: ["inspection_template_id"]
+            isOneToOne: false
+            referencedRelation: "inspection_template"
             referencedColumns: ["id"]
           }
         ]
@@ -64,64 +293,6 @@ export type Database = {
           permissions?: Database["public"]["Enums"]["Permission"][] | null
         }
         Relationships: []
-      }
-      step: {
-        Row: {
-          created_at: string
-          created_by_id: string | null
-          description: string | null
-          id: string
-          name: string
-          order: number | null
-          parent_step_id: string | null
-          plan_id: string
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          created_by_id?: string | null
-          description?: string | null
-          id?: string
-          name: string
-          order?: number | null
-          parent_step_id?: string | null
-          plan_id: string
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          created_by_id?: string | null
-          description?: string | null
-          id?: string
-          name?: string
-          order?: number | null
-          parent_step_id?: string | null
-          plan_id?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "step_created_by_id_fkey"
-            columns: ["created_by_id"]
-            isOneToOne: false
-            referencedRelation: "user"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "step_parent_step_id_fkey"
-            columns: ["parent_step_id"]
-            isOneToOne: false
-            referencedRelation: "step"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "step_plan_id_fkey"
-            columns: ["plan_id"]
-            isOneToOne: false
-            referencedRelation: "plan"
-            referencedColumns: ["id"]
-          }
-        ]
       }
       team: {
         Row: {
@@ -326,13 +497,13 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      inspectionType: "INSPECTION" | "MAINTENANCE" | "OTHER"
       Permission:
         | "FULL_ACCESS"
         | "CAN_EDIT"
         | "CAN_COMMENT"
         | "CAN_VIEW"
         | "NO_ACCESS"
-      PlanType: "INSPECTION" | "MAINTENANCE" | "OTHER"
       Priority: "LOW" | "MEDIUM" | "HIGH"
       Role:
         | "ADMIN"

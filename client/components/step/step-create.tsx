@@ -19,7 +19,7 @@ import { catchError, cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 import { TCreateStep, ZCreateStep } from "@/lib/service/step/actions/create";
-import { trpc } from "@/trpc/client";
+import { api } from "@/trpc/client";
 import { useRouter } from "next/navigation";
 interface StepCreateProps extends React.HTMLAttributes<HTMLFormElement> {
   plan_id: string;
@@ -28,7 +28,7 @@ interface StepCreateProps extends React.HTMLAttributes<HTMLFormElement> {
 const CreateStepForm: FC<StepCreateProps> = ({ plan_id, className }) => {
   const router = useRouter();
 
-  const { mutate, isPending } = trpc.db.step.create.useMutation({
+  const { mutate, isPending } = api.db.step.create.useMutation({
     onSuccess: (data) => {
       toast.success("Team created successfully");
       form.reset({

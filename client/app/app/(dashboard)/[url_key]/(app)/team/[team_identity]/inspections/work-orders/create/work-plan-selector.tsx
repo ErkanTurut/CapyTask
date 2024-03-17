@@ -1,9 +1,8 @@
 "use client";
 
-import * as React from "react";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import * as React from "react";
 
-import { cn } from "@/lib/utils";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Command,
@@ -13,31 +12,40 @@ import {
   CommandItem,
   CommandList,
   CommandLoading,
-  useCommandState,
 } from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Database } from "@/types/supabase.types";
+import { cn } from "@/lib/utils";
+import { api } from "@/trpc/client";
+import { trpc } from "@/trpc/server";
 import Link from "next/link";
 import { useDebouncedCallback } from "use-debounce";
-import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
 
 interface WorkPlanSelectorProps {
-  data: Database["public"]["Tables"]["plan"]["Row"][] | null;
-  searchParams: {
-    q: string;
-  } | null;
+  initialData: NonNullable<
+    Awaited<
+      ReturnType<(typeof trpc)["db"]["plan"]["getPlansByIdentity"]["query"]>
+    >
+  >;
+
+  params: {
+    team_identity: string;
+  };
 }
 
 export function WorkPlanSelector({
-  data,
-  searchParams,
+  initialData: { data: plans },
+  params,
 }: WorkPlanSelectorProps) {
-  if (!data) {
+  const {
+    mutate,
+    data: searchPlans,
+    isPending,
+  } = api.db.plan.searchPlan.useMutation();
+  if (!plans) {
     return (
       <Link
         href="/app/teams/create"
@@ -48,21 +56,11 @@ export function WorkPlanSelector({
     );
   }
 
-  const router = useRouter();
-  const supabase = createClient();
-
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
-  const [searchPlans, setSearchPlans] = React.useState<
-    Database["public"]["Tables"]["plan"]["Row"][]
-  >([]);
 
   const debouncedValue = useDebouncedCallback(async (value: string) => {
-    const { data } = await supabase
-      .from("plan")
-      .select("*")
-      .textSearch("name", value, { type: "websearch" });
-    setSearchPlans(data || []);
+    mutate({ q: value, team_identity: params.team_identity });
   }, 1000);
 
   return (
@@ -72,22 +70,22 @@ export function WorkPlanSelector({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[300px] justify-between"
+          className="w-[250px] justify-between"
         >
           {value
-            ? data.find((plan) => plan.name === value)?.name
-            : "Select work plan template..."}
+            ? plans.find((plan) => plan.id === value)?.name
+            : "Select work plan..."}
           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[300px] p-0">
+      <PopoverContent className="w-[250px] p-0">
         <Command>
           <CommandInput
             placeholder="Search work plan template..."
             className="h-9"
             onValueChange={(e) => debouncedValue(e)}
           />
-          {/* {loading && <CommandLoading>Loading...</CommandLoading>} */}
+          {/* {isPending && <CommandLoading>Loading...</CommandLoading>} */}
           <CommandEmpty>No framework found.</CommandEmpty>
           <CommandList>
             <CommandGroup heading="Create a new plan">
@@ -95,41 +93,45 @@ export function WorkPlanSelector({
                 <Link href="/app/teams/create">Create a new plan</Link>
               </CommandItem>
             </CommandGroup>
-            <CommandGroup heading="recherche">
-              {searchPlans.map((plan) => (
+            {searchPlans && searchPlans.data && searchPlans.data.length > 0 && (
+              <CommandGroup heading="Research">
+                {searchPlans?.data?.map((plan) => (
+                  <CommandItem
+                    key={plan.id}
+                    value={plan.name}
+                    onSelect={() => {
+                      setValue(plan.id);
+                      setOpen(false);
+                    }}
+                  >
+                    {plan.name}
+                    <CheckIcon
+                      className={cn(
+                        "ml-auto h-4 w-4",
+
+                        value === plan.id ? "opacity-100" : "opacity-0",
+                      )}
+                    />
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
+
+            <CommandGroup heading="Recent">
+              {plans.map((plan) => (
                 <CommandItem
                   key={plan.id}
                   value={plan.name}
                   onSelect={() => {
-                    setValue(plan.name === value ? "" : plan.name);
                     setOpen(false);
+                    setValue(plan.id);
                   }}
                 >
                   {plan.name}
                   <CheckIcon
                     className={cn(
                       "ml-auto h-4 w-4",
-                      value === plan.name ? "opacity-100" : "opacity-0",
-                    )}
-                  />
-                </CommandItem>
-              ))}
-            </CommandGroup>
-            <CommandGroup key={1} heading="Recent">
-              {data.map((plan) => (
-                <CommandItem
-                  key={plan.id}
-                  value={plan.name}
-                  onSelect={() => {
-                    setValue(plan.name === value ? "" : plan.name);
-                    setOpen(false);
-                  }}
-                >
-                  {plan.name}
-                  <CheckIcon
-                    className={cn(
-                      "ml-auto h-4 w-4",
-                      value === plan.name ? "opacity-100" : "opacity-0",
+                      value === plan.id ? "opacity-100" : "opacity-0",
                     )}
                   />
                 </CommandItem>
@@ -140,4 +142,76 @@ export function WorkPlanSelector({
       </PopoverContent>
     </Popover>
   );
+}
+
+{
+  /* <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="language"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Language</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={cn(
+                        "w-[200px] justify-between",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value
+                        ? languages.find(
+                            (language) => language.value === field.value
+                          )?.label
+                        : "Select language"}
+                      <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-[200px] p-0">
+                  <Command>
+                    <CommandInput
+                      placeholder="Search framework..."
+                      className="h-9"
+                    />
+                    <CommandEmpty>No framework found.</CommandEmpty>
+                    <CommandGroup>
+                      {languages.map((language) => (
+                        <CommandItem
+                          value={language.label}
+                          key={language.value}
+                          onSelect={() => {
+                            form.setValue("language", language.value)
+                          }}
+                        >
+                          {language.label}
+                          <CheckIcon
+                            className={cn(
+                              "ml-auto h-4 w-4",
+                              language.value === field.value
+                                ? "opacity-100"
+                                : "opacity-0"
+                            )}
+                          />
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              <FormDescription>
+                This is the language that will be used in the dashboard.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit">Submit</Button>
+      </form>
+    </Form> */
 }

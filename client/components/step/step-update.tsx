@@ -20,7 +20,7 @@ import { catchError, cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 import { TUpdateStep, ZUpdateStep } from "@/lib/service/step/actions/update";
-import { trpc } from "@/trpc/client";
+import { api } from "@/trpc/client";
 import { Textarea } from "@/ui/textarea";
 import { useRouter } from "next/navigation";
 
@@ -30,7 +30,7 @@ interface StepUpdateFormProps extends React.HTMLAttributes<HTMLFormElement> {
 
 const StepUpdateForm: FC<StepUpdateFormProps> = ({ step, className }) => {
   const router = useRouter();
-  const { mutate, isPending } = trpc.db.step.update.useMutation({
+  const { mutate, isPending } = api.db.step.update.useMutation({
     onSuccess: ({ data }) => {
       if (!data) return;
       toast.success("Step updated successfully");

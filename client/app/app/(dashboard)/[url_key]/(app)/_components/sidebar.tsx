@@ -100,7 +100,7 @@ const Sidebar: FC<sidebarProps> = async ({ params }) => {
         <Separator />
         <Nav rootPath={`/${params.url_key}`} items={appNavItems.footer} />
         <Separator />
-        <Suspense fallback={<Skeleton className="h-8 w-full" />}>
+        <Suspense fallback={<Skeleton className="h-9 w-full" />}>
           {(async () => {
             const { data: user } = await trpc.db.user.getCurrentUser.query();
             if (!user) {

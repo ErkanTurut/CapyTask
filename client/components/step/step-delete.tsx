@@ -21,7 +21,7 @@ import {
 import { Icons } from "@/components/icons";
 import { deleteStep } from "@/lib/service/step/actions/delete";
 import { useRouter } from "next/navigation";
-import { trpc } from "@/trpc/client";
+import { api } from "@/trpc/client";
 
 interface StepDeleteFormProps extends React.HTMLAttributes<HTMLFormElement> {
   step: Database["public"]["Tables"]["step"]["Row"];
@@ -35,7 +35,7 @@ const StepDeleteForm: FC<StepDeleteFormProps> = ({
 }) => {
   const router = useRouter();
 
-  const { mutate, isPending } = trpc.db.step.delete.useMutation({
+  const { mutate, isPending } = api.db.step.delete.useMutation({
     onSuccess: () => {
       toast.success("Step deleted successfully");
       router.refresh();

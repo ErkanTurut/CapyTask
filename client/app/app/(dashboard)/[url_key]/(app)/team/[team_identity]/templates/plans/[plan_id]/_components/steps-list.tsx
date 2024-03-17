@@ -6,7 +6,7 @@ import { useAction } from "@/lib/hooks/use-actions";
 import { upsertStep } from "@/lib/service/step/actions/upsert";
 import { getStepsByPlan } from "@/lib/service/step/fetch";
 import { catchError, cn } from "@/lib/utils";
-import { trpc } from "@/trpc/client";
+import { api } from "@/trpc/client";
 import { trpc as server } from "@/trpc/server";
 import {
   DragDropContext,
@@ -43,15 +43,19 @@ interface StepListProps {
 }
 
 export default function StepList({ initialData, plan_id }: StepListProps) {
-  const [stepsList] = trpc.db.step.getStepsByPlan.useSuspenseQuery(
+  const [stepsList] = api.db.step.getStepsByPlan.useSuspenseQuery(
     { plan_id },
     {
       initialData,
     },
   );
-  const utils = trpc.useUtils();
+  if (!stepsList) {
+    return null;
+  }
 
-  const { mutate, isPending, isError } = trpc.db.step.upsert.useMutation({
+  const utils = api.useUtils();
+
+  const { mutate, isPending, isError } = api.db.step.upsert.useMutation({
     onMutate: async (newData) => {
       await utils.db.step.getStepsByPlan.cancel({ plan_id });
       const oldData = utils.db.step.getStepsByPlan.getData({ plan_id });

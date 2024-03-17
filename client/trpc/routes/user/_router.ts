@@ -5,7 +5,6 @@ import { ZUserUpdateSchema } from "./update.schema";
 import { createClient } from "@/lib/supabase/server";
 
 import { cookies } from "next/headers";
-import { TRPCClientError } from "@trpc/client";
 
 import { getUserHandler } from "./getUser.handler";
 import { ZGetUserSchema } from "./getUser.schema";

@@ -1,0 +1,182 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider  = "postgresql"
+    url       = env("DATABASE_URL")
+    directUrl = env("DIRECT_URL")
+}
+
+model user {
+    id             String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+    image_uri      String?
+    email          String           @unique
+    first_name     String?
+    last_name      String?
+    createdAt      DateTime         @default(now()) @db.Timestamptz(6)
+    updatedAt      DateTime         @default(now()) @updatedAt @db.Timestamptz(6)
+    external_id    String?          @unique @db.Uuid
+    steps          step[]
+    user_team      user_team[]
+    user_workspace user_workspace[]
+    workspaces     workspace[]
+}
+
+model team {
+    id           String       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+    name         String
+    description  String?
+    image_uri    String?
+    created_at   DateTime     @default(now()) @db.Timestamptz(6)
+    updated_at   DateTime     @default(now()) @updatedAt @db.Timestamptz(6)
+    workspace_id String       @db.Uuid
+    identity     String
+    plans        plan[]
+    workspace    workspace    @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
+    users        user_team[]
+    work_order   work_order[]
+
+    @@unique([identity, workspace_id])
+    @@unique([name, workspace_id])
+    @@index([workspace_id])
+}
+
+model workspace {
+    id             String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+    name           String
+    description    String?
+    created_at     DateTime         @default(now()) @db.Timestamptz(6)
+    updated_at     DateTime         @default(now()) @updatedAt @db.Timestamptz(6)
+    url_key        String           @unique
+    created_by     String           @db.Uuid
+    image_uri      String?
+    team           team[]
+    user_workspace user_workspace[]
+    user           user             @relation(fields: [created_by], references: [id])
+
+    @@index([url_key])
+}
+
+model user_team {
+    user_id String  @db.Uuid
+    team_id String  @db.Uuid
+    role_id String? @db.Uuid
+    role    role?   @relation(fields: [role_id], references: [id])
+    team    team    @relation(fields: [team_id], references: [id])
+    user    user    @relation(fields: [user_id], references: [id])
+
+    @@id([user_id, team_id])
+    @@index([team_id])
+    @@index([role_id])
+    @@index([user_id])
+}
+
+model user_workspace {
+    user_id      String    @db.Uuid
+    workspace_id String    @db.Uuid
+    role_id      String?   @db.Uuid
+    role         role?     @relation(fields: [role_id], references: [id])
+    user         user      @relation(fields: [user_id], references: [id])
+    workspace    workspace @relation(fields: [workspace_id], references: [id])
+
+    @@id([user_id, workspace_id])
+    @@index([user_id])
+    @@index([workspace_id])
+    @@index([role_id])
+}
+
+model role {
+    id             String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+    name           Role
+    description    String
+    permissions    Permission[]     @default([])
+    user_team      user_team[]
+    user_workspace user_workspace[]
+}
+
+model plan {
+    id          String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+    name        String
+    description String?
+    created_at  DateTime @default(now()) @db.Timestamptz(6)
+    updated_at  DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+    team_id     String   @db.Uuid
+    team        team     @relation(fields: [team_id], references: [id], onDelete: Cascade)
+    step        step[]
+
+    @@index([team_id])
+}
+
+model step {
+    id             String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+    name           String
+    description    String?
+    created_at     DateTime @default(now()) @db.Timestamptz(6)
+    updated_at     DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+    parent_step_id String?  @db.Uuid
+    created_by_id  String?  @db.Uuid
+    plan_id        String   @db.Uuid
+    order          Int?
+    created_by     user?    @relation(fields: [created_by_id], references: [id])
+    parent_step    step?    @relation("step_sub_steps", fields: [parent_step_id], references: [id], onDelete: Cascade)
+    sub_steps      step[]   @relation("step_sub_steps")
+    plan           plan     @relation(fields: [plan_id], references: [id], onDelete: Cascade)
+
+    @@index([parent_step_id])
+    @@index([created_by_id])
+    @@index([plan_id])
+}
+
+model work_order {
+    id          String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+    name        String
+    description String?
+    created_at  DateTime @default(now()) @db.Timestamptz(6)
+    updated_at  DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+    work_plan   Json
+    team_id     String   @db.Uuid
+    status      Status   @default(OPEN)
+    team        team     @relation(fields: [team_id], references: [id], onDelete: Cascade)
+
+    @@index([team_id])
+}
+
+enum Status {
+    OPEN
+    IN_PROGRESS
+    COMPLETED
+    ON_HOLD
+    CANCELED
+}
+
+enum Role {
+    ADMIN
+    MANAGER
+    SUPERVISOR
+    TECHNICIAN
+    ENGINEER
+    QUALITY_INSPECTOR
+    OPERATOR
+    OTHER
+}
+
+enum Permission {
+    FULL_ACCESS
+    CAN_EDIT
+    CAN_COMMENT
+    CAN_VIEW
+    NO_ACCESS
+}
+
+enum Priority {
+    LOW
+    MEDIUM
+    HIGH
+}
+
+enum PlanType {
+    INSPECTION
+    MAINTENANCE
+    OTHER
+}

@@ -30,12 +30,8 @@ export default async function DashboardPage({
   const offset = (page - 1) * limit;
 
   return (
-    <>
-      <PageHeader
-        className="pt-10"
-        id="account-header"
-        aria-labelledby="account-header-heading"
-      >
+    <Shell variant="default">
+      <PageHeader id="account-header" aria-labelledby="account-header-heading">
         <PageHeaderHeading size="sm" className="flex items-center gap-1">
           Your Plans
         </PageHeaderHeading>
@@ -48,6 +44,6 @@ export default async function DashboardPage({
           <PlansTable props={{ offset, limit, page }} params={params} />
         </Suspense>
       </Shell>
-    </>
+    </Shell>
   );
 }

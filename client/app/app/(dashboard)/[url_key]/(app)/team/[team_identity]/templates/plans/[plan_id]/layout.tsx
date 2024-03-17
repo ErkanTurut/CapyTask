@@ -6,6 +6,7 @@ import {
 import CardSkeleton from "@/components/skeletons/card-skeleton";
 import { Suspense } from "react";
 import StepsContainer from "./_components/steps-container";
+import { Shell } from "@/components/shells";
 
 interface layoutProps {
   children: React.ReactNode;
@@ -23,13 +24,9 @@ export default async function layoutPage({
   command,
 }: layoutProps) {
   return (
-    <>
+    <Shell>
       {command}
-      <PageHeader
-        className="pt-10"
-        id="account-header"
-        aria-labelledby="account-header-heading"
-      >
+      <PageHeader id="account-header" aria-labelledby="account-header-heading">
         <PageHeaderHeading size="sm" className="flex items-center gap-1">
           Your Inspection Plans
         </PageHeaderHeading>
@@ -44,6 +41,6 @@ export default async function layoutPage({
         </Suspense>
         <Suspense fallback={<CardSkeleton />}>{children}</Suspense>
       </div>
-    </>
+    </Shell>
   );
 }

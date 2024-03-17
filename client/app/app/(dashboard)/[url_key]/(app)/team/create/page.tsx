@@ -53,10 +53,7 @@ export default async function createTeam({ params }: createTeamProps) {
         </CardHeader>
         <CardContent>
           <Suspense fallback="loading...">
-            <CreateTeamForm
-              url_key={params.url_key}
-              workspace_id={workspace.id}
-            />
+            <CreateTeamForm workspace_id={workspace.id} />
           </Suspense>
         </CardContent>
       </Card>
@@ -69,10 +66,7 @@ export default async function createTeam({ params }: createTeamProps) {
         </CardHeader>
         <CardContent>
           <Suspense fallback="loading...">
-            <CreateTeamForm
-              workspace_id={workspace.id}
-              url_key={params.url_key}
-            />
+            <CreateTeamForm workspace_id={workspace.id} />
           </Suspense>
           {/* i will add team invitation section here with form */}
         </CardContent>

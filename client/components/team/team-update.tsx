@@ -22,7 +22,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { TUpdateTeam, ZUpdateTeam } from "@/lib/service/team/actions/update";
 
-import { trpc } from "@/trpc/client";
+import { api } from "@/trpc/client";
 import { Database } from "@/types/supabase.types";
 import { FC } from "react";
 
@@ -31,7 +31,7 @@ interface UpdateTeamFormProps extends React.HTMLAttributes<HTMLFormElement> {
 }
 
 const UpdateTeamForm: FC<UpdateTeamFormProps> = ({ team, className }) => {
-  const { isPending, mutate } = trpc.db.team.update.useMutation({
+  const { isPending, mutate } = api.db.team.update.useMutation({
     onSuccess: ({ data }) => {
       if (!data) return;
       toast.success("Team created successfully");

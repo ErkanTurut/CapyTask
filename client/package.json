@@ -7,7 +7,7 @@
     "format": "prettier \"**/*.{css,js,json,jsx,ts,tsx}\"",
     "start": "next start",
     "lint": "next lint",
-    "db": "prisma db push && supabase gen types typescript --project-id hxhaycanqkhkuppkvcoy --schema public > types/supabase.types.ts && prisma generate"
+    "db": "prisma db push && supabase gen types typescript --project-id igidoujvlaqxflfjjlps --schema public > types/supabase.types.ts && prisma generate"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^16.5.0",

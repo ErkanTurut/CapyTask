@@ -19,7 +19,7 @@ import { catchError } from "@/lib/utils";
 import { toast } from "sonner";
 
 import { Button } from "../ui/button";
-import { trpc } from "@/trpc/client";
+import { api } from "@/trpc/client";
 import {
   TCreateWorkspaceSchema,
   ZCreateWorkspaceSchema,
@@ -27,7 +27,7 @@ import {
 
 export function CreateWorspaceForm() {
   const router = useRouter();
-  const { mutate, isPending } = trpc.db.workspace.create.useMutation({
+  const { mutate, isPending } = api.db.workspace.create.useMutation({
     onSuccess: (data, variables) => {
       toast.success("Workspace created successfully");
       router.replace(`/${variables.url_key}`);

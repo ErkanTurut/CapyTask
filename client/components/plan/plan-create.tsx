@@ -29,7 +29,7 @@ import { Button } from "@/components/ui/button";
 
 import { FC } from "react";
 import { Database } from "@/types/supabase.types";
-import { trpc } from "@/trpc/client";
+import { api } from "@/trpc/client";
 import { useRouter } from "next/navigation";
 
 interface CreatePlanFormProps extends React.HTMLAttributes<HTMLFormElement> {
@@ -43,7 +43,7 @@ const CreatePlanForm: FC<CreatePlanFormProps> = ({
   className,
 }) => {
   const router = useRouter();
-  const { mutate, isPending } = trpc.db.plan.create.useMutation({
+  const { mutate, isPending } = api.db.plan.create.useMutation({
     onSuccess: (data, variables) => {
       toast.success("Team created successfully");
       form.reset();

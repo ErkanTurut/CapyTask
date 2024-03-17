@@ -17,7 +17,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/ui/dropdown-menu";
-import { trpc } from "@/trpc/client";
+import { api } from "@/trpc/client";
 import { ZPlanSchema } from "@/trpc/routes/plan/plan.schema";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -30,10 +30,17 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  const plan = ZPlanSchema.parse(row.original);
+  const plan = ZPlanSchema.pick({
+    created_at: true,
+    description: true,
+    id: true,
+    name: true,
+    team_id: true,
+    updated_at: true,
+  }).parse(row.original);
   const router = useRouter();
 
-  const { mutate: remove } = trpc.db.plan.delete.useMutation({
+  const { mutate: remove } = api.db.plan.delete.useMutation({
     onSuccess: (data) => {
       toast.success("Team created successfully");
     },

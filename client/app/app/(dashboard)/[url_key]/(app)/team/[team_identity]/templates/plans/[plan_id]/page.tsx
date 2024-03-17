@@ -21,6 +21,9 @@ interface PageProps {
 }
 
 export default async function Page({ searchParams, params }: PageProps) {
+  const { data } = await trpc.db.plan.get.withSteps.query({
+    id: params.plan_id,
+  });
   if (searchParams.step_id) {
     const { data: step } = await trpc.db.step.get.query({
       id: searchParams.step_id,

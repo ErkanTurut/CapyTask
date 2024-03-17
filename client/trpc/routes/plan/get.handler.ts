@@ -38,7 +38,8 @@ export async function getPlansByIdentityHandler({
     .select("*, team!inner(*)", { count: "estimated" })
     .eq("team.identity", input.team_identity)
     .range(input.range.start, input.range.end)
-    .order("updated_at", { ascending: false });
+    .order("updated_at", { ascending: false })
+    .throwOnError();
 }
 
 export async function getPlanHandler({
@@ -51,6 +52,23 @@ export async function getPlanHandler({
   db: SupabaseClient;
 }) {
   return await db.from("plan").select("*").eq("id", input.id).single();
+}
+
+export async function getPlanStepsHandler({
+  input,
+  db,
+}: {
+  input: {
+    id: TGetPlanSchema["id"];
+  };
+  db: SupabaseClient;
+}) {
+  return await db
+    .from("plan")
+    .select("*, step!inner(*) ")
+    .eq("id", input.id)
+    .single()
+    .throwOnError();
 }
 
 export async function searchPlanHandler({
@@ -70,5 +88,6 @@ export async function searchPlanHandler({
     .eq("team.identity", input.team_identity)
     .textSearch("name", input.q, {
       type: "websearch",
-    });
+    })
+    .throwOnError();
 }

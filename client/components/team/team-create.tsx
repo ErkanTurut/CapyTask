@@ -22,7 +22,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { TCreateTeam, ZCreateTeam } from "@/lib/service/team/actions/create";
 
-import { trpc } from "@/trpc/client";
+import { api } from "@/trpc/client";
 import { FC } from "react";
 
 interface CreateTeamFormProps extends React.HTMLAttributes<HTMLFormElement> {
@@ -33,7 +33,7 @@ const CreateTeamForm: FC<CreateTeamFormProps> = ({
   workspace_id,
   className,
 }) => {
-  const { mutate, isPending } = trpc.db.team.create.useMutation({
+  const { mutate, isPending } = api.db.team.create.useMutation({
     onSuccess: () => {
       toast.success("Team created successfully");
       form.reset();

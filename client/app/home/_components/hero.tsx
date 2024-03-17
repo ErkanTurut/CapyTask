@@ -6,7 +6,6 @@ import {
   PageHeaderHeading,
 } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
-import { trpc } from "@/trpc/client";
 import { FC } from "react";
 interface heroProps {}
 
