@@ -47,6 +47,7 @@ export default async function middleware(req: NextRequest) {
       data: { user },
       error,
     } = await supabase.auth.getUser();
+
     if (
       (!user &&
         path !== "/login" &&
