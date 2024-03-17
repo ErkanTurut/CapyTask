@@ -1,4 +1,3 @@
-import { Database } from "@/types/supabase.types";
 import * as z from "zod";
 export const ZUpdateStepSchema = z.object({
   id: z
@@ -6,7 +5,7 @@ export const ZUpdateStepSchema = z.object({
       invalid_type_error: "Step ID must be a string",
       required_error: "Step ID is required",
     })
-    .uuid({ message: "Plan ID must be a valid UUID" }),
+    .uuid({ message: "inspection ID must be a valid UUID" }),
   name: z
     .string({
       invalid_type_error: "Name must be a string",
@@ -24,11 +23,11 @@ export const ZUpdateStepSchema = z.object({
       message: "Description must be less than 500 characters long",
     })
     .optional(),
-  order: z.number().nonnegative().nullish(),
-  plan_id: z.string(),
-  parent_step_id: z.string().nullable(),
-  created_at: z.string(),
-  updated_at: z.string(),
-  created_by_id: z.string().nullable(),
+  // order: z.number().nonnegative().nullish(),
+  // inspection_template_id: z.string(),
+  // parent_step_id: z.string().nullable(),
+  // created_at: z.string(),
+  // updated_at: z.string(),
+  // created_by_id: z.string().nullable(),
 });
 export type TUpdateStepSchema = z.infer<typeof ZUpdateStepSchema>;

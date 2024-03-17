@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { TPlanSchema, ZPlanSchema } from "../plan/plan.schema";
+import { TPlanSchema, ZPlanSchema } from "../inspection/plan.schema";
 
 export const ZCreateWorkOrderSchema = z.object({
   name: z

@@ -9,5 +9,5 @@ type opts = {
 };
 
 export const upsertStepHandler = async ({ input, db }: opts) => {
-  return await db.from("step").upsert(input).select();
+  return await db.from("step_template").upsert(input).select();
 };
