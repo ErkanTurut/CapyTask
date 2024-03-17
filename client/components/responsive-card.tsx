@@ -1,6 +1,12 @@
 "use client";
 
-import { Card } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import useTailwindBreakpoint from "@/lib/hooks/use-tailwind-breakpoint";
@@ -30,5 +36,16 @@ export function ResponsiveCard({ children }: ResponsiveCardProps) {
     );
   }
 
-  return <Card className="sticky top-4 h-min">{children}</Card>;
+  return (
+    <Card className="sticky top-4 h-min">
+      <CardHeader>
+        <CardTitle>Plan detail</CardTitle>
+        <CardDescription>
+          Update the details below to update your plan template. You will be
+          able to use this plan in your inspections.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>{children}</CardContent>
+    </Card>
+  );
 }

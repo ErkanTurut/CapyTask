@@ -57,8 +57,8 @@ export const appNavItems: {
       id: "templates",
       items: [
         {
-          title: "Work plans",
-          href: "/plans",
+          title: "Inspections plans",
+          href: "/inspections",
           variant: "ghost",
           id: "plans",
         },
