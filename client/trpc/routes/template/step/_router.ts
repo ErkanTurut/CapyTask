@@ -8,7 +8,7 @@ import { ZDeleteStepSchema } from "./delete.schema";
 import {
   getStepHandler,
   getStepsByIdentityHandler,
-  getStepsByPlanHandler,
+  getStepsByInspectionHandler,
   searchStepsHandler,
 } from "./get.handler";
 import { ZGetStepSchema } from "./get.schema";
@@ -30,10 +30,10 @@ export const step = router({
       return await searchStepsHandler({ input, db: createClient(cookies()) });
     }),
 
-  getStepsByPlan: protectedProcedure
-    .input(ZGetStepSchema.pick({ plan_id: true }))
+  getStepsByInspection: protectedProcedure
+    .input(ZGetStepSchema.pick({ inspection_template_id: true }))
     .query(async ({ ctx, input }) => {
-      const { data } = await getStepsByPlanHandler({
+      const { data } = await getStepsByInspectionHandler({
         input,
         db: createClient(cookies()),
       });

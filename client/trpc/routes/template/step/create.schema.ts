@@ -11,12 +11,12 @@ export const ZCreateStepSchema = z.object({
     .regex(/^[a-zA-Z0-9 ]+$/, {
       message: "Name must contain only letters, numbers and spaces",
     }),
-  plan_id: z
+  inspection_template_id: z
     .string({
-      invalid_type_error: "Plan ID must be a string",
-      required_error: "Plan ID is required",
+      invalid_type_error: "Inspection template ID must be a string",
+      required_error: "Inspection template  is required",
     })
-    .uuid({ message: "Plan ID must be a valid UUID" }),
+    .uuid({ message: "Inspection template  must be a valid UUID" }),
   description: z
     .string({
       invalid_type_error: "Description must be a string",

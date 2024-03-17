@@ -7,12 +7,12 @@ export const ZGetStepSchema = z.object({
       required_error: "Step ID is required",
     })
     .uuid({ message: "Step ID must be a valid UUID" }),
-  plan_id: z
+  inspection_template_id: z
     .string({
-      invalid_type_error: "Plan ID must be a string",
-      required_error: "Plan ID is required",
+      invalid_type_error: "inspection ID must be a string",
+      required_error: "inspection ID is required",
     })
-    .uuid({ message: "Plan ID must be a valid UUID" }),
+    .uuid({ message: "inspection ID must be a valid UUID" }),
 
   team_identity: z
     .string({

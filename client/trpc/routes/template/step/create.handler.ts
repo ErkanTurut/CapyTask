@@ -12,5 +12,5 @@ type opts = {
 };
 
 export const createStepHandler = async ({ input, db }: opts) => {
-  return await db.from("step").insert(input).select("*");
+  return await db.from("step_template").insert(input).select("*");
 };
