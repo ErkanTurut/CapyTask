@@ -1,7 +1,7 @@
 import { protectedProcedure, router } from "@/trpc/trpc";
 
-export const step = router({
+export const inspection = router({
   test: protectedProcedure.query(async ({ ctx }) => {
-    return { message: "Hello World" };
+    return { data: "Hello" };
   }),
 });
