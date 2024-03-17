@@ -90,116 +90,6 @@ export type Database = {
           }
         ]
       }
-      inspection_step: {
-        Row: {
-          created_at: string
-          id: string
-          inspection_id: string
-          status: Database["public"]["Enums"]["Status"]
-          step_id: string
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          inspection_id: string
-          status?: Database["public"]["Enums"]["Status"]
-          step_id: string
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          inspection_id?: string
-          status?: Database["public"]["Enums"]["Status"]
-          step_id?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "inspection_step_inspection_id_fkey"
-            columns: ["inspection_id"]
-            isOneToOne: false
-            referencedRelation: "inspection"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "inspection_step_step_id_fkey"
-            columns: ["step_id"]
-            isOneToOne: false
-            referencedRelation: "inspection_step_template"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      inspection_step_template: {
-        Row: {
-          created_at: string
-          created_by_id: string | null
-          description: string | null
-          id: string
-          inspection_template_id: string
-          inspection_template_snapshot_id: string | null
-          name: string
-          order: number | null
-          parent_step_id: string | null
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          created_by_id?: string | null
-          description?: string | null
-          id?: string
-          inspection_template_id: string
-          inspection_template_snapshot_id?: string | null
-          name: string
-          order?: number | null
-          parent_step_id?: string | null
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          created_by_id?: string | null
-          description?: string | null
-          id?: string
-          inspection_template_id?: string
-          inspection_template_snapshot_id?: string | null
-          name?: string
-          order?: number | null
-          parent_step_id?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "inspection_step_template_created_by_id_fkey"
-            columns: ["created_by_id"]
-            isOneToOne: false
-            referencedRelation: "user"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "inspection_step_template_inspection_template_id_fkey"
-            columns: ["inspection_template_id"]
-            isOneToOne: false
-            referencedRelation: "inspection_template"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "inspection_step_template_inspection_template_snapshot_id_fkey"
-            columns: ["inspection_template_snapshot_id"]
-            isOneToOne: false
-            referencedRelation: "inspection_template_snapshot"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "inspection_step_template_parent_step_id_fkey"
-            columns: ["parent_step_id"]
-            isOneToOne: false
-            referencedRelation: "inspection_step_template"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
       inspection_template: {
         Row: {
           created_at: string
@@ -293,6 +183,116 @@ export type Database = {
           permissions?: Database["public"]["Enums"]["Permission"][] | null
         }
         Relationships: []
+      }
+      step: {
+        Row: {
+          created_at: string
+          id: string
+          inspection_id: string
+          status: Database["public"]["Enums"]["Status"]
+          step_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          inspection_id: string
+          status?: Database["public"]["Enums"]["Status"]
+          step_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          inspection_id?: string
+          status?: Database["public"]["Enums"]["Status"]
+          step_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "step_inspection_id_fkey"
+            columns: ["inspection_id"]
+            isOneToOne: false
+            referencedRelation: "inspection"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "step_step_id_fkey"
+            columns: ["step_id"]
+            isOneToOne: false
+            referencedRelation: "step_template"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      step_template: {
+        Row: {
+          created_at: string
+          created_by_id: string | null
+          description: string | null
+          id: string
+          inspection_template_id: string
+          inspection_template_snapshot_id: string | null
+          name: string
+          order: number | null
+          parent_step_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by_id?: string | null
+          description?: string | null
+          id?: string
+          inspection_template_id: string
+          inspection_template_snapshot_id?: string | null
+          name: string
+          order?: number | null
+          parent_step_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by_id?: string | null
+          description?: string | null
+          id?: string
+          inspection_template_id?: string
+          inspection_template_snapshot_id?: string | null
+          name?: string
+          order?: number | null
+          parent_step_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "step_template_created_by_id_fkey"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "step_template_inspection_template_id_fkey"
+            columns: ["inspection_template_id"]
+            isOneToOne: false
+            referencedRelation: "inspection_template"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "step_template_inspection_template_snapshot_id_fkey"
+            columns: ["inspection_template_snapshot_id"]
+            isOneToOne: false
+            referencedRelation: "inspection_template_snapshot"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "step_template_parent_step_id_fkey"
+            columns: ["parent_step_id"]
+            isOneToOne: false
+            referencedRelation: "step_template"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       team: {
         Row: {
