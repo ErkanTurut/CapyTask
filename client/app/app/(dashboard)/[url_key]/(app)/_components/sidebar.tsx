@@ -13,16 +13,10 @@ import {
   SidebarLayout,
 } from "./sidebar-layout";
 
-import { getTeams } from "@/lib/service/team/fetch";
-
-import { getSession } from "@/lib/service/auth/fetch";
-import { getUser } from "@/lib/service/user/fetch";
-
 import TeamListSkeleton from "@/components/team/team-list-skeleton";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getWorkspaces } from "@/lib/service/workspace/fetch";
-import { createClient } from "@/lib/supabase/server";
 import { generateAvatar } from "@/lib/utils";
+import { trpc } from "@/trpc/server";
 import { redirect } from "next/navigation";
 
 interface sidebarProps {
@@ -32,26 +26,16 @@ interface sidebarProps {
 }
 
 const Sidebar: FC<sidebarProps> = async ({ params }) => {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
   const layout = cookies().get("react-resizable-panels:layout");
   const collapsed = cookies().get("react-resizable-panels:collapsed");
-
   const defaultLayout = layout
     ? (JSON.parse(layout.value) as number[])
     : undefined;
   const defaultCollapsed = collapsed
     ? (JSON.parse(collapsed.value) as boolean)
     : undefined;
-  const {
-    data: { session },
-    error,
-  } = await getSession(supabase);
-  if (!session || error) {
-    redirect("/login");
-  }
 
-  const { data: workspaces } = await getWorkspaces({ client: supabase });
+  const { data: workspaces } = await trpc.db.workspace.getByCurrentUser.query();
 
   if (!workspaces) {
     redirect("/create");
@@ -81,11 +65,10 @@ const Sidebar: FC<sidebarProps> = async ({ params }) => {
         <SidebarBody className="flex flex-col gap-2 overflow-x-auto overflow-ellipsis whitespace-nowrap	 p-2	">
           <Suspense fallback={<TeamListSkeleton />}>
             {(async () => {
-              const { data: teams } = await getTeams({
-                supabase,
-                workspace_id: workspace.id,
-              });
-
+              const { data: teams } =
+                await trpc.db.team.getByWorkspaceUrlKey.query({
+                  url_key: params.url_key,
+                });
               return (
                 <Nav
                   size={"sm"}
@@ -117,12 +100,9 @@ const Sidebar: FC<sidebarProps> = async ({ params }) => {
         <Separator />
         <Nav rootPath={`/${params.url_key}`} items={appNavItems.footer} />
         <Separator />
-        <Suspense fallback={<Skeleton className="h-8 w-full" />}>
+        <Suspense fallback={<Skeleton className="h-9 w-full" />}>
           {(async () => {
-            const { data: user } = await getUser({
-              user_id: session.user.id,
-              supabase,
-            });
+            const { data: user } = await trpc.db.user.getCurrentUser.query();
             if (!user) {
               redirect("/login");
             }

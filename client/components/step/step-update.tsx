@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Database } from "@/types/supabase.types";
-import React, { FC, use, useEffect } from "react";
+import React, { FC, useEffect } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -19,31 +19,30 @@ import {
 import { catchError, cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-import { useAction } from "@/lib/hooks/use-actions";
-import {
-  TUpdateStep,
-  ZUpdateStep,
-  updateStep,
-} from "@/lib/service/step/actions/update";
+import { TUpdateStep, ZUpdateStep } from "@/lib/service/step/actions/update";
+import { api } from "@/trpc/client";
 import { Textarea } from "@/ui/textarea";
-import { revalidateTag } from "next/cache";
+import { useRouter } from "next/navigation";
 
 interface StepUpdateFormProps extends React.HTMLAttributes<HTMLFormElement> {
   step: Database["public"]["Tables"]["step"]["Row"];
 }
 
 const StepUpdateForm: FC<StepUpdateFormProps> = ({ step, className }) => {
-  const { run, isLoading } = useAction(updateStep, {
-    onSuccess: (data) => {
+  const router = useRouter();
+  const { mutate, isPending } = api.db.step.update.useMutation({
+    onSuccess: ({ data }) => {
+      if (!data) return;
       toast.success("Step updated successfully");
       form.reset({
         name: data.name,
         description: data.description || "",
         id: data.id,
       });
+      router.refresh();
     },
     onError: (err) => {
-      catchError(new Error(err));
+      catchError(new Error(err.message));
     },
   });
 
@@ -66,7 +65,7 @@ const StepUpdateForm: FC<StepUpdateFormProps> = ({ step, className }) => {
   });
 
   async function onSubmit(data: TUpdateStep) {
-    await run(data);
+    mutate(data);
   }
 
   return (
@@ -118,7 +117,7 @@ const StepUpdateForm: FC<StepUpdateFormProps> = ({ step, className }) => {
         />
 
         {form.formState.isDirty && (
-          <Button isLoading={isLoading}>
+          <Button isLoading={isPending}>
             Update now
             <span className="sr-only">Update now</span>
           </Button>

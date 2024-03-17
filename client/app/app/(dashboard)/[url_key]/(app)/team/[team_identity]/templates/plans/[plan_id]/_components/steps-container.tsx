@@ -7,12 +7,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { createClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
-import { cookies } from "next/headers";
+import { trpc } from "@/trpc/server";
 import Link from "next/link";
 import StepList from "./steps-list";
-import { getStepsByPlan } from "@/lib/service/step/fetch";
 interface StepsContainerProps {
   params: {
     url_key: string;
@@ -21,11 +19,7 @@ interface StepsContainerProps {
   };
 }
 const StepsContainer: React.FC<StepsContainerProps> = async ({ params }) => {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
-
-  const { data: steps } = await getStepsByPlan({
-    client: supabase,
+  const steps = await trpc.db.step.getStepsByPlan.query({
     plan_id: params.plan_id,
   });
 
@@ -61,8 +55,9 @@ const StepsContainer: React.FC<StepsContainerProps> = async ({ params }) => {
             </p>
           </div>
         ) : (
-          <StepList steps={steps} />
+          <StepList initialData={steps} plan_id={params.plan_id} />
         )}
+        {/* <StepList initialData={steps} plan_id={params.plan_id} /> */}
       </CardContent>
     </Card>
   );

@@ -17,11 +17,10 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { useSidebar } from "@/lib/store";
 import { usePathname } from "next/navigation";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { useEffect, useState } from "react";
 
 interface NavProps extends React.HTMLAttributes<HTMLDivElement> {
   items: NavItem[];

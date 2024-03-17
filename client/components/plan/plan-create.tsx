@@ -29,6 +29,8 @@ import { Button } from "@/components/ui/button";
 
 import { FC } from "react";
 import { Database } from "@/types/supabase.types";
+import { api } from "@/trpc/client";
+import { useRouter } from "next/navigation";
 
 interface CreatePlanFormProps extends React.HTMLAttributes<HTMLFormElement> {
   team: Database["public"]["Tables"]["team"]["Row"];
@@ -40,13 +42,15 @@ const CreatePlanForm: FC<CreatePlanFormProps> = ({
   team,
   className,
 }) => {
-  const { run, isLoading } = useAction(createPlan, {
-    onSuccess: (data) => {
+  const router = useRouter();
+  const { mutate, isPending } = api.db.plan.create.useMutation({
+    onSuccess: (data, variables) => {
       toast.success("Team created successfully");
       form.reset();
+      router.refresh();
     },
     onError: (err) => {
-      catchError(new Error(err));
+      catchError(new Error(err.message));
     },
   });
 
@@ -61,11 +65,7 @@ const CreatePlanForm: FC<CreatePlanFormProps> = ({
   });
 
   async function onSubmit(data: TCreatePlan) {
-    run({
-      name: data.name,
-      description: data.description,
-      team_id: data.team_id,
-    });
+    mutate(data);
   }
 
   const [isGenerating, setIsGenerating] = useState(false);
@@ -116,7 +116,7 @@ const CreatePlanForm: FC<CreatePlanFormProps> = ({
         />
 
         {form.formState.isDirty && (
-          <Button isLoading={isLoading}>
+          <Button isLoading={isPending}>
             Create now
             <span className="sr-only">Create now</span>
           </Button>

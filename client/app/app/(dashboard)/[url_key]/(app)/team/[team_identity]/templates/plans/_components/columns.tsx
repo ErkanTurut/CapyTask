@@ -6,7 +6,7 @@ import { Database } from "@/types/supabase.types";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { DataTableColumnHeader } from "@/components/table/data-table-column-header";
-import { DataTableRowActions } from "@/components/table/data-table-row-actions";
+import { DataTableRowActions } from "./data-table-row-actions";
 import { Checkbox } from "@/components/ui/checkbox";
 
 export const columns: ColumnDef<Database["public"]["Tables"]["plan"]["Row"]>[] =

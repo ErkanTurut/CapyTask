@@ -2,7 +2,6 @@ import "server-only";
 
 import { unstable_cache as cache } from "next/cache";
 import { SupabaseClient } from "@/lib/supabase/server";
-import { sleep } from "@/lib/utils";
 
 export const getUser = async ({
   user_id,

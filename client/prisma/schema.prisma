@@ -9,33 +9,33 @@ datasource db {
 }
 
 model user {
-  id             String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  image_uri      String?
-  email          String           @unique
-  first_name     String?
-  last_name      String?
-  createdAt      DateTime         @default(now()) @db.Timestamptz(6)
-  updatedAt      DateTime         @default(now()) @updatedAt @db.Timestamptz(6)
-  external_id    String?          @unique @db.Uuid
-  steps          step[]
-  user_team      user_team[]
-  user_workspace user_workspace[]
-  workspaces     workspace[]
+  id                       String                     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  image_uri                String?
+  email                    String                     @unique
+  first_name               String?
+  last_name                String?
+  createdAt                DateTime                   @default(now()) @db.Timestamptz(6)
+  updatedAt                DateTime                   @default(now()) @updatedAt @db.Timestamptz(6)
+  external_id              String?                    @unique @db.Uuid
+  inspection_step_template inspection_step_template[]
+  user_team                user_team[]
+  user_workspace           user_workspace[]
+  workspaces               workspace[]
 }
 
 model team {
-  id           String       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name         String
-  description  String?
-  image_uri    String?
-  created_at   DateTime     @default(now()) @db.Timestamptz(6)
-  updated_at   DateTime     @default(now()) @updatedAt @db.Timestamptz(6)
-  workspace_id String       @db.Uuid
-  identity     String
-  plans        plan[]
-  workspace    workspace    @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
-  users        user_team[]
-  work_order   work_order[]
+  id                  String                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name                String
+  description         String?
+  image_uri           String?
+  created_at          DateTime              @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime              @default(now()) @updatedAt @db.Timestamptz(6)
+  workspace_id        String                @db.Uuid
+  identity            String
+  inspection_template inspection_template[]
+  workspace           workspace             @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
+  users               user_team[]
+  inspection          inspection[]
 
   @@unique([identity, workspace_id])
   @@unique([name, workspace_id])
@@ -95,20 +95,34 @@ model role {
   user_workspace user_workspace[]
 }
 
-model plan {
-  id          String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name        String
-  description String?
-  created_at  DateTime @default(now()) @db.Timestamptz(6)
-  updated_at  DateTime @default(now()) @updatedAt @db.Timestamptz(6)
-  team_id     String   @db.Uuid
-  team        team     @relation(fields: [team_id], references: [id], onDelete: Cascade)
-  step        step[]
+model inspection_template {
+  id                           String                         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name                         String
+  description                  String?
+  created_at                   DateTime                       @default(now()) @db.Timestamptz(6)
+  updated_at                   DateTime                       @default(now()) @updatedAt @db.Timestamptz(6)
+  team_id                      String                         @db.Uuid
+  team                         team                           @relation(fields: [team_id], references: [id], onDelete: Cascade)
+  inspection_step_template     inspection_step_template[]
+  inspection_template_snapshot inspection_template_snapshot[]
 
   @@index([team_id])
 }
 
-model step {
+model inspection_template_snapshot {
+  id                       String                     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  version                  Int                        @default(1)
+  name                     String
+  description              String?
+  created_at               DateTime                   @default(now()) @db.Timestamptz(6)
+  updated_at               DateTime                   @default(now()) @updatedAt @db.Timestamptz(6)
+  inspection_template_id   String                     @db.Uuid
+  inspection_template      inspection_template        @relation(fields: [inspection_template_id], references: [id], onDelete: Cascade)
+  inspection_step_template inspection_step_template[]
+  inspection               inspection[]
+}
+
+model inspection_step_template {
   id             String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name           String
   description    String?
@@ -118,30 +132,89 @@ model step {
   created_by_id  String?  @db.Uuid
   order          Int?
 
-  plan_id String @db.Uuid
-  plan    plan   @relation(fields: [plan_id], references: [id], onDelete: Cascade)
+  inspection_template_id String              @db.Uuid
+  inspection_template    inspection_template @relation(fields: [inspection_template_id], references: [id], onDelete: Cascade)
 
-  created_by  user?  @relation(fields: [created_by_id], references: [id])
-  parent_step step?  @relation("step_sub_steps", fields: [parent_step_id], references: [id], onDelete: Cascade)
-  sub_steps   step[] @relation("step_sub_steps")
+  created_by                      user?                         @relation(fields: [created_by_id], references: [id])
+  parent_step                     inspection_step_template?     @relation("step_sub_steps", fields: [parent_step_id], references: [id], onDelete: Cascade)
+  sub_steps                       inspection_step_template[]    @relation("step_sub_steps")
+  inspection_template_snapshot    inspection_template_snapshot? @relation(fields: [inspection_template_snapshot_id], references: [id])
+  inspection_template_snapshot_id String?                       @db.Uuid
+  inspection_step                 inspection_step[]
 
   @@index([parent_step_id])
   @@index([created_by_id])
-  @@index([plan_id])
+  @@index([inspection_template_id])
+  @@index([inspection_template_snapshot_id])
 }
 
-model work_order {
-  id          String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name        String
-  description String?
-  created_at  DateTime @default(now()) @db.Timestamptz(6)
-  updated_at  DateTime @default(now()) @updatedAt @db.Timestamptz(6)
-  work_plan   Json     @db.JsonB
-  team_id     String   @db.Uuid
-  team        team     @relation(fields: [team_id], references: [id], onDelete: Cascade)
-  status      Status   @default(OPEN)
+model inspection {
+  id                     String                        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name                   String
+  description            String?
+  created_at             DateTime                      @default(now()) @db.Timestamptz(6)
+  updated_at             DateTime                      @default(now()) @updatedAt @db.Timestamptz(6)
+  team_id                String                        @db.Uuid
+  team                   team                          @relation(fields: [team_id], references: [id], onDelete: Cascade)
+  status                 Status                        @default(OPEN)
+  inspection_snapshot_id String?                       @db.Uuid
+  inspection_snapshot    inspection_template_snapshot? @relation(fields: [inspection_snapshot_id], references: [id])
+  inspection_step        inspection_step[]
 
   @@index([team_id])
+}
+
+model inspection_step {
+  id            String                   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  inspection    inspection               @relation(fields: [inspection_id], references: [id], onDelete: Cascade)
+  inspection_id String                   @db.Uuid
+  step          inspection_step_template @relation(fields: [step_id], references: [id], onDelete: Cascade)
+  step_id       String                   @db.Uuid
+  status        Status                   @default(OPEN)
+  created_at    DateTime                 @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime                 @default(now()) @updatedAt @db.Timestamptz(6)
+
+  @@index([inspection_id])
+  @@index([step_id])
+}
+
+enum Status {
+  OPEN
+  IN_PROGRESS
+  COMPLETED
+  ON_HOLD
+  CANCELED
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  SUPERVISOR
+  TECHNICIAN
+  ENGINEER
+  QUALITY_INSPECTOR
+  OPERATOR
+  OTHER
+}
+
+enum Permission {
+  FULL_ACCESS
+  CAN_EDIT
+  CAN_COMMENT
+  CAN_VIEW
+  NO_ACCESS
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum inspectionType {
+  INSPECTION
+  MAINTENANCE
+  OTHER
 }
 
 //useless part will be removed 
@@ -252,42 +325,3 @@ model work_order {
 //   image         String?
 //   imageBlurhash String?
 // }
-
-enum Status {
-  OPEN
-  IN_PROGRESS
-  COMPLETED
-  ON_HOLD
-  CANCELED
-}
-
-enum Role {
-  ADMIN
-  MANAGER
-  SUPERVISOR
-  TECHNICIAN
-  ENGINEER
-  QUALITY_INSPECTOR
-  OPERATOR
-  OTHER
-}
-
-enum Permission {
-  FULL_ACCESS
-  CAN_EDIT
-  CAN_COMMENT
-  CAN_VIEW
-  NO_ACCESS
-}
-
-enum Priority {
-  LOW
-  MEDIUM
-  HIGH
-}
-
-enum PlanType {
-  INSPECTION
-  MAINTENANCE
-  OTHER
-}

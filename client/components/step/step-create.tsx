@@ -18,13 +18,8 @@ import {
 import { catchError, cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-import { useAction } from "@/lib/hooks/use-actions";
-
-import {
-  TCreateStep,
-  ZCreateStep,
-  createStep,
-} from "@/lib/service/step/actions/create";
+import { TCreateStep, ZCreateStep } from "@/lib/service/step/actions/create";
+import { api } from "@/trpc/client";
 import { useRouter } from "next/navigation";
 interface StepCreateProps extends React.HTMLAttributes<HTMLFormElement> {
   plan_id: string;
@@ -33,7 +28,7 @@ interface StepCreateProps extends React.HTMLAttributes<HTMLFormElement> {
 const CreateStepForm: FC<StepCreateProps> = ({ plan_id, className }) => {
   const router = useRouter();
 
-  const { run, isLoading } = useAction(createStep, {
+  const { mutate, isPending } = api.db.step.create.useMutation({
     onSuccess: (data) => {
       toast.success("Team created successfully");
       form.reset({
@@ -46,7 +41,7 @@ const CreateStepForm: FC<StepCreateProps> = ({ plan_id, className }) => {
       router.refresh();
     },
     onError: (err) => {
-      catchError(new Error(err));
+      catchError(new Error(err.message));
     },
   });
 
@@ -63,7 +58,7 @@ const CreateStepForm: FC<StepCreateProps> = ({ plan_id, className }) => {
   });
 
   async function onSubmit(data: TCreateStep) {
-    await run(data);
+    mutate(data);
   }
   return (
     <Form {...form}>
@@ -99,7 +94,7 @@ const CreateStepForm: FC<StepCreateProps> = ({ plan_id, className }) => {
           )}
         />
 
-        <Button isLoading={isLoading}>
+        <Button isLoading={isPending}>
           Create now
           <span className="sr-only">Create now</span>
         </Button>
