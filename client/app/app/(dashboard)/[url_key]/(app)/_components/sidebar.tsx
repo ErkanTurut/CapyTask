@@ -36,6 +36,7 @@ const Sidebar: FC<sidebarProps> = async ({ params }) => {
     : undefined;
 
   const { data: workspaces } = await trpc.db.workspace.getByCurrentUser.query();
+  console.log(workspaces, "workspaces");
 
   if (!workspaces) {
     redirect("/create");
