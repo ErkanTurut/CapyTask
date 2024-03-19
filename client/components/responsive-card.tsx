@@ -18,6 +18,7 @@ interface ResponsiveCardProps {
 
 export function ResponsiveCard({ children }: ResponsiveCardProps) {
   const { isDesktop, isMobile, isTablet } = useWindowSize();
+  console.log({ isDesktop, isMobile, isTablet });
 
   const router = useRouter();
 
