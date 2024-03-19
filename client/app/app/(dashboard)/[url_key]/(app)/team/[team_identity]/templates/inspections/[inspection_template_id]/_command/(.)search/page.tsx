@@ -15,8 +15,11 @@ interface pageProps {
 
 export default async function Page({ searchParams, params }: pageProps) {
   dynamic();
+  const initialData = await trpc.db.template.step.getStepsByInspection.query({
+    inspection_template_id: params.inspection_template_id,
+  });
 
-  const { data: steps, error } = await trpc.db.template.step.searchSteps.query({
+  const { data: searchStep } = await trpc.db.template.step.searchSteps.query({
     q: searchParams.q,
     team_identity: params.team_identity,
   });
@@ -24,7 +27,8 @@ export default async function Page({ searchParams, params }: pageProps) {
   return (
     <SearchStep
       inspection_template_id={params.inspection_template_id}
-      steps={steps || []}
+      searchStep={searchStep || []}
+      initialData={initialData || []}
       searchParams={searchParams}
     />
   );
