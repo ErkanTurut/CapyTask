@@ -20,13 +20,15 @@ import { Icons } from "@/components/icons";
 import { trpc } from "@/trpc/server";
 import { useRouter } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
 
 interface SearchStepProps {
   searchParams: {
     q: string;
   };
   inspection_template_id: string;
-  steps: NonNullable<
+  initialData: NonNullable<
     Awaited<
       ReturnType<
         (typeof trpc)["db"]["template"]["step"]["getStepsByInspection"]["query"]
@@ -37,8 +39,8 @@ interface SearchStepProps {
 
 export function SearchStep({
   searchParams,
-  steps,
   inspection_template_id,
+  initialData,
 }: SearchStepProps) {
   const router = useRouter();
   const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -53,7 +55,7 @@ export function SearchStep({
         <StepCommand
           onSearch={debouncedValue}
           query={searchParams.q}
-          steps={steps}
+          initialData={initialData}
           inspection_template_id={inspection_template_id}
         />
       </CommandDialog>
@@ -67,7 +69,7 @@ export function SearchStep({
           <StepCommand
             onSearch={debouncedValue}
             query={searchParams.q}
-            steps={steps}
+            initialData={initialData}
             inspection_template_id={inspection_template_id}
           />
         </div>
@@ -77,21 +79,21 @@ export function SearchStep({
 }
 
 export function StepCommand({
-  steps,
   query,
   onSearch,
+  initialData,
   inspection_template_id,
 }: {
-  steps: NonNullable<
+  query?: string;
+  onSearch: (value: string) => void;
+  inspection_template_id: string;
+  initialData: NonNullable<
     Awaited<
       ReturnType<
         (typeof trpc)["db"]["template"]["step"]["getStepsByInspection"]["query"]
       >
     >
   >;
-  query?: string;
-  onSearch: (value: string) => void;
-  inspection_template_id: string;
 }) {
   const [searchValue, setSearchValue] = useState(query || "");
 
@@ -107,28 +109,28 @@ export function StepCommand({
       />
       <CommandList>
         <CommandGroup>
-          <CommandItem>
-            <Icons.plusCircled className="mr-2 h-4 w-4" />
-            <Link href={`./create`}>Create a new step</Link>
-          </CommandItem>
+          <Link href={"./create"}>
+            <CommandItem className="cursor-pointer">
+              <Icons.plusCircled className="mr-2 h-4 w-4" />
+              <span>Create a new step</span>
+            </CommandItem>
+          </Link>
         </CommandGroup>
-        <CommandSeparator alwaysRender />
+        <CommandSeparator alwaysRender className="mb-1" />
         <CommandEmpty>no found</CommandEmpty>
-        <CommandGroup heading="Or use an existing one">
-          {steps.map((step) => (
+        <CommandGroup>
+          {initialData.map((step) => (
             <CommandItem
               className="cursor-pointer"
               key={step.id}
               value={step.id}
-              onSelect={() => {
-                // run({
-                //   step_id: step.id,
-                //   inspection_template_id: inspection_template_id,
-                //   order: null,
-                // });
+              onSelect={(e) => {
+                console.log(e);
               }}
             >
-              <Icons.user className="mr-2 h-4 w-4" />
+              {step.inspection_template_id === inspection_template_id && (
+                <Icons.checkCircled className="mr-2 h-4 w-4" />
+              )}
               <span>{step.name}</span>
             </CommandItem>
           ))}
