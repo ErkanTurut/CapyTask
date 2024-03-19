@@ -33,9 +33,10 @@ const CreateStepForm: FC<StepCreateProps> = ({
   className,
 }) => {
   const router = useRouter();
+  const utils = api.useUtils();
 
   const { mutate, isPending } = api.db.template.step.create.useMutation({
-    onSuccess: (data) => {
+    onSuccess(data) {
       toast.success("Team created successfully");
       form.reset({
         description: "",
@@ -44,10 +45,14 @@ const CreateStepForm: FC<StepCreateProps> = ({
         parent_id: undefined,
         inspection_template_id,
       });
-      router.refresh();
     },
-    onError: (err) => {
+    onError(err) {
       catchError(new Error(err.message));
+    },
+    onSettled() {
+      utils.db.template.step.getStepsByInspection.invalidate({
+        inspection_template_id: inspection_template_id,
+      });
     },
   });
 
