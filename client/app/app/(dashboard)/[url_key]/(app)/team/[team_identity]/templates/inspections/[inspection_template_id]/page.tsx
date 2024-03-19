@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { trpc } from "@/trpc/server";
+import { headers as dynamic } from "next/headers";
 
 interface PageProps {
   searchParams: {
@@ -24,6 +25,7 @@ export default async function Page({ searchParams, params }: PageProps) {
   // const { data } = await trpc.db.template.inspection.get.withSteps.query({
   //   id: params.inspection_template_id,
   // });
+  dynamic();
   if (searchParams.step_id) {
     const { data: step } = await trpc.db.template.step.get.query({
       id: searchParams.step_id,
