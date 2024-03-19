@@ -38,19 +38,27 @@ interface StepUpdateFormProps extends React.HTMLAttributes<HTMLFormElement> {
 
 const StepUpdateForm: FC<StepUpdateFormProps> = ({ step, className }) => {
   const router = useRouter();
+  const utils = api.useUtils();
+
   const { mutate, isPending } = api.db.template.step.update.useMutation({
     onSuccess: ({ data }) => {
-      if (!data) return;
       toast.success("Step updated successfully");
       form.reset({
-        name: data.name,
-        description: data.description || "",
-        id: data.id,
+        name: step.name,
+        description: step.description || "",
+        id: step.id,
       });
-      router.refresh();
     },
     onError: (err) => {
       catchError(new Error(err.message));
+    },
+    onSettled: () => {
+      utils.db.template.step.get.invalidate({
+        id: step.id,
+      });
+      utils.db.template.step.getStepsByInspection.invalidate({
+        inspection_template_id: step.inspection_template_id,
+      });
     },
   });
 
@@ -73,7 +81,6 @@ const StepUpdateForm: FC<StepUpdateFormProps> = ({ step, className }) => {
   });
 
   async function onSubmit(data: TUpdateStepSchema) {
-    console.log(data);
     mutate(data);
   }
 
