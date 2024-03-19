@@ -1,6 +1,5 @@
 import { Shell } from "@/components/shells";
-import { DataTable } from "@/components/table/data-table";
-import { columns } from "./_components/columns";
+
 import {
   PageHeader,
   PageHeaderDescription,
@@ -19,9 +18,7 @@ export default function Page({}: PageProps) {
           View and manage your work orders
         </PageHeaderDescription>
       </PageHeader>
-      <Shell variant={"dashboard"}>
-        <DataTable columns={columns} count={0} data={[]} />
-      </Shell>
+      <Shell variant={"dashboard"}></Shell>
     </Shell>
   );
 }
