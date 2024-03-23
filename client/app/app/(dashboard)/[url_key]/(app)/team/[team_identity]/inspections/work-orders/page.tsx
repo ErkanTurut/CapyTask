@@ -5,9 +5,22 @@ import {
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/components/page-header";
-interface PageProps {}
+import WorkOrderTable from "./_components/work-order-table";
+interface PageProps {
+  searchParams: { [key: string]: string | string[] | undefined };
+  params: {
+    team_identity: string;
+  };
+}
 
-export default function Page({}: PageProps) {
+export default function Page({ searchParams, params }: PageProps) {
+  const page = searchParams["page"]
+    ? parseInt(searchParams["page"] as string)
+    : 1;
+  const limit = searchParams["limit"]
+    ? parseInt(searchParams["limit"] as string)
+    : 10;
+  const offset = (page - 1) * limit;
   return (
     <Shell>
       <PageHeader id="account-header" aria-labelledby="account-header-heading">
@@ -18,7 +31,9 @@ export default function Page({}: PageProps) {
           View and manage your work orders
         </PageHeaderDescription>
       </PageHeader>
-      <Shell variant={"dashboard"}></Shell>
+      <Shell variant={"dashboard"}>
+        <WorkOrderTable props={{ offset, limit, page }} params={params} />
+      </Shell>
     </Shell>
   );
 }

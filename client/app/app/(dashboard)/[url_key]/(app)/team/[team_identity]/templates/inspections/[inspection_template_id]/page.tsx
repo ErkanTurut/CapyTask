@@ -1,5 +1,8 @@
+import { Icons } from "@/components/icons";
 import { ResponsiveCard } from "@/components/responsive-card";
+import StepDeleteForm from "@/components/step/step-delete";
 import StepUpdateForm from "@/components/step/step-update";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -34,6 +37,7 @@ export default async function Page({ searchParams, params }: PageProps) {
     return (
       <ResponsiveCard>
         <StepUpdateForm step={step} />
+        <StepDeleteForm step={step} size="default" />
       </ResponsiveCard>
     );
   }

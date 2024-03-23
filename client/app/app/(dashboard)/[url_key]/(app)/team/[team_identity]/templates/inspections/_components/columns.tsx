@@ -2,15 +2,21 @@
 
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Database } from "@/types/supabase.types";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { DataTableColumnHeader } from "@/components/table/data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
 import { Checkbox } from "@/components/ui/checkbox";
+import type { trpc } from "@/trpc/server";
 
 export const columns: ColumnDef<
-  Database["public"]["Tables"]["inspection_template"]["Row"]
+  NonNullable<
+    Awaited<
+      ReturnType<
+        (typeof trpc)["db"]["template"]["inspection"]["get"]["byId"]["query"]
+      >
+    >["data"]
+  >
 >[] = [
   {
     id: "select",
@@ -22,7 +28,6 @@ export const columns: ColumnDef<
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
-        className="translate-y-[2px]"
       />
     ),
     cell: ({ row }) => (
@@ -30,12 +35,12 @@ export const columns: ColumnDef<
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label="Select row"
-        className="translate-y-[2px]"
       />
     ),
     enableSorting: false,
     enableHiding: false,
   },
+
   {
     accessorKey: "name",
     header: ({ column }) => {

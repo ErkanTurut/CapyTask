@@ -27,7 +27,6 @@ export default async function Page({ searchParams, params }: pageProps) {
   return (
     <SearchStep
       inspection_template_id={params.inspection_template_id}
-      searchStep={searchStep || []}
       initialData={initialData || []}
       searchParams={searchParams}
     />
