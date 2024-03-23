@@ -36,14 +36,20 @@ const StepDeleteForm: FC<StepDeleteFormProps> = ({
   size = "default",
 }) => {
   const router = useRouter();
+  const utils = api.useUtils();
 
   const { mutate, isPending } = api.db.template.step.delete.useMutation({
     onSuccess: () => {
       toast.success("Step deleted successfully");
-      router.refresh();
     },
     onError: (err) => {
       catchError(new Error(err.message));
+    },
+    onSettled: () => {
+      utils.db.template.step.getStepsByInspection.invalidate({
+        inspection_template_id: step.inspection_template_id,
+      });
+      router.push(`./${step.inspection_template_id}`);
     },
   });
 
@@ -64,7 +70,7 @@ const StepDeleteForm: FC<StepDeleteFormProps> = ({
   return (
     <Form {...form}>
       <form
-        className={cn("grid gap-4", className)}
+        className={cn("", className)}
         onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
       >
         <FormField
@@ -80,8 +86,8 @@ const StepDeleteForm: FC<StepDeleteFormProps> = ({
         />
         <Button size={size} variant={"destructive"} isLoading={isPending}>
           <Icons.trash />
-          {size === "default" && "Delete the step"}
-          <span className="sr-only"> Delete the step </span>
+          {size === "default" && "Delete"}
+          <span className="sr-only"> Delete </span>
         </Button>
       </form>
     </Form>

@@ -1,7 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Database } from "@/types/supabase.types";
 import React, { FC, useEffect } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,14 +18,13 @@ import {
 import { catchError, cn } from "@/lib/utils";
 import { toast } from "sonner";
 
+import { api } from "@/trpc/client";
 import {
   TUpdateStepSchema,
   ZUpdateStepSchema,
 } from "@/trpc/routes/template/step/update.schema";
-import { api } from "@/trpc/client";
-import { Textarea } from "@/ui/textarea";
-import { useRouter } from "next/navigation";
 import { trpc } from "@/trpc/server";
+import { Textarea } from "@/ui/textarea";
 
 interface StepUpdateFormProps extends React.HTMLAttributes<HTMLFormElement> {
   step: NonNullable<
@@ -37,15 +35,15 @@ interface StepUpdateFormProps extends React.HTMLAttributes<HTMLFormElement> {
 }
 
 const StepUpdateForm: FC<StepUpdateFormProps> = ({ step, className }) => {
-  const router = useRouter();
   const utils = api.useUtils();
 
   const { mutate, isPending } = api.db.template.step.update.useMutation({
     onSuccess: ({ data }) => {
       toast.success("Step updated successfully");
+      if (!data) return;
       form.reset({
-        name: step.name,
-        description: step.description || "",
+        name: data.name,
+        description: data.description || "",
         id: step.id,
       });
     },
@@ -53,9 +51,6 @@ const StepUpdateForm: FC<StepUpdateFormProps> = ({ step, className }) => {
       catchError(new Error(err.message));
     },
     onSettled: () => {
-      utils.db.template.step.get.invalidate({
-        id: step.id,
-      });
       utils.db.template.step.getStepsByInspection.invalidate({
         inspection_template_id: step.inspection_template_id,
       });
