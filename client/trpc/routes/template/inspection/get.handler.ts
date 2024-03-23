@@ -1,8 +1,6 @@
 import "server-only";
 
-import { unstable_cache as cache } from "next/cache";
 import { SupabaseClient } from "@/lib/supabase/server";
-import { sleep } from "@/lib/utils";
 import { TGetInspectionSchema } from "./get.schema";
 // import { cache } from "react";
 
