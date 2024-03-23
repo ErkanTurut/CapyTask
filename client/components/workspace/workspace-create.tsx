@@ -33,7 +33,6 @@ export function CreateWorspaceForm() {
       router.replace(`/${variables.url_key}`);
     },
     onError: (err) => {
-      console.log(err);
       catchError(new Error(err.message));
     },
   });
