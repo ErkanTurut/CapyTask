@@ -2,6 +2,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator zod {
+  provider = "zod-prisma-types"
+}
+
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
@@ -43,7 +47,7 @@ model team {
 }
 
 model workspace {
-  id             String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id             String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid // @zod.uuid()
   name           String
   description    String?
   created_at     DateTime         @default(now()) @db.Timestamptz(6)
@@ -59,9 +63,9 @@ model workspace {
 }
 
 model user_team {
-  user_id String  @db.Uuid
-  team_id String  @db.Uuid
-  role_id String? @db.Uuid
+  user_id String  @db.Uuid // @zod.uuid()
+  team_id String  @db.Uuid // @zod.uuid()
+  role_id String? @db.Uuid // @zod.uuid()
   role    role?   @relation(fields: [role_id], references: [id])
   team    team    @relation(fields: [team_id], references: [id])
   user    user    @relation(fields: [user_id], references: [id])
@@ -73,9 +77,9 @@ model user_team {
 }
 
 model user_workspace {
-  user_id      String    @db.Uuid
-  workspace_id String    @db.Uuid
-  role_id      String?   @db.Uuid
+  user_id      String    @db.Uuid // @zod.uuid()
+  workspace_id String    @db.Uuid // @zod.uuid()
+  role_id      String?   @db.Uuid // @zod.uuid()
   role         role?     @relation(fields: [role_id], references: [id])
   user         user      @relation(fields: [user_id], references: [id])
   workspace    workspace @relation(fields: [workspace_id], references: [id])
@@ -87,7 +91,7 @@ model user_workspace {
 }
 
 model role {
-  id             String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id             String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid // @zod.uuid()
   name           Role
   description    String
   permissions    Permission[]     @default([])
@@ -96,12 +100,12 @@ model role {
 }
 
 model inspection_template {
-  id                           String                         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id                           String                         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid // @zod.uuid()
   name                         String
   description                  String?
   created_at                   DateTime                       @default(now()) @db.Timestamptz(6)
   updated_at                   DateTime                       @default(now()) @updatedAt @db.Timestamptz(6)
-  team_id                      String                         @db.Uuid
+  team_id                      String                         @db.Uuid // @zod.uuid()
   team                         team                           @relation(fields: [team_id], references: [id], onDelete: Cascade)
   step_template                step_template[]
   inspection_template_snapshot inspection_template_snapshot[]
@@ -110,36 +114,36 @@ model inspection_template {
 }
 
 model inspection_template_snapshot {
-  id                     String              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id                     String              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid // @zod.uuid()
   version                Int                 @default(1)
   name                   String
   description            String?
   created_at             DateTime            @default(now()) @db.Timestamptz(6)
   updated_at             DateTime            @default(now()) @updatedAt @db.Timestamptz(6)
-  inspection_template_id String              @db.Uuid
+  inspection_template_id String              @db.Uuid // @zod.uuid()
   inspection_template    inspection_template @relation(fields: [inspection_template_id], references: [id], onDelete: Cascade)
   step_template          step_template[]
   inspection             inspection[]
 }
 
 model step_template {
-  id             String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id             String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid // @zod.uuid()
   name           String
   description    String?
   created_at     DateTime @default(now()) @db.Timestamptz(6)
   updated_at     DateTime @default(now()) @updatedAt @db.Timestamptz(6)
-  parent_step_id String?  @db.Uuid
-  created_by_id  String?  @db.Uuid
+  parent_step_id String?  @db.Uuid // @zod.uuid()
+  created_by_id  String?  @db.Uuid // @zod.uuid()
   order          Int?
 
-  inspection_template_id String              @db.Uuid
+  inspection_template_id String              @db.Uuid // @zod.uuid()
   inspection_template    inspection_template @relation(fields: [inspection_template_id], references: [id], onDelete: Cascade)
 
   created_by                      user?                         @relation(fields: [created_by_id], references: [id])
   parent_step                     step_template?                @relation("step_sub_steps", fields: [parent_step_id], references: [id], onDelete: Cascade)
   sub_steps                       step_template[]               @relation("step_sub_steps")
   inspection_template_snapshot    inspection_template_snapshot? @relation(fields: [inspection_template_snapshot_id], references: [id])
-  inspection_template_snapshot_id String?                       @db.Uuid
+  inspection_template_snapshot_id String?                       @db.Uuid // @zod.uuid()
   step                            step[]
 
   @@index([parent_step_id])
@@ -149,15 +153,15 @@ model step_template {
 }
 
 model inspection {
-  id                     String                        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id                     String                        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid // @zod.uuid()
   name                   String
   description            String?
   created_at             DateTime                      @default(now()) @db.Timestamptz(6)
   updated_at             DateTime                      @default(now()) @updatedAt @db.Timestamptz(6)
-  team_id                String                        @db.Uuid
+  team_id                String                        @db.Uuid // @zod.uuid()
   team                   team                          @relation(fields: [team_id], references: [id], onDelete: Cascade)
   status                 Status                        @default(OPEN)
-  inspection_snapshot_id String?                       @db.Uuid
+  inspection_snapshot_id String?                       @db.Uuid // @zod.uuid()
   inspection_snapshot    inspection_template_snapshot? @relation(fields: [inspection_snapshot_id], references: [id])
   step                   step[]
 
@@ -165,11 +169,11 @@ model inspection {
 }
 
 model step {
-  id            String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id            String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid // @zod.uuid()
   inspection    inspection    @relation(fields: [inspection_id], references: [id], onDelete: Cascade)
-  inspection_id String        @db.Uuid
+  inspection_id String        @db.Uuid // @zod.uuid()
   step          step_template @relation(fields: [step_id], references: [id], onDelete: Cascade)
-  step_id       String        @db.Uuid
+  step_id       String        @db.Uuid // @zod.uuid()
   status        Status        @default(OPEN)
   created_at    DateTime      @default(now()) @db.Timestamptz(6)
   updated_at    DateTime      @default(now()) @updatedAt @db.Timestamptz(6)
