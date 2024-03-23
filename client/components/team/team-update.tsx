@@ -20,11 +20,14 @@ import { catchError, cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import { TUpdateTeam, ZUpdateTeam } from "@/lib/service/team/actions/update";
 
 import { api } from "@/trpc/client";
 import { Database } from "@/types/supabase.types";
 import { FC } from "react";
+import {
+  TUpdateTeamSchema,
+  ZUpdateTeamSchema,
+} from "@/trpc/routes/team/update.schema";
 
 interface UpdateTeamFormProps extends React.HTMLAttributes<HTMLFormElement> {
   team: Database["public"]["Tables"]["team"]["Row"];
@@ -48,8 +51,8 @@ const UpdateTeamForm: FC<UpdateTeamFormProps> = ({ team, className }) => {
     },
   });
 
-  const form = useForm<TUpdateTeam>({
-    resolver: zodResolver(ZUpdateTeam),
+  const form = useForm<TUpdateTeamSchema>({
+    resolver: zodResolver(ZUpdateTeamSchema),
     defaultValues: {
       name: team.name,
       identity: team.identity,
@@ -59,7 +62,7 @@ const UpdateTeamForm: FC<UpdateTeamFormProps> = ({ team, className }) => {
     },
   });
 
-  async function onSubmit(data: TUpdateTeam) {
+  async function onSubmit(data: TUpdateTeamSchema) {
     mutate(data);
   }
 
@@ -92,17 +95,7 @@ const UpdateTeamForm: FC<UpdateTeamFormProps> = ({ team, className }) => {
                 The identifier is used to create a unique URL for your team.
               </FormDescription>
               <FormControl>
-                <Input
-                  placeholder={"example"}
-                  maxLength={
-                    //@ts-ignore
-                    ZUpdateTeam["shape"]["identity"]["_def"]["checks"].find(
-                      (check) => check.kind === "max",
-                      // @ts-ignore
-                    ).value || 0
-                  }
-                  {...field}
-                />
+                <Input placeholder={"example"} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
