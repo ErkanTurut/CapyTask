@@ -121,8 +121,10 @@ export function Nav({ items, size, className, rootPath, level = 0 }: NavProps) {
                   </span>
                 </AccordionTrigger>
                 <AccordionContent className="py-1">
-                  <span className="flex w-full gap-1 pl-2 ">
-                    {level < 2 && (
+                  <span
+                    className={cn("flex w-full gap-1", level > 1 && "pl-2")}
+                  >
+                    {level > 1 && (
                       <Separator orientation="vertical" className="h-auto " />
                     )}
                     <Nav
