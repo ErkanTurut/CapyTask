@@ -15,19 +15,13 @@ import { ZDeleteInspectionSchema } from "./delete.schema";
 import { deleteinspectionHandler } from "./delete.handler";
 
 export const inspection = router({
-  // get: protectedProcedure
-  //   .input(ZGetInspectionSchema.pick({ id: true }))
-  //   .query(async ({ ctx, input }) => {
-  //     return await getinspectionHandler({ input, db: createClient(cookies()) });
-  //   }),
-
   get: router({
     byId: protectedProcedure
       .input(ZGetInspectionSchema.pick({ id: true }))
       .query(async ({ ctx, input }) => {
         return await getInspectionHandler({
           input,
-          db: createClient(cookies()),
+          db: ctx.db,
         });
       }),
     withSteps: protectedProcedure
@@ -35,7 +29,7 @@ export const inspection = router({
       .query(async ({ ctx, input }) => {
         return await getInspectionStepsHandler({
           input,
-          db: createClient(cookies()),
+          db: ctx.db,
         });
       }),
   }),
@@ -45,7 +39,7 @@ export const inspection = router({
     .query(async ({ ctx, input }) => {
       return await getInspectionsByTeamIdHandler({
         input,
-        db: createClient(cookies()),
+        db: ctx.db,
       });
     }),
 
@@ -54,32 +48,32 @@ export const inspection = router({
     .query(async ({ ctx, input }) => {
       const { data, count } = await getInspectionsByIdentityHandler({
         input,
-        db: createClient(cookies()),
+        db: ctx.db,
       });
       return { data, count };
     }),
 
-  searchInspection: protectedProcedure
-    .input(ZGetInspectionSchema.pick({ q: true, team_identity: true }))
-    .mutation(async ({ ctx, input }) => {
+  search: protectedProcedure
+    .input(ZGetInspectionSchema.pick({ q: true, team_id: true }))
+    .query(async ({ ctx, input }) => {
       const { data, count } = await searchInspectionHandler({
         input,
-        db: createClient(cookies()),
+        db: ctx.db,
       });
-      return { data, count };
+      return data;
     }),
 
   create: protectedProcedure
     .input(ZCreateInspectionSchema)
     .mutation(async ({ ctx, input }) => {
-      return await createStepHandler({ input, db: createClient(cookies()) });
+      return await createStepHandler({ input, db: ctx.db });
     }),
   delete: protectedProcedure
     .input(ZDeleteInspectionSchema)
     .mutation(async ({ ctx, input }) => {
       return await deleteinspectionHandler({
         input,
-        db: createClient(cookies()),
+        db: ctx.db,
       });
     }),
 });

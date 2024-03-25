@@ -21,7 +21,7 @@ export const team = router({
     .mutation(async ({ ctx, input }) => {
       return await createTeamHandler({
         input,
-        db: createClient(cookies()),
+        db: ctx.db,
       });
     }),
 
@@ -30,21 +30,21 @@ export const team = router({
     .mutation(async ({ ctx, input }) => {
       return await updateTeamHandler({
         input,
-        db: createClient(cookies()),
+        db: ctx.db,
       });
     }),
 
   get: protectedProcedure
     .input(ZGetTeamSchema.pick({ id: true }))
     .query(async ({ ctx, input }) => {
-      return await getTeamHandler({ input, db: createClient(cookies()) });
+      return await getTeamHandler({ input, db: ctx.db });
     }),
   getByIdentity: protectedProcedure
     .input(ZGetTeamSchema.pick({ identity: true }))
     .query(async ({ ctx, input }) => {
       return await getTeamByIdentityHandler({
         input,
-        db: createClient(cookies()),
+        db: ctx.db,
       });
     }),
   getByWorkspaceUrlKey: protectedProcedure
@@ -52,7 +52,7 @@ export const team = router({
     .query(async ({ ctx, input }) => {
       return await getTeamsByWorkspaceUrlKeyHandler({
         input,
-        db: createClient(cookies()),
+        db: ctx.db,
       });
     }),
 });
