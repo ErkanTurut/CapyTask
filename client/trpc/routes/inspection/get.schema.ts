@@ -1,9 +1,6 @@
 import * as z from "zod";
-import { StatusSchema } from "./enum.schema";
 
-import { ZCreateStepSchema } from "../template/step/create.schema";
-
-export const ZGetInspcetionSchema = z
+export const ZGetInspectionSchema = z
   .object({
     team_identity: z
       .string({
@@ -19,7 +16,8 @@ export const ZGetInspcetionSchema = z
       start: z.number().int().nonnegative(),
       end: z.number().int().positive(),
     }),
+    q: z.string(),
   })
   .strict();
 
-export type TGetInspcetionSchema = z.infer<typeof ZGetInspcetionSchema>;
+export type TGetInspectionSchema = z.infer<typeof ZGetInspectionSchema>;

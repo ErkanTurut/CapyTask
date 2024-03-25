@@ -1,10 +1,10 @@
 import "server-only";
 
 import { SupabaseClient } from "@/lib/supabase/server";
-import { TGetInspcetionSchema } from "./get.schema";
+import { TGetInspectionSchema } from "./get.schema";
 
 type opts = {
-  input: TGetInspcetionSchema;
+  input: TGetInspectionSchema;
   db: SupabaseClient;
 };
 
@@ -13,8 +13,8 @@ export async function getInspectionsByIdentityHandler({
   input,
 }: {
   input: {
-    team_identity: TGetInspcetionSchema["team_identity"];
-    range: TGetInspcetionSchema["range"];
+    team_identity: TGetInspectionSchema["team_identity"];
+    range: TGetInspectionSchema["range"];
   };
   db: SupabaseClient;
 }) {
@@ -24,5 +24,25 @@ export async function getInspectionsByIdentityHandler({
     .eq("team.identity", input.team_identity)
     .range(input.range.start, input.range.end)
     .order("updated_at", { ascending: false })
+    .throwOnError();
+}
+
+export async function searchInspectionHandler({
+  input,
+  db,
+}: {
+  input: {
+    q: TGetInspectionSchema["q"];
+    team_identity: TGetInspectionSchema["team_identity"];
+  };
+  db: SupabaseClient;
+}) {
+  return await db
+    .from("inspection_template")
+    .select("*, team!inner(*)")
+    .eq("team.identity", input.team_identity)
+    .textSearch("name", input.q, {
+      type: "websearch",
+    })
     .throwOnError();
 }
