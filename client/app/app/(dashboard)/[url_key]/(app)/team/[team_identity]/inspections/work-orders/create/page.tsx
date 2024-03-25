@@ -15,18 +15,25 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { trpc } from "@/trpc/server";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Suspense } from "react";
 
 interface createInspectionProps {
   params: {
     url_key: string;
+    team_identity: string;
   };
 }
 
 export default async function createInspection({
   params,
 }: createInspectionProps) {
+  const { data: team } = await trpc.db.team.getByIdentity.query({
+    identity: params.team_identity,
+  });
+  if (!team) {
+    notFound();
+  }
   return (
     <Shell variant="markdown" className="gap-2">
       <PageHeader
@@ -49,7 +56,7 @@ export default async function createInspection({
         </CardHeader>
         <CardContent>
           <Suspense fallback="loading...">
-            <CreateInspectionForm team_id="dd" />
+            <CreateInspectionForm team_id={team.id} />
           </Suspense>
         </CardContent>
       </Card>

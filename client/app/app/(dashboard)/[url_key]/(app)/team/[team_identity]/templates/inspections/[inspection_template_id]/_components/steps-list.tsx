@@ -12,6 +12,7 @@ import {
   Droppable,
 } from "@hello-pangea/dnd";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { toast } from "sonner";
 
 function getDifference(
@@ -43,6 +44,8 @@ export default function StepList({
   initialData,
   inspection_template_id,
 }: StepListProps) {
+  const pathname = usePathname();
+
   const [stepsList] =
     api.db.template.step.getStepsByInspection.useSuspenseQuery(
       { inspection_template_id },
@@ -139,6 +142,7 @@ export default function StepList({
                         >
                           <Link
                             href={{
+                              pathname: pathname.replace(/\/create/g, ""),
                               query: {
                                 step_id: step.id,
                               },

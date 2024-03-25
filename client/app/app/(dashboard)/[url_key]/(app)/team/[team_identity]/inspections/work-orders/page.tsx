@@ -6,6 +6,8 @@ import {
   PageHeaderHeading,
 } from "@/components/page-header";
 import WorkOrderTable from "./_components/work-order-table";
+import { Suspense } from "react";
+import TableSkeleton from "@/components/skeletons/table-skeleton";
 interface PageProps {
   searchParams: { [key: string]: string | string[] | undefined };
   params: {
@@ -31,8 +33,11 @@ export default function Page({ searchParams, params }: PageProps) {
           View and manage your work orders
         </PageHeaderDescription>
       </PageHeader>
+
       <Shell variant={"dashboard"}>
-        <WorkOrderTable props={{ offset, limit, page }} params={params} />
+        <Suspense fallback={<TableSkeleton />}>
+          <WorkOrderTable props={{ offset, limit, page }} params={params} />
+        </Suspense>
       </Shell>
     </Shell>
   );
