@@ -79,15 +79,15 @@ export async function searchInspectionHandler({
 }: {
   input: {
     q: TGetInspectionSchema["q"];
-    team_identity: TGetInspectionSchema["team_identity"];
+    team_id: TGetInspectionSchema["team_id"];
   };
 
   db: SupabaseClient;
 }) {
   return await db
     .from("inspection_template")
-    .select("*, team!inner(*)")
-    .eq("team.identity", input.team_identity)
+    .select("*")
+    .eq("team_id", input.team_id)
     .textSearch("name", input.q, {
       type: "websearch",
     })

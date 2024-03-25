@@ -8,18 +8,16 @@ import type { Session } from "@supabase/supabase-js";
 type opts = {
   input: TCreateWorkspaceSchema;
   db: SupabaseClient;
-  ctx: {
-    session: Session;
-  };
+  session: Session;
 };
 
-export const createWorkspaceHandler = async ({ input, db, ctx }: opts) => {
+export const createWorkspaceHandler = async ({ input, db, session }: opts) => {
   return await db
     .from("workspace")
     .insert({
       name: input.name,
       url_key: input.url_key,
-      created_by: ctx.session.user.id,
+      created_by: session.user.id,
     })
     .throwOnError();
 };
