@@ -4,16 +4,6 @@ import { StatusSchema } from "./enum.schema";
 
 export const ZCreateInspcetionSchema = z
   .object({
-    // id: z.string().uuid().optional(),
-    // name: z.string(),
-    // description: z.string().optional().nullable(),
-    // created_at: z.coerce.date().optional(),
-    // updated_at: z.coerce.date().optional(),
-    // status: z.lazy(() => StatusSchema).optional(),
-    // team_id: z.string().uuid(),
-    // inspection_snapshot_id: z.string().uuid().optional(),
-    // step: z.lazy(() => ZCreateStepSchema).optional(),
-
     name: z
       .string({
         invalid_type_error: "Name must be a string",
@@ -40,7 +30,7 @@ export const ZCreateInspcetionSchema = z
         message: "Description must be less than 1000 characters long",
       })
       .optional(),
-    inspection_snapshot_id: z.string().uuid().optional(),
+    inspection_template_id: z.string().uuid().optional(),
   })
   .strict();
 
