@@ -27,14 +27,6 @@ export const createStepHandler = async ({ input, db }: opts) => {
       },
     });
   }
-  await db
-    .from("inspection_template_snapshot")
-    .insert({
-      name: data.name,
-      description: data.description,
-      inspection_template_id: data.id,
-    })
-    .throwOnError();
 
   return data;
 };

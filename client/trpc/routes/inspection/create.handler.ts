@@ -29,10 +29,14 @@ export const createInspectionHandler = async ({ input, db }: opts) => {
 
     const { data: inspection_template_snapshot, error } = await db
       .from("inspection_template_snapshot")
-      .insert({
-        inspection_template_id: inpsection_template.id,
-        name: inpsection_template.name,
-      })
+      .upsert(
+        {
+          inspection_template_id: inpsection_template.id,
+          name: inpsection_template.name,
+          created_at: inpsection_template.updated_at,
+        },
+        { onConflict: "inspection_template_id, created_at" },
+      )
       .select("*")
       .single();
 
@@ -42,7 +46,6 @@ export const createInspectionHandler = async ({ input, db }: opts) => {
         code: "INTERNAL_SERVER_ERROR",
       });
     }
-
     inspection_snapshot_id = inspection_template_snapshot.id;
   }
 
