@@ -35,20 +35,6 @@ const Sidebar: FC<sidebarProps> = async ({ params }) => {
     ? (JSON.parse(collapsed.value) as boolean)
     : undefined;
 
-  const { data: workspaces } = await trpc.db.workspace.getByCurrentUser.query();
-  console.log(workspaces, "workspaces");
-
-  if (!workspaces) {
-    redirect("/create");
-  }
-  const workspace = workspaces.find(
-    (workspace) => workspace.url_key === params.url_key,
-  );
-
-  if (!workspace) {
-    redirect("/create");
-  }
-
   return (
     <SidebarLayout
       defaultLayout={defaultLayout}
@@ -58,7 +44,23 @@ const Sidebar: FC<sidebarProps> = async ({ params }) => {
       <div>
         <SidebarHeader className="flex flex-col gap-2 p-2">
           <Suspense fallback={<WorkspaceSkeleton />}>
-            <WorkspaceNav workspaces={workspaces} workspace={workspace} />
+            {(async () => {
+              const { data: workspaces } =
+                await trpc.db.workspace.getByCurrentUser.query();
+              if (!workspaces) {
+                redirect("/create");
+              }
+              const workspace = workspaces.find(
+                (workspace) => workspace.url_key === params.url_key,
+              );
+
+              if (!workspace) {
+                redirect("/create");
+              }
+              return (
+                <WorkspaceNav workspaces={workspaces} workspace={workspace} />
+              );
+            })()}
           </Suspense>
           <Nav rootPath={`/${params.url_key}`} items={appNavItems.header} />
           <Separator />
