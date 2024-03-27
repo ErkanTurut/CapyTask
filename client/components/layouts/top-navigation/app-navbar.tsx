@@ -45,7 +45,7 @@ const NavBar: FC<NavbarProps> = () => {
             Get Started
             <span className="sr-only">Get Started</span>
             <div className="w-0 translate-x-[100%] pl-0 opacity-0 transition-all duration-200 group-hover:w-5 group-hover:translate-x-0 group-hover:pl-1 group-hover:opacity-100">
-              <Icons.rocket className="ml-2 h-4 w-4" />
+              <Icons.orange className="ml-1 h-8" />
             </div>
           </Link>
           <ThemeToggle toggle />
