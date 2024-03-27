@@ -118,7 +118,6 @@ model inspection_template {
 
 model inspection_template_snapshot {
   id                          String                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  version                     Int                   @default(0)
   name                        String
   description                 String?
   created_at                  DateTime              @default(now()) @db.Timestamptz(6)
@@ -129,7 +128,7 @@ model inspection_template_snapshot {
   inspection                  inspection[]
   current_inspection_snapshot inspection_template[] @relation("current_inspection_snapshot")
 
-  @@unique([version, inspection_template_id])
+  @@unique([inspection_template_id, created_at])
   @@index([inspection_template_id])
 }
 

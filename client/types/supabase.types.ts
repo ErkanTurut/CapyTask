@@ -93,6 +93,7 @@ export type Database = {
       inspection_template: {
         Row: {
           created_at: string
+          current_inspection_snapshot_id: string | null
           description: string | null
           id: string
           name: string
@@ -101,6 +102,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          current_inspection_snapshot_id?: string | null
           description?: string | null
           id?: string
           name: string
@@ -109,6 +111,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          current_inspection_snapshot_id?: string | null
           description?: string | null
           id?: string
           name?: string
@@ -116,6 +119,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "inspection_template_current_inspection_snapshot_id_fkey"
+            columns: ["current_inspection_snapshot_id"]
+            isOneToOne: false
+            referencedRelation: "inspection_template_snapshot"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "inspection_template_team_id_fkey"
             columns: ["team_id"]
@@ -133,7 +143,6 @@ export type Database = {
           inspection_template_id: string
           name: string
           updated_at: string
-          version: number
         }
         Insert: {
           created_at?: string
@@ -142,7 +151,6 @@ export type Database = {
           inspection_template_id: string
           name: string
           updated_at?: string
-          version?: number
         }
         Update: {
           created_at?: string
@@ -151,7 +159,6 @@ export type Database = {
           inspection_template_id?: string
           name?: string
           updated_at?: string
-          version?: number
         }
         Relationships: [
           {
