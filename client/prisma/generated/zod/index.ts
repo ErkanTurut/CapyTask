@@ -26,7 +26,7 @@ export const RoleScalarFieldEnumSchema = z.enum(['id','name','description','perm
 
 export const Inspection_templateScalarFieldEnumSchema = z.enum(['id','name','description','created_at','updated_at','team_id','current_inspection_snapshot_id']);
 
-export const Inspection_template_snapshotScalarFieldEnumSchema = z.enum(['id','version','name','description','created_at','updated_at','inspection_template_id']);
+export const Inspection_template_snapshotScalarFieldEnumSchema = z.enum(['id','name','description','created_at','updated_at','inspection_template_id']);
 
 export const Step_templateScalarFieldEnumSchema = z.enum(['id','name','description','created_at','updated_at','parent_step_id','created_by_id','order','inspection_template_id','inspection_template_snapshot_id']);
 
@@ -174,7 +174,6 @@ export type inspection_template = z.infer<typeof inspection_templateSchema>
 
 export const inspection_template_snapshotSchema = z.object({
   id: z.string(),
-  version: z.number().int(),
   name: z.string(),
   description: z.string().nullable(),
   created_at: z.coerce.date(),
@@ -510,7 +509,6 @@ export const inspection_template_snapshotCountOutputTypeSelectSchema: z.ZodType<
 
 export const inspection_template_snapshotSelectSchema: z.ZodType<Prisma.inspection_template_snapshotSelect> = z.object({
   id: z.boolean().optional(),
-  version: z.boolean().optional(),
   name: z.boolean().optional(),
   description: z.boolean().optional(),
   created_at: z.boolean().optional(),
@@ -1189,7 +1187,6 @@ export const inspection_template_snapshotWhereInputSchema: z.ZodType<Prisma.insp
   OR: z.lazy(() => inspection_template_snapshotWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => inspection_template_snapshotWhereInputSchema),z.lazy(() => inspection_template_snapshotWhereInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => UuidFilterSchema),z.string() ]).optional(),
-  version: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
   name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   description: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   created_at: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
@@ -1203,7 +1200,6 @@ export const inspection_template_snapshotWhereInputSchema: z.ZodType<Prisma.insp
 
 export const inspection_template_snapshotOrderByWithRelationInputSchema: z.ZodType<Prisma.inspection_template_snapshotOrderByWithRelationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  version: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional(),
   description: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   created_at: z.lazy(() => SortOrderSchema).optional(),
@@ -1218,22 +1214,21 @@ export const inspection_template_snapshotOrderByWithRelationInputSchema: z.ZodTy
 export const inspection_template_snapshotWhereUniqueInputSchema: z.ZodType<Prisma.inspection_template_snapshotWhereUniqueInput> = z.union([
   z.object({
     id: z.string(),
-    version_inspection_template_id: z.lazy(() => inspection_template_snapshotVersionInspection_template_idCompoundUniqueInputSchema)
+    inspection_template_id_created_at: z.lazy(() => inspection_template_snapshotInspection_template_idCreated_atCompoundUniqueInputSchema)
   }),
   z.object({
     id: z.string(),
   }),
   z.object({
-    version_inspection_template_id: z.lazy(() => inspection_template_snapshotVersionInspection_template_idCompoundUniqueInputSchema),
+    inspection_template_id_created_at: z.lazy(() => inspection_template_snapshotInspection_template_idCreated_atCompoundUniqueInputSchema),
   }),
 ])
 .and(z.object({
   id: z.string().optional(),
-  version_inspection_template_id: z.lazy(() => inspection_template_snapshotVersionInspection_template_idCompoundUniqueInputSchema).optional(),
+  inspection_template_id_created_at: z.lazy(() => inspection_template_snapshotInspection_template_idCreated_atCompoundUniqueInputSchema).optional(),
   AND: z.union([ z.lazy(() => inspection_template_snapshotWhereInputSchema),z.lazy(() => inspection_template_snapshotWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => inspection_template_snapshotWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => inspection_template_snapshotWhereInputSchema),z.lazy(() => inspection_template_snapshotWhereInputSchema).array() ]).optional(),
-  version: z.union([ z.lazy(() => IntFilterSchema),z.number().int() ]).optional(),
   name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   description: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   created_at: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
@@ -1247,17 +1242,14 @@ export const inspection_template_snapshotWhereUniqueInputSchema: z.ZodType<Prism
 
 export const inspection_template_snapshotOrderByWithAggregationInputSchema: z.ZodType<Prisma.inspection_template_snapshotOrderByWithAggregationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  version: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional(),
   description: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   created_at: z.lazy(() => SortOrderSchema).optional(),
   updated_at: z.lazy(() => SortOrderSchema).optional(),
   inspection_template_id: z.lazy(() => SortOrderSchema).optional(),
   _count: z.lazy(() => inspection_template_snapshotCountOrderByAggregateInputSchema).optional(),
-  _avg: z.lazy(() => inspection_template_snapshotAvgOrderByAggregateInputSchema).optional(),
   _max: z.lazy(() => inspection_template_snapshotMaxOrderByAggregateInputSchema).optional(),
-  _min: z.lazy(() => inspection_template_snapshotMinOrderByAggregateInputSchema).optional(),
-  _sum: z.lazy(() => inspection_template_snapshotSumOrderByAggregateInputSchema).optional()
+  _min: z.lazy(() => inspection_template_snapshotMinOrderByAggregateInputSchema).optional()
 }).strict();
 
 export const inspection_template_snapshotScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.inspection_template_snapshotScalarWhereWithAggregatesInput> = z.object({
@@ -1265,7 +1257,6 @@ export const inspection_template_snapshotScalarWhereWithAggregatesInputSchema: z
   OR: z.lazy(() => inspection_template_snapshotScalarWhereWithAggregatesInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => inspection_template_snapshotScalarWhereWithAggregatesInputSchema),z.lazy(() => inspection_template_snapshotScalarWhereWithAggregatesInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => UuidWithAggregatesFilterSchema),z.string() ]).optional(),
-  version: z.union([ z.lazy(() => IntWithAggregatesFilterSchema),z.number() ]).optional(),
   name: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   description: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   created_at: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
@@ -1996,7 +1987,6 @@ export const inspection_templateUncheckedUpdateManyInputSchema: z.ZodType<Prisma
 
 export const inspection_template_snapshotCreateInputSchema: z.ZodType<Prisma.inspection_template_snapshotCreateInput> = z.object({
   id: z.string().optional(),
-  version: z.number().int().optional(),
   name: z.string(),
   description: z.string().optional().nullable(),
   created_at: z.coerce.date().optional(),
@@ -2009,7 +1999,6 @@ export const inspection_template_snapshotCreateInputSchema: z.ZodType<Prisma.ins
 
 export const inspection_template_snapshotUncheckedCreateInputSchema: z.ZodType<Prisma.inspection_template_snapshotUncheckedCreateInput> = z.object({
   id: z.string().optional(),
-  version: z.number().int().optional(),
   name: z.string(),
   description: z.string().optional().nullable(),
   created_at: z.coerce.date().optional(),
@@ -2022,7 +2011,6 @@ export const inspection_template_snapshotUncheckedCreateInputSchema: z.ZodType<P
 
 export const inspection_template_snapshotUpdateInputSchema: z.ZodType<Prisma.inspection_template_snapshotUpdateInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  version: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   created_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2035,7 +2023,6 @@ export const inspection_template_snapshotUpdateInputSchema: z.ZodType<Prisma.ins
 
 export const inspection_template_snapshotUncheckedUpdateInputSchema: z.ZodType<Prisma.inspection_template_snapshotUncheckedUpdateInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  version: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   created_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2048,7 +2035,6 @@ export const inspection_template_snapshotUncheckedUpdateInputSchema: z.ZodType<P
 
 export const inspection_template_snapshotCreateManyInputSchema: z.ZodType<Prisma.inspection_template_snapshotCreateManyInput> = z.object({
   id: z.string().optional(),
-  version: z.number().int().optional(),
   name: z.string(),
   description: z.string().optional().nullable(),
   created_at: z.coerce.date().optional(),
@@ -2058,7 +2044,6 @@ export const inspection_template_snapshotCreateManyInputSchema: z.ZodType<Prisma
 
 export const inspection_template_snapshotUpdateManyMutationInputSchema: z.ZodType<Prisma.inspection_template_snapshotUpdateManyMutationInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  version: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   created_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2067,7 +2052,6 @@ export const inspection_template_snapshotUpdateManyMutationInputSchema: z.ZodTyp
 
 export const inspection_template_snapshotUncheckedUpdateManyInputSchema: z.ZodType<Prisma.inspection_template_snapshotUncheckedUpdateManyInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  version: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   created_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2794,30 +2778,18 @@ export const inspection_templateMinOrderByAggregateInputSchema: z.ZodType<Prisma
   current_inspection_snapshot_id: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
-export const IntFilterSchema: z.ZodType<Prisma.IntFilter> = z.object({
-  equals: z.number().optional(),
-  in: z.number().array().optional(),
-  notIn: z.number().array().optional(),
-  lt: z.number().optional(),
-  lte: z.number().optional(),
-  gt: z.number().optional(),
-  gte: z.number().optional(),
-  not: z.union([ z.number(),z.lazy(() => NestedIntFilterSchema) ]).optional(),
-}).strict();
-
 export const Inspection_templateRelationFilterSchema: z.ZodType<Prisma.Inspection_templateRelationFilter> = z.object({
   is: z.lazy(() => inspection_templateWhereInputSchema).optional(),
   isNot: z.lazy(() => inspection_templateWhereInputSchema).optional()
 }).strict();
 
-export const inspection_template_snapshotVersionInspection_template_idCompoundUniqueInputSchema: z.ZodType<Prisma.inspection_template_snapshotVersionInspection_template_idCompoundUniqueInput> = z.object({
-  version: z.number(),
-  inspection_template_id: z.string()
+export const inspection_template_snapshotInspection_template_idCreated_atCompoundUniqueInputSchema: z.ZodType<Prisma.inspection_template_snapshotInspection_template_idCreated_atCompoundUniqueInput> = z.object({
+  inspection_template_id: z.string(),
+  created_at: z.coerce.date()
 }).strict();
 
 export const inspection_template_snapshotCountOrderByAggregateInputSchema: z.ZodType<Prisma.inspection_template_snapshotCountOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  version: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
   created_at: z.lazy(() => SortOrderSchema).optional(),
@@ -2825,13 +2797,8 @@ export const inspection_template_snapshotCountOrderByAggregateInputSchema: z.Zod
   inspection_template_id: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
-export const inspection_template_snapshotAvgOrderByAggregateInputSchema: z.ZodType<Prisma.inspection_template_snapshotAvgOrderByAggregateInput> = z.object({
-  version: z.lazy(() => SortOrderSchema).optional()
-}).strict();
-
 export const inspection_template_snapshotMaxOrderByAggregateInputSchema: z.ZodType<Prisma.inspection_template_snapshotMaxOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  version: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
   created_at: z.lazy(() => SortOrderSchema).optional(),
@@ -2841,32 +2808,11 @@ export const inspection_template_snapshotMaxOrderByAggregateInputSchema: z.ZodTy
 
 export const inspection_template_snapshotMinOrderByAggregateInputSchema: z.ZodType<Prisma.inspection_template_snapshotMinOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  version: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
   created_at: z.lazy(() => SortOrderSchema).optional(),
   updated_at: z.lazy(() => SortOrderSchema).optional(),
   inspection_template_id: z.lazy(() => SortOrderSchema).optional()
-}).strict();
-
-export const inspection_template_snapshotSumOrderByAggregateInputSchema: z.ZodType<Prisma.inspection_template_snapshotSumOrderByAggregateInput> = z.object({
-  version: z.lazy(() => SortOrderSchema).optional()
-}).strict();
-
-export const IntWithAggregatesFilterSchema: z.ZodType<Prisma.IntWithAggregatesFilter> = z.object({
-  equals: z.number().optional(),
-  in: z.number().array().optional(),
-  notIn: z.number().array().optional(),
-  lt: z.number().optional(),
-  lte: z.number().optional(),
-  gt: z.number().optional(),
-  gte: z.number().optional(),
-  not: z.union([ z.number(),z.lazy(() => NestedIntWithAggregatesFilterSchema) ]).optional(),
-  _count: z.lazy(() => NestedIntFilterSchema).optional(),
-  _avg: z.lazy(() => NestedFloatFilterSchema).optional(),
-  _sum: z.lazy(() => NestedIntFilterSchema).optional(),
-  _min: z.lazy(() => NestedIntFilterSchema).optional(),
-  _max: z.lazy(() => NestedIntFilterSchema).optional()
 }).strict();
 
 export const IntNullableFilterSchema: z.ZodType<Prisma.IntNullableFilter> = z.object({
@@ -3815,14 +3761,6 @@ export const inspection_templateUncheckedCreateNestedManyWithoutCurrent_inspecti
   connect: z.union([ z.lazy(() => inspection_templateWhereUniqueInputSchema),z.lazy(() => inspection_templateWhereUniqueInputSchema).array() ]).optional(),
 }).strict();
 
-export const IntFieldUpdateOperationsInputSchema: z.ZodType<Prisma.IntFieldUpdateOperationsInput> = z.object({
-  set: z.number().optional(),
-  increment: z.number().optional(),
-  decrement: z.number().optional(),
-  multiply: z.number().optional(),
-  divide: z.number().optional()
-}).strict();
-
 export const inspection_templateUpdateOneRequiredWithoutInspection_template_snapshotNestedInputSchema: z.ZodType<Prisma.inspection_templateUpdateOneRequiredWithoutInspection_template_snapshotNestedInput> = z.object({
   create: z.union([ z.lazy(() => inspection_templateCreateWithoutInspection_template_snapshotInputSchema),z.lazy(() => inspection_templateUncheckedCreateWithoutInspection_template_snapshotInputSchema) ]).optional(),
   connectOrCreate: z.lazy(() => inspection_templateCreateOrConnectWithoutInspection_template_snapshotInputSchema).optional(),
@@ -4347,33 +4285,6 @@ export const NestedEnumRoleWithAggregatesFilterSchema: z.ZodType<Prisma.NestedEn
   _count: z.lazy(() => NestedIntFilterSchema).optional(),
   _min: z.lazy(() => NestedEnumRoleFilterSchema).optional(),
   _max: z.lazy(() => NestedEnumRoleFilterSchema).optional()
-}).strict();
-
-export const NestedIntWithAggregatesFilterSchema: z.ZodType<Prisma.NestedIntWithAggregatesFilter> = z.object({
-  equals: z.number().optional(),
-  in: z.number().array().optional(),
-  notIn: z.number().array().optional(),
-  lt: z.number().optional(),
-  lte: z.number().optional(),
-  gt: z.number().optional(),
-  gte: z.number().optional(),
-  not: z.union([ z.number(),z.lazy(() => NestedIntWithAggregatesFilterSchema) ]).optional(),
-  _count: z.lazy(() => NestedIntFilterSchema).optional(),
-  _avg: z.lazy(() => NestedFloatFilterSchema).optional(),
-  _sum: z.lazy(() => NestedIntFilterSchema).optional(),
-  _min: z.lazy(() => NestedIntFilterSchema).optional(),
-  _max: z.lazy(() => NestedIntFilterSchema).optional()
-}).strict();
-
-export const NestedFloatFilterSchema: z.ZodType<Prisma.NestedFloatFilter> = z.object({
-  equals: z.number().optional(),
-  in: z.number().array().optional(),
-  notIn: z.number().array().optional(),
-  lt: z.number().optional(),
-  lte: z.number().optional(),
-  gt: z.number().optional(),
-  gte: z.number().optional(),
-  not: z.union([ z.number(),z.lazy(() => NestedFloatFilterSchema) ]).optional(),
 }).strict();
 
 export const NestedIntNullableWithAggregatesFilterSchema: z.ZodType<Prisma.NestedIntNullableWithAggregatesFilter> = z.object({
@@ -5556,7 +5467,6 @@ export const step_templateCreateManyInspection_templateInputEnvelopeSchema: z.Zo
 
 export const inspection_template_snapshotCreateWithoutInspection_templateInputSchema: z.ZodType<Prisma.inspection_template_snapshotCreateWithoutInspection_templateInput> = z.object({
   id: z.string().optional(),
-  version: z.number().int().optional(),
   name: z.string(),
   description: z.string().optional().nullable(),
   created_at: z.coerce.date().optional(),
@@ -5568,7 +5478,6 @@ export const inspection_template_snapshotCreateWithoutInspection_templateInputSc
 
 export const inspection_template_snapshotUncheckedCreateWithoutInspection_templateInputSchema: z.ZodType<Prisma.inspection_template_snapshotUncheckedCreateWithoutInspection_templateInput> = z.object({
   id: z.string().optional(),
-  version: z.number().int().optional(),
   name: z.string(),
   description: z.string().optional().nullable(),
   created_at: z.coerce.date().optional(),
@@ -5590,7 +5499,6 @@ export const inspection_template_snapshotCreateManyInspection_templateInputEnvel
 
 export const inspection_template_snapshotCreateWithoutCurrent_inspection_snapshotInputSchema: z.ZodType<Prisma.inspection_template_snapshotCreateWithoutCurrent_inspection_snapshotInput> = z.object({
   id: z.string().optional(),
-  version: z.number().int().optional(),
   name: z.string(),
   description: z.string().optional().nullable(),
   created_at: z.coerce.date().optional(),
@@ -5602,7 +5510,6 @@ export const inspection_template_snapshotCreateWithoutCurrent_inspection_snapsho
 
 export const inspection_template_snapshotUncheckedCreateWithoutCurrent_inspection_snapshotInputSchema: z.ZodType<Prisma.inspection_template_snapshotUncheckedCreateWithoutCurrent_inspection_snapshotInput> = z.object({
   id: z.string().optional(),
-  version: z.number().int().optional(),
   name: z.string(),
   description: z.string().optional().nullable(),
   created_at: z.coerce.date().optional(),
@@ -5691,7 +5598,6 @@ export const inspection_template_snapshotScalarWhereInputSchema: z.ZodType<Prism
   OR: z.lazy(() => inspection_template_snapshotScalarWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => inspection_template_snapshotScalarWhereInputSchema),z.lazy(() => inspection_template_snapshotScalarWhereInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => UuidFilterSchema),z.string() ]).optional(),
-  version: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
   name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   description: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   created_at: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
@@ -5712,7 +5618,6 @@ export const inspection_template_snapshotUpdateToOneWithWhereWithoutCurrent_insp
 
 export const inspection_template_snapshotUpdateWithoutCurrent_inspection_snapshotInputSchema: z.ZodType<Prisma.inspection_template_snapshotUpdateWithoutCurrent_inspection_snapshotInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  version: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   created_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5724,7 +5629,6 @@ export const inspection_template_snapshotUpdateWithoutCurrent_inspection_snapsho
 
 export const inspection_template_snapshotUncheckedUpdateWithoutCurrent_inspection_snapshotInputSchema: z.ZodType<Prisma.inspection_template_snapshotUncheckedUpdateWithoutCurrent_inspection_snapshotInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  version: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   created_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -6077,7 +5981,6 @@ export const step_templateCreateManyParent_stepInputEnvelopeSchema: z.ZodType<Pr
 
 export const inspection_template_snapshotCreateWithoutStep_templateInputSchema: z.ZodType<Prisma.inspection_template_snapshotCreateWithoutStep_templateInput> = z.object({
   id: z.string().optional(),
-  version: z.number().int().optional(),
   name: z.string(),
   description: z.string().optional().nullable(),
   created_at: z.coerce.date().optional(),
@@ -6089,7 +5992,6 @@ export const inspection_template_snapshotCreateWithoutStep_templateInputSchema: 
 
 export const inspection_template_snapshotUncheckedCreateWithoutStep_templateInputSchema: z.ZodType<Prisma.inspection_template_snapshotUncheckedCreateWithoutStep_templateInput> = z.object({
   id: z.string().optional(),
-  version: z.number().int().optional(),
   name: z.string(),
   description: z.string().optional().nullable(),
   created_at: z.coerce.date().optional(),
@@ -6270,7 +6172,6 @@ export const inspection_template_snapshotUpdateToOneWithWhereWithoutStep_templat
 
 export const inspection_template_snapshotUpdateWithoutStep_templateInputSchema: z.ZodType<Prisma.inspection_template_snapshotUpdateWithoutStep_templateInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  version: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   created_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -6282,7 +6183,6 @@ export const inspection_template_snapshotUpdateWithoutStep_templateInputSchema: 
 
 export const inspection_template_snapshotUncheckedUpdateWithoutStep_templateInputSchema: z.ZodType<Prisma.inspection_template_snapshotUncheckedUpdateWithoutStep_templateInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  version: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   created_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -6353,7 +6253,6 @@ export const teamCreateOrConnectWithoutInspectionInputSchema: z.ZodType<Prisma.t
 
 export const inspection_template_snapshotCreateWithoutInspectionInputSchema: z.ZodType<Prisma.inspection_template_snapshotCreateWithoutInspectionInput> = z.object({
   id: z.string().optional(),
-  version: z.number().int().optional(),
   name: z.string(),
   description: z.string().optional().nullable(),
   created_at: z.coerce.date().optional(),
@@ -6365,7 +6264,6 @@ export const inspection_template_snapshotCreateWithoutInspectionInputSchema: z.Z
 
 export const inspection_template_snapshotUncheckedCreateWithoutInspectionInputSchema: z.ZodType<Prisma.inspection_template_snapshotUncheckedCreateWithoutInspectionInput> = z.object({
   id: z.string().optional(),
-  version: z.number().int().optional(),
   name: z.string(),
   description: z.string().optional().nullable(),
   created_at: z.coerce.date().optional(),
@@ -6456,7 +6354,6 @@ export const inspection_template_snapshotUpdateToOneWithWhereWithoutInspectionIn
 
 export const inspection_template_snapshotUpdateWithoutInspectionInputSchema: z.ZodType<Prisma.inspection_template_snapshotUpdateWithoutInspectionInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  version: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   created_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -6468,7 +6365,6 @@ export const inspection_template_snapshotUpdateWithoutInspectionInputSchema: z.Z
 
 export const inspection_template_snapshotUncheckedUpdateWithoutInspectionInputSchema: z.ZodType<Prisma.inspection_template_snapshotUncheckedUpdateWithoutInspectionInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  version: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   created_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -6984,7 +6880,6 @@ export const step_templateCreateManyInspection_templateInputSchema: z.ZodType<Pr
 
 export const inspection_template_snapshotCreateManyInspection_templateInputSchema: z.ZodType<Prisma.inspection_template_snapshotCreateManyInspection_templateInput> = z.object({
   id: z.string().optional(),
-  version: z.number().int().optional(),
   name: z.string(),
   description: z.string().optional().nullable(),
   created_at: z.coerce.date().optional(),
@@ -7033,7 +6928,6 @@ export const step_templateUncheckedUpdateManyWithoutInspection_templateInputSche
 
 export const inspection_template_snapshotUpdateWithoutInspection_templateInputSchema: z.ZodType<Prisma.inspection_template_snapshotUpdateWithoutInspection_templateInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  version: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   created_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -7045,7 +6939,6 @@ export const inspection_template_snapshotUpdateWithoutInspection_templateInputSc
 
 export const inspection_template_snapshotUncheckedUpdateWithoutInspection_templateInputSchema: z.ZodType<Prisma.inspection_template_snapshotUncheckedUpdateWithoutInspection_templateInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  version: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   created_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -7057,7 +6950,6 @@ export const inspection_template_snapshotUncheckedUpdateWithoutInspection_templa
 
 export const inspection_template_snapshotUncheckedUpdateManyWithoutInspection_templateInputSchema: z.ZodType<Prisma.inspection_template_snapshotUncheckedUpdateManyWithoutInspection_templateInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  version: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   created_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
