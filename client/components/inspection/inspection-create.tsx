@@ -70,7 +70,7 @@ const CreateInspectionForm: FC<CreateInspectionFormProps> = ({
         q: search,
         team_id,
       },
-      { placeholderData: [] },
+      { placeholderData: [], refetchOnWindowFocus: false },
     );
 
   const debouncedSearch = useDebouncedCallback(
@@ -199,12 +199,10 @@ const CreateInspectionForm: FC<CreateInspectionFormProps> = ({
           )}
         />
 
-        {form.formState.isDirty && (
-          <Button isLoading={isPending}>
-            Create now
-            <span className="sr-only">Create now</span>
-          </Button>
-        )}
+        <Button disabled={!form.formState.isDirty} isLoading={isPending}>
+          Create now
+          <span className="sr-only">Create now</span>
+        </Button>
       </form>
     </Form>
   );
