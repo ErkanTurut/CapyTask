@@ -49,7 +49,7 @@ const StepDeleteForm: FC<StepDeleteFormProps> = ({
       utils.db.template.step.getStepsByInspection.invalidate({
         inspection_template_id: step.inspection_template_id,
       });
-      router.push(`./${step.inspection_template_id}`);
+      router.replace(`./${step.inspection_template_id}`);
     },
   });
 
