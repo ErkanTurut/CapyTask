@@ -105,12 +105,6 @@ export const Icons = {
     const { size, className } = props;
 
     const { width, height } = sizes[size ? size : "s"];
-    // const colors = {
-    //   body: color === "light" ? "#FFFFFF" : "#000814",
-    //   orange: "#FB8500",
-    //   green: "#1AD33C",
-    //   dark_green: "#17AA2B",
-    // };
 
     return (
       <svg
