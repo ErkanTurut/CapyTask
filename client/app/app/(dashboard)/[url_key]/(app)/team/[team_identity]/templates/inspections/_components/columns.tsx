@@ -89,7 +89,7 @@ export const columns: ColumnDef<
       return <DataTableColumnHeader column={column} title="Updated at" />;
     },
     cell: ({ row }) => {
-      return new Date(row.original.created_at).toLocaleDateString("en-US", {
+      return new Date(row.original.updated_at).toLocaleDateString("en-US", {
         year: "numeric",
         month: "long",
         hour: "numeric",
