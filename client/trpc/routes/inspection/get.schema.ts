@@ -2,6 +2,7 @@ import * as z from "zod";
 
 export const ZGetInspectionSchema = z
   .object({
+    id: z.string(),
     team_identity: z
       .string({
         invalid_type_error: "Indentity must be a string",

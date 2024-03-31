@@ -10,43 +10,20 @@ type opts = {
 };
 
 export const createInspectionHandler = async ({ input, db }: opts) => {
-  let inspection_snapshot_id = undefined;
+  let inspection_snapshot_id = null;
 
   if (input.inspection_template_id) {
-    const { data: inpsection_template } = await db
-      .from("inspection_template")
-      .select("*")
-      .eq("id", input.inspection_template_id)
-      .single()
-      .throwOnError();
-
-    if (!inpsection_template) {
-      throw new TRPCError({
-        message: "Inspection template not found",
-        code: "NOT_FOUND",
-      });
-    }
-
-    const { data: inspection_template_snapshot, error } = await db
-      .from("inspection_template_snapshot")
-      .upsert(
-        {
-          inspection_template_id: inpsection_template.id,
-          name: inpsection_template.name,
-          created_at: inpsection_template.updated_at,
-        },
-        { onConflict: "inspection_template_id, created_at" },
-      )
-      .select("*")
-      .single();
-
-    if (!inspection_template_snapshot || error) {
+    const { data, error } = await db.rpc("create_inspection_snapshot", {
+      input: input.inspection_template_id,
+    });
+    console.log(error);
+    if (error || !data) {
       throw new TRPCError({
         message: "Failed to create inspection snapshot",
         code: "INTERNAL_SERVER_ERROR",
       });
     }
-    inspection_snapshot_id = inspection_template_snapshot.id;
+    inspection_snapshot_id = data;
   }
 
   return await db
@@ -55,7 +32,7 @@ export const createInspectionHandler = async ({ input, db }: opts) => {
       name: input.name,
       team_id: input.team_id,
       description: input.description,
-      inspection_snapshot_id: inspection_snapshot_id,
+      inspection_snapshot_id,
     })
     .throwOnError()
     .select("*");

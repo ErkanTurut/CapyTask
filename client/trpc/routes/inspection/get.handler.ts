@@ -18,13 +18,14 @@ export async function getInspectionsByIdentityHandler({
   };
   db: SupabaseClient;
 }) {
-  return await db
+  const { data, count } = await db
     .from("inspection")
     .select("*, team!inner(*)", { count: "estimated" })
     .eq("team.identity", input.team_identity)
     .range(input.range.start, input.range.end)
     .order("updated_at", { ascending: false })
     .throwOnError();
+  return { data, count };
 }
 
 export async function searchInspectionHandler({
@@ -45,4 +46,16 @@ export async function searchInspectionHandler({
       type: "websearch",
     })
     .throwOnError();
+}
+
+export async function getInspectionHandler({
+  input,
+  db,
+}: {
+  input: {
+    id: TGetInspectionSchema["id"];
+  };
+  db: SupabaseClient;
+}) {
+  return await db.from("inspection").select("*").eq("id", input.id).single();
 }

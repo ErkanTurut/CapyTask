@@ -30,7 +30,7 @@ export const ZCreateInspcetionSchema = z
         message: "Description must be less than 1000 characters long",
       })
       .optional(),
-    inspection_template_id: z.string().uuid().optional(),
+    inspection_template_id: z.string().uuid().nullish(),
   })
   .strict();
 
