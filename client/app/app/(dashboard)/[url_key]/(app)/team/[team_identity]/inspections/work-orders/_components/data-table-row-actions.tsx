@@ -1,7 +1,7 @@
 "use client";
 
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
-import { Row } from "@tanstack/react-table";
+import { Row, Table } from "@tanstack/react-table";
 
 import { Button } from "@/ui/button";
 import {
@@ -20,17 +20,25 @@ import {
 import { api } from "@/trpc/client";
 import { ZGetInspectionSchema } from "@/trpc/routes/template/inspection/get.schema";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { catchError } from "@/lib/utils";
+import { trpc } from "@/trpc/server";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
+  table: Table<
+    NonNullable<
+      Awaited<
+        ReturnType<(typeof trpc)["db"]["inspection"]["get"]["byId"]["query"]>
+      >["data"]
+    >
+  >;
 }
 
 export function DataTableRowActions<TData>({
   row,
+  table,
 }: DataTableRowActionsProps<TData>) {
-  const plan = ZGetInspectionSchema.pick({
+  const inspection = ZGetInspectionSchema.pick({
     created_at: true,
     description: true,
     id: true,
@@ -38,17 +46,44 @@ export function DataTableRowActions<TData>({
     team_id: true,
     updated_at: true,
   }).parse(row.original);
-  const router = useRouter();
 
-  const { mutate: remove } = api.db.template.inspection.delete.useMutation({
-    onSuccess: (data) => {
-      toast.success("Team created successfully");
+  // api.db.template.step.upsert.useMutation({
+  //   onMutate: async (newData) => {
+  //     await utils.db.template.step.getStepsByInspection.cancel({
+  //       inspection_template_id,
+  //     });
+  //     const oldData = utils.db.template.step.getStepsByInspection.getData({
+  //       inspection_template_id,
+  //     });
+  //     utils.db.template.step.getStepsByInspection.setData(
+  //       { inspection_template_id },
+  //       newData,
+  //     );
+  //     return { oldData };
+  //   },
+  //   onSuccess() {
+  //     toast.success("Step updated successfully");
+  //   },
+  //   onError: (err, variables, ctx) => {
+  //     catchError(new Error(err.message));
+  //     utils.db.template.step.getStepsByInspection.setData(
+  //       { inspection_template_id },
+  //       ctx?.oldData,
+  //     );
+  //   },
+  //   onSettled: () => {
+  //     utils.db.template.inspection.get.withSteps.invalidate({
+  //       id: inspection_template_id,
+  //     });
+  //   },
+  // });
+
+  const { mutate: remove } = api.db.inspection.delete.useMutation({
+    onSuccess: async (data) => {
+      toast.success("Inspection deleted successfully!");
     },
     onError: (err) => {
       catchError(new Error(err.message));
-    },
-    onSettled: () => {
-      router.refresh();
     },
   });
 
@@ -81,7 +116,7 @@ export function DataTableRowActions<TData>({
           </DropdownMenuSubContent>
         </DropdownMenuSub> */}
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => remove({ id: plan.id })}>
+        <DropdownMenuItem onClick={() => remove({ id: [inspection.id] })}>
           Delete
           <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
         </DropdownMenuItem>

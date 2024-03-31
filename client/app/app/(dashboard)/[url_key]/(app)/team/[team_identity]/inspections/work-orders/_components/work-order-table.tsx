@@ -1,10 +1,9 @@
-import { DataTable } from "@/components/table/data-table";
+import { DataTable } from "./data-table";
 import { FC } from "react";
 import { columns } from "./columns";
 import { trpc } from "@/trpc/server";
 interface plansTableProps {
-  props: {
-    offset: number;
+  searchParams: {
     limit: number;
     page: number;
   };
@@ -13,16 +12,19 @@ interface plansTableProps {
   };
 }
 
-const WorkOrderTable: FC<plansTableProps> = async ({ props, params }) => {
-  const { data: inspection, count } =
-    await trpc.db.inspection.get.byTeamIdentity.query({
-      team_identity: params.team_identity,
-      range: { start: props.offset, end: props.offset + props.limit * 2 },
-    });
+const WorkOrderTable: FC<plansTableProps> = async ({
+  searchParams,
+  params,
+}) => {
+  const data = await trpc.db.inspection.get.byTeamIdentity.query({
+    team_identity: params.team_identity,
+    range: {
+      start: (searchParams.page - 1) * searchParams.limit,
+      end: (searchParams.page - 1) * searchParams.limit + searchParams.limit,
+    },
+  });
 
-  return (
-    <DataTable columns={columns} count={count || 0} data={inspection || []} />
-  );
+  return <DataTable params={params} columns={columns} initialData={data} />;
 };
 
 export default WorkOrderTable;
