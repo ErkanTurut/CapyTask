@@ -1,19 +1,14 @@
 import { siteConfig } from "@/config/site.config";
 import Link from "next/link";
-import { FC, Suspense } from "react";
+import { FC } from "react";
 
 import { buttonVariants } from "@/components/ui/button";
 
 import { MainNav } from "@/components/layouts/top-navigation/main-nav";
-import { Skeleton } from "@/components/ui/skeleton";
 
-import UserAccountNav from "@/components/user/user-account-nav";
-
+import ThemeToggle from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
 import { Icons } from "../../icons";
-import useScroll from "@/lib/hooks/use-scroll";
-import { useSelectedLayoutSegment } from "next/navigation";
-import ThemeToggle from "@/components/theme-toggle";
 
 interface NavbarProps {}
 
