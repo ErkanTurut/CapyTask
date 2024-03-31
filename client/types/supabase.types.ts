@@ -93,7 +93,6 @@ export type Database = {
       inspection_template: {
         Row: {
           created_at: string
-          current_inspection_snapshot_id: string | null
           description: string | null
           id: string
           name: string
@@ -102,7 +101,6 @@ export type Database = {
         }
         Insert: {
           created_at?: string
-          current_inspection_snapshot_id?: string | null
           description?: string | null
           id?: string
           name: string
@@ -111,7 +109,6 @@ export type Database = {
         }
         Update: {
           created_at?: string
-          current_inspection_snapshot_id?: string | null
           description?: string | null
           id?: string
           name?: string
@@ -119,13 +116,6 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "inspection_template_current_inspection_snapshot_id_fkey"
-            columns: ["current_inspection_snapshot_id"]
-            isOneToOne: false
-            referencedRelation: "inspection_template_snapshot"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "inspection_template_team_id_fkey"
             columns: ["team_id"]
@@ -198,6 +188,7 @@ export type Database = {
           inspection_id: string
           status: Database["public"]["Enums"]["Status"]
           step_id: string
+          step_template_snapshotId: string | null
           updated_at: string
         }
         Insert: {
@@ -206,6 +197,7 @@ export type Database = {
           inspection_id: string
           status?: Database["public"]["Enums"]["Status"]
           step_id: string
+          step_template_snapshotId?: string | null
           updated_at?: string
         }
         Update: {
@@ -214,6 +206,7 @@ export type Database = {
           inspection_id?: string
           status?: Database["public"]["Enums"]["Status"]
           step_id?: string
+          step_template_snapshotId?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -231,6 +224,13 @@ export type Database = {
             referencedRelation: "step_template"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "step_step_template_snapshotId_fkey"
+            columns: ["step_template_snapshotId"]
+            isOneToOne: false
+            referencedRelation: "step_template_snapshot"
+            referencedColumns: ["id"]
+          },
         ]
       }
       step_template: {
@@ -240,7 +240,6 @@ export type Database = {
           description: string | null
           id: string
           inspection_template_id: string
-          inspection_template_snapshot_id: string | null
           name: string
           order: number | null
           parent_step_id: string | null
@@ -252,7 +251,6 @@ export type Database = {
           description?: string | null
           id?: string
           inspection_template_id: string
-          inspection_template_snapshot_id?: string | null
           name: string
           order?: number | null
           parent_step_id?: string | null
@@ -264,7 +262,6 @@ export type Database = {
           description?: string | null
           id?: string
           inspection_template_id?: string
-          inspection_template_snapshot_id?: string | null
           name?: string
           order?: number | null
           parent_step_id?: string | null
@@ -286,17 +283,68 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "step_template_inspection_template_snapshot_id_fkey"
+            foreignKeyName: "step_template_parent_step_id_fkey"
+            columns: ["parent_step_id"]
+            isOneToOne: false
+            referencedRelation: "step_template"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      step_template_snapshot: {
+        Row: {
+          created_at: string
+          created_by_id: string | null
+          description: string | null
+          id: string
+          inspection_template_snapshot_id: string
+          name: string
+          order: number | null
+          parent_step_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by_id?: string | null
+          description?: string | null
+          id?: string
+          inspection_template_snapshot_id: string
+          name: string
+          order?: number | null
+          parent_step_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by_id?: string | null
+          description?: string | null
+          id?: string
+          inspection_template_snapshot_id?: string
+          name?: string
+          order?: number | null
+          parent_step_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "step_template_snapshot_created_by_id_fkey"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "step_template_snapshot_inspection_template_snapshot_id_fkey"
             columns: ["inspection_template_snapshot_id"]
             isOneToOne: false
             referencedRelation: "inspection_template_snapshot"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "step_template_parent_step_id_fkey"
+            foreignKeyName: "step_template_snapshot_parent_step_id_fkey"
             columns: ["parent_step_id"]
             isOneToOne: false
-            referencedRelation: "step_template"
+            referencedRelation: "step_template_snapshot"
             referencedColumns: ["id"]
           },
         ]
@@ -501,7 +549,12 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      create_inspection_snapshot: {
+        Args: {
+          input: string
+        }
+        Returns: string
+      }
     }
     Enums: {
       inspectionType: "INSPECTION" | "MAINTENANCE" | "OTHER"
