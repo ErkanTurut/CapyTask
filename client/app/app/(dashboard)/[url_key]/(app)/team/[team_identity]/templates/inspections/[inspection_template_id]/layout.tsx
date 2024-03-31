@@ -5,7 +5,7 @@ import {
 } from "@/components/page-header";
 import CardSkeleton from "@/components/skeletons/card-skeleton";
 import { Suspense } from "react";
-import StepsContainer from "./_components/steps-container";
+import InspectionContainer from "./_components/inspection-container";
 import { Shell } from "@/components/shells";
 
 interface layoutProps {
@@ -31,7 +31,7 @@ export default async function layoutPage({ children, params }: layoutProps) {
 
       <div className={"grid grid-cols-1 gap-4 lg:grid-cols-2"}>
         <Suspense fallback={<CardSkeleton />}>
-          <StepsContainer params={params} />
+          <InspectionContainer params={params} />
         </Suspense>
         <Suspense fallback={<CardSkeleton />}>{children}</Suspense>
       </div>
