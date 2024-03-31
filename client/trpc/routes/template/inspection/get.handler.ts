@@ -67,10 +67,9 @@ export async function getInspectionStepsHandler({
 }) {
   return await db
     .from("inspection_template")
-    .select("*, step_template!inner(*) ")
+    .select("*, step_template(*) ")
     .eq("id", input.id)
-    .single()
-    .throwOnError();
+    .single();
 }
 
 export async function searchInspectionHandler({
