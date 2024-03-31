@@ -25,7 +25,6 @@ export const ZUpsertStepSchema = z
     created_at: z.string(),
     updated_at: z.string(),
     created_by_id: z.string().nullable(),
-    inspection_template_snapshot_id: z.string().nullable(),
   })
   .array();
 export type TUpsertStepSchema = z.infer<typeof ZUpsertStepSchema>;
