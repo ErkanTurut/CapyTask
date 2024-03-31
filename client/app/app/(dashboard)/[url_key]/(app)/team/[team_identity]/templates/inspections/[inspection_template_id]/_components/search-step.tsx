@@ -20,8 +20,6 @@ import { Icons } from "@/components/icons";
 import { trpc } from "@/trpc/server";
 import { useRouter } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
-import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
 
 interface SearchStepProps {
   searchParams: {

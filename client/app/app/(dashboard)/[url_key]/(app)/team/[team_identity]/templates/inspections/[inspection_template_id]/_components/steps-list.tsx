@@ -1,6 +1,6 @@
 "use client";
 import { Icons } from "@/components/icons";
-import { Item } from "@/components/ui/item";
+import { Item } from "@/components/item";
 import { Separator } from "@/components/ui/separator";
 import { catchError, cn } from "@/lib/utils";
 import { api } from "@/trpc/client";
@@ -12,7 +12,7 @@ import {
   Droppable,
 } from "@hello-pangea/dnd";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 function getDifference(
@@ -53,9 +53,6 @@ export default function StepList({
         initialData,
       },
     );
-  if (!stepsList) {
-    return null;
-  }
 
   const utils = api.useUtils();
 
@@ -74,7 +71,7 @@ export default function StepList({
         );
         return { oldData };
       },
-      onSuccess(data) {
+      onSuccess() {
         toast.success("Step updated successfully");
       },
       onError: (err, variables, ctx) => {
@@ -85,8 +82,8 @@ export default function StepList({
         );
       },
       onSettled: () => {
-        utils.db.template.step.getStepsByInspection.invalidate({
-          inspection_template_id,
+        utils.db.template.inspection.get.withSteps.invalidate({
+          id: inspection_template_id,
         });
       },
     });
@@ -107,6 +104,7 @@ export default function StepList({
       mutate(items);
     }
   }
+
   return (
     <div>
       <div className=" flex h-4 w-full items-center justify-end px-4">
@@ -129,6 +127,13 @@ export default function StepList({
               ref={provided.innerRef}
               className="flex w-full flex-col gap-1"
             >
+              {stepsList.length === 0 && (
+                <div className="flex h-40 items-center justify-center">
+                  <p className="text-muted-foreground">
+                    No steps found for this inspection plan
+                  </p>
+                </div>
+              )}
               {stepsList.map((step, index) => {
                 return (
                   <Draggable key={step.id} draggableId={step.id} index={index}>
@@ -147,43 +152,37 @@ export default function StepList({
                                 step_id: step.id,
                               },
                             }}
+                            className={cn(
+                              "group flex w-full items-center justify-between rounded-md  border border-background px-4 py-2 hover:border-border",
+                              isDragging &&
+                                "border border-border bg-background/40 backdrop-blur-[2px]",
+                            )}
                           >
-                            <Item
-                              size={"lg"}
-                              className={cn(
-                                "group",
-                                isDragging &&
-                                  "border border-border bg-background/40 backdrop-blur-[2px]",
-                              )}
-                            >
-                              <div className="overflow-ellipsi flex h-5 w-full grow-0 items-center space-x-2 overflow-hidden text-sm">
-                                <div className="flex h-4 w-4 items-center justify-center rounded-full border border-border p-2 text-xs">
-                                  <span className="animate-fade-in">
-                                    {index + 1}
-                                  </span>
+                            <div className="overflow-ellipsi flex h-5 w-full grow-0 items-center space-x-2 overflow-hidden text-sm">
+                              <div className="flex h-4 w-4 items-center justify-center rounded-full border border-border p-2 text-xs">
+                                <span className="animate-fade-in">
+                                  {index + 1}
+                                </span>
 
-                                  {index !== stepsList.length - 1 && (
-                                    <Separator
-                                      orientation="vertical"
-                                      className={cn(
-                                        "delay-250 absolute mt-11 h-4 transition-opacity ease-in-out",
-                                        isDragging
-                                          ? "opacity-0"
-                                          : "opacity-100",
-                                      )}
-                                    />
-                                  )}
-                                </div>
-                                <h3 className="w-20 shrink-0 overflow-hidden overflow-ellipsis">
-                                  {step.name}
-                                </h3>
-                                <Separator orientation="vertical" />
-                                <p className="overflow-x-auto overflow-ellipsis whitespace-nowrap  text-muted-foreground">
-                                  {step.description}
-                                </p>
+                                {index !== stepsList.length - 1 && (
+                                  <Separator
+                                    orientation="vertical"
+                                    className={cn(
+                                      "delay-250 absolute mt-11 h-4 transition-opacity ease-in-out",
+                                      isDragging ? "opacity-0" : "opacity-100",
+                                    )}
+                                  />
+                                )}
                               </div>
-                              <Icons.arrowRight className="ml-1 h-4 w-4 transition group-hover:translate-x-1" />
-                            </Item>
+                              <h3 className="w-20 shrink-0 overflow-hidden overflow-ellipsis">
+                                {step.name}
+                              </h3>
+                              <Separator orientation="vertical" />
+                              <p className="overflow-x-auto overflow-ellipsis whitespace-nowrap  text-muted-foreground">
+                                {step.description}
+                              </p>
+                            </div>
+                            <Icons.arrowRight className="ml-1 h-4 w-4 transition group-hover:translate-x-1" />
                           </Link>
                         </li>
                       );
