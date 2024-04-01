@@ -5,7 +5,6 @@ import {
   PageHeaderHeading,
 } from "@/components/page-header";
 import { Shell } from "@/components/shells";
-import CreateTeamForm from "@/components/team/team-create";
 import {
   Card,
   CardContent,
@@ -13,9 +12,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import { trpc } from "@/trpc/server";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 interface createInspectionProps {

@@ -100,7 +100,7 @@ export default function StepList({
         stepsList,
         result.source.index,
         result.destination.index,
-      ).map((item, index) => ({ ...item, order: index }));
+      ).map((item, index) => ({ ...item, step_order: index }));
       mutate(items);
     }
   }

@@ -39,7 +39,7 @@ export default async function DashboardPage({
           List of your inspection Plans
         </PageHeaderDescription>
       </PageHeader>
-      <Shell variant="dashboard">
+      <Shell variant="bento">
         <Suspense fallback={<TableSkeleton />}>
           <InspectionTemplateTable
             props={{ offset, limit, page }}

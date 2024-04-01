@@ -23,7 +23,6 @@ const WorkOrderTable: FC<plansTableProps> = async ({
       end: (searchParams.page - 1) * searchParams.limit + searchParams.limit,
     },
   });
-
   return <DataTable params={params} columns={columns} initialData={data} />;
 };
 
