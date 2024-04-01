@@ -241,8 +241,8 @@ export type Database = {
           id: string
           inspection_template_id: string
           name: string
-          order: number | null
           parent_step_id: string | null
+          step_order: number | null
           updated_at: string
         }
         Insert: {
@@ -252,8 +252,8 @@ export type Database = {
           id?: string
           inspection_template_id: string
           name: string
-          order?: number | null
           parent_step_id?: string | null
+          step_order?: number | null
           updated_at?: string
         }
         Update: {
@@ -263,8 +263,8 @@ export type Database = {
           id?: string
           inspection_template_id?: string
           name?: string
-          order?: number | null
           parent_step_id?: string | null
+          step_order?: number | null
           updated_at?: string
         }
         Relationships: [
@@ -299,8 +299,8 @@ export type Database = {
           id: string
           inspection_template_snapshot_id: string
           name: string
-          order: number | null
           parent_step_id: string | null
+          step_order: number | null
           updated_at: string
         }
         Insert: {
@@ -310,8 +310,8 @@ export type Database = {
           id?: string
           inspection_template_snapshot_id: string
           name: string
-          order?: number | null
           parent_step_id?: string | null
+          step_order?: number | null
           updated_at?: string
         }
         Update: {
@@ -321,8 +321,8 @@ export type Database = {
           id?: string
           inspection_template_snapshot_id?: string
           name?: string
-          order?: number | null
           parent_step_id?: string | null
+          step_order?: number | null
           updated_at?: string
         }
         Relationships: [
@@ -551,9 +551,23 @@ export type Database = {
     Functions: {
       create_inspection_snapshot: {
         Args: {
-          input: string
+          inspection_template_id_param: string
         }
         Returns: string
+      }
+      create_step_snapshot: {
+        Args: {
+          inspection_template_id_param: string
+          inspection_template_snapshot_id_param: string
+        }
+        Returns: undefined
+      }
+      create_step_template_snapshot: {
+        Args: {
+          inspection_template_id_param: string
+          inspection_template_snapshot_id_param: string
+        }
+        Returns: undefined
       }
     }
     Enums: {

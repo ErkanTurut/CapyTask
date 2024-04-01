@@ -133,7 +133,7 @@ model step_template {
   updated_at     DateTime @default(now()) @updatedAt @db.Timestamptz(6)
   parent_step_id String?  @db.Uuid
   created_by_id  String?  @db.Uuid
-  order          Int?
+  step_order     Int?
 
   inspection_template_id String              @db.Uuid
   inspection_template    inspection_template @relation(fields: [inspection_template_id], references: [id], onDelete: Cascade)
@@ -156,7 +156,7 @@ model step_template_snapshot {
   updated_at     DateTime @default(now()) @updatedAt @db.Timestamptz(6)
   parent_step_id String?  @db.Uuid
   created_by_id  String?  @db.Uuid
-  order          Int?
+  step_order     Int?
 
   inspection_template_snapshot_id String                       @db.Uuid
   inspection_template_snapshot    inspection_template_snapshot @relation(fields: [inspection_template_snapshot_id], references: [id], onDelete: Cascade)
