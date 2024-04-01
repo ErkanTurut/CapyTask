@@ -33,7 +33,7 @@ export default function Page({ searchParams, params }: PageProps) {
         </PageHeaderDescription>
       </PageHeader>
 
-      <Shell variant={"dashboard"}>
+      <Shell variant={"bento"}>
         <Suspense fallback={<TableSkeleton />}>
           <WorkOrderTable searchParams={{ limit, page }} params={params} />
         </Suspense>
