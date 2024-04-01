@@ -11,6 +11,7 @@ import DotPattern from "@/components/dot-pattern";
 import Toolbar from "@/components/layouts/toolbar/top-toolbar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Sidebar from "./_components/sidebar";
+import { SheetSide } from "./_components/sheet";
 interface DashboardLayoutProps {
   children: React.ReactNode;
   params: {
@@ -38,13 +39,13 @@ export default async function DashboardLayout({
           <ResizableGroup>
             <Sidebar params={params} />
             <Resizable defaultLayout={defaultLayout}>
-              <ScrollArea className="h-screen ">
+              <ScrollArea className="h-screen">
                 <Toolbar />
                 {children}
               </ScrollArea>
             </Resizable>
           </ResizableGroup>
-        </DotPattern>{" "}
+        </DotPattern>
       </TooltipProvider>
     </SidebarProvider>
   );

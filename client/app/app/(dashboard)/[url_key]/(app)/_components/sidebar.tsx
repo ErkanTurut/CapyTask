@@ -18,6 +18,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { generateAvatar } from "@/lib/utils";
 import { trpc } from "@/trpc/server";
 import { redirect } from "next/navigation";
+import { SheetSide } from "./sheet";
 
 interface sidebarProps {
   params: {
@@ -39,7 +40,7 @@ const Sidebar: FC<sidebarProps> = async ({ params }) => {
     <SidebarLayout
       defaultLayout={defaultLayout}
       defaultCollapsed={defaultCollapsed}
-      className="hidden h-screen bg-background md:flex"
+      className=" hidden h-screen bg-muted/20 backdrop-blur-[2px] lg:flex"
     >
       <div>
         <SidebarHeader className="flex flex-col gap-2 p-2">
@@ -118,7 +119,3 @@ const Sidebar: FC<sidebarProps> = async ({ params }) => {
 };
 
 export default Sidebar;
-
-{
-  /* <div class="relative h-full w-full bg-white"><div class="absolute h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div></div> */
-}
