@@ -55,13 +55,11 @@ interface DataTableProps {
 export function DataTable({ columns, initialData, params }: DataTableProps) {
   const searchParams = useSearchParams();
 
+  const page = parseInt(searchParams.get("page") as string) || 1;
+  const limit = parseInt(searchParams.get("limit") as string) || 10;
   const [{ pageIndex, pageSize }, setPagination] = React.useState({
-    pageIndex: searchParams.get("page")
-      ? parseInt(searchParams.get("page") as string)
-      : 0,
-    pageSize: searchParams.get("limit")
-      ? parseInt(searchParams.get("limit") as string)
-      : 10,
+    pageIndex: page - 1,
+    pageSize: limit,
   });
 
   const {
@@ -79,7 +77,9 @@ export function DataTable({ columns, initialData, params }: DataTableProps) {
 
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
+    React.useState<VisibilityState>({
+      description: false,
+    });
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   );
@@ -118,7 +118,7 @@ export function DataTable({ columns, initialData, params }: DataTableProps) {
       <DataTableToolbar table={table} />
       <div className="rounded-md border bg-background">
         <Table>
-          <TableHeader className="  border-foreground bg-muted/50">
+          <TableHeader className=" bg-muted/50 ">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {

@@ -27,20 +27,6 @@ interface DataTableToolbarProps {
 export function DataTableToolbar({ table }: DataTableToolbarProps) {
   const isFiltered = table.getState().columnFilters.length > 0;
   const pathname = usePathname();
-  const { mutate: remove } = api.db.inspection.delete.useMutation({
-    onSuccess: () => {
-      toast.success("Inspection deleted successfully!");
-    },
-    onError: (err) => {
-      toast.error(err.message);
-    },
-  });
-
-  const handleDelete = async () => {
-    const selectedRows = table.getSelectedRowModel().rows;
-    const selectedRows_id = selectedRows.map((row) => row.original.id);
-    remove({ id: selectedRows_id });
-  };
 
   return (
     <div className="flex items-center justify-between">
@@ -55,23 +41,11 @@ export function DataTableToolbar({ table }: DataTableToolbarProps) {
         />
         {/* {
           <DataTableFacetedFilter
-            column={table.getColumn("name")}
+            column={table.getColumn("")}
             title="Status"
-            options={statuses}
+            options={table.get}
           />
         } */}
-
-        {(table.getIsSomePageRowsSelected() ||
-          table.getIsAllPageRowsSelected()) && (
-          <Button
-            variant="destructive"
-            size="sm"
-            onClick={() => handleDelete()}
-          >
-            <Icons.trash className="mr-2 h-4 w-4" />
-            Delete
-          </Button>
-        )}
 
         {isFiltered && (
           <Button

@@ -46,6 +46,7 @@ export function DataTableRowActions<TData>({
     team_id: true,
     updated_at: true,
   }).parse(row.original);
+  const utils = api.useUtils();
 
   // api.db.template.step.upsert.useMutation({
   //   onMutate: async (newData) => {
@@ -84,6 +85,9 @@ export function DataTableRowActions<TData>({
     },
     onError: (err) => {
       catchError(new Error(err.message));
+    },
+    onSettled: async () => {
+      await utils.db.inspection.get.invalidate();
     },
   });
 
