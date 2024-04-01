@@ -42,6 +42,7 @@ import {
 import { FC } from "react";
 import { Icons } from "../icons";
 import { useDebouncedCallback } from "use-debounce";
+import { useRouter } from "next/navigation";
 
 interface CreateInspectionFormProps
   extends React.HTMLAttributes<HTMLFormElement> {
@@ -52,6 +53,7 @@ const CreateInspectionForm: FC<CreateInspectionFormProps> = ({
   className,
   team_id,
 }) => {
+  const router = useRouter();
   const [search, setSearch] = useState("");
 
   const { mutate, isPending } = api.db.inspection.create.useMutation({
@@ -61,6 +63,9 @@ const CreateInspectionForm: FC<CreateInspectionFormProps> = ({
     },
     onError: (err) => {
       catchError(new Error(err.message));
+    },
+    onSettled: async () => {
+      router.refresh();
     },
   });
 
