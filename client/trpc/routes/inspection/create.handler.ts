@@ -14,7 +14,7 @@ export const createInspectionHandler = async ({ input, db }: opts) => {
 
   if (input.inspection_template_id) {
     const { data, error } = await db.rpc("create_inspection_snapshot", {
-      input: input.inspection_template_id,
+      inspection_template_id_param: input.inspection_template_id,
     });
     console.log(error);
     if (error || !data) {
@@ -34,6 +34,7 @@ export const createInspectionHandler = async ({ input, db }: opts) => {
       description: input.description,
       inspection_snapshot_id,
     })
-    .throwOnError()
-    .select("*");
+    .select("*")
+    .single()
+    .throwOnError();
 };

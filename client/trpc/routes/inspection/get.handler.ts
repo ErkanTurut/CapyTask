@@ -2,6 +2,7 @@ import "server-only";
 
 import { SupabaseClient } from "@/lib/supabase/server";
 import { TGetInspectionSchema } from "./get.schema";
+import { TRPCError } from "@trpc/server";
 
 type opts = {
   input: TGetInspectionSchema;
@@ -18,13 +19,20 @@ export async function getInspectionsByIdentityHandler({
   };
   db: SupabaseClient;
 }) {
-  const { data, count } = await db
+  const { data, count, error } = await db
     .from("inspection")
     .select("*, team!inner(*)", { count: "estimated" })
     .eq("team.identity", input.team_identity)
     .range(input.range.start, input.range.end)
-    .order("updated_at", { ascending: false })
-    .throwOnError();
+    .order("updated_at", { ascending: false });
+
+  if (error) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      cause: error,
+    });
+  }
+
   return { data, count };
 }
 

@@ -17,7 +17,7 @@ export async function getStepsByInspectionHandler({
     .from("step_template")
     .select("*")
     .eq("inspection_template_id", input.inspection_template_id)
-    .order("order")
+    .order("step_order")
     .throwOnError();
 }
 
