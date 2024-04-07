@@ -49,6 +49,7 @@ export type Database = {
           id: string
           inspection_snapshot_id: string | null
           name: string
+          public_id: string
           status: Database["public"]["Enums"]["Status"]
           team_id: string
           updated_at: string
@@ -59,6 +60,7 @@ export type Database = {
           id?: string
           inspection_snapshot_id?: string | null
           name: string
+          public_id?: string
           status?: Database["public"]["Enums"]["Status"]
           team_id: string
           updated_at?: string
@@ -69,6 +71,7 @@ export type Database = {
           id?: string
           inspection_snapshot_id?: string | null
           name?: string
+          public_id?: string
           status?: Database["public"]["Enums"]["Status"]
           team_id?: string
           updated_at?: string
@@ -96,6 +99,7 @@ export type Database = {
           description: string | null
           id: string
           name: string
+          public_id: string
           team_id: string
           updated_at: string
         }
@@ -104,6 +108,7 @@ export type Database = {
           description?: string | null
           id?: string
           name: string
+          public_id?: string
           team_id: string
           updated_at?: string
         }
@@ -112,6 +117,7 @@ export type Database = {
           description?: string | null
           id?: string
           name?: string
+          public_id?: string
           team_id?: string
           updated_at?: string
         }
@@ -130,24 +136,30 @@ export type Database = {
           created_at: string
           description: string | null
           id: string
-          inspection_template_id: string
+          inspection_template_id: string | null
           name: string
+          public_id: string
+          team_id: string
           updated_at: string
         }
         Insert: {
           created_at?: string
           description?: string | null
           id?: string
-          inspection_template_id: string
+          inspection_template_id?: string | null
           name: string
+          public_id?: string
+          team_id: string
           updated_at?: string
         }
         Update: {
           created_at?: string
           description?: string | null
           id?: string
-          inspection_template_id?: string
+          inspection_template_id?: string | null
           name?: string
+          public_id?: string
+          team_id?: string
           updated_at?: string
         }
         Relationships: [
@@ -156,6 +168,13 @@ export type Database = {
             columns: ["inspection_template_id"]
             isOneToOne: false
             referencedRelation: "inspection_template"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inspection_template_snapshot_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "team"
             referencedColumns: ["id"]
           },
         ]
@@ -186,6 +205,7 @@ export type Database = {
           created_at: string
           id: string
           inspection_id: string
+          public_id: string
           status: Database["public"]["Enums"]["Status"]
           step_id: string
           step_template_snapshotId: string | null
@@ -195,6 +215,7 @@ export type Database = {
           created_at?: string
           id?: string
           inspection_id: string
+          public_id?: string
           status?: Database["public"]["Enums"]["Status"]
           step_id: string
           step_template_snapshotId?: string | null
@@ -204,6 +225,7 @@ export type Database = {
           created_at?: string
           id?: string
           inspection_id?: string
+          public_id?: string
           status?: Database["public"]["Enums"]["Status"]
           step_id?: string
           step_template_snapshotId?: string | null
@@ -242,6 +264,7 @@ export type Database = {
           inspection_template_id: string
           name: string
           parent_step_id: string | null
+          public_id: string
           step_order: number | null
           updated_at: string
         }
@@ -253,6 +276,7 @@ export type Database = {
           inspection_template_id: string
           name: string
           parent_step_id?: string | null
+          public_id?: string
           step_order?: number | null
           updated_at?: string
         }
@@ -264,6 +288,7 @@ export type Database = {
           inspection_template_id?: string
           name?: string
           parent_step_id?: string | null
+          public_id?: string
           step_order?: number | null
           updated_at?: string
         }
@@ -300,6 +325,7 @@ export type Database = {
           inspection_template_snapshot_id: string
           name: string
           parent_step_id: string | null
+          public_id: string
           step_order: number | null
           updated_at: string
         }
@@ -311,6 +337,7 @@ export type Database = {
           inspection_template_snapshot_id: string
           name: string
           parent_step_id?: string | null
+          public_id?: string
           step_order?: number | null
           updated_at?: string
         }
@@ -322,6 +349,7 @@ export type Database = {
           inspection_template_snapshot_id?: string
           name?: string
           parent_step_id?: string | null
+          public_id?: string
           step_order?: number | null
           updated_at?: string
         }
@@ -562,12 +590,22 @@ export type Database = {
         }
         Returns: undefined
       }
-      create_step_template_snapshot: {
+      nanoid: {
         Args: {
-          inspection_template_id_param: string
-          inspection_template_snapshot_id_param: string
+          size?: number
+          alphabet?: string
+          additionalbytesfactor?: number
         }
-        Returns: undefined
+        Returns: string
+      }
+      nanoid_optimized: {
+        Args: {
+          size: number
+          alphabet: string
+          mask: number
+          step: number
+        }
+        Returns: string
       }
     }
     Enums: {
