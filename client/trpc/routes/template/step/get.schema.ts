@@ -1,19 +1,14 @@
 import * as z from "zod";
 
 export const ZGetStepSchema = z.object({
-  id: z
-    .string({
-      invalid_type_error: "Step ID must be a string",
-      required_error: "Step ID is required",
-    })
-    .uuid({ message: "Step ID must be a valid UUID" }),
-  inspection_template_id: z
-    .string({
-      invalid_type_error: "inspection ID must be a string",
-      required_error: "inspection ID is required",
-    })
-    .uuid({ message: "inspection ID must be a valid UUID" }),
-
+  id: z.string({
+    invalid_type_error: "Step ID must be a string",
+    required_error: "Step ID is required",
+  }),
+  inspection_template_id: z.string({
+    invalid_type_error: "inspection ID must be a string",
+    required_error: "inspection ID is required",
+  }),
   team_identity: z
     .string({
       invalid_type_error: "Indentity must be a string",

@@ -1,12 +1,10 @@
 import * as z from "zod";
 
 export const ZInspectionSchema = z.object({
-  id: z
-    .string({
-      invalid_type_error: "inspection ID must be a string",
-      required_error: "inspection ID is required",
-    })
-    .uuid({ message: "inspection ID must be a valid UUID" }),
+  id: z.string({
+    invalid_type_error: "inspection ID must be a string",
+    required_error: "inspection ID is required",
+  }),
   name: z.string({
     invalid_type_error: "Name must be a string",
     required_error: "Name is required",
@@ -25,12 +23,10 @@ export const ZInspectionSchema = z.object({
     invalid_type_error: "Updated at must be a string",
     required_error: "Updated at is required",
   }),
-  team_id: z
-    .string({
-      invalid_type_error: "Team ID must be a string",
-      required_error: "Team ID is required",
-    })
-    .uuid({ message: "Team ID must be a valid UUID" }),
+  team_id: z.string({
+    invalid_type_error: "Team ID must be a string",
+    required_error: "Team ID is required",
+  }),
 });
 
 export type TInspectionSchema = z.infer<typeof ZInspectionSchema>;

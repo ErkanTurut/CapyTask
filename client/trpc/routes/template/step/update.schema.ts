@@ -1,11 +1,9 @@
 import * as z from "zod";
 export const ZUpdateStepSchema = z.object({
-  id: z
-    .string({
-      invalid_type_error: "Step ID must be a string",
-      required_error: "Step ID is required",
-    })
-    .uuid({ message: "inspection ID must be a valid UUID" }),
+  id: z.string({
+    invalid_type_error: "Step ID must be a string",
+    required_error: "Step ID is required",
+  }),
   name: z
     .string({
       invalid_type_error: "Name must be a string",

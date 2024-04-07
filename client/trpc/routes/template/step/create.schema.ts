@@ -11,12 +11,10 @@ export const ZCreateStepSchema = z.object({
     .regex(/^[a-zA-Z0-9 ]+$/, {
       message: "Name must contain only letters, numbers and spaces",
     }),
-  inspection_template_id: z
-    .string({
-      invalid_type_error: "Inspection template ID must be a string",
-      required_error: "Inspection template  is required",
-    })
-    .uuid({ message: "Inspection template  must be a valid UUID" }),
+  inspection_template_id: z.string({
+    invalid_type_error: "Inspection template ID must be a string",
+    required_error: "Inspection template  is required",
+  }),
   description: z
     .string({
       invalid_type_error: "Description must be a string",
@@ -32,7 +30,6 @@ export const ZCreateStepSchema = z.object({
       invalid_type_error: "Parent ID must be a string",
       required_error: "Parent ID is required",
     })
-    .uuid({ message: "Parent ID must be a valid UUID" })
     .optional(),
   order: z
     .number({

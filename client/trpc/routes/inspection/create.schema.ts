@@ -14,12 +14,10 @@ export const ZCreateInspcetionSchema = z
       .regex(/^[a-zA-Z0-9 ]+$/, {
         message: "Name must contain only letters, numbers and spaces",
       }),
-    team_id: z
-      .string({
-        invalid_type_error: "Team ID must be a string",
-        required_error: "Team ID is required",
-      })
-      .uuid({ message: "Team ID must be a valid UUID" }),
+    team_id: z.string({
+      invalid_type_error: "Team ID must be a string",
+      required_error: "Team ID is required",
+    }),
     description: z
       .string({
         invalid_type_error: "Description must be a string",
@@ -30,7 +28,7 @@ export const ZCreateInspcetionSchema = z
         message: "Description must be less than 1000 characters long",
       })
       .optional(),
-    inspection_template_id: z.string().uuid().nullish(),
+    inspection_template_id: z.string().nullish(),
   })
   .strict();
 
