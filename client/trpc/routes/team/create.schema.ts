@@ -11,12 +11,10 @@ export const ZCreateTeamSchema = z.object({
     .regex(/^[a-zA-Z0-9 ]+$/, {
       message: "Name must contain only letters, numbers and spaces",
     }),
-  workspace_id: z
-    .string({
-      invalid_type_error: "Workspace ID must be a string",
-      required_error: "Workspace ID is required",
-    })
-    .uuid({ message: "Workspace ID must be a valid UUID" }),
+  workspace_id: z.string({
+    invalid_type_error: "Workspace ID must be a string",
+    required_error: "Workspace ID is required",
+  }),
   identity: z
     .string({
       invalid_type_error: "Indentity must be a string",

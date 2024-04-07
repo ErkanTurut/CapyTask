@@ -1,6 +1,7 @@
 import { protectedProcedure, router } from "@/trpc/trpc";
 import {
   getInspectionHandler,
+  getInspectionStepsHandler,
   getInspectionsByIdentityHandler,
   searchInspectionHandler,
 } from "./get.handler";
@@ -27,6 +28,15 @@ export const inspection = router({
       .input(ZGetInspectionSchema.pick({ team_identity: true, range: true }))
       .query(async ({ ctx, input }) => {
         return await getInspectionsByIdentityHandler({
+          input,
+          db: ctx.db,
+        });
+      }),
+
+    withSteps: protectedProcedure
+      .input(ZGetInspectionSchema.pick({ id: true }))
+      .query(async ({ ctx, input }) => {
+        return await getInspectionStepsHandler({
           input,
           db: ctx.db,
         });

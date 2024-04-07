@@ -67,3 +67,21 @@ export async function getInspectionHandler({
 }) {
   return await db.from("inspection").select("*").eq("id", input.id).single();
 }
+
+export async function getInspectionStepsHandler({
+  input,
+  db,
+}: {
+  input: {
+    id: TGetInspectionSchema["id"];
+  };
+  db: SupabaseClient;
+}) {
+  return await db
+    .from("inspection")
+    .select(
+      "*, step(*, step_template_snapshot(id,name, description, step_order))",
+    )
+    .eq("id", input.id)
+    .single();
+}
