@@ -40,7 +40,7 @@ const Sidebar: FC<sidebarProps> = async ({ params }) => {
     <SidebarLayout
       defaultLayout={defaultLayout}
       defaultCollapsed={defaultCollapsed}
-      className=" hidden h-screen bg-muted/20 backdrop-blur-[2px] lg:flex"
+      className=" hidden h-screen bg-muted/50 backdrop-blur-[2px] lg:flex"
     >
       <div>
         <SidebarHeader className="flex flex-col gap-2 p-2">

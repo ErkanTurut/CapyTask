@@ -22,7 +22,7 @@ interface toolbarProps {}
 
 const Toolbar: FC<toolbarProps> = ({}) => {
   return (
-    <div className="sticky top-0 z-40 p-2 pb-4 ">
+    <div className=" sticky top-0 z-40 p-2 pb-4 ">
       <Menubar className="justify-between border bg-background/80 px-2 text-muted-foreground shadow-inner backdrop-blur-sm ">
         <BackButton />
         <span className="flex gap-2">
@@ -35,7 +35,7 @@ const Toolbar: FC<toolbarProps> = ({}) => {
           <MenubarMenu>
             <MenubarTrigger>
               <Icons.bell className="mr-1 h-4 w-4" />
-              Notifications
+              <span className="hidden md:inline">Notifications</span>
             </MenubarTrigger>
           </MenubarMenu>
         </span>
