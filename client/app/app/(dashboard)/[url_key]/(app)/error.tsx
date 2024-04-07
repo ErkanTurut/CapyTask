@@ -1,5 +1,7 @@
 "use client"; // Error components must be Client Components
 
+import type { TRPCClientError } from "@trpc/client";
+import { TRPCError } from "@trpc/server";
 import { useEffect } from "react";
 
 export default function Error({
