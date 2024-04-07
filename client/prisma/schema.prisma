@@ -32,7 +32,7 @@ model team {
   image_uri                    String?
   created_at                   DateTime                       @default(now()) @db.Timestamptz(6)
   updated_at                   DateTime                       @default(now()) @updatedAt @db.Timestamptz(6)
-  workspace_id                 String                         @db.Uuid
+  workspace_id                 String
   identity                     String
   inspection_template          inspection_template[]
   workspace                    workspace                      @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
@@ -47,7 +47,8 @@ model team {
 }
 
 model workspace {
-  id             String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id             String           @id @default(dbgenerated("nanoid(10)"))
+  public_id      String           @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name           String
   description    String?
   created_at     DateTime         @default(now()) @db.Timestamptz(6)
@@ -59,6 +60,7 @@ model workspace {
   user_workspace user_workspace[]
   user           user             @relation(fields: [created_by], references: [id])
 
+  @@unique([public_id])
   @@index([url_key])
 }
 
@@ -67,7 +69,7 @@ model user_team {
   team_id String
   role_id String? @db.Uuid
   role    role?   @relation(fields: [role_id], references: [id])
-  team    team    @relation(fields: [team_id], references: [id])
+  team    team    @relation(fields: [team_id], references: [id], onDelete: Cascade)
   user    user    @relation(fields: [user_id], references: [id])
 
   @@id([user_id, team_id])
@@ -78,11 +80,11 @@ model user_team {
 
 model user_workspace {
   user_id      String    @db.Uuid
-  workspace_id String    @db.Uuid
+  workspace_id String
   role_id      String?   @db.Uuid
   role         role?     @relation(fields: [role_id], references: [id])
   user         user      @relation(fields: [user_id], references: [id])
-  workspace    workspace @relation(fields: [workspace_id], references: [id])
+  workspace    workspace @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
 
   @@id([user_id, workspace_id])
   @@index([user_id])
@@ -135,7 +137,6 @@ model step_template {
   created_by  user?           @relation(fields: [created_by_id], references: [id])
   parent_step step_template?  @relation("step_sub_steps", fields: [parent_step_id], references: [id], onDelete: Cascade)
   sub_steps   step_template[] @relation("step_sub_steps")
-  step        step[]
 
   @@unique([public_id])
   @@index([parent_step_id])
@@ -224,15 +225,11 @@ model step {
   inspection    inspection @relation(fields: [inspection_id], references: [id], onDelete: Cascade)
   inspection_id String
 
-  step    step_template @relation(fields: [step_id], references: [id], onDelete: Cascade)
-  step_id String
-
-  step_template_snapshot   step_template_snapshot? @relation(fields: [step_template_snapshotId], references: [id])
-  step_template_snapshotId String?
+  step_template_snapshot    step_template_snapshot? @relation(fields: [step_template_snapshot_id], references: [id])
+  step_template_snapshot_id String?
 
   @@unique([public_id])
   @@index([inspection_id])
-  @@index([step_id])
 }
 
 enum Status {

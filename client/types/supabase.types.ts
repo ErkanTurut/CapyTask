@@ -207,8 +207,7 @@ export type Database = {
           inspection_id: string
           public_id: string
           status: Database["public"]["Enums"]["Status"]
-          step_id: string
-          step_template_snapshotId: string | null
+          step_template_snapshot_id: string | null
           updated_at: string
         }
         Insert: {
@@ -217,8 +216,7 @@ export type Database = {
           inspection_id: string
           public_id?: string
           status?: Database["public"]["Enums"]["Status"]
-          step_id: string
-          step_template_snapshotId?: string | null
+          step_template_snapshot_id?: string | null
           updated_at?: string
         }
         Update: {
@@ -227,8 +225,7 @@ export type Database = {
           inspection_id?: string
           public_id?: string
           status?: Database["public"]["Enums"]["Status"]
-          step_id?: string
-          step_template_snapshotId?: string | null
+          step_template_snapshot_id?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -240,15 +237,8 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "step_step_id_fkey"
-            columns: ["step_id"]
-            isOneToOne: false
-            referencedRelation: "step_template"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "step_step_template_snapshotId_fkey"
-            columns: ["step_template_snapshotId"]
+            foreignKeyName: "step_step_template_snapshot_id_fkey"
+            columns: ["step_template_snapshot_id"]
             isOneToOne: false
             referencedRelation: "step_template_snapshot"
             referencedColumns: ["id"]
@@ -385,6 +375,7 @@ export type Database = {
           identity: string
           image_uri: string | null
           name: string
+          public_id: string
           updated_at: string
           workspace_id: string
         }
@@ -395,6 +386,7 @@ export type Database = {
           identity: string
           image_uri?: string | null
           name: string
+          public_id?: string
           updated_at?: string
           workspace_id: string
         }
@@ -405,6 +397,7 @@ export type Database = {
           identity?: string
           image_uri?: string | null
           name?: string
+          public_id?: string
           updated_at?: string
           workspace_id?: string
         }
@@ -539,6 +532,7 @@ export type Database = {
           id: string
           image_uri: string | null
           name: string
+          public_id: string
           updated_at: string
           url_key: string
         }
@@ -549,6 +543,7 @@ export type Database = {
           id?: string
           image_uri?: string | null
           name: string
+          public_id?: string
           updated_at?: string
           url_key: string
         }
@@ -559,6 +554,7 @@ export type Database = {
           id?: string
           image_uri?: string | null
           name?: string
+          public_id?: string
           updated_at?: string
           url_key?: string
         }
