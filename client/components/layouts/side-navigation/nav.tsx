@@ -87,7 +87,7 @@ export function Nav({ items, size, className, rootPath, level = 0 }: NavProps) {
                       variant: item.variant || "ghost",
                       size: size || "sm",
                     }),
-                    "h-6 justify-between",
+                    "group h-6 justify-between",
                   )}
                 >
                   <span className="flex w-full justify-start ">
