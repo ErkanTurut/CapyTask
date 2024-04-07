@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { trpc } from "@/trpc/server";
 import Link from "next/link";
 import StepList from "./steps-list";
+import { notFound } from "next/navigation";
 interface StepsContainerProps {
   params: {
     url_key: string;
@@ -27,7 +28,7 @@ const InspectionContainer: React.FC<StepsContainerProps> = async ({
     });
 
   if (!inspection_template) {
-    return null;
+    return notFound();
   }
 
   return (
