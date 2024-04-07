@@ -87,12 +87,12 @@ export function Nav({ items, size, className, rootPath, level = 0 }: NavProps) {
                       variant: item.variant || "ghost",
                       size: size || "sm",
                     }),
-                    "justify-between",
+                    "h-6 justify-between",
                   )}
                 >
                   <span className="flex w-full justify-start ">
                     {item.image_url && (
-                      <Avatar className="mr-2 h-5 w-5 rounded-md">
+                      <Avatar className="mr-2 h-4 w-4 rounded-sm">
                         <AvatarImage
                           src={item.image_url}
                           alt={item.title ?? ""}
@@ -150,7 +150,7 @@ export function Nav({ items, size, className, rootPath, level = 0 }: NavProps) {
                     pathname === href ? "secondary" : item.variant || "ghost",
                   size: size || "sm",
                 }),
-                "justify-start ",
+                "h-6 justify-start ",
               )}
             >
               {Icon && (
