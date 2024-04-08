@@ -56,16 +56,16 @@ const CreateInspectionForm: FC<CreateInspectionFormProps> = ({
   const router = useRouter();
   const [search, setSearch] = useState("");
 
+  const utils = api.useUtils();
   const { mutate, isPending } = api.db.inspection.create.useMutation({
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("Team created successfully");
       form.reset();
+      utils.db.inspection.get.invalidate();
+      router.push(`./${data.id}`);
     },
     onError: (err) => {
       catchError(new Error(err.message));
-    },
-    onSettled: async () => {
-      router.refresh();
     },
   });
 
