@@ -1,7 +1,11 @@
 import * as z from "zod";
 
 export const ZGetTeamSchema = z.object({
-  id: z
+  id: z.string({
+    invalid_type_error: "Plan ID must be a string",
+    required_error: "Plan ID is required",
+  }),
+  public_id: z
     .string({
       invalid_type_error: "Plan ID must be a string",
       required_error: "Plan ID is required",

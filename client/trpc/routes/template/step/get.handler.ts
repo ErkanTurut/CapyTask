@@ -6,18 +6,18 @@ import { sleep } from "@/lib/utils";
 import { TGetStepSchema } from "./get.schema";
 // import { cache } from "react";
 
-export async function getStepsByPlanHandler({
+export async function getStepsByInspectionHandler({
   input,
   db,
 }: {
-  input: { plan_id: TGetStepSchema["plan_id"] };
+  input: { inspection_template_id: TGetStepSchema["inspection_template_id"] };
   db: SupabaseClient;
 }) {
   return await db
-    .from("step")
+    .from("step_template")
     .select("*")
-    .eq("plan_id", input.plan_id)
-    .order("order")
+    .eq("inspection_template_id", input.inspection_template_id)
+    .order("step_order")
     .throwOnError();
 }
 
@@ -32,7 +32,7 @@ export async function getStepsByIdentityHandler({
   db: SupabaseClient;
 }) {
   return await db
-    .from("step")
+    .from("step_template")
     .select("*, team!inner(*)")
     .eq("team.identity", input.team_identity)
     .range(input.range.start, input.range.end);
@@ -45,7 +45,7 @@ export async function getStepHandler({
   input: { id: TGetStepSchema["id"] };
   db: SupabaseClient;
 }) {
-  return await db.from("step").select("*").eq("id", input.id).single();
+  return await db.from("step_template").select("*").eq("id", input.id).single();
 }
 
 export async function searchStepsHandler({
@@ -59,9 +59,9 @@ export async function searchStepsHandler({
   db: SupabaseClient;
 }) {
   return await db
-    .from("step")
-    .select("*, plan(team!inner(*))")
-    .eq("plan.team.identity", input.team_identity)
+    .from("step_template")
+    .select("*, inspection_template(team!inner(*))")
+    .eq("inspection_template.team.identity", input.team_identity)
     .textSearch("name", input.q, {
       type: "websearch",
     });

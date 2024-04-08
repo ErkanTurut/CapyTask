@@ -20,10 +20,13 @@ import { catchError, cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import { TCreateTeam, ZCreateTeam } from "@/lib/service/team/actions/create";
 
 import { api } from "@/trpc/client";
 import { FC } from "react";
+import {
+  TCreateTeamSchema,
+  ZCreateTeamSchema,
+} from "@/trpc/routes/team/create.schema";
 
 interface CreateTeamFormProps extends React.HTMLAttributes<HTMLFormElement> {
   workspace_id: string;
@@ -44,8 +47,8 @@ const CreateTeamForm: FC<CreateTeamFormProps> = ({
   });
 
   // react-hook-form
-  const form = useForm<TCreateTeam>({
-    resolver: zodResolver(ZCreateTeam),
+  const form = useForm<TCreateTeamSchema>({
+    resolver: zodResolver(ZCreateTeamSchema),
     defaultValues: {
       name: "",
       identity: "",
@@ -53,7 +56,7 @@ const CreateTeamForm: FC<CreateTeamFormProps> = ({
     },
   });
 
-  async function onSubmit(data: TCreateTeam) {
+  async function onSubmit(data: TCreateTeamSchema) {
     mutate(data);
   }
 
@@ -90,13 +93,6 @@ const CreateTeamForm: FC<CreateTeamFormProps> = ({
               <FormControl>
                 <Input
                   placeholder={isGenerating ? "Loading..." : "example"}
-                  maxLength={
-                    //@ts-ignore
-                    ZCreateTeam["shape"]["identity"]["_def"]["checks"].find(
-                      (check) => check.kind === "max",
-                      // @ts-ignore
-                    ).value || 0
-                  }
                   {...field}
                 />
               </FormControl>

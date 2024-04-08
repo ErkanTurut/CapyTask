@@ -1,12 +1,12 @@
 import { SupabaseClient } from "@/lib/supabase/server";
-import { TDeletePlanSchema } from "./delete.schema";
+import { TDeleteInspectionSchema } from "./delete.schema";
 import { revalidatePath } from "next/cache";
 
-export async function deletePlanHandler({
+export async function deleteinspectionHandler({
   db,
   input,
 }: {
-  input: TDeletePlanSchema;
+  input: TDeleteInspectionSchema;
   db: SupabaseClient;
 }) {
   return await db

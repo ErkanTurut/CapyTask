@@ -49,6 +49,7 @@ export type Database = {
           id: string
           inspection_snapshot_id: string | null
           name: string
+          public_id: string
           status: Database["public"]["Enums"]["Status"]
           team_id: string
           updated_at: string
@@ -59,6 +60,7 @@ export type Database = {
           id?: string
           inspection_snapshot_id?: string | null
           name: string
+          public_id?: string
           status?: Database["public"]["Enums"]["Status"]
           team_id: string
           updated_at?: string
@@ -69,6 +71,7 @@ export type Database = {
           id?: string
           inspection_snapshot_id?: string | null
           name?: string
+          public_id?: string
           status?: Database["public"]["Enums"]["Status"]
           team_id?: string
           updated_at?: string
@@ -87,117 +90,7 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "team"
             referencedColumns: ["id"]
-          }
-        ]
-      }
-      inspection_step: {
-        Row: {
-          created_at: string
-          id: string
-          inspection_id: string
-          status: Database["public"]["Enums"]["Status"]
-          step_id: string
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          inspection_id: string
-          status?: Database["public"]["Enums"]["Status"]
-          step_id: string
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          inspection_id?: string
-          status?: Database["public"]["Enums"]["Status"]
-          step_id?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "inspection_step_inspection_id_fkey"
-            columns: ["inspection_id"]
-            isOneToOne: false
-            referencedRelation: "inspection"
-            referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "inspection_step_step_id_fkey"
-            columns: ["step_id"]
-            isOneToOne: false
-            referencedRelation: "inspection_step_template"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      inspection_step_template: {
-        Row: {
-          created_at: string
-          created_by_id: string | null
-          description: string | null
-          id: string
-          inspection_template_id: string
-          inspection_template_snapshot_id: string | null
-          name: string
-          order: number | null
-          parent_step_id: string | null
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          created_by_id?: string | null
-          description?: string | null
-          id?: string
-          inspection_template_id: string
-          inspection_template_snapshot_id?: string | null
-          name: string
-          order?: number | null
-          parent_step_id?: string | null
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          created_by_id?: string | null
-          description?: string | null
-          id?: string
-          inspection_template_id?: string
-          inspection_template_snapshot_id?: string | null
-          name?: string
-          order?: number | null
-          parent_step_id?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "inspection_step_template_created_by_id_fkey"
-            columns: ["created_by_id"]
-            isOneToOne: false
-            referencedRelation: "user"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "inspection_step_template_inspection_template_id_fkey"
-            columns: ["inspection_template_id"]
-            isOneToOne: false
-            referencedRelation: "inspection_template"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "inspection_step_template_inspection_template_snapshot_id_fkey"
-            columns: ["inspection_template_snapshot_id"]
-            isOneToOne: false
-            referencedRelation: "inspection_template_snapshot"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "inspection_step_template_parent_step_id_fkey"
-            columns: ["parent_step_id"]
-            isOneToOne: false
-            referencedRelation: "inspection_step_template"
-            referencedColumns: ["id"]
-          }
         ]
       }
       inspection_template: {
@@ -206,6 +99,7 @@ export type Database = {
           description: string | null
           id: string
           name: string
+          public_id: string
           team_id: string
           updated_at: string
         }
@@ -214,6 +108,7 @@ export type Database = {
           description?: string | null
           id?: string
           name: string
+          public_id?: string
           team_id: string
           updated_at?: string
         }
@@ -222,6 +117,7 @@ export type Database = {
           description?: string | null
           id?: string
           name?: string
+          public_id?: string
           team_id?: string
           updated_at?: string
         }
@@ -232,7 +128,7 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "team"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       inspection_template_snapshot: {
@@ -240,28 +136,31 @@ export type Database = {
           created_at: string
           description: string | null
           id: string
-          inspection_template_id: string
+          inspection_template_id: string | null
           name: string
+          public_id: string
+          team_id: string
           updated_at: string
-          version: number
         }
         Insert: {
           created_at?: string
           description?: string | null
           id?: string
-          inspection_template_id: string
+          inspection_template_id?: string | null
           name: string
+          public_id?: string
+          team_id: string
           updated_at?: string
-          version?: number
         }
         Update: {
           created_at?: string
           description?: string | null
           id?: string
-          inspection_template_id?: string
+          inspection_template_id?: string | null
           name?: string
+          public_id?: string
+          team_id?: string
           updated_at?: string
-          version?: number
         }
         Relationships: [
           {
@@ -270,7 +169,14 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "inspection_template"
             referencedColumns: ["id"]
-          }
+          },
+          {
+            foreignKeyName: "inspection_template_snapshot_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "team"
+            referencedColumns: ["id"]
+          },
         ]
       }
       role: {
@@ -294,6 +200,173 @@ export type Database = {
         }
         Relationships: []
       }
+      step: {
+        Row: {
+          created_at: string
+          id: string
+          inspection_id: string
+          public_id: string
+          status: Database["public"]["Enums"]["Status"]
+          step_template_snapshot_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          inspection_id: string
+          public_id?: string
+          status?: Database["public"]["Enums"]["Status"]
+          step_template_snapshot_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          inspection_id?: string
+          public_id?: string
+          status?: Database["public"]["Enums"]["Status"]
+          step_template_snapshot_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "step_inspection_id_fkey"
+            columns: ["inspection_id"]
+            isOneToOne: false
+            referencedRelation: "inspection"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "step_step_template_snapshot_id_fkey"
+            columns: ["step_template_snapshot_id"]
+            isOneToOne: false
+            referencedRelation: "step_template_snapshot"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      step_template: {
+        Row: {
+          created_at: string
+          created_by_id: string | null
+          description: string | null
+          id: string
+          inspection_template_id: string
+          name: string
+          parent_step_id: string | null
+          public_id: string
+          step_order: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by_id?: string | null
+          description?: string | null
+          id?: string
+          inspection_template_id: string
+          name: string
+          parent_step_id?: string | null
+          public_id?: string
+          step_order?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by_id?: string | null
+          description?: string | null
+          id?: string
+          inspection_template_id?: string
+          name?: string
+          parent_step_id?: string | null
+          public_id?: string
+          step_order?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "step_template_created_by_id_fkey"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "step_template_inspection_template_id_fkey"
+            columns: ["inspection_template_id"]
+            isOneToOne: false
+            referencedRelation: "inspection_template"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "step_template_parent_step_id_fkey"
+            columns: ["parent_step_id"]
+            isOneToOne: false
+            referencedRelation: "step_template"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      step_template_snapshot: {
+        Row: {
+          created_at: string
+          created_by_id: string | null
+          description: string | null
+          id: string
+          inspection_template_snapshot_id: string
+          name: string
+          parent_step_id: string | null
+          public_id: string
+          step_order: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by_id?: string | null
+          description?: string | null
+          id?: string
+          inspection_template_snapshot_id: string
+          name: string
+          parent_step_id?: string | null
+          public_id?: string
+          step_order?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by_id?: string | null
+          description?: string | null
+          id?: string
+          inspection_template_snapshot_id?: string
+          name?: string
+          parent_step_id?: string | null
+          public_id?: string
+          step_order?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "step_template_snapshot_created_by_id_fkey"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "step_template_snapshot_inspection_template_snapshot_id_fkey"
+            columns: ["inspection_template_snapshot_id"]
+            isOneToOne: false
+            referencedRelation: "inspection_template_snapshot"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "step_template_snapshot_parent_step_id_fkey"
+            columns: ["parent_step_id"]
+            isOneToOne: false
+            referencedRelation: "step_template_snapshot"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       team: {
         Row: {
           created_at: string
@@ -302,6 +375,7 @@ export type Database = {
           identity: string
           image_uri: string | null
           name: string
+          public_id: string
           updated_at: string
           workspace_id: string
         }
@@ -312,6 +386,7 @@ export type Database = {
           identity: string
           image_uri?: string | null
           name: string
+          public_id?: string
           updated_at?: string
           workspace_id: string
         }
@@ -322,6 +397,7 @@ export type Database = {
           identity?: string
           image_uri?: string | null
           name?: string
+          public_id?: string
           updated_at?: string
           workspace_id?: string
         }
@@ -332,7 +408,7 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "workspace"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       user: {
@@ -405,7 +481,7 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "user"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       user_workspace: {
@@ -445,7 +521,7 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "workspace"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       workspace: {
@@ -456,6 +532,7 @@ export type Database = {
           id: string
           image_uri: string | null
           name: string
+          public_id: string
           updated_at: string
           url_key: string
         }
@@ -466,6 +543,7 @@ export type Database = {
           id?: string
           image_uri?: string | null
           name: string
+          public_id?: string
           updated_at?: string
           url_key: string
         }
@@ -476,6 +554,7 @@ export type Database = {
           id?: string
           image_uri?: string | null
           name?: string
+          public_id?: string
           updated_at?: string
           url_key?: string
         }
@@ -486,7 +565,7 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "user"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
     }
@@ -494,7 +573,36 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      create_inspection_snapshot: {
+        Args: {
+          inspection_template_id_param: string
+        }
+        Returns: string
+      }
+      create_step_snapshot: {
+        Args: {
+          inspection_template_id_param: string
+          inspection_template_snapshot_id_param: string
+        }
+        Returns: undefined
+      }
+      nanoid: {
+        Args: {
+          size?: number
+          alphabet?: string
+          additionalbytesfactor?: number
+        }
+        Returns: string
+      }
+      nanoid_optimized: {
+        Args: {
+          size: number
+          alphabet: string
+          mask: number
+          step: number
+        }
+        Returns: string
+      }
     }
     Enums: {
       inspectionType: "INSPECTION" | "MAINTENANCE" | "OTHER"
@@ -522,14 +630,16 @@ export type Database = {
   }
 }
 
+type PublicSchema = Database[Extract<keyof Database, "public">]
+
 export type Tables<
   PublicTableNameOrOptions extends
-    | keyof (Database["public"]["Tables"] & Database["public"]["Views"])
+    | keyof (PublicSchema["Tables"] & PublicSchema["Views"])
     | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
         Database[PublicTableNameOrOptions["schema"]]["Views"])
-    : never = never
+    : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
       Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
@@ -537,67 +647,67 @@ export type Tables<
     }
     ? R
     : never
-  : PublicTableNameOrOptions extends keyof (Database["public"]["Tables"] &
-      Database["public"]["Views"])
-  ? (Database["public"]["Tables"] &
-      Database["public"]["Views"])[PublicTableNameOrOptions] extends {
-      Row: infer R
-    }
-    ? R
+  : PublicTableNameOrOptions extends keyof (PublicSchema["Tables"] &
+        PublicSchema["Views"])
+    ? (PublicSchema["Tables"] &
+        PublicSchema["Views"])[PublicTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
     : never
-  : never
 
 export type TablesInsert<
   PublicTableNameOrOptions extends
-    | keyof Database["public"]["Tables"]
+    | keyof PublicSchema["Tables"]
     | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
-    : never = never
+    : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
     : never
-  : PublicTableNameOrOptions extends keyof Database["public"]["Tables"]
-  ? Database["public"]["Tables"][PublicTableNameOrOptions] extends {
-      Insert: infer I
-    }
-    ? I
+  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
+    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
     : never
-  : never
 
 export type TablesUpdate<
   PublicTableNameOrOptions extends
-    | keyof Database["public"]["Tables"]
+    | keyof PublicSchema["Tables"]
     | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
-    : never = never
+    : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
     : never
-  : PublicTableNameOrOptions extends keyof Database["public"]["Tables"]
-  ? Database["public"]["Tables"][PublicTableNameOrOptions] extends {
-      Update: infer U
-    }
-    ? U
+  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
+    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
     : never
-  : never
 
 export type Enums<
   PublicEnumNameOrOptions extends
-    | keyof Database["public"]["Enums"]
+    | keyof PublicSchema["Enums"]
     | { schema: keyof Database },
   EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
     ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
-    : never = never
+    : never = never,
 > = PublicEnumNameOrOptions extends { schema: keyof Database }
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : PublicEnumNameOrOptions extends keyof Database["public"]["Enums"]
-  ? Database["public"]["Enums"][PublicEnumNameOrOptions]
-  : never
+  : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
+    ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+    : never

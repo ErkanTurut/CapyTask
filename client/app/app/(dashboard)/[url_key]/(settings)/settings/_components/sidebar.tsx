@@ -5,11 +5,13 @@ import { Nav } from "./nav";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { settingsNavItems } from "@/config/dashboard.config";
 import { TeamList } from "./team-list";
-import { Database } from "@/types/supabase.types";
+import type { trpc } from "@/trpc/server";
 
 export interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   url_key: string;
-  teams: Database["public"]["Tables"]["team"]["Row"][] | null;
+  teams: Awaited<
+    ReturnType<(typeof trpc)["db"]["team"]["getByWorkspaceUrlKey"]["query"]>
+  >["data"];
 }
 
 export async function Sidebar({ url_key, teams }: SidebarProps) {

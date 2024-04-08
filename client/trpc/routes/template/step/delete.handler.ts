@@ -9,5 +9,9 @@ type opts = {
 };
 
 export const deleteStepHandler = async ({ input, db }: opts) => {
-  return await db.from("step").delete().eq("id", input.id);
+  return await db
+    .from("step_template")
+    .delete()
+    .eq("id", input.id)
+    .throwOnError();
 };

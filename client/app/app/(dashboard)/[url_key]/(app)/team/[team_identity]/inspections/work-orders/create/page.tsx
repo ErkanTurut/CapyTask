@@ -1,46 +1,63 @@
+import CreateInspectionForm from "@/components/inspection/inspection-create";
 import {
   PageHeader,
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/components/page-header";
 import { Shell } from "@/components/shells";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { trpc } from "@/trpc/server";
-import { CreateWorkOrderForm } from "./create-workorder-form";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
-interface PageProps {
+interface createInspectionProps {
   params: {
+    url_key: string;
     team_identity: string;
   };
 }
 
-export default async function Page({ params }: PageProps) {
-  const { data: plans } = await trpc.db.plan.getPlansByIdentity.query({
-    team_identity: params.team_identity,
-    range: {
-      start: 0,
-      end: 10,
-    },
-  });
+export default async function createInspection({
+  params,
+}: createInspectionProps) {
   const { data: team } = await trpc.db.team.getByIdentity.query({
     identity: params.team_identity,
   });
-  if (!team) notFound();
-
+  if (!team) {
+    notFound();
+  }
   return (
-    <Shell variant={"markdown"}>
-      <Shell variant={"dashboard"}>
-        <PageHeader
-          id="account-header"
-          aria-labelledby="account-header-heading"
-        >
-          <PageHeaderHeading size="sm">Create work order</PageHeaderHeading>
-          <PageHeaderDescription size="sm">
-            fill in the form to create a work order
-          </PageHeaderDescription>
-        </PageHeader>
-        <CreateWorkOrderForm plans={plans} team={team} />
-      </Shell>
+    <Shell variant="markdown" className="gap-2">
+      <PageHeader
+        className="pb-4"
+        id="account-header"
+        aria-labelledby="account-header-heading"
+      >
+        <PageHeaderHeading size="sm" className="flex items-center gap-1">
+          Create a new work order
+        </PageHeaderHeading>
+        <PageHeaderDescription size="sm">Create</PageHeaderDescription>
+      </PageHeader>
+      <Card>
+        <CardHeader>
+          <CardTitle>Create work order</CardTitle>
+          <CardDescription>
+            Fill in the details below to create your new work order. This
+            information will be displayed to your team members.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Suspense fallback="loading...">
+            <CreateInspectionForm team_id={team.id} />
+          </Suspense>
+        </CardContent>
+      </Card>
     </Shell>
   );
 }

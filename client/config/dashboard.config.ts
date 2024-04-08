@@ -53,16 +53,16 @@ export const appNavItems: {
       title: "Templates",
       icon: "dashboard",
       variant: "ghost",
-      href: "/templates",
+      href: "/templates/inspections",
       id: "templates",
-      items: [
-        {
-          title: "Work plans",
-          href: "/plans",
-          variant: "ghost",
-          id: "plans",
-        },
-      ],
+      // items: [
+      //   {
+      //     title: "Inspections plans",
+      //     href: "/inspections",
+      //     variant: "ghost",
+      //     id: "plans",
+      //   },
+      // ],
     },
     {
       title: "Inspections",

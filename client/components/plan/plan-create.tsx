@@ -19,11 +19,11 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { catchError, cn } from "@/lib/utils";
 
-import {
-  createPlan,
-  TCreatePlan,
-  ZCreatePlan,
-} from "@/lib/service/plan/actions/create";
+// import {
+//   createPlan,
+//   TCreatePlan,
+//   ZCreatePlan,
+// } from "@/lib/service/plan/actions/create";
 import { useAction } from "@/lib/hooks/use-actions";
 import { Button } from "@/components/ui/button";
 
@@ -31,6 +31,10 @@ import { FC } from "react";
 import { Database } from "@/types/supabase.types";
 import { api } from "@/trpc/client";
 import { useRouter } from "next/navigation";
+import {
+  TCreateInspectionSchema,
+  ZCreateInspectionSchema,
+} from "@/trpc/routes/template/inspection/create.schema";
 
 interface CreatePlanFormProps extends React.HTMLAttributes<HTMLFormElement> {
   team: Database["public"]["Tables"]["team"]["Row"];
@@ -43,11 +47,10 @@ const CreatePlanForm: FC<CreatePlanFormProps> = ({
   className,
 }) => {
   const router = useRouter();
-  const { mutate, isPending } = api.db.plan.create.useMutation({
+  const { mutate, isPending } = api.db.template.inspection.create.useMutation({
     onSuccess: (data, variables) => {
       toast.success("Team created successfully");
       form.reset();
-      router.refresh();
     },
     onError: (err) => {
       catchError(new Error(err.message));
@@ -55,8 +58,8 @@ const CreatePlanForm: FC<CreatePlanFormProps> = ({
   });
 
   // react-hook-form
-  const form = useForm<TCreatePlan>({
-    resolver: zodResolver(ZCreatePlan),
+  const form = useForm<TCreateInspectionSchema>({
+    resolver: zodResolver(ZCreateInspectionSchema),
     defaultValues: {
       name: "",
       description: "",
@@ -64,7 +67,7 @@ const CreatePlanForm: FC<CreatePlanFormProps> = ({
     },
   });
 
-  async function onSubmit(data: TCreatePlan) {
+  async function onSubmit(data: TCreateInspectionSchema) {
     mutate(data);
   }
 

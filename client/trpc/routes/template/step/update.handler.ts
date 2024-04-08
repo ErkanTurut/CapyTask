@@ -10,7 +10,7 @@ type opts = {
 
 export const updateStepHandler = async ({ input, db }: opts) => {
   return await db
-    .from("step")
+    .from("step_template")
     .update(input)
     .eq("id", input.id)
     .select("*")

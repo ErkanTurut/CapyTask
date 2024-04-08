@@ -9,24 +9,15 @@ interface TeamListSkeletonProps {}
 const TeamListSkeleton: FC<TeamListSkeletonProps> = ({}) => {
   return (
     <>
-      <Skeleton
-        className={cn(
-          buttonVariants({ variant: "ghost", size: "sm" }),
-          "w-full",
-        )}
-      />
-      <Skeleton
-        className={cn(
-          buttonVariants({ variant: "ghost", size: "sm" }),
-          "w-full",
-        )}
-      />
-      <Skeleton
-        className={cn(
-          buttonVariants({ variant: "ghost", size: "sm" }),
-          "w-full",
-        )}
-      />
+      {[...Array(3)].map((_, i) => (
+        <Skeleton
+          key={i}
+          className={cn(
+            buttonVariants({ variant: "ghost", size: "sm" }),
+            "h-6 w-full",
+          )}
+        />
+      ))}
     </>
   );
 };

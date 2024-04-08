@@ -17,29 +17,29 @@ export const workspace = router({
     .mutation(async ({ input, ctx }) => {
       return await createWorkspaceHandler({
         input,
-        db: createClient(cookies()),
-        ctx,
+        db: ctx.db,
+        session: ctx.session,
       });
     }),
   getByUrlKey: protectedProcedure
     .input(ZGetWorkspaceSchema.pick({ url_key: true }))
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       return await getWorkspaceByUrlKeyHandler({
         input,
-        db: createClient(cookies()),
+        db: ctx.db,
       });
     }),
   getByUser: protectedProcedure
     .input(ZGetWorkspaceSchema.pick({ user_id: true }))
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       return await getWorkspaceByUserHandler({
-        db: createClient(cookies()),
+        db: ctx.db,
         input,
       });
     }),
   getByCurrentUser: protectedProcedure.query(async ({ ctx }) => {
     return await getWorkspaceByUserHandler({
-      db: createClient(cookies()),
+      db: ctx.db,
       input: { user_id: ctx.session.user.id },
     });
   }),

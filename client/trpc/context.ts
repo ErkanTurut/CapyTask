@@ -10,6 +10,7 @@ export async function createContext(opts?: FetchCreateContextFnOptions) {
   return {
     session,
     headers: opts && Object.fromEntries(opts.req.headers),
+    db: createClient(cookies()),
   };
 }
 

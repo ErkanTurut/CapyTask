@@ -1,7 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Database } from "@/types/supabase.types";
 import React, { FC, useEffect } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,30 +18,42 @@ import {
 import { catchError, cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-import { TUpdateStep, ZUpdateStep } from "@/lib/service/step/actions/update";
 import { api } from "@/trpc/client";
+import {
+  TUpdateStepSchema,
+  ZUpdateStepSchema,
+} from "@/trpc/routes/template/step/update.schema";
+import { trpc } from "@/trpc/server";
 import { Textarea } from "@/ui/textarea";
-import { useRouter } from "next/navigation";
 
 interface StepUpdateFormProps extends React.HTMLAttributes<HTMLFormElement> {
-  step: Database["public"]["Tables"]["step"]["Row"];
+  step: NonNullable<
+    Awaited<
+      ReturnType<(typeof trpc)["db"]["template"]["step"]["get"]["query"]>
+    >["data"]
+  >;
 }
 
 const StepUpdateForm: FC<StepUpdateFormProps> = ({ step, className }) => {
-  const router = useRouter();
-  const { mutate, isPending } = api.db.step.update.useMutation({
+  const utils = api.useUtils();
+
+  const { mutate, isPending } = api.db.template.step.update.useMutation({
     onSuccess: ({ data }) => {
-      if (!data) return;
       toast.success("Step updated successfully");
+      if (!data) return;
       form.reset({
         name: data.name,
         description: data.description || "",
-        id: data.id,
+        id: step.id,
       });
-      router.refresh();
     },
     onError: (err) => {
       catchError(new Error(err.message));
+    },
+    onSettled: () => {
+      utils.db.template.step.getStepsByInspection.invalidate({
+        inspection_template_id: step.inspection_template_id,
+      });
     },
   });
 
@@ -55,8 +66,8 @@ const StepUpdateForm: FC<StepUpdateFormProps> = ({ step, className }) => {
   }, [step]);
 
   // react-hook-form
-  const form = useForm<TUpdateStep>({
-    resolver: zodResolver(ZUpdateStep),
+  const form = useForm<TUpdateStepSchema>({
+    resolver: zodResolver(ZUpdateStepSchema),
     defaultValues: {
       name: step.name,
       description: step.description || "",
@@ -64,7 +75,7 @@ const StepUpdateForm: FC<StepUpdateFormProps> = ({ step, className }) => {
     },
   });
 
-  async function onSubmit(data: TUpdateStep) {
+  async function onSubmit(data: TUpdateStepSchema) {
     mutate(data);
   }
 

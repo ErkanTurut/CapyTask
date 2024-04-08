@@ -18,9 +18,10 @@ export const ZUpsertStepSchema = z
         message: "Description must be less than 500 characters long",
       })
       .nullable(),
-    order: z.number().nullable(),
-    plan_id: z.string(),
+    step_order: z.number().nullable(),
+    inspection_template_id: z.string(),
     parent_step_id: z.string().nullable(),
+
     created_at: z.string(),
     updated_at: z.string(),
     created_by_id: z.string().nullable(),

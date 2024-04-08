@@ -12,8 +12,7 @@ const shellVariants = cva("grid gap-8", {
         "container max-w-3xl gap-0 py-8 md:py-10 lg:py-10 flex h-[100dvh] flex-col justify-center",
       markdown_full:
         "container max-w-3xl gap-0 py-8 md:py-10 lg:py-10 flex h-[100dvh] flex-col justify-center",
-      dashboard:
-        " border-border w-full rounded-lg border backdrop-blur-[2px] p-6 ",
+      bento: " border-border w-full rounded-lg border backdrop-blur-[2px] p-4 ",
     },
   },
   defaultVariants: {

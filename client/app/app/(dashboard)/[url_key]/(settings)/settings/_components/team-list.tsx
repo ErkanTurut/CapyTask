@@ -1,15 +1,5 @@
 "use client";
-import { NavItem } from "@/types";
-import Link from "next/link";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { buttonVariants } from "@/components/ui/button";
-import { cn, generateAvatar } from "@/lib/utils";
 import { Icons } from "@/components/icons";
-import { Database } from "@/types/supabase.types";
 import {
   Accordion,
   AccordionContent,
@@ -17,12 +7,24 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { cn, generateAvatar } from "@/lib/utils";
+import { trpc } from "@/trpc/server";
+import { NavItem } from "@/types";
+import Link from "next/link";
 import { Nav } from "./nav";
 
 interface TeamListProps {
   items: NavItem[];
-  teams: Database["public"]["Tables"]["team"]["Row"][] | null;
+  teams: Awaited<
+    ReturnType<(typeof trpc)["db"]["team"]["getByWorkspaceUrlKey"]["query"]>
+  >["data"];
   rootPath: string;
   isCollapsed?: boolean;
 }

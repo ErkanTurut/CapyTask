@@ -8,7 +8,7 @@ import { ZDeleteStepSchema } from "./delete.schema";
 import {
   getStepHandler,
   getStepsByIdentityHandler,
-  getStepsByPlanHandler,
+  getStepsByInspectionHandler,
   searchStepsHandler,
 } from "./get.handler";
 import { ZGetStepSchema } from "./get.schema";
@@ -16,26 +16,27 @@ import { updateStepHandler } from "./update.handler";
 import { ZUpdateStepSchema } from "./update.schema";
 import { ZUpsertStepSchema } from "./upsert.schema";
 import { upsertStepHandler } from "./upsert.handler";
+import { sleep } from "@/lib/utils";
 
 export const step = router({
   get: protectedProcedure
     .input(ZGetStepSchema.pick({ id: true }))
     .query(async ({ ctx, input }) => {
-      return await getStepHandler({ input, db: createClient(cookies()) });
+      return await getStepHandler({ input, db: ctx.db });
     }),
 
   searchSteps: protectedProcedure
     .input(ZGetStepSchema.pick({ q: true, team_identity: true }))
     .query(async ({ ctx, input }) => {
-      return await searchStepsHandler({ input, db: createClient(cookies()) });
+      return await searchStepsHandler({ input, db: ctx.db });
     }),
 
-  getStepsByPlan: protectedProcedure
-    .input(ZGetStepSchema.pick({ plan_id: true }))
+  getStepsByInspection: protectedProcedure
+    .input(ZGetStepSchema.pick({ inspection_template_id: true }))
     .query(async ({ ctx, input }) => {
-      const { data } = await getStepsByPlanHandler({
+      const { data } = await getStepsByInspectionHandler({
         input,
-        db: createClient(cookies()),
+        db: ctx.db,
       });
       return data;
     }),
@@ -45,27 +46,27 @@ export const step = router({
     .query(async ({ ctx, input }) => {
       return await getStepsByIdentityHandler({
         input,
-        db: createClient(cookies()),
+        db: ctx.db,
       });
     }),
   update: protectedProcedure
     .input(ZUpdateStepSchema)
     .mutation(async ({ ctx, input }) => {
-      return await updateStepHandler({ input, db: createClient(cookies()) });
+      return await updateStepHandler({ input, db: ctx.db });
     }),
   create: protectedProcedure
     .input(ZCreateStepSchema)
     .mutation(async ({ ctx, input }) => {
-      return await createStepHandler({ input, db: createClient(cookies()) });
+      return await createStepHandler({ input, db: ctx.db });
     }),
   delete: protectedProcedure
     .input(ZDeleteStepSchema)
     .mutation(async ({ ctx, input }) => {
-      return await deleteStepHandler({ input, db: createClient(cookies()) });
+      return await deleteStepHandler({ input, db: ctx.db });
     }),
   upsert: protectedProcedure
     .input(ZUpsertStepSchema)
     .mutation(async ({ ctx, input }) => {
-      return await upsertStepHandler({ input, db: createClient(cookies()) });
+      return await upsertStepHandler({ input, db: ctx.db });
     }),
 });
