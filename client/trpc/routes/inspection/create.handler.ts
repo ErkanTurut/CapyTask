@@ -11,23 +11,21 @@ type opts = {
 };
 
 export const createInspectionHandler = async ({ input, db }: opts) => {
-  let inspection_snapshot_id = null;
-
-  if (input.inspection_template_id) {
-    const { data, error } = await db.rpc("create_inspection_snapshot", {
+  const { data: inspection_snapshot_id, error } = await db.rpc(
+    "create_inspection_snapshot",
+    {
       inspection_template_id_param: input.inspection_template_id,
-    });
+    },
+  );
 
-    if (error || !data) {
-      throw new TRPCError({
-        message: "Failed to create inspection snapshot",
-        code: "INTERNAL_SERVER_ERROR",
-      });
-    }
-    inspection_snapshot_id = data;
+  if (error || !inspection_snapshot_id) {
+    throw new TRPCError({
+      message: "Failed to create inspection snapshot",
+      code: "INTERNAL_SERVER_ERROR",
+    });
   }
 
-  return await db
+  const { data: inspection } = await db
     .from("inspection")
     .insert({
       name: input.name,
@@ -38,4 +36,33 @@ export const createInspectionHandler = async ({ input, db }: opts) => {
     .select("*")
     .single()
     .throwOnError();
+
+  if (!inspection) {
+    throw new TRPCError({
+      message: "Failed to create inspection",
+      code: "INTERNAL_SERVER_ERROR",
+    });
+  }
+
+  const { data: step_snapshot } = await db
+    .from("step_template_snapshot")
+    .select("*")
+    .eq("inspection_template_snapshot_id", inspection_snapshot_id);
+
+  if (!step_snapshot) {
+    throw new TRPCError({
+      message: "Failed to create inspection snapshot",
+      code: "INTERNAL_SERVER_ERROR",
+    });
+  }
+
+  await upsertStepHandler({
+    db,
+    input: step_snapshot.map((step) => ({
+      inspection_id: inspection.id,
+      step_template_snapshot_id: step.id,
+    })),
+  });
+
+  return inspection;
 };

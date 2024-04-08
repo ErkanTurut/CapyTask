@@ -175,9 +175,7 @@ const CreateInspectionForm: FC<CreateInspectionFormProps> = ({
                             onSelect={() => {
                               form.setValue(
                                 "inspection_template_id",
-                                field.value === inspection_template.id
-                                  ? undefined
-                                  : inspection_template.id,
+                                inspection_template.id,
                               );
                             }}
                           >
