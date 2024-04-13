@@ -15,7 +15,7 @@ export const inspection = router({
   test: protectedProcedure.query(async ({ ctx }) => {
     return { data: "Hello" };
   }),
-  get: router({
+  get: {
     byId: protectedProcedure
       .input(ZGetInspectionSchema.pick({ id: true }))
       .query(async ({ ctx, input }) => {
@@ -41,7 +41,7 @@ export const inspection = router({
           db: ctx.db,
         });
       }),
-  }),
+  },
   create: protectedProcedure
     .input(ZCreateInspcetionSchema)
     .mutation(async ({ ctx, input }) => {

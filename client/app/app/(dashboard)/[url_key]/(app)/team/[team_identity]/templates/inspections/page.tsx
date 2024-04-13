@@ -6,7 +6,6 @@ import {
 
 import { Shell } from "@/components/shells";
 import TableSkeleton from "@/components/skeletons/table-skeleton";
-import { trpc } from "@/trpc/server";
 import { Suspense } from "react";
 import InspectionTemplateTable from "./_components/inspection-template-table";
 

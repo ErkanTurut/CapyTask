@@ -12,19 +12,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
 import { toast } from "sonner";
 import { catchError, cn } from "@/lib/utils";
 
-// import {
-//   createPlan,
-//   TCreatePlan,
-//   ZCreatePlan,
-// } from "@/lib/service/plan/actions/create";
-import { useAction } from "@/lib/hooks/use-actions";
 import { Button } from "@/components/ui/button";
 
 import { FC } from "react";
@@ -47,10 +40,19 @@ const CreatePlanForm: FC<CreatePlanFormProps> = ({
   className,
 }) => {
   const router = useRouter();
+
+  const utils = api.useUtils();
+
   const { mutate, isPending } = api.db.template.inspection.create.useMutation({
-    onSuccess: (data, variables) => {
+    onSuccess: async (data, variables) => {
       toast.success("Team created successfully");
       form.reset();
+      await utils.db.template.inspection.get.invalidate(undefined, {
+        refetchType: "all",
+      });
+      router.push(
+        `/${url_key}/team/${team.identity}/templates/inspections/${data.id}`,
+      );
     },
     onError: (err) => {
       catchError(new Error(err.message));
@@ -70,8 +72,6 @@ const CreatePlanForm: FC<CreatePlanFormProps> = ({
   async function onSubmit(data: TCreateInspectionSchema) {
     mutate(data);
   }
-
-  const [isGenerating, setIsGenerating] = useState(false);
 
   return (
     <Form {...form}>

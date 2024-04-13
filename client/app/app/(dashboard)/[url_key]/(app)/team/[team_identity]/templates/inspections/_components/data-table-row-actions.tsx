@@ -39,6 +39,7 @@ export function DataTableRowActions<TData>({
     updated_at: true,
   }).parse(row.original);
   const router = useRouter();
+  const utils = api.useUtils();
 
   const { mutate: remove } = api.db.template.inspection.delete.useMutation({
     onSuccess: (data) => {
@@ -47,8 +48,8 @@ export function DataTableRowActions<TData>({
     onError: (err) => {
       catchError(new Error(err.message));
     },
-    onSettled: () => {
-      router.refresh();
+    onSettled: async () => {
+      await utils.db.template.inspection.get.invalidate();
     },
   });
 

@@ -32,6 +32,15 @@ export const inspection = router({
           db: ctx.db,
         });
       }),
+    byTeamId: protectedProcedure
+      .input(ZGetInspectionSchema.pick({ team_identity: true, range: true }))
+      .query(async ({ ctx, input }) => {
+        const { data, count } = await getInspectionsByIdentityHandler({
+          input,
+          db: ctx.db,
+        });
+        return { data, count };
+      }),
   }),
 
   getInspectionsByTeamId: protectedProcedure

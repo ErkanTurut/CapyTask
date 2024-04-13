@@ -1,4 +1,4 @@
-import { DataTable } from "@/components/table/data-table";
+import { DataTable } from "./data-table";
 import { FC } from "react";
 import { columns } from "./columns";
 import { trpc } from "@/trpc/server";
@@ -17,17 +17,16 @@ const InspectionTemplateTable: FC<plansTableProps> = async ({
   props,
   params,
 }) => {
-  const { data: inspection_template, count } =
-    await trpc.db.template.inspection.getInspectionsByIdentity.query({
-      team_identity: params.team_identity,
-      range: { start: props.offset, end: props.offset + props.limit * 2 },
-    });
+  const initialData = await trpc.db.template.inspection.get.byTeamId.query({
+    team_identity: params.team_identity,
+    range: { start: props.offset, end: props.offset + props.limit * 2 },
+  });
 
   return (
     <DataTable
       columns={columns}
-      count={count || 0}
-      data={inspection_template || []}
+      initialData={initialData || { data: [], count: 0 }}
+      params={params}
     />
   );
 };
