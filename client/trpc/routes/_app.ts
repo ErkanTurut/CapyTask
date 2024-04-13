@@ -17,8 +17,8 @@ export const appRouter = router({
     workspace,
 
     // old routes
-    inspection,
-    template,
+    // inspection,
+    // template,
 
     // new routes
     work_order,

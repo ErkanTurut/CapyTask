@@ -80,7 +80,7 @@ export async function getWorkOrderStepsHandler({
   return await db
     .from("work_order")
     .select(
-      "*, work_Step_status(*, work_step(id,name, description, step_order))",
+      "*, work_step_status(*, work_step(id,name, description, step_order))",
     )
     .eq("id", input.id)
     .single();

@@ -65,32 +65,39 @@ export const appNavItems: {
       // ],
     },
     {
-      title: "Inspections",
+      title: "Work Orders",
       icon: "checkCircled",
       variant: "ghost",
-      href: "/inspections",
-      id: "inspections",
-      items: [
-        {
-          title: "Work orders",
-          href: "/work-orders",
-          variant: "ghost",
-          id: "work-orders",
-        },
-        {
-          title: "Reports",
-          href: "/reports",
-          variant: "ghost",
-          id: "reports",
-        },
-        {
-          title: "Schedules",
-          href: "/schedules",
-          variant: "ghost",
-          id: "schedules",
-        },
-      ],
+      href: "/work-orders",
+      id: "work-orders",
     },
+    // {
+    //   title: "Inspections",
+    //   icon: "checkCircled",
+    //   variant: "ghost",
+    //   href: "/inspections",
+    //   id: "inspections",
+    //   items: [
+    //     {
+    //       title: "Work orders",
+    //       href: "/work-orders",
+    //       variant: "ghost",
+    //       id: "work-orders",
+    //     },
+    //     {
+    //       title: "Reports",
+    //       href: "/reports",
+    //       variant: "ghost",
+    //       id: "reports",
+    //     },
+    //     {
+    //       title: "Schedules",
+    //       href: "/schedules",
+    //       variant: "ghost",
+    //       id: "schedules",
+    //     },
+    //   ],
+    // },
   ],
   footer: [
     {
