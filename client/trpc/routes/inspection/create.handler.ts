@@ -3,7 +3,7 @@ import "server-only";
 import { SupabaseClient } from "@/lib/supabase/server";
 import { TCreateInspcetionSchema } from "./create.schema";
 import { TRPCError } from "@trpc/server";
-import { upsertStepHandler } from "../step/upsert.handler";
+import { upsertStepHandler } from "../work_step_status/upsert.handler";
 
 type opts = {
   input: TCreateInspcetionSchema;
