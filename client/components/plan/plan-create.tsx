@@ -44,10 +44,12 @@ const CreatePlanForm: FC<CreatePlanFormProps> = ({
   const utils = api.useUtils();
 
   const { mutate, isPending } = api.db.template.inspection.create.useMutation({
-    onSuccess: (data, variables) => {
+    onSuccess: async (data, variables) => {
       toast.success("Team created successfully");
       form.reset();
-      utils.db.template.inspection.getInspectionsByIdentity.invalidate();
+      await utils.db.template.inspection.get.invalidate(undefined, {
+        refetchType: "all",
+      });
       router.push(
         `/${url_key}/team/${team.identity}/templates/inspections/${data.id}`,
       );

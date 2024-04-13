@@ -61,7 +61,6 @@ export default async function Page({ params }: PageProps) {
   const { data: inspection } = await trpc.db.inspection.get.withSteps.query({
     id: params.inspection_id,
   });
-  console.log("=====>", inspection);
   if (!inspection) return notFound();
 
   return (
@@ -78,7 +77,7 @@ export default async function Page({ params }: PageProps) {
             </CardHeader>
             <CardFooter className="gap-2 border-t bg-muted/50 py-2">
               <Button size={"sm"} variant={"outline"}>
-                <Icons.checkCircled className="text-success mr-2 h-4 w-4" />
+                <Icons.checkCircled className="mr-2 h-4 w-4 text-success" />
                 Update status
               </Button>
               <Button size={"sm"} variant={"outline"}>

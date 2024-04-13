@@ -27,34 +27,55 @@ import {
 } from "@/ui/table";
 
 import { DataTablePagination } from "@/components/table/data-table-pagination";
-import { trpc } from "@/trpc/server";
 import { useSearchParams } from "next/navigation";
 import { DataTableToolbar } from "./data-table-toolbar";
+import { trpc } from "@/trpc/server";
 import { api } from "@/trpc/client";
+import { Button } from "@/components/ui/button";
 
-interface DataTableProps {
+interface DataTableProps<TData, TValue> {
   columns: ColumnDef<
     NonNullable<
       Awaited<
-        ReturnType<(typeof trpc)["db"]["inspection"]["get"]["byId"]["query"]>
+        ReturnType<
+          (typeof trpc)["db"]["template"]["inspection"]["get"]["byId"]["query"]
+        >
       >["data"]
     >
   >[];
   initialData: NonNullable<
     Awaited<
       ReturnType<
-        (typeof trpc)["db"]["inspection"]["get"]["byTeamIdentity"]["query"]
+        (typeof trpc)["db"]["template"]["inspection"]["get"]["byTeamId"]["query"]
       >
     >
   >;
+
+  //   columns: ColumnDef<
+  //   NonNullable<
+  //     Awaited<
+  //       ReturnType<(typeof trpc)["db"]["inspection"]["get"]["byId"]["query"]>
+  //     >["data"]
+  //   >
+  // >[];
+  // initialData: NonNullable<
+  //   Awaited<
+  //     ReturnType<
+  //       (typeof trpc)["db"]["inspection"]["get"]["byTeamIdentity"]["query"]
+  //     >
+  //   >
+  // >;
   params: {
     team_identity: string;
   };
 }
 
-export function DataTable({ columns, initialData, params }: DataTableProps) {
+export function DataTable<TData, TValue>({
+  columns,
+  initialData,
+  params,
+}: DataTableProps<TData, TValue>) {
   const searchParams = useSearchParams();
-
   const page = parseInt(searchParams.get("page") as string) || 1;
   const limit = parseInt(searchParams.get("limit") as string) || 10;
   const [{ pageIndex, pageSize }, setPagination] = React.useState({
@@ -64,7 +85,7 @@ export function DataTable({ columns, initialData, params }: DataTableProps) {
 
   const {
     data: { data, count },
-  } = api.db.inspection.get.byTeamIdentity.useQuery(
+  } = api.db.template.inspection.get.byTeamId.useQuery(
     {
       team_identity: params.team_identity,
       range: {
@@ -77,9 +98,7 @@ export function DataTable({ columns, initialData, params }: DataTableProps) {
 
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({
-      description: false,
-    });
+    React.useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   );
@@ -116,9 +135,10 @@ export function DataTable({ columns, initialData, params }: DataTableProps) {
   return (
     <div className="space-y-4">
       <DataTableToolbar table={table} />
+
       <div className="rounded-md border bg-background">
         <Table>
-          <TableHeader className=" bg-muted/50 ">
+          <TableHeader className="  border-foreground bg-muted/50">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
