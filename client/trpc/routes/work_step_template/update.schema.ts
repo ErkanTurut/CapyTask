@@ -21,12 +21,6 @@ export const ZUpdateWorkStepTemplateSchema = z.object({
       message: "Description must be less than 500 characters long",
     })
     .optional(),
-  // order: z.number().nonnegative().nullish(),
-  // inspection_template_id: z.string(),
-  // parent_step_id: z.string().nullable(),
-  // created_at: z.string(),
-  // updated_at: z.string(),
-  // created_by_id: z.string().nullable(),
 });
 export type TUpdateWorkStepTemplateSchema = z.infer<
   typeof ZUpdateWorkStepTemplateSchema

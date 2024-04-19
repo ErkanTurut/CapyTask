@@ -6,7 +6,7 @@ import { sleep } from "@/lib/utils";
 import { TGetWorkStepTemplateSchema } from "./get.schema";
 // import { cache } from "react";
 
-export async function getStepsByInspectionHandler({
+export async function getStepsByWorkPlanTemplateHandler({
   input,
   db,
 }: {

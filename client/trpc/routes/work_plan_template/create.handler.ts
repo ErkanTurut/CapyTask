@@ -21,7 +21,7 @@ export const createWorkPlanTemplateHandler = async ({ input, db }: opts) => {
   if (!data || error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
-      message: "Failed to create inspection template",
+      message: "Failed to create work plan template",
       cause: {
         error,
       },

@@ -6,8 +6,8 @@ export const ZGetWorkStepTemplateSchema = z.object({
     required_error: "Step ID is required",
   }),
   work_plan_template_id: z.string({
-    invalid_type_error: "inspection ID must be a string",
-    required_error: "inspection ID is required",
+    invalid_type_error: "ID must be a string",
+    required_error: "ID is required",
   }),
   team_identity: z
     .string({

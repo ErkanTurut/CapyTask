@@ -6,7 +6,7 @@ import { ZDeleteWorkStepTemplateSchema } from "./delete.schema";
 import {
   getStepHandler,
   getStepsByIdentityHandler,
-  getStepsByInspectionHandler,
+  getStepsByWorkPlanTemplateHandler,
   searchStepsHandler,
 } from "./get.handler";
 import { ZGetWorkStepTemplateSchema } from "./get.schema";
@@ -28,10 +28,10 @@ export const work_step_template = router({
       return await searchStepsHandler({ input, db: ctx.db });
     }),
 
-  getStepsByInspection: protectedProcedure
+  getStepsByWorkPlanTemplate: protectedProcedure
     .input(ZGetWorkStepTemplateSchema.pick({ work_plan_template_id: true }))
     .query(async ({ ctx, input }) => {
-      const { data } = await getStepsByInspectionHandler({
+      const { data } = await getStepsByWorkPlanTemplateHandler({
         input,
         db: ctx.db,
       });
