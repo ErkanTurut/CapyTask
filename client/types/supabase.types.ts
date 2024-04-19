@@ -467,7 +467,7 @@ export type Database = {
           public_id: string
           step_order: number | null
           updated_at: string
-          work_plan_id: string
+          work_plan_template_id: string
         }
         Insert: {
           created_at?: string
@@ -479,7 +479,7 @@ export type Database = {
           public_id?: string
           step_order?: number | null
           updated_at?: string
-          work_plan_id: string
+          work_plan_template_id: string
         }
         Update: {
           created_at?: string
@@ -491,7 +491,7 @@ export type Database = {
           public_id?: string
           step_order?: number | null
           updated_at?: string
-          work_plan_id?: string
+          work_plan_template_id?: string
         }
         Relationships: [
           {
@@ -502,8 +502,8 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "work_step_template_work_plan_id_fkey"
-            columns: ["work_plan_id"]
+            foreignKeyName: "work_step_template_work_plan_template_id_fkey"
+            columns: ["work_plan_template_id"]
             isOneToOne: false
             referencedRelation: "work_plan_template"
             referencedColumns: ["id"]

@@ -135,8 +135,8 @@ model work_step_template {
   created_by_id  String?  @db.Uuid
   step_order     Int?
 
-  work_plan_id       String
-  work_plan_template work_plan_template @relation(fields: [work_plan_id], references: [id], onDelete: Cascade)
+  work_plan_template_id String
+  work_plan_template    work_plan_template @relation(fields: [work_plan_template_id], references: [id], onDelete: Cascade)
 
   parent_step work_step_template?  @relation("step_sub_steps", fields: [parent_step_id], references: [id], onDelete: Cascade)
   sub_steps   work_step_template[] @relation("step_sub_steps")
@@ -144,7 +144,7 @@ model work_step_template {
   @@unique([public_id])
   @@index([parent_step_id])
   @@index([created_by_id])
-  @@index([work_plan_id])
+  @@index([work_plan_template_id])
 }
 
 // work plan
