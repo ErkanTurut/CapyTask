@@ -9,8 +9,7 @@ import { DataTableRowActions } from "./data-table-row-actions";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { trpc } from "@/trpc/server";
 import { Badge } from "@/components/ui/badge";
-import { Icons } from "@/components/icons";
-import { api } from "@/trpc/client";
+
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 
 export const columns: ColumnDef<
@@ -125,36 +124,6 @@ export const columns: ColumnDef<
           </Button>
         )
       );
-      // const utils = api.useUtils();
-      // const { mutate: remove } = api.db.inspection.delete.useMutation({
-      //   onSuccess: () => {
-      //     toast.success("Inspection deleted successfully!");
-      //   },
-      //   onError: (err) => {
-      //     toast.error(err.message);
-      //   },
-      //   onSettled: async () => {
-      //     utils.db.inspection.get.invalidate();
-      //     table.resetRowSelection();
-      //   },
-      // });
-      // const handleDelete = async () => {
-      //   const selectedRows = table.getSelectedRowModel().rows;
-      //   const selectedRows_id = selectedRows.map((row) => row.original.id);
-      //   remove({ id: selectedRows_id });
-      // };
-      // return (
-      //   (table.getIsSomePageRowsSelected() ||
-      //     table.getIsAllPageRowsSelected()) && (
-      //     <Button
-      //       variant="destructive"
-      //       size="icon"
-      //       onClick={() => handleDelete()}
-      //     >
-      //       <Icons.trash className=" h-4 w-4" />
-      //     </Button>
-      //   )
-      // );
     },
     cell: ({ row, table }) => {
       return <DataTableRowActions row={row} table={table} />;

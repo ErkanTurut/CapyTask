@@ -1,4 +1,4 @@
-import CreateInspectionForm from "@/components/inspection/inspection-create";
+import CreateInspectionForm from "@/components/work-order/work-order-create-form";
 import {
   PageHeader,
   PageHeaderDescription,
@@ -16,16 +16,16 @@ import { trpc } from "@/trpc/server";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
-interface createInspectionProps {
+interface createWorkOrderProps {
   params: {
     url_key: string;
     team_identity: string;
   };
 }
 
-export default async function createInspection({
+export default async function createWorkOrder({
   params,
-}: createInspectionProps) {
+}: createWorkOrderProps) {
   const { data: team } = await trpc.db.team.getByIdentity.query({
     identity: params.team_identity,
   });
