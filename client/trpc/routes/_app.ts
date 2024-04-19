@@ -19,19 +19,13 @@ export const appRouter = router({
     team,
     workspace,
 
-    // old routes
-    // inspection,
-    // template,
-
-    // new routes
     work_order,
+    work_plan,
+    work_plan_template,
 
     work_step,
     work_step_status,
     work_step_template,
-
-    work_plan,
-    work_plan_template,
   }),
 });
 
