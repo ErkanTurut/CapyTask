@@ -43,11 +43,11 @@ const CreatePlanForm: FC<CreatePlanFormProps> = ({
 
   const utils = api.useUtils();
 
-  const { mutate, isPending } = api.db.template.inspection.create.useMutation({
+  const { mutate, isPending } = api.db.work_plan_template.create.useMutation({
     onSuccess: async (data, variables) => {
       toast.success("Team created successfully");
       form.reset();
-      await utils.db.template.inspection.get.invalidate(undefined, {
+      await utils.db.work_plan_template.get.invalidate(undefined, {
         refetchType: "all",
       });
       router.push(

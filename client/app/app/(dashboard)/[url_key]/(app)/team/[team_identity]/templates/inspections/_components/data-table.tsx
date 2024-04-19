@@ -38,7 +38,7 @@ interface DataTableProps<TData, TValue> {
     NonNullable<
       Awaited<
         ReturnType<
-          (typeof trpc)["db"]["template"]["inspection"]["get"]["byId"]["query"]
+          (typeof trpc)["db"]["work_plan_template"]["get"]["byId"]["query"]
         >
       >["data"]
     >
@@ -46,7 +46,7 @@ interface DataTableProps<TData, TValue> {
   initialData: NonNullable<
     Awaited<
       ReturnType<
-        (typeof trpc)["db"]["template"]["inspection"]["get"]["byTeamId"]["query"]
+        (typeof trpc)["db"]["work_plan_template"]["get"]["byTeamId"]["query"]
       >
     >
   >;
@@ -85,7 +85,7 @@ export function DataTable<TData, TValue>({
 
   const {
     data: { data, count },
-  } = api.db.template.inspection.get.byTeamId.useQuery(
+  } = api.db.work_plan_template.get.byTeamId.useQuery(
     {
       team_identity: params.team_identity,
       range: {

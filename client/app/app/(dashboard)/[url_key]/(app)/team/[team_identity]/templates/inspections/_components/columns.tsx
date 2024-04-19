@@ -13,7 +13,7 @@ export const columns: ColumnDef<
   NonNullable<
     Awaited<
       ReturnType<
-        (typeof trpc)["db"]["template"]["inspection"]["get"]["byId"]["query"]
+        (typeof trpc)["db"]["work_plan_template"]["get"]["byId"]["query"]
       >
     >["data"]
   >

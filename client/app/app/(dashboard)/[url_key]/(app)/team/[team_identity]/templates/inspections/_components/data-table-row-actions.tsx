@@ -41,7 +41,7 @@ export function DataTableRowActions<TData>({
   const router = useRouter();
   const utils = api.useUtils();
 
-  const { mutate: remove } = api.db.template.inspection.delete.useMutation({
+  const { mutate: remove } = api.db.work_plan_template.delete.useMutation({
     onSuccess: (data) => {
       toast.success("Team created successfully");
     },
@@ -49,7 +49,7 @@ export function DataTableRowActions<TData>({
       catchError(new Error(err.message));
     },
     onSettled: async () => {
-      await utils.db.template.inspection.get.invalidate();
+      await utils.db.work_plan_template.get.invalidate();
     },
   });
 

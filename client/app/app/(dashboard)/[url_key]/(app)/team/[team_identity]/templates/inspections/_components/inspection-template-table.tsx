@@ -17,7 +17,7 @@ const InspectionTemplateTable: FC<plansTableProps> = async ({
   props,
   params,
 }) => {
-  const initialData = await trpc.db.template.inspection.get.byTeamId.query({
+  const initialData = await trpc.db.work_plan_template.get.byTeamId.query({
     team_identity: params.team_identity,
     range: { start: props.offset, end: props.offset + props.limit * 2 },
   });
