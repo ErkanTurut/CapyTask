@@ -17,12 +17,13 @@ import {
 import { FC } from "react";
 import BackButton from "../back-button";
 import { Icons } from "@/components/icons";
+import { cn } from "@/lib/utils";
 
-interface toolbarProps {}
+interface toolbarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-const Toolbar: FC<toolbarProps> = ({}) => {
+const Toolbar: FC<toolbarProps> = ({ className }) => {
   return (
-    <div className=" sticky top-0 z-40 p-2 pb-4 ">
+    <div className={cn("", className)}>
       <Menubar className="justify-between border bg-background/80 px-2 text-muted-foreground shadow-inner backdrop-blur-sm ">
         <BackButton />
         <span className="flex gap-2">

@@ -59,17 +59,16 @@ export default async function middleware(req: NextRequest) {
         headers: response.headers,
       });
     } else if (user && path == "/login") {
-      const { data: user_workspaces } = await supabase
-        .from("user_workspace")
-        .select("*")
-        .eq("user_id", user.id);
+      const { data: workspaces, error } = await supabase
+        .from("workspace")
+        .select("*, user_workspace!inner(*)")
+        .eq("user_workspace.user_id", user.id);
 
-      if (!user_workspaces || user_workspaces.length < 1) {
+      if (!workspaces || workspaces.length < 1 || error) {
         return NextResponse.redirect(new URL("/create", req.url), {
           headers: response.headers,
         });
       }
-
       let stored_workspace: { url_key: string } | null;
       try {
         stored_workspace = JSON.parse(
@@ -78,18 +77,10 @@ export default async function middleware(req: NextRequest) {
       } catch (error) {
         stored_workspace = null;
       }
-
-      const user_workspace =
-        user_workspaces.find(
-          (user_workspace) =>
-            user_workspace.workspace_id === stored_workspace?.url_key,
-        ) || user_workspaces[0];
-
-      const { data: workspace } = await supabase
-        .from("workspace")
-        .select("*")
-        .eq("id", user_workspace.workspace_id)
-        .single();
+      const workspace =
+        workspaces.find(
+          (workspace) => workspace.url_key === stored_workspace?.url_key,
+        ) || workspaces[0];
 
       if (!workspace) {
         return NextResponse.redirect(new URL("/create", req.url), {

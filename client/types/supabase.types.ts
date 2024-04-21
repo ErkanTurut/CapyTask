@@ -42,143 +42,6 @@ export type Database = {
         }
         Relationships: []
       }
-      inspection: {
-        Row: {
-          created_at: string
-          description: string | null
-          id: string
-          inspection_snapshot_id: string | null
-          name: string
-          public_id: string
-          status: Database["public"]["Enums"]["Status"]
-          team_id: string
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          description?: string | null
-          id?: string
-          inspection_snapshot_id?: string | null
-          name: string
-          public_id?: string
-          status?: Database["public"]["Enums"]["Status"]
-          team_id: string
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          description?: string | null
-          id?: string
-          inspection_snapshot_id?: string | null
-          name?: string
-          public_id?: string
-          status?: Database["public"]["Enums"]["Status"]
-          team_id?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "inspection_inspection_snapshot_id_fkey"
-            columns: ["inspection_snapshot_id"]
-            isOneToOne: false
-            referencedRelation: "inspection_template_snapshot"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "inspection_team_id_fkey"
-            columns: ["team_id"]
-            isOneToOne: false
-            referencedRelation: "team"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      inspection_template: {
-        Row: {
-          created_at: string
-          description: string | null
-          id: string
-          name: string
-          public_id: string
-          team_id: string
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          description?: string | null
-          id?: string
-          name: string
-          public_id?: string
-          team_id: string
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          description?: string | null
-          id?: string
-          name?: string
-          public_id?: string
-          team_id?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "inspection_template_team_id_fkey"
-            columns: ["team_id"]
-            isOneToOne: false
-            referencedRelation: "team"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      inspection_template_snapshot: {
-        Row: {
-          created_at: string
-          description: string | null
-          id: string
-          inspection_template_id: string | null
-          name: string
-          public_id: string
-          team_id: string
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          description?: string | null
-          id?: string
-          inspection_template_id?: string | null
-          name: string
-          public_id?: string
-          team_id: string
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          description?: string | null
-          id?: string
-          inspection_template_id?: string | null
-          name?: string
-          public_id?: string
-          team_id?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "inspection_template_snapshot_inspection_template_id_fkey"
-            columns: ["inspection_template_id"]
-            isOneToOne: false
-            referencedRelation: "inspection_template"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "inspection_template_snapshot_team_id_fkey"
-            columns: ["team_id"]
-            isOneToOne: false
-            referencedRelation: "team"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       role: {
         Row: {
           description: string
@@ -199,173 +62,6 @@ export type Database = {
           permissions?: Database["public"]["Enums"]["Permission"][] | null
         }
         Relationships: []
-      }
-      step: {
-        Row: {
-          created_at: string
-          id: string
-          inspection_id: string
-          public_id: string
-          status: Database["public"]["Enums"]["Status"]
-          step_template_snapshot_id: string | null
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          inspection_id: string
-          public_id?: string
-          status?: Database["public"]["Enums"]["Status"]
-          step_template_snapshot_id?: string | null
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          inspection_id?: string
-          public_id?: string
-          status?: Database["public"]["Enums"]["Status"]
-          step_template_snapshot_id?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "step_inspection_id_fkey"
-            columns: ["inspection_id"]
-            isOneToOne: false
-            referencedRelation: "inspection"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "step_step_template_snapshot_id_fkey"
-            columns: ["step_template_snapshot_id"]
-            isOneToOne: false
-            referencedRelation: "step_template_snapshot"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      step_template: {
-        Row: {
-          created_at: string
-          created_by_id: string | null
-          description: string | null
-          id: string
-          inspection_template_id: string
-          name: string
-          parent_step_id: string | null
-          public_id: string
-          step_order: number | null
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          created_by_id?: string | null
-          description?: string | null
-          id?: string
-          inspection_template_id: string
-          name: string
-          parent_step_id?: string | null
-          public_id?: string
-          step_order?: number | null
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          created_by_id?: string | null
-          description?: string | null
-          id?: string
-          inspection_template_id?: string
-          name?: string
-          parent_step_id?: string | null
-          public_id?: string
-          step_order?: number | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "step_template_created_by_id_fkey"
-            columns: ["created_by_id"]
-            isOneToOne: false
-            referencedRelation: "user"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "step_template_inspection_template_id_fkey"
-            columns: ["inspection_template_id"]
-            isOneToOne: false
-            referencedRelation: "inspection_template"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "step_template_parent_step_id_fkey"
-            columns: ["parent_step_id"]
-            isOneToOne: false
-            referencedRelation: "step_template"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      step_template_snapshot: {
-        Row: {
-          created_at: string
-          created_by_id: string | null
-          description: string | null
-          id: string
-          inspection_template_snapshot_id: string
-          name: string
-          parent_step_id: string | null
-          public_id: string
-          step_order: number | null
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          created_by_id?: string | null
-          description?: string | null
-          id?: string
-          inspection_template_snapshot_id: string
-          name: string
-          parent_step_id?: string | null
-          public_id?: string
-          step_order?: number | null
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          created_by_id?: string | null
-          description?: string | null
-          id?: string
-          inspection_template_snapshot_id?: string
-          name?: string
-          parent_step_id?: string | null
-          public_id?: string
-          step_order?: number | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "step_template_snapshot_created_by_id_fkey"
-            columns: ["created_by_id"]
-            isOneToOne: false
-            referencedRelation: "user"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "step_template_snapshot_inspection_template_snapshot_id_fkey"
-            columns: ["inspection_template_snapshot_id"]
-            isOneToOne: false
-            referencedRelation: "inspection_template_snapshot"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "step_template_snapshot_parent_step_id_fkey"
-            columns: ["parent_step_id"]
-            isOneToOne: false
-            referencedRelation: "step_template_snapshot"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       team: {
         Row: {
@@ -524,6 +220,299 @@ export type Database = {
           },
         ]
       }
+      work_order: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          public_id: string
+          status: Database["public"]["Enums"]["Status"]
+          team_id: string
+          updated_at: string
+          work_plan_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          public_id?: string
+          status?: Database["public"]["Enums"]["Status"]
+          team_id: string
+          updated_at?: string
+          work_plan_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          public_id?: string
+          status?: Database["public"]["Enums"]["Status"]
+          team_id?: string
+          updated_at?: string
+          work_plan_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "work_order_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "team"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "work_order_work_plan_id_fkey"
+            columns: ["work_plan_id"]
+            isOneToOne: false
+            referencedRelation: "work_plan"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      work_plan: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          public_id: string
+          team_id: string
+          updated_at: string
+          work_plan_template_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          public_id?: string
+          team_id: string
+          updated_at?: string
+          work_plan_template_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          public_id?: string
+          team_id?: string
+          updated_at?: string
+          work_plan_template_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "work_plan_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "team"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "work_plan_work_plan_template_id_fkey"
+            columns: ["work_plan_template_id"]
+            isOneToOne: false
+            referencedRelation: "work_plan_template"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      work_plan_template: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          public_id: string
+          team_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          public_id?: string
+          team_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          public_id?: string
+          team_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "work_plan_template_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "team"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      work_step: {
+        Row: {
+          created_at: string
+          created_by_id: string | null
+          description: string | null
+          id: string
+          name: string
+          parent_step_id: string | null
+          public_id: string
+          step_order: number | null
+          updated_at: string
+          work_plan_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by_id?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          parent_step_id?: string | null
+          public_id?: string
+          step_order?: number | null
+          updated_at?: string
+          work_plan_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by_id?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          parent_step_id?: string | null
+          public_id?: string
+          step_order?: number | null
+          updated_at?: string
+          work_plan_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "work_step_parent_step_id_fkey"
+            columns: ["parent_step_id"]
+            isOneToOne: false
+            referencedRelation: "work_step"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "work_step_work_plan_id_fkey"
+            columns: ["work_plan_id"]
+            isOneToOne: false
+            referencedRelation: "work_plan"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      work_step_status: {
+        Row: {
+          created_at: string
+          id: string
+          public_id: string
+          status: Database["public"]["Enums"]["Status"]
+          step_order: number | null
+          updated_at: string
+          work_order_id: string
+          work_step_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          public_id?: string
+          status?: Database["public"]["Enums"]["Status"]
+          step_order?: number | null
+          updated_at?: string
+          work_order_id: string
+          work_step_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          public_id?: string
+          status?: Database["public"]["Enums"]["Status"]
+          step_order?: number | null
+          updated_at?: string
+          work_order_id?: string
+          work_step_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "work_step_status_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "work_order"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "work_step_status_work_step_id_fkey"
+            columns: ["work_step_id"]
+            isOneToOne: false
+            referencedRelation: "work_step"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      work_step_template: {
+        Row: {
+          created_at: string
+          created_by_id: string | null
+          description: string | null
+          id: string
+          name: string
+          parent_step_id: string | null
+          public_id: string
+          step_order: number | null
+          updated_at: string
+          work_plan_template_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by_id?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          parent_step_id?: string | null
+          public_id?: string
+          step_order?: number | null
+          updated_at?: string
+          work_plan_template_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by_id?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          parent_step_id?: string | null
+          public_id?: string
+          step_order?: number | null
+          updated_at?: string
+          work_plan_template_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "work_step_template_parent_step_id_fkey"
+            columns: ["parent_step_id"]
+            isOneToOne: false
+            referencedRelation: "work_step_template"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "work_step_template_work_plan_template_id_fkey"
+            columns: ["work_plan_template_id"]
+            isOneToOne: false
+            referencedRelation: "work_plan_template"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       workspace: {
         Row: {
           created_at: string
@@ -573,16 +562,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      create_inspection_snapshot: {
+      create_work_plan: {
         Args: {
-          inspection_template_id_param: string
+          work_plan_template_id_param: string
         }
         Returns: string
       }
-      create_step_snapshot: {
+      create_work_step: {
         Args: {
-          inspection_template_id_param: string
-          inspection_template_snapshot_id_param: string
+          work_plan_template_id_param: string
+          work_plan_id: string
         }
         Returns: undefined
       }

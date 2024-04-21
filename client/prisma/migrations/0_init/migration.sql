@@ -15,7 +15,7 @@ CREATE TYPE "inspectionType" AS ENUM ('INSPECTION', 'MAINTENANCE', 'OTHER');
 
 -- CreateTable
 CREATE TABLE "user" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "image_uri" TEXT,
     "email" TEXT NOT NULL,
     "first_name" TEXT,
@@ -29,13 +29,14 @@ CREATE TABLE "user" (
 
 -- CreateTable
 CREATE TABLE "team" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "id" TEXT NOT NULL DEFAULT nanoid(10),
+    "public_id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "name" TEXT NOT NULL,
     "description" TEXT,
     "image_uri" TEXT,
     "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "workspace_id" UUID NOT NULL,
+    "workspace_id" TEXT NOT NULL,
     "identity" TEXT NOT NULL,
 
     CONSTRAINT "team_pkey" PRIMARY KEY ("id")
@@ -43,7 +44,8 @@ CREATE TABLE "team" (
 
 -- CreateTable
 CREATE TABLE "workspace" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "id" TEXT NOT NULL DEFAULT nanoid(10),
+    "public_id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "name" TEXT NOT NULL,
     "description" TEXT,
     "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -58,7 +60,7 @@ CREATE TABLE "workspace" (
 -- CreateTable
 CREATE TABLE "user_team" (
     "user_id" UUID NOT NULL,
-    "team_id" UUID NOT NULL,
+    "team_id" TEXT NOT NULL,
     "role_id" UUID,
 
     CONSTRAINT "user_team_pkey" PRIMARY KEY ("user_id","team_id")
@@ -67,7 +69,7 @@ CREATE TABLE "user_team" (
 -- CreateTable
 CREATE TABLE "user_workspace" (
     "user_id" UUID NOT NULL,
-    "workspace_id" UUID NOT NULL,
+    "workspace_id" TEXT NOT NULL,
     "role_id" UUID,
 
     CONSTRAINT "user_workspace_pkey" PRIMARY KEY ("user_id","workspace_id")
@@ -75,7 +77,7 @@ CREATE TABLE "user_workspace" (
 
 -- CreateTable
 CREATE TABLE "role" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "name" "Role" NOT NULL,
     "description" TEXT NOT NULL,
     "permissions" "Permission"[] DEFAULT ARRAY[]::"Permission"[],
@@ -85,81 +87,87 @@ CREATE TABLE "role" (
 
 -- CreateTable
 CREATE TABLE "inspection_template" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "id" TEXT NOT NULL DEFAULT nanoid(10),
+    "public_id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "name" TEXT NOT NULL,
     "description" TEXT,
     "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "team_id" UUID NOT NULL,
+    "team_id" TEXT NOT NULL,
 
     CONSTRAINT "inspection_template_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "inspection_template_snapshot" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
-    "name" TEXT NOT NULL,
-    "description" TEXT,
-    "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "inspection_template_id" UUID NOT NULL,
-
-    CONSTRAINT "inspection_template_snapshot_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "step_template" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "id" TEXT NOT NULL DEFAULT nanoid(17),
+    "public_id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "name" TEXT NOT NULL,
     "description" TEXT,
     "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "parent_step_id" UUID,
+    "parent_step_id" TEXT,
     "created_by_id" UUID,
     "step_order" INTEGER,
-    "inspection_template_id" UUID NOT NULL,
+    "inspection_template_id" TEXT NOT NULL,
 
     CONSTRAINT "step_template_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "step_template_snapshot" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+CREATE TABLE "inspection_template_snapshot" (
+    "id" TEXT NOT NULL DEFAULT nanoid(10),
+    "public_id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "name" TEXT NOT NULL,
     "description" TEXT,
     "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "parent_step_id" UUID,
+    "inspection_template_id" TEXT,
+    "team_id" TEXT NOT NULL,
+
+    CONSTRAINT "inspection_template_snapshot_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "step_template_snapshot" (
+    "id" TEXT NOT NULL DEFAULT nanoid(17),
+    "public_id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "name" TEXT NOT NULL,
+    "description" TEXT,
+    "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "parent_step_id" TEXT,
     "created_by_id" UUID,
     "step_order" INTEGER,
-    "inspection_template_snapshot_id" UUID NOT NULL,
+    "inspection_template_snapshot_id" TEXT NOT NULL,
 
     CONSTRAINT "step_template_snapshot_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "inspection" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "id" TEXT NOT NULL DEFAULT nanoid(10),
+    "public_id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "name" TEXT NOT NULL,
     "description" TEXT,
     "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "team_id" UUID NOT NULL,
     "status" "Status" NOT NULL DEFAULT 'OPEN',
-    "inspection_snapshot_id" UUID,
+    "team_id" TEXT NOT NULL,
+    "inspection_snapshot_id" TEXT,
 
     CONSTRAINT "inspection_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "step" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
-    "inspection_id" UUID NOT NULL,
-    "step_id" UUID NOT NULL,
+    "id" TEXT NOT NULL DEFAULT nanoid(17),
+    "public_id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "status" "Status" NOT NULL DEFAULT 'OPEN',
     "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "step_template_snapshotId" UUID,
+    "inspection_id" TEXT NOT NULL,
+    "step_template_snapshot_id" TEXT,
 
     CONSTRAINT "step_pkey" PRIMARY KEY ("id")
 );
@@ -180,10 +188,16 @@ CREATE UNIQUE INDEX "team_identity_workspace_id_key" ON "team"("identity", "work
 CREATE UNIQUE INDEX "team_name_workspace_id_key" ON "team"("name", "workspace_id");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "team_public_id_key" ON "team"("public_id");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "workspace_url_key_key" ON "workspace"("url_key");
 
 -- CreateIndex
 CREATE INDEX "workspace_url_key_idx" ON "workspace"("url_key");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "workspace_public_id_key" ON "workspace"("public_id");
 
 -- CreateIndex
 CREATE INDEX "user_team_team_id_idx" ON "user_team"("team_id");
@@ -207,10 +221,7 @@ CREATE INDEX "user_workspace_role_id_idx" ON "user_workspace"("role_id");
 CREATE INDEX "inspection_template_team_id_idx" ON "inspection_template"("team_id");
 
 -- CreateIndex
-CREATE INDEX "inspection_template_snapshot_inspection_template_id_idx" ON "inspection_template_snapshot"("inspection_template_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "inspection_template_snapshot_inspection_template_id_created_key" ON "inspection_template_snapshot"("inspection_template_id", "created_at");
+CREATE UNIQUE INDEX "inspection_template_public_id_key" ON "inspection_template"("public_id");
 
 -- CreateIndex
 CREATE INDEX "step_template_parent_step_id_idx" ON "step_template"("parent_step_id");
@@ -222,6 +233,18 @@ CREATE INDEX "step_template_created_by_id_idx" ON "step_template"("created_by_id
 CREATE INDEX "step_template_inspection_template_id_idx" ON "step_template"("inspection_template_id");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "step_template_public_id_key" ON "step_template"("public_id");
+
+-- CreateIndex
+CREATE INDEX "inspection_template_snapshot_inspection_template_id_idx" ON "inspection_template_snapshot"("inspection_template_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "inspection_template_snapshot_inspection_template_id_created_key" ON "inspection_template_snapshot"("inspection_template_id", "created_at");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "inspection_template_snapshot_public_id_key" ON "inspection_template_snapshot"("public_id");
+
+-- CreateIndex
 CREATE INDEX "step_template_snapshot_parent_step_id_idx" ON "step_template_snapshot"("parent_step_id");
 
 -- CreateIndex
@@ -231,13 +254,19 @@ CREATE INDEX "step_template_snapshot_created_by_id_idx" ON "step_template_snapsh
 CREATE INDEX "step_template_snapshot_inspection_template_snapshot_id_idx" ON "step_template_snapshot"("inspection_template_snapshot_id");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "step_template_snapshot_public_id_key" ON "step_template_snapshot"("public_id");
+
+-- CreateIndex
 CREATE INDEX "inspection_team_id_idx" ON "inspection"("team_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "inspection_public_id_key" ON "inspection"("public_id");
 
 -- CreateIndex
 CREATE INDEX "step_inspection_id_idx" ON "step"("inspection_id");
 
 -- CreateIndex
-CREATE INDEX "step_step_id_idx" ON "step"("step_id");
+CREATE UNIQUE INDEX "step_public_id_key" ON "step"("public_id");
 
 -- AddForeignKey
 ALTER TABLE "team" ADD CONSTRAINT "team_workspace_id_fkey" FOREIGN KEY ("workspace_id") REFERENCES "workspace"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -249,7 +278,7 @@ ALTER TABLE "workspace" ADD CONSTRAINT "workspace_created_by_fkey" FOREIGN KEY (
 ALTER TABLE "user_team" ADD CONSTRAINT "user_team_role_id_fkey" FOREIGN KEY ("role_id") REFERENCES "role"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "user_team" ADD CONSTRAINT "user_team_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "user_team" ADD CONSTRAINT "user_team_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "team"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "user_team" ADD CONSTRAINT "user_team_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -261,13 +290,10 @@ ALTER TABLE "user_workspace" ADD CONSTRAINT "user_workspace_role_id_fkey" FOREIG
 ALTER TABLE "user_workspace" ADD CONSTRAINT "user_workspace_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "user_workspace" ADD CONSTRAINT "user_workspace_workspace_id_fkey" FOREIGN KEY ("workspace_id") REFERENCES "workspace"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "user_workspace" ADD CONSTRAINT "user_workspace_workspace_id_fkey" FOREIGN KEY ("workspace_id") REFERENCES "workspace"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "inspection_template" ADD CONSTRAINT "inspection_template_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "team"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "inspection_template_snapshot" ADD CONSTRAINT "inspection_template_snapshot_inspection_template_id_fkey" FOREIGN KEY ("inspection_template_id") REFERENCES "inspection_template"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "step_template" ADD CONSTRAINT "step_template_inspection_template_id_fkey" FOREIGN KEY ("inspection_template_id") REFERENCES "inspection_template"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -277,6 +303,12 @@ ALTER TABLE "step_template" ADD CONSTRAINT "step_template_created_by_id_fkey" FO
 
 -- AddForeignKey
 ALTER TABLE "step_template" ADD CONSTRAINT "step_template_parent_step_id_fkey" FOREIGN KEY ("parent_step_id") REFERENCES "step_template"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "inspection_template_snapshot" ADD CONSTRAINT "inspection_template_snapshot_inspection_template_id_fkey" FOREIGN KEY ("inspection_template_id") REFERENCES "inspection_template"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "inspection_template_snapshot" ADD CONSTRAINT "inspection_template_snapshot_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "team"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "step_template_snapshot" ADD CONSTRAINT "step_template_snapshot_inspection_template_snapshot_id_fkey" FOREIGN KEY ("inspection_template_snapshot_id") REFERENCES "inspection_template_snapshot"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -297,8 +329,5 @@ ALTER TABLE "inspection" ADD CONSTRAINT "inspection_inspection_snapshot_id_fkey"
 ALTER TABLE "step" ADD CONSTRAINT "step_inspection_id_fkey" FOREIGN KEY ("inspection_id") REFERENCES "inspection"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "step" ADD CONSTRAINT "step_step_id_fkey" FOREIGN KEY ("step_id") REFERENCES "step_template"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "step" ADD CONSTRAINT "step_step_template_snapshotId_fkey" FOREIGN KEY ("step_template_snapshotId") REFERENCES "step_template_snapshot"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "step" ADD CONSTRAINT "step_step_template_snapshot_id_fkey" FOREIGN KEY ("step_template_snapshot_id") REFERENCES "step_template_snapshot"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 

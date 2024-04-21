@@ -88,7 +88,7 @@ export function ResponsiveCard({ children, className }: ResponsiveCardProps) {
         <CardTitle>Plan detail</CardTitle>
         <CardDescription>
           Update the details below to update your plan template. You will be
-          able to use this plan in your inspections.
+          able to use this plan in your work order.
         </CardDescription>
       </CardHeader>
       <CardContent>{children}</CardContent>

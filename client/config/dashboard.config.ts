@@ -53,7 +53,7 @@ export const appNavItems: {
       title: "Templates",
       icon: "dashboard",
       variant: "ghost",
-      href: "/templates/inspections",
+      href: "/work-plans/templates",
       id: "templates",
       // items: [
       //   {
@@ -65,32 +65,39 @@ export const appNavItems: {
       // ],
     },
     {
-      title: "Inspections",
+      title: "Work Orders",
       icon: "checkCircled",
       variant: "ghost",
-      href: "/inspections",
-      id: "inspections",
-      items: [
-        {
-          title: "Work orders",
-          href: "/work-orders",
-          variant: "ghost",
-          id: "work-orders",
-        },
-        {
-          title: "Reports",
-          href: "/reports",
-          variant: "ghost",
-          id: "reports",
-        },
-        {
-          title: "Schedules",
-          href: "/schedules",
-          variant: "ghost",
-          id: "schedules",
-        },
-      ],
+      href: "/work-orders",
+      id: "work-orders",
     },
+    // {
+    //   title: "Inspections",
+    //   icon: "checkCircled",
+    //   variant: "ghost",
+    //   href: "/inspections",
+    //   id: "inspections",
+    //   items: [
+    //     {
+    //       title: "Work orders",
+    //       href: "/work-orders",
+    //       variant: "ghost",
+    //       id: "work-orders",
+    //     },
+    //     {
+    //       title: "Reports",
+    //       href: "/reports",
+    //       variant: "ghost",
+    //       id: "reports",
+    //     },
+    //     {
+    //       title: "Schedules",
+    //       href: "/schedules",
+    //       variant: "ghost",
+    //       id: "schedules",
+    //     },
+    //   ],
+    // },
   ],
   footer: [
     {

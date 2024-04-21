@@ -49,7 +49,6 @@ export function DataTable<TData, TValue>({
   const limit = searchParams.get("limit")
     ? parseInt(searchParams.get("limit") as string)
     : 10;
-  // add RQ with initial data trpc
   const createQueryString = React.useCallback(
     (params: Record<string, string | number | null>) => {
       const newSearchParams = new URLSearchParams(searchParams?.toString());
