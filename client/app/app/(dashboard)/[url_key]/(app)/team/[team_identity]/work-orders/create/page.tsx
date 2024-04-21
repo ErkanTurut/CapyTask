@@ -1,4 +1,4 @@
-import CreateInspectionForm from "@/components/work-order/work-order-create-form";
+import CreateWorkOrderForm from "@/components/work-order/work-order-create-form";
 import {
   PageHeader,
   PageHeaderDescription,
@@ -54,7 +54,7 @@ export default async function createWorkOrder({
         </CardHeader>
         <CardContent>
           <Suspense fallback="loading...">
-            <CreateInspectionForm team_id={team.id} />
+            <CreateWorkOrderForm team_id={team.id} />
           </Suspense>
         </CardContent>
       </Card>
