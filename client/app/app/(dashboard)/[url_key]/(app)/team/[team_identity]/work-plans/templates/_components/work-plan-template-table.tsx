@@ -13,7 +13,7 @@ interface plansTableProps {
   };
 }
 
-const InspectionTemplateTable: FC<plansTableProps> = async ({
+const WorkPlanTemplateTable: FC<plansTableProps> = async ({
   props,
   params,
 }) => {
@@ -31,4 +31,4 @@ const InspectionTemplateTable: FC<plansTableProps> = async ({
   );
 };
 
-export default InspectionTemplateTable;
+export default WorkPlanTemplateTable;

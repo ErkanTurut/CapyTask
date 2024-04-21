@@ -18,7 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/ui/dropdown-menu";
 import { api } from "@/trpc/client";
-import { ZGetInspectionSchema } from "@/trpc/routes/template/inspection/get.schema";
+import { ZGetWorkPlanTemplateSchema } from "@/trpc/routes/work_plan_template/get.schema";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { catchError } from "@/lib/utils";
@@ -30,7 +30,7 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  const plan = ZGetInspectionSchema.pick({
+  const plan = ZGetWorkPlanTemplateSchema.pick({
     created_at: true,
     description: true,
     id: true,

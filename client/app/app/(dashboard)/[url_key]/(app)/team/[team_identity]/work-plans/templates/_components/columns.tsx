@@ -49,7 +49,7 @@ export const columns: ColumnDef<
     cell: ({ row }) => {
       return (
         <Link
-          href={`./${row.original.id}`}
+          href={`./templates/${row.original.id}`}
           className={cn(
             buttonVariants({ variant: "link", size: "sm" }),
             "underline",

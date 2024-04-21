@@ -1,13 +1,12 @@
 "use client";
 
-import { Table } from "@tanstack/react-table";
 import { Icons } from "@/components/icons";
+import { Table } from "@tanstack/react-table";
 
+import { DataTableViewOptions } from "@/components/table/data-table-view-options";
 import { Button, buttonVariants } from "@/ui/button";
 import { Input } from "@/ui/input";
-import { DataTableViewOptions } from "@/components/table/data-table-view-options";
 
-import { Database } from "@/types/supabase.types";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 

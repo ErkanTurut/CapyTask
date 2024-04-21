@@ -51,20 +51,6 @@ interface DataTableProps<TData, TValue> {
     >
   >;
 
-  //   columns: ColumnDef<
-  //   NonNullable<
-  //     Awaited<
-  //       ReturnType<(typeof trpc)["db"]["inspection"]["get"]["byId"]["query"]>
-  //     >["data"]
-  //   >
-  // >[];
-  // initialData: NonNullable<
-  //   Awaited<
-  //     ReturnType<
-  //       (typeof trpc)["db"]["inspection"]["get"]["byTeamIdentity"]["query"]
-  //     >
-  //   >
-  // >;
   params: {
     team_identity: string;
   };
