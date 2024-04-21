@@ -44,12 +44,12 @@ import { Icons } from "../icons";
 import { useDebouncedCallback } from "use-debounce";
 import { useRouter } from "next/navigation";
 
-interface CreateInspectionFormProps
+interface CreateWorkOrderFormProps
   extends React.HTMLAttributes<HTMLFormElement> {
   team_id: string;
 }
 
-const CreateWorkOrderForm: FC<CreateInspectionFormProps> = ({
+const CreateWorkOrderForm: FC<CreateWorkOrderFormProps> = ({
   className,
   team_id,
 }) => {
@@ -111,7 +111,7 @@ const CreateWorkOrderForm: FC<CreateInspectionFormProps> = ({
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Inspection name</FormLabel>
+              <FormLabel>Work order name</FormLabel>
               <FormControl>
                 <Input placeholder="example" {...field} />
               </FormControl>
@@ -124,7 +124,7 @@ const CreateWorkOrderForm: FC<CreateInspectionFormProps> = ({
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Inspection description</FormLabel>
+              <FormLabel>Work order description</FormLabel>
               <FormControl>
                 <Input placeholder="example" {...field} />
               </FormControl>

@@ -51,7 +51,7 @@ const StepUpdateForm: FC<StepUpdateFormProps> = ({ step, className }) => {
       catchError(new Error(err.message));
     },
     onSettled: () => {
-      utils.db.work_step_template.getStepsByInspection.invalidate({
+      utils.db.work_step_template.getStepsByWorkPlanTemplate.invalidate({
         work_plan_template_id: step.work_plan_template_id,
       });
     },
