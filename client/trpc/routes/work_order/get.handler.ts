@@ -79,9 +79,11 @@ export async function getWorkOrderStepsHandler({
 }) {
   return await db
     .from("work_order")
-    .select(
-      "*, work_step_status(*, work_step(id,name, description, step_order))",
-    )
+    .select("*, work_step_status(*, work_step(*))")
     .eq("id", input.id)
-    .single();
+    .order("step_order", {
+      referencedTable: "work_step_status.work_step",
+    })
+    .single()
+    .throwOnError();
 }

@@ -12,8 +12,9 @@ type opts = {
 
 export const createWorkOrderHandler = async ({ input, db }: opts) => {
   const { data: work_plan_id, error } = await db.rpc("create_work_plan", {
-    work_plan_template_id: input.work_plan_template_id,
+    work_plan_template_id_param: input.work_plan_template_id,
   });
+  console.log(error);
 
   if (error || !work_plan_id) {
     throw new TRPCError({
@@ -58,6 +59,7 @@ export const createWorkOrderHandler = async ({ input, db }: opts) => {
     input: work_step.map((step) => ({
       work_order_id: work_order.id,
       work_step_id: step.id,
+      step_order: step.step_order,
     })),
   });
 
