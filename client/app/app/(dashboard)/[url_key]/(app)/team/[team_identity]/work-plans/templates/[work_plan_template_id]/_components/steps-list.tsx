@@ -1,6 +1,5 @@
 "use client";
 import { Icons } from "@/components/icons";
-import { Item } from "@/components/item";
 import { Separator } from "@/components/ui/separator";
 import { catchError, cn } from "@/lib/utils";
 import { api } from "@/trpc/client";
@@ -12,7 +11,7 @@ import {
   Droppable,
 } from "@hello-pangea/dnd";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { toast } from "sonner";
 
 function getDifference(
@@ -33,7 +32,7 @@ interface StepListProps {
   initialData: NonNullable<
     Awaited<
       ReturnType<
-        (typeof trpc)["db"]["work_step_template"]["getStepsByInspection"]["query"]
+        (typeof trpc)["db"]["work_step_template"]["getStepsByWorkPlanTemplate"]["query"]
       >
     >
   >;
@@ -47,7 +46,7 @@ export default function StepList({
   const pathname = usePathname();
 
   const [stepsList] =
-    api.db.work_step_template.getStepsByInspection.useSuspenseQuery(
+    api.db.work_step_template.getStepsByWorkPlanTemplate.useSuspenseQuery(
       { work_plan_template_id },
       {
         initialData,
@@ -59,14 +58,14 @@ export default function StepList({
   const { mutate, isPending, isError } =
     api.db.work_step_template.upsert.useMutation({
       onMutate: async (newData) => {
-        await utils.db.work_step_template.getStepsByInspection.cancel({
+        await utils.db.work_step_template.getStepsByWorkPlanTemplate.cancel({
           work_plan_template_id,
         });
         const oldData =
-          utils.db.work_step_template.getStepsByInspection.getData({
+          utils.db.work_step_template.getStepsByWorkPlanTemplate.getData({
             work_plan_template_id,
           });
-        utils.db.work_step_template.getStepsByInspection.setData(
+        utils.db.work_step_template.getStepsByWorkPlanTemplate.setData(
           { work_plan_template_id },
           // @ts-expect-error
           newData,
@@ -78,7 +77,7 @@ export default function StepList({
       },
       onError: (err, variables, ctx) => {
         catchError(new Error(err.message));
-        utils.db.work_step_template.getStepsByInspection.setData(
+        utils.db.work_step_template.getStepsByWorkPlanTemplate.setData(
           { work_plan_template_id },
           ctx?.oldData,
         );
@@ -132,7 +131,7 @@ export default function StepList({
               {stepsList.length === 0 && (
                 <div className="flex h-40 items-center justify-center">
                   <p className="text-muted-foreground">
-                    No steps found for this inspection plan
+                    No steps found for this work plan
                   </p>
                 </div>
               )}

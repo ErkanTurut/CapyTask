@@ -15,10 +15,6 @@ interface pageProps {
 
 export default async function Page({ searchParams, params }: pageProps) {
   dynamic();
-  // const initialData =
-  //   await trpc.db.work_step_template.getStepsByInspection.query({
-  //     work_plan_template_id: params.work_plan_template_id,
-  //   });
 
   const { data: searchStep } =
     await trpc.db.work_step_template.searchSteps.query({

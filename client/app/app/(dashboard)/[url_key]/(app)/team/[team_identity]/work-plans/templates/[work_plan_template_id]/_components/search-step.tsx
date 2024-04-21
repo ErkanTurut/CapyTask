@@ -29,7 +29,7 @@ interface SearchStepProps {
   initialData: NonNullable<
     Awaited<
       ReturnType<
-        (typeof trpc)["db"]["work_step_template"]["getStepsByInspection"]["query"]
+        (typeof trpc)["db"]["work_step_template"]["getStepsByWorkPlanTemplate"]["query"]
       >
     >
   >;
@@ -88,7 +88,7 @@ export function StepCommand({
   initialData: NonNullable<
     Awaited<
       ReturnType<
-        (typeof trpc)["db"]["work_step_template"]["getStepsByInspection"]["query"]
+        (typeof trpc)["db"]["work_step_template"]["getStepsByWorkPlanTemplate"]["query"]
       >
     >
   >;
