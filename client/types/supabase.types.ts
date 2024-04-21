@@ -417,27 +417,30 @@ export type Database = {
           id: string
           public_id: string
           status: Database["public"]["Enums"]["Status"]
+          step_order: number | null
           updated_at: string
           work_order_id: string
-          work_step_id: string | null
+          work_step_id: string
         }
         Insert: {
           created_at?: string
           id?: string
           public_id?: string
           status?: Database["public"]["Enums"]["Status"]
+          step_order?: number | null
           updated_at?: string
           work_order_id: string
-          work_step_id?: string | null
+          work_step_id: string
         }
         Update: {
           created_at?: string
           id?: string
           public_id?: string
           status?: Database["public"]["Enums"]["Status"]
+          step_order?: number | null
           updated_at?: string
           work_order_id?: string
-          work_step_id?: string | null
+          work_step_id?: string
         }
         Relationships: [
           {
@@ -559,24 +562,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      create_inspection_snapshot: {
-        Args: {
-          inspection_template_id_param: string
-        }
-        Returns: string
-      }
-      create_step_snapshot: {
-        Args: {
-          inspection_template_id_param: string
-          inspection_template_snapshot_id_param: string
-        }
-        Returns: undefined
-      }
       create_work_plan: {
         Args: {
-          work_plan_template_id: string
+          work_plan_template_id_param: string
         }
         Returns: string
+      }
+      create_work_step: {
+        Args: {
+          work_plan_template_id_param: string
+          work_plan_id: string
+        }
+        Returns: undefined
       }
       nanoid: {
         Args: {
