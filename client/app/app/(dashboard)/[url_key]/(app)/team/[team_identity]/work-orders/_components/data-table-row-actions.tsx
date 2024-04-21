@@ -24,7 +24,13 @@ import { catchError } from "@/lib/utils";
 import { trpc } from "@/trpc/server";
 
 interface DataTableRowActionsProps<TData> {
-  row: Row<TData>;
+  row: Row<
+    NonNullable<
+      Awaited<
+        ReturnType<(typeof trpc)["db"]["work_order"]["get"]["byId"]["query"]>
+      >["data"]
+    >
+  >;
   table: Table<
     NonNullable<
       Awaited<
@@ -38,14 +44,7 @@ export function DataTableRowActions<TData>({
   row,
   table,
 }: DataTableRowActionsProps<TData>) {
-  const work_order = ZGetWorkOrderSchema.pick({
-    created_at: true,
-    description: true,
-    id: true,
-    name: true,
-    team_id: true,
-    updated_at: true,
-  }).parse(row.original);
+  const work_order = row.original;
   const utils = api.useUtils();
 
   const { mutate: remove } = api.db.work_order.delete.useMutation({

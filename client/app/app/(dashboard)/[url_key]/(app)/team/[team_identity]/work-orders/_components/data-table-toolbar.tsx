@@ -1,18 +1,15 @@
 "use client";
 
-import { Table } from "@tanstack/react-table";
 import { Icons } from "@/components/icons";
+import { Table } from "@tanstack/react-table";
 
+import { DataTableViewOptions } from "@/components/table/data-table-view-options";
 import { Button, buttonVariants } from "@/ui/button";
 import { Input } from "@/ui/input";
-import { DataTableViewOptions } from "@/components/table/data-table-view-options";
 
+import { trpc } from "@/trpc/server";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { trpc } from "@/trpc/server";
-import { DataTableFacetedFilter } from "./data-table-faceted-filter";
-import { api } from "@/trpc/client";
-import { toast } from "sonner";
 
 interface DataTableToolbarProps {
   table: Table<
