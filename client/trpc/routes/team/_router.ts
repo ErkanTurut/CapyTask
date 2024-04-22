@@ -1,9 +1,7 @@
-import { publicProcedure, protectedProcedure, router } from "@/trpc/trpc";
+import { protectedProcedure, router } from "@/trpc/trpc";
 
-import { createClient } from "@/lib/supabase/server";
-
-import { cookies } from "next/headers";
-
+import { createTeamHandler } from "./create.handler";
+import { ZCreateTeamSchema } from "./create.schema";
 import {
   getTeamByIdentityHandler,
   getTeamHandler,
@@ -12,9 +10,6 @@ import {
 import { ZGetTeamSchema } from "./get.schema";
 import { updateTeamHandler } from "./update.handler";
 import { ZUpdateTeamSchema } from "./update.schema";
-import { ZCreateTeamSchema } from "./create.schema";
-import { createTeamHandler } from "./create.handler";
-import { sleep } from "@/lib/utils";
 
 export const team = router({
   create: protectedProcedure
