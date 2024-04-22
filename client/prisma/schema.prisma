@@ -7,52 +7,46 @@ datasource db {
   provider   = "postgresql"
   url        = env("DATABASE_URL")
   directUrl  = env("DIRECT_URL")
-  extensions = [pgcrypto]
+  extensions = [pgcrypto, uuid_ossp(map: "uuid-ossp", schema: "extensions")]
 }
 
 model user {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  image_uri   String?
-  email       String   @unique
-  first_name  String?
-  last_name   String?
-  createdAt   DateTime @default(now()) @db.Timestamptz(6)
-  updatedAt   DateTime @default(now()) @updatedAt @db.Timestamptz(6)
-  external_id String?  @unique @db.Uuid
-
+  id             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  image_uri      String?
+  email          String           @unique
+  first_name     String?
+  last_name      String?
+  createdAt      DateTime         @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime         @default(now()) @updatedAt @db.Timestamptz(6)
+  external_id    String?          @unique @db.Uuid
   user_team      user_team[]
   user_workspace user_workspace[]
   workspaces     workspace[]
 }
 
 model team {
-  id        String @id @default(dbgenerated("nanoid(10)"))
-  public_id String @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  identity  String
-
-  name        String
-  description String?
-  image_uri   String?
-  created_at  DateTime @default(now()) @db.Timestamptz(6)
-  updated_at  DateTime @default(now()) @updatedAt @db.Timestamptz(6)
-
-  workspace_id String
-  workspace    workspace @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
-
-  work_plan_template work_plan_template[]
+  id                 String               @id @default(dbgenerated("nanoid(10)"))
+  name               String
+  description        String?
+  image_uri          String?
+  created_at         DateTime             @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime             @default(now()) @updatedAt @db.Timestamptz(6)
+  workspace_id       String
+  identity           String
+  public_id          String               @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace          workspace            @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
   users              user_team[]
   work_order         work_order[]
   work_plan          work_plan[]
+  work_plan_template work_plan_template[]
 
   @@unique([identity, workspace_id])
   @@unique([name, workspace_id])
-  @@unique([public_id])
   @@index([workspace_id])
 }
 
 model workspace {
   id             String           @id @default(dbgenerated("nanoid(10)"))
-  public_id      String           @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name           String
   description    String?
   created_at     DateTime         @default(now()) @db.Timestamptz(6)
@@ -60,11 +54,11 @@ model workspace {
   url_key        String           @unique
   created_by     String           @db.Uuid
   image_uri      String?
+  public_id      String           @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   team           team[]
   user_workspace user_workspace[]
   user           user             @relation(fields: [created_by], references: [id])
 
-  @@unique([public_id])
   @@index([url_key])
 }
 
@@ -105,132 +99,109 @@ model role {
   user_workspace user_workspace[]
 }
 
-// work plan templates
 model work_plan_template {
-  id          String   @id @default(dbgenerated("nanoid(10)"))
-  public_id   String   @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name        String
-  description String?
-  created_at  DateTime @default(now()) @db.Timestamptz(6)
-  updated_at  DateTime @default(now()) @updatedAt @db.Timestamptz(6)
-
-  team_id String
-  team    team   @relation(fields: [team_id], references: [id], onDelete: Cascade)
-
-  work_step_template work_step_template[]
+  id                 String               @id @default(dbgenerated("nanoid(10)"))
+  public_id          String               @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name               String
+  description        String?
+  created_at         DateTime             @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime             @default(now()) @updatedAt @db.Timestamptz(6)
+  team_id            String
   work_plan          work_plan[]
+  team               team                 @relation(fields: [team_id], references: [id], onDelete: Cascade)
+  work_step_template work_step_template[]
 
-  @@unique([public_id])
   @@index([team_id])
 }
 
 model work_step_template {
-  id             String   @id @default(dbgenerated("nanoid(17)"))
-  public_id      String   @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name           String
-  description    String?
-  created_at     DateTime @default(now()) @db.Timestamptz(6)
-  updated_at     DateTime @default(now()) @updatedAt @db.Timestamptz(6)
-  parent_step_id String?
-  created_by_id  String?  @db.Uuid
-  step_order     Int?
-
+  id                    String               @id @default(dbgenerated("nanoid(17)"))
+  public_id             String               @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                  String
+  description           String?
+  created_at            DateTime             @default(now()) @db.Timestamptz(6)
+  updated_at            DateTime             @default(now()) @updatedAt @db.Timestamptz(6)
+  parent_step_id        String?
+  created_by_id         String?              @db.Uuid
+  step_order            Int?
   work_plan_template_id String
-  work_plan_template    work_plan_template @relation(fields: [work_plan_template_id], references: [id], onDelete: Cascade)
+  parent_step           work_step_template?  @relation("step_sub_steps", fields: [parent_step_id], references: [id], onDelete: Cascade)
+  sub_steps             work_step_template[] @relation("step_sub_steps")
+  work_plan_template    work_plan_template   @relation(fields: [work_plan_template_id], references: [id], onDelete: Cascade)
 
-  parent_step work_step_template?  @relation("step_sub_steps", fields: [parent_step_id], references: [id], onDelete: Cascade)
-  sub_steps   work_step_template[] @relation("step_sub_steps")
-
-  @@unique([public_id])
   @@index([parent_step_id])
   @@index([created_by_id])
   @@index([work_plan_template_id])
 }
 
-// work plan
 model work_plan {
-  id          String   @id @default(dbgenerated("nanoid(10)"))
-  public_id   String   @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name        String
-  description String?
-  created_at  DateTime @default(now()) @db.Timestamptz(6)
-  updated_at  DateTime @default(now()) @updatedAt @db.Timestamptz(6)
-
+  id                    String              @id @default(dbgenerated("nanoid(10)"))
+  public_id             String              @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                  String
+  description           String?
+  created_at            DateTime            @default(now()) @db.Timestamptz(6)
+  updated_at            DateTime            @default(now()) @updatedAt @db.Timestamptz(6)
   work_plan_template_id String?
+  team_id               String
+  work_order            work_order[]
+  team                  team                @relation(fields: [team_id], references: [id], onDelete: Cascade)
   work_plan_template    work_plan_template? @relation(fields: [work_plan_template_id], references: [id])
-
-  team_id String
-  team    team   @relation(fields: [team_id], references: [id], onDelete: Cascade)
-
-  work_order work_order[]
-  work_step  work_step[]
+  work_step             work_step[]
 
   @@unique([work_plan_template_id, created_at])
-  @@unique([public_id])
   @@index([work_plan_template_id])
 }
 
 model work_step {
-  id             String   @id @default(dbgenerated("nanoid(17)"))
-  public_id      String   @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name           String
-  description    String?
-  created_at     DateTime @default(now()) @db.Timestamptz(6)
-  updated_at     DateTime @default(now()) @updatedAt @db.Timestamptz(6)
-  parent_step_id String?
-  created_by_id  String?  @db.Uuid
-  step_order     Int?
-
-  work_plan_id String
-  work_plan    work_plan @relation(fields: [work_plan_id], references: [id], onDelete: Cascade)
-
+  id               String             @id @default(dbgenerated("nanoid(17)"))
+  public_id        String             @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name             String
+  description      String?
+  created_at       DateTime           @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime           @default(now()) @updatedAt @db.Timestamptz(6)
+  parent_step_id   String?
+  created_by_id    String?            @db.Uuid
+  step_order       Int?
+  work_plan_id     String
   parent_step      work_step?         @relation("step_sub_steps", fields: [parent_step_id], references: [id], onDelete: Cascade)
   sub_steps        work_step[]        @relation("step_sub_steps")
+  work_plan        work_plan          @relation(fields: [work_plan_id], references: [id], onDelete: Cascade)
   work_step_status work_step_status[]
 
-  @@unique([public_id])
   @@index([parent_step_id])
   @@index([created_by_id])
   @@index([work_plan_id])
 }
 
-//work orders
 model work_order {
-  id          String   @id @default(dbgenerated("nanoid(10)"))
-  public_id   String   @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name        String
-  description String?
-  created_at  DateTime @default(now()) @db.Timestamptz(6)
-  updated_at  DateTime @default(now()) @updatedAt @db.Timestamptz(6)
-  status      Status   @default(OPEN)
-
-  team_id String
-  team    team   @relation(fields: [team_id], references: [id], onDelete: Cascade)
-
-  work_plan_id String?
-  work_plan    work_plan? @relation(fields: [work_plan_id], references: [id])
-
+  id               String             @id @default(dbgenerated("nanoid(10)"))
+  public_id        String             @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name             String
+  description      String?
+  created_at       DateTime           @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime           @default(now()) @updatedAt @db.Timestamptz(6)
+  status           Status             @default(OPEN)
+  team_id          String
+  work_plan_id     String?
+  team             team               @relation(fields: [team_id], references: [id], onDelete: Cascade)
+  work_plan        work_plan?         @relation(fields: [work_plan_id], references: [id])
   work_step_status work_step_status[]
 
-  @@unique([public_id])
   @@index([team_id])
 }
 
 model work_step_status {
-  id         String   @id @default(dbgenerated("nanoid(17)"))
-  public_id  String   @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  status     Status   @default(OPEN)
-  step_order Int?
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-  updated_at DateTime @default(now()) @updatedAt @db.Timestamptz(6)
-
+  id            String     @id @default(dbgenerated("nanoid(17)"))
+  public_id     String     @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  status        Status     @default(OPEN)
+  created_at    DateTime   @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime   @default(now()) @updatedAt @db.Timestamptz(6)
   work_order_id String
+  work_step_id  String
+  step_order    Int?
   work_order    work_order @relation(fields: [work_order_id], references: [id], onDelete: Cascade)
+  work_step     work_step  @relation(fields: [work_step_id], references: [id])
 
-  work_step_id String
-  work_step    work_step @relation(fields: [work_step_id], references: [id])
-
-  @@unique([public_id])
   @@index([work_order_id])
 }
 
