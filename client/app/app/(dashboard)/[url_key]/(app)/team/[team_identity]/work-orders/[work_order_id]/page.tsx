@@ -34,9 +34,9 @@ export default async function Page({ params }: PageProps) {
         <Tabs defaultValue="week">
           <div className="flex items-center">
             <TabsList className="border shadow-inner">
-              <TabsTrigger value="week">Week</TabsTrigger>
-              <TabsTrigger value="month">Month</TabsTrigger>
-              <TabsTrigger value="year">Year</TabsTrigger>
+              <TabsTrigger value="week">Steps</TabsTrigger>
+              <TabsTrigger value="month">Assigned</TabsTrigger>
+              <TabsTrigger value="year">Comments</TabsTrigger>
             </TabsList>
             <div className="ml-auto flex items-center gap-2">
               <DropdownMenu>
