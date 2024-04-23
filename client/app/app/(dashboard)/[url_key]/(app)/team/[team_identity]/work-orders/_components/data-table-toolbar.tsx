@@ -9,7 +9,6 @@ import { Input } from "@/ui/input";
 
 import { trpc } from "@/trpc/server";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 interface DataTableToolbarProps {
   table: Table<
@@ -23,7 +22,6 @@ interface DataTableToolbarProps {
 
 export function DataTableToolbar({ table }: DataTableToolbarProps) {
   const isFiltered = table.getState().columnFilters.length > 0;
-  const pathname = usePathname();
 
   return (
     <div className="flex items-center justify-between">
@@ -57,10 +55,7 @@ export function DataTableToolbar({ table }: DataTableToolbarProps) {
       </div>
       <div className="flex items-center space-x-2">
         <DataTableViewOptions table={table} />
-        <Link
-          className={buttonVariants({ size: "sm" })}
-          href={`${pathname}/create`}
-        >
+        <Link className={buttonVariants({ size: "sm" })} href={`./create`}>
           Create
           <Icons.plusCircled className="ml-2 h-4 w-4" />
         </Link>

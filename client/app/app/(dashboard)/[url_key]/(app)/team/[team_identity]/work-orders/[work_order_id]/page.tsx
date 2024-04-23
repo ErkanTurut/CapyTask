@@ -15,6 +15,9 @@ import { Suspense } from "react";
 import StepTable from "./_components/StepTable";
 import WorkOrderDetail from "./_components/WorkOrderDetail";
 import WorkOrderHeader from "./_components/WorkOrderHeader";
+import { trpc } from "@/trpc/server";
+import { notFound } from "next/navigation";
+import { unstable_noStore } from "next/cache";
 
 interface PageProps {
   params: {
@@ -25,11 +28,20 @@ interface PageProps {
 }
 
 export default async function Page({ params }: PageProps) {
+  unstable_noStore();
+  const { data: work_order } = await trpc.db.work_order.get.withSteps.query({
+    id: params.work_order_id,
+  });
+
+  if (!work_order) {
+    return notFound();
+  }
+
   return (
     <main className="container grid flex-1 items-start gap-4 px-4 sm:px-8 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
       <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
         <div className="grid gap-4">
-          <WorkOrderHeader params={params} />
+          <WorkOrderHeader params={params} work_order={work_order} />
         </div>
         <Tabs defaultValue="week">
           <div className="flex items-center">
@@ -68,7 +80,10 @@ export default async function Page({ params }: PageProps) {
           </div>
           <TabsContent value="week">
             <Suspense fallback={<CardSkeleton />}>
-              <StepTable params={params} />
+              <StepTable
+                params={params}
+                work_step_status={work_order.work_step_status}
+              />
             </Suspense>
           </TabsContent>
         </Tabs>

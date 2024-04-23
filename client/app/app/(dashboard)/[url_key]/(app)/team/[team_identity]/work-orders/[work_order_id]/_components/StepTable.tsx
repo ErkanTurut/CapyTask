@@ -27,14 +27,17 @@ interface StepTableProps {
   params: {
     work_order_id: string;
   };
+  work_step_status: NonNullable<
+    Awaited<
+      ReturnType<(typeof trpc)["db"]["work_order"]["get"]["withSteps"]["query"]>
+    >["data"]
+  >["work_step_status"];
 }
 
-export default async function StepTable({ params }: StepTableProps) {
-  const { data: work_step_status } =
-    await trpc.db.work_step_status.get.withWorkOrder.query({
-      work_order_id: params.work_order_id,
-    });
-
+export default async function StepTable({
+  params,
+  work_step_status,
+}: StepTableProps) {
   return (
     <TooltipProvider>
       <Card x-chunk="dashboard-05-chunk-3">
