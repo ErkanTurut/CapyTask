@@ -10,6 +10,6 @@ export const authMutationRouter = router({
   signin: publicProcedure
     .input(ZSignInSchema)
     .mutation(async ({ ctx, input }) => {
-      return signinHandler({ input, db: createClient(cookies()) });
+      return signinHandler({ input, db: ctx.db });
     }),
 });

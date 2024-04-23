@@ -3,7 +3,7 @@ import { user } from "./user/_router";
 import { team } from "./team/_router";
 import { workspace } from "./workspace/_router";
 
-import { router } from "@/trpc/trpc";
+import { protectedProcedure, publicProcedure, router } from "@/trpc/trpc";
 
 import { work_order } from "./work_order/_router";
 import { work_step_status } from "./work_step_status/_router";
@@ -26,6 +26,9 @@ export const appRouter = router({
     work_step,
     work_step_status,
     work_step_template,
+  }),
+  test: protectedProcedure.query(() => {
+    return { hello: "world" };
   }),
 });
 

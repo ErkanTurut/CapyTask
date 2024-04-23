@@ -12,18 +12,18 @@ import { ZGetUserSchema } from "./getUser.schema";
 export const user = router({
   update: protectedProcedure
     .input(ZUserUpdateSchema)
-    .mutation(async ({ input }) => {
-      return updateUserHandler({ input, db: createClient(cookies()) });
+    .mutation(async ({ input, ctx }) => {
+      return updateUserHandler({ input, db: ctx.db });
     }),
   get: protectedProcedure
     .input(ZGetUserSchema)
     .query(async ({ ctx, input }) => {
-      return getUserHandler({ input, db: createClient(cookies()) });
+      return getUserHandler({ input, db: ctx.db });
     }),
   getCurrentUser: protectedProcedure.query(async ({ ctx }) => {
     return getUserHandler({
       input: { id: ctx.session.user.id },
-      db: createClient(cookies()),
+      db: ctx.db,
     });
   }),
 });
