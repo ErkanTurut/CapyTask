@@ -10,6 +10,8 @@ import { ZCreateWorkOrderSchema } from "./create.schema";
 import { createWorkOrderHandler } from "./create.handler";
 import { ZDeleteWorkOrderSchema } from "./delete.schema";
 import { deleteWorkOrderHandler } from "./delete.handler";
+import { updateWorkOrderStatusHandler } from "./update.handler";
+import { ZUpdateWorkOrderSchema } from "./update.schema";
 
 export const work_order = router({
   test: protectedProcedure.query(async ({ ctx }) => {
@@ -66,4 +68,15 @@ export const work_order = router({
         db: ctx.db,
       });
     }),
+
+  update: {
+    status: protectedProcedure
+      .input(ZUpdateWorkOrderSchema.pick({ id: true, status: true }))
+      .mutation(async ({ ctx, input }) => {
+        updateWorkOrderStatusHandler({
+          input,
+          db: ctx.db,
+        });
+      }),
+  },
 });

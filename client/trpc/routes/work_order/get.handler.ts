@@ -82,7 +82,7 @@ export async function getWorkOrderStepsHandler({
     .select("*, work_step_status(*, work_step(*))")
     .eq("id", input.id)
     .order("step_order", {
-      referencedTable: "work_step_status.work_step",
+      referencedTable: "work_step_status",
     })
     .single()
     .throwOnError();
