@@ -15,6 +15,7 @@ import {
 import { trpc } from "@/trpc/server";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { unstable_noStore } from "next/cache";
 
 interface createWorkOrderProps {
   params: {
@@ -26,6 +27,7 @@ interface createWorkOrderProps {
 export default async function createWorkOrder({
   params,
 }: createWorkOrderProps) {
+  unstable_noStore();
   const { data: team } = await trpc.db.team.getByIdentity.query({
     identity: params.team_identity,
   });
