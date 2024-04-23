@@ -1,11 +1,9 @@
 import { Nav } from "@/components/layouts/side-navigation/nav";
 import { Separator } from "@/components/ui/separator";
-import UserAccountNav from "@/components/user/user-account-nav";
-import WorkspaceNav from "@/components/workspace/workspace-navigation";
 import WorkspaceSkeleton from "@/components/workspace/workspace-skeleton";
 import { appNavItems } from "@/config/dashboard.config";
 import { cookies } from "next/headers";
-import { FC, Suspense } from "react";
+import { Suspense } from "react";
 import {
   SidebarBody,
   SidebarFooter,
@@ -16,9 +14,9 @@ import {
 import TeamListSkeleton from "@/components/team/team-list-skeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 
-import WorkspaceSelector from "./sidebar/workspace-selector";
 import TeamNav from "./sidebar/team-nav";
 import UserNav from "./sidebar/user-account-nav";
+import WorkspaceSelector from "./sidebar/workspace-selector";
 interface sidebarProps {
   params: {
     url_key: string;

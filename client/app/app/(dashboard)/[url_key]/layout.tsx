@@ -1,4 +1,5 @@
 import { Providers } from "./providers";
+
 interface layoutProps {
   children: React.ReactNode;
 }
