@@ -1,3 +1,4 @@
+import { Icons } from "@/components/icons";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -20,6 +21,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import StepStatusSelector from "@/components/work-step-status/StepStatusSelector";
+import { Database } from "@/lib/supabase/server";
 import { formatTimeToNow } from "@/lib/utils";
 import { trpc } from "@/trpc/server";
 
@@ -33,6 +36,40 @@ interface StepTableProps {
     >["data"]
   >["work_step_status"];
 }
+
+const status_config: Record<
+  Database["public"]["Enums"]["Status"],
+  { icon: keyof typeof Icons; label: string }
+> = {
+  OPEN: {
+    icon: "view",
+    label: "Open",
+  },
+  IN_PROGRESS: {
+    icon: "timer",
+    label: "In progress",
+  },
+  COMPLETED: {
+    icon: "check",
+    label: "Completed",
+  },
+  ON_HOLD: {
+    icon: "pause",
+    label: "On hold",
+  },
+  CANCELED: {
+    icon: "CrossCircled",
+    label: "Canceled",
+  },
+};
+
+const options = Object.entries(status_config).map(
+  ([status, { icon, label }]) => ({
+    value: status as Database["public"]["Enums"]["Status"],
+    label,
+    icon,
+  }),
+);
 
 export default async function StepTable({
   params,
@@ -63,7 +100,6 @@ export default async function StepTable({
               </TableHeader>
               <TableBody>
                 {work_step_status.map((step, index) => {
-                  console.log(step);
                   if (!step.work_step) {
                     return null;
                   }
@@ -79,9 +115,14 @@ export default async function StepTable({
                         </div>
                       </TableCell>
                       <TableCell className="table-cell ">
-                        <Badge className="text-xs " variant="secondary">
+                        {/* <Badge className="text-xs " variant="secondary">
                           {step.status}
-                        </Badge>
+                        </Badge> */}
+                        <StepStatusSelector
+                          status={options}
+                          work_step_status_id={step.id}
+                          initialStatus={step.status}
+                        />
                       </TableCell>
                       <Tooltip>
                         <TableCell className="table-cell ">

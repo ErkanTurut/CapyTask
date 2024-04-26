@@ -17,7 +17,6 @@ import WorkOrderDetail from "./_components/WorkOrderDetail";
 import WorkOrderHeader from "./_components/WorkOrderHeader";
 import { trpc } from "@/trpc/server";
 import { notFound } from "next/navigation";
-import { unstable_noStore } from "next/cache";
 
 interface PageProps {
   params: {
@@ -28,7 +27,6 @@ interface PageProps {
 }
 
 export default async function Page({ params }: PageProps) {
-  unstable_noStore();
   const { data: work_order } = await trpc.db.work_order.get.withSteps.query({
     id: params.work_order_id,
   });

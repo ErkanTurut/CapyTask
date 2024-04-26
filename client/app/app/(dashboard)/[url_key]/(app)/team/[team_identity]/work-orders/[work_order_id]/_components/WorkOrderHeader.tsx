@@ -11,10 +11,9 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { trpc } from "@/trpc/server";
-import { notFound } from "next/navigation";
 import { Label } from "@/components/ui/label";
-import { ComboBox } from "@/components/statusSelector";
 import { Database } from "@/types/supabase.types";
+import StatusSelector from "@/components/work-order/statusSelector";
 
 interface WorkOrderHeaderProps {
   params: {
@@ -81,7 +80,11 @@ export default async function WorkOrderHeader({
           >
             Status :
           </Label>
-          <ComboBox options={options} initialValue={work_order.status} />
+          <StatusSelector
+            initialStatus={work_order.status}
+            status={options}
+            work_order_id={params.work_order_id}
+          />
         </div>
         <Separator orientation="vertical" className="h-auto" />
         <div className="flex flex-col gap-0.5 rounded-md p-2  text-center">
