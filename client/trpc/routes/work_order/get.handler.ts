@@ -87,3 +87,20 @@ export async function getWorkOrderStepsHandler({
     .single()
     .throwOnError();
 }
+
+export async function getWorkOrderStatusHandler({
+  input,
+  db,
+}: {
+  input: {
+    id: TGetWorkOrderSchema["id"];
+  };
+  db: SupabaseClient;
+}) {
+  return await db
+    .from("work_order")
+    .select("status")
+    .eq("id", input.id)
+    .single()
+    .throwOnError();
+}

@@ -1,6 +1,7 @@
 import { protectedProcedure, router } from "@/trpc/trpc";
 import {
   getWorkOrderHandler,
+  getWorkOrderStatusHandler,
   getWorkOrderStepsHandler,
   getWorkOrdersByIdentityHandler,
   searchWorkOrderHandler,
@@ -42,6 +43,15 @@ export const work_order = router({
           input,
           db: ctx.db,
         });
+      }),
+    status: protectedProcedure
+      .input(ZGetWorkOrderSchema.pick({ id: true }))
+      .query(async ({ ctx, input }) => {
+        const { data } = await getWorkOrderStatusHandler({
+          input,
+          db: ctx.db,
+        });
+        return data;
       }),
   },
   create: protectedProcedure
