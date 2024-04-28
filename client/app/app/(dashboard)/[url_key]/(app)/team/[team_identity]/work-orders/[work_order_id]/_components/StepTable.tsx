@@ -1,5 +1,5 @@
 import { Icons } from "@/components/icons";
-import { Badge } from "@/components/ui/badge";
+import { Badge, BadgeProps } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -21,9 +21,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import StepStatusSelector from "@/components/work-step-status/StepStatusSelector";
 import { Database } from "@/lib/supabase/server";
-import { formatTimeToNow } from "@/lib/utils";
+import { formatDate, formatTimeToNow } from "@/lib/utils";
 import { trpc } from "@/trpc/server";
 
 interface StepTableProps {
@@ -39,27 +38,32 @@ interface StepTableProps {
 
 const status_config: Record<
   Database["public"]["Enums"]["Status"],
-  { icon: keyof typeof Icons; label: string }
+  { icon: keyof typeof Icons; label: string; variant: BadgeProps["variant"] }
 > = {
   OPEN: {
     icon: "view",
     label: "Open",
+    variant: "default",
   },
   IN_PROGRESS: {
     icon: "timer",
     label: "In progress",
+    variant: "secondary",
   },
   COMPLETED: {
     icon: "check",
     label: "Completed",
+    variant: "success",
   },
   ON_HOLD: {
     icon: "pause",
     label: "On hold",
+    variant: "dashed",
   },
   CANCELED: {
     icon: "CrossCircled",
     label: "Canceled",
+    variant: "destructive",
   },
 };
 
@@ -92,21 +96,21 @@ export default async function StepTable({
                   <TableHead>Order</TableHead>
                   <TableHead className="table-cell">Title</TableHead>
                   <TableHead className="table-cell">Status</TableHead>
-                  <TableHead className="table-cell">Last update</TableHead>
-                  {/* <TableHead className="hidden md:table-cell">
+                  <TableHead className="hidden md:table-cell">
                     Last update
-                  </TableHead> */}
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {work_step_status.map((step, index) => {
+                  const Icon = Icons[status_config[step.status].icon];
                   if (!step.work_step) {
                     return null;
                   }
                   return (
                     <TableRow key={step.id}>
                       <TableCell className="">{index + 1}</TableCell>
-                      <TableCell className="table-cell max-w-xs overflow-hidden overflow-ellipsis whitespace-nowrap">
+                      <TableCell className="table-cell max-w-40 overflow-hidden overflow-ellipsis whitespace-nowrap">
                         <div className="font-normal sm:font-medium">
                           {step.work_step?.name}
                         </div>
@@ -115,23 +119,27 @@ export default async function StepTable({
                         </div>
                       </TableCell>
                       <TableCell className="table-cell ">
-                        {/* <Badge className="text-xs " variant="secondary">
-                          {step.status}
-                        </Badge> */}
-                        <StepStatusSelector
-                          status={options}
-                          work_step_status_id={step.id}
-                          initialStatus={step.status}
-                        />
+                        <Badge
+                          className="text-xs "
+                          variant={status_config[step.status].variant}
+                        >
+                          {status_config[step.status].label}
+                        </Badge>
                       </TableCell>
-                      <Tooltip>
-                        <TableCell className="table-cell ">
+
+                      <TableCell className="hidden sm:table-cell">
+                        <Tooltip>
                           <TooltipTrigger>
                             {formatTimeToNow(new Date(step.updated_at))}
                           </TooltipTrigger>
-                        </TableCell>
-                        <TooltipContent>{step.updated_at}</TooltipContent>
-                      </Tooltip>
+                          <TooltipContent>
+                            {formatDate({
+                              date: step.updated_at,
+                              format: "LLL",
+                            })}
+                          </TooltipContent>
+                        </Tooltip>
+                      </TableCell>
                     </TableRow>
                   );
                 })}

@@ -1,19 +1,17 @@
 import { Icons } from "@/components/icons";
-import { StatusButton } from "@/components/statusButton";
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { trpc } from "@/trpc/server";
 import { Label } from "@/components/ui/label";
-import { Database } from "@/types/supabase.types";
+import { Separator } from "@/components/ui/separator";
 import StatusSelector from "@/components/work-order/statusSelector";
+import { trpc } from "@/trpc/server";
+import { Database } from "@/types/supabase.types";
 
 interface WorkOrderHeaderProps {
   params: {
@@ -72,8 +70,8 @@ export default async function WorkOrderHeader({
           {work_order.description}
         </CardDescription>
       </CardHeader>
-      <CardFooter className="flex w-full items-stretch  pb-2">
-        <div className="flex flex-col gap-0.5 rounded-md p-2 text-center">
+      <CardFooter>
+        <div className="flex flex-col gap-0.5 rounded-md  text-center">
           <Label
             className="text-pretty text-xs text-muted-foreground "
             htmlFor="status"
@@ -87,7 +85,7 @@ export default async function WorkOrderHeader({
           />
         </div>
         <Separator orientation="vertical" className="h-auto" />
-        <div className="flex flex-col gap-0.5 rounded-md p-2  text-center">
+        <div className="flex flex-col gap-0.5 rounded-md  text-center">
           <Label
             className="text-pretty text-xs text-muted-foreground "
             htmlFor="work_plan"
@@ -99,7 +97,7 @@ export default async function WorkOrderHeader({
           </Button>
         </div>
         <Separator orientation="vertical" className="h-auto" />
-        <div className="flex flex-col gap-0.5 text-pretty  rounded-md p-2 text-center ">
+        <div className="flex flex-col gap-0.5 text-pretty  rounded-md text-center ">
           <Label
             className="text-pretty text-xs text-muted-foreground "
             htmlFor="status"
