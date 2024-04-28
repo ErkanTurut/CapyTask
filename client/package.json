@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "dev": "clear && next dev --turbo",
-    "build": "prisma generate && prisma db push && next build",
+    "build": "next build",
     "format:write": "prettier --write \"**/*.{css,js,json,jsx,ts,tsx}\"",
     "format": "prettier \"**/*.{css,js,json,jsx,ts,tsx}\"",
     "start": "next start",
