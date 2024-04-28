@@ -5,8 +5,10 @@ import { formatDistanceToNowStrict } from "date-fns";
 import locale from "date-fns/locale/en-US";
 import dayjs from "dayjs";
 import { z } from "zod";
-
+import "dayjs/locale/nl-be";
+import localizedFormat from "dayjs/plugin/localizedFormat";
 import { toast } from "sonner";
+dayjs.extend(localizedFormat);
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -117,8 +119,14 @@ export function formatTimeToNow(date: Date): string {
   });
 }
 
-export function formatDate(date: Date | string) {
-  return dayjs(date).format("MMMM D, YYYY");
+export function formatDate({
+  date,
+  format = "LL",
+}: {
+  date: Date | string;
+  format?: "LL" | "LLL" | "LLLL" | "LT" | "LTS" | "L" | "l" | "ll" | "lll";
+}) {
+  return dayjs(date).locale("nl-be").format(format);
 }
 
 export function catchError(err: unknown) {

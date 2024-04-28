@@ -1,7 +1,4 @@
-import { type SidebarNavItem, type SettingsNavItem } from "@/types";
-import { Database } from "@/types/supabase.types";
 import { NavItem } from "@/types";
-import { useId } from "react";
 
 export interface TDashboardConfig {
   sidebarNav: {
@@ -43,33 +40,41 @@ export const appNavItems: {
   main: [],
   teamNav: [
     {
-      title: "Team Settings",
-      icon: "gear",
-      variant: "ghost",
-      href: "/settings",
-      id: "members",
-    },
-    {
-      title: "Templates",
+      title: "Work plans",
       icon: "dashboard",
       variant: "ghost",
       href: "/work-plans/templates",
       id: "templates",
-      // items: [
-      //   {
-      //     title: "Inspections plans",
-      //     href: "/inspections",
-      //     variant: "ghost",
-      //     id: "plans",
-      //   },
-      // ],
     },
     {
-      title: "Work Orders",
+      title: "Work orders",
       icon: "checkCircled",
       variant: "ghost",
       href: "/work-orders",
       id: "work-orders",
+      items: [
+        {
+          title: "Reports",
+          href: "/reports",
+          icon: "fileText",
+          variant: "ghost",
+          id: "reports",
+        },
+      ],
+    },
+    {
+      title: "Locations",
+      icon: "SewingPin",
+      variant: "ghost",
+      href: "/maps",
+      id: "maps",
+    },
+    {
+      title: "Assets",
+      icon: "mix",
+      variant: "ghost",
+      href: "/assets",
+      id: "assets",
     },
     // {
     //   title: "Inspections",
