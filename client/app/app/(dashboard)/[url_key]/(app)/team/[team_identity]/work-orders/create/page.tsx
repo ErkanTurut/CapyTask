@@ -27,13 +27,13 @@ interface createWorkOrderProps {
 export default async function createWorkOrder({
   params,
 }: createWorkOrderProps) {
-  unstable_noStore();
-  const { data: team } = await trpc.db.team.getByIdentity.query({
-    identity: params.team_identity,
-  });
-  if (!team) {
-    notFound();
-  }
+  // unstable_noStore();
+  // const { data: team } = await trpc.db.team.getByIdentity.query({
+  //   identity: params.team_identity,
+  // });
+  // if (!team) {
+  //   notFound();
+  // }
   return (
     <Shell variant="markdown" className="gap-2">
       <PageHeader
@@ -55,9 +55,9 @@ export default async function createWorkOrder({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Suspense fallback="loading...">
+          {/* <Suspense fallback="loading...">
             <CreateWorkOrderForm team_id={team.id} />
-          </Suspense>
+          </Suspense> */}
         </CardContent>
       </Card>
     </Shell>

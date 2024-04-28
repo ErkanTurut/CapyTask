@@ -10,8 +10,9 @@ import {
 import { cn } from "@/lib/utils";
 import { trpc } from "@/trpc/server";
 import Link from "next/link";
-import StepList from "./steps-list";
 import { notFound } from "next/navigation";
+import StepList from "./steps-list";
+
 interface StepsContainerProps {
   params: {
     url_key: string;
@@ -22,6 +23,12 @@ interface StepsContainerProps {
 const WorkPlanTemplateContainer: React.FC<StepsContainerProps> = async ({
   params,
 }) => {
+  // unstable_noStore();
+  // const { data: work_plan_template } =
+  //   await trpc.db.work_plan_template.get.withSteps.query({
+  //     id: params.work_plan_template_id,
+  //   });
+
   const { data: work_plan_template } =
     await trpc.db.work_plan_template.get.withSteps.query({
       id: params.work_plan_template_id,

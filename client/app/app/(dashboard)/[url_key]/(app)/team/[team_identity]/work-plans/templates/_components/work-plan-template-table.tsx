@@ -1,7 +1,8 @@
-import { DataTable } from "./data-table";
-import { FC } from "react";
-import { columns } from "./columns";
 import { trpc } from "@/trpc/server";
+import { FC } from "react";
+import { columns } from "./table/columns";
+import { DataTable } from "./table/data-table";
+
 interface plansTableProps {
   props: {
     offset: number;
@@ -23,11 +24,7 @@ const WorkPlanTemplateTable: FC<plansTableProps> = async ({
   });
 
   return (
-    <DataTable
-      columns={columns}
-      initialData={initialData || { data: [], count: 0 }}
-      params={params}
-    />
+    <DataTable params={params} columns={columns} initialData={initialData} />
   );
 };
 
