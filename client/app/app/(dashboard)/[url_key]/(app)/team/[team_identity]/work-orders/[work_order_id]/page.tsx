@@ -1,22 +1,15 @@
-import { File, ListFilter } from "lucide-react";
+import { File } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import CardSkeleton from "@/components/skeletons/card-skeleton";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { trpc } from "@/trpc/server";
+import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import StepTable from "./_components/StepTable";
 import WorkOrderDetail from "./_components/WorkOrderDetail";
 import WorkOrderHeader from "./_components/WorkOrderHeader";
-import { trpc } from "@/trpc/server";
-import { notFound } from "next/navigation";
 
 interface PageProps {
   params: {
@@ -34,22 +27,23 @@ export default async function Page({ params }: PageProps) {
   if (!work_order) {
     return notFound();
   }
-
   return (
-    <main className="container grid flex-1 items-start gap-4 px-4 sm:px-8 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
+    <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
       <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
-        <div className="grid gap-4">
+        <div className="grid gap-4 sm:grid-cols-2 ">
           <WorkOrderHeader params={params} work_order={work_order} />
         </div>
-        <Tabs defaultValue="week">
+        <Tabs defaultValue="step">
           <div className="flex items-center">
-            <TabsList className="border shadow-inner">
-              <TabsTrigger value="week">Steps</TabsTrigger>
-              <TabsTrigger value="month">Assigned</TabsTrigger>
-              <TabsTrigger value="year">Comments</TabsTrigger>
+            <TabsList>
+              <TabsTrigger value="step">Steps</TabsTrigger>
+              <TabsTrigger value="asset">Assets</TabsTrigger>
+              <TabsTrigger value="service_ressource">
+                Service Ressources
+              </TabsTrigger>
             </TabsList>
             <div className="ml-auto flex items-center gap-2">
-              <DropdownMenu>
+              {/* <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="outline"
@@ -69,14 +63,14 @@ export default async function Page({ params }: PageProps) {
                   <DropdownMenuCheckboxItem>Declined</DropdownMenuCheckboxItem>
                   <DropdownMenuCheckboxItem>Refunded</DropdownMenuCheckboxItem>
                 </DropdownMenuContent>
-              </DropdownMenu>
+              </DropdownMenu> */}
               <Button size="sm" variant="outline" className="h-7 gap-1 text-sm">
                 <File className="h-3.5 w-3.5" />
                 <span className="sr-only sm:not-sr-only">Export</span>
               </Button>
             </div>
           </div>
-          <TabsContent value="week">
+          <TabsContent value="step">
             <Suspense fallback={<CardSkeleton />}>
               <StepTable
                 params={params}
@@ -84,10 +78,20 @@ export default async function Page({ params }: PageProps) {
               />
             </Suspense>
           </TabsContent>
+          <TabsContent value="asset">
+            <p className="p-6 text-center text-muted-foreground">
+              No orders found.
+            </p>
+          </TabsContent>
+          <TabsContent value="service_ressource">
+            <p className="p-6 text-center text-muted-foreground">
+              No orders found.
+            </p>
+          </TabsContent>
         </Tabs>
       </div>
       <div>
-        <WorkOrderDetail />
+        <WorkOrderDetail params={params} work_order={work_order} />
       </div>
     </main>
   );
