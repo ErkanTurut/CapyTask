@@ -1,3 +1,4 @@
+import "server-only";
 // src/trpc/server.ts
 import { AppRouter } from "./routes/_app";
 import { createTRPCClient, httpBatchLink, loggerLink } from "@trpc/client";
@@ -9,6 +10,8 @@ import superjson from "superjson";
 import { experimental_createTRPCNextAppDirServer } from "@trpc/next/app-dir/server";
 import { experimental_nextCacheLink } from "@trpc/next/app-dir/links/nextCache";
 import { createClient } from "@/lib/supabase/server";
+import { createContext } from "./context";
+import { createCallerFactory } from "./trpc";
 export const trpc = experimental_createTRPCNextAppDirServer<typeof appRouter>({
   config() {
     return {
@@ -59,3 +62,18 @@ export const trpc = experimental_createTRPCNextAppDirServer<typeof appRouter>({
 //     }),
 //   ],
 // });
+
+export const testRPC = createCallerFactory(appRouter)(async () => {
+  const supabase = createClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  return {
+    session: session,
+    headers: {
+      cookie: cookies().toString(),
+      "x-trpc-source": "rsc-invoke",
+    },
+    db: supabase,
+  };
+});
