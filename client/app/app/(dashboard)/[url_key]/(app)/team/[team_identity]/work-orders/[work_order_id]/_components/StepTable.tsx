@@ -31,7 +31,7 @@ interface StepTableProps {
   };
   work_step_status: NonNullable<
     Awaited<
-      ReturnType<(typeof trpc)["db"]["work_order"]["get"]["withSteps"]["query"]>
+      ReturnType<(typeof trpc)["db"]["work_order"]["get"]["withSteps"]>
     >["data"]
   >["work_step_status"];
 }

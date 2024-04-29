@@ -12,37 +12,37 @@ import { experimental_nextCacheLink } from "@trpc/next/app-dir/links/nextCache";
 import { createClient } from "@/lib/supabase/server";
 import { createContext } from "./context";
 import { createCallerFactory } from "./trpc";
-export const trpc = experimental_createTRPCNextAppDirServer<typeof appRouter>({
-  config() {
-    return {
-      links: [
-        loggerLink({
-          enabled: (op) => true,
-        }),
-        experimental_nextCacheLink({
-          transformer: superjson,
-          // requests are cached for 5 seconds
-          revalidate: 5,
-          router: appRouter,
-          async createContext() {
-            const supabase = createClient();
-            const {
-              data: { session },
-            } = await supabase.auth.getSession();
-            return {
-              session: session,
-              headers: {
-                cookie: cookies().toString(),
-                "x-trpc-source": "rsc-invoke",
-              },
-              db: supabase,
-            };
-          },
-        }),
-      ],
-    };
-  },
-});
+// export const trpc = experimental_createTRPCNextAppDirServer<typeof appRouter>({
+//   config() {
+//     return {
+//       links: [
+//         loggerLink({
+//           enabled: (op) => true,
+//         }),
+//         experimental_nextCacheLink({
+//           transformer: superjson,
+//           // requests are cached for 5 seconds
+//           revalidate: 5,
+//           router: appRouter,
+//           async createContext() {
+//             const supabase = createClient();
+//             const {
+//               data: { session },
+//             } = await supabase.auth.getSession();
+//             return {
+//               session: session,
+//               headers: {
+//                 cookie: cookies().toString(),
+//                 "x-trpc-source": "rsc-invoke",
+//               },
+//               db: supabase,
+//             };
+//           },
+//         }),
+//       ],
+//     };
+//   },
+// });
 
 // export const trpc = createTRPCClient<AppRouter>({
 //   links: [
@@ -63,7 +63,7 @@ export const trpc = experimental_createTRPCNextAppDirServer<typeof appRouter>({
 //   ],
 // });
 
-export const testRPC = createCallerFactory(appRouter)(async () => {
+export const trpc = createCallerFactory(appRouter)(async () => {
   const supabase = createClient();
   const {
     data: { session },

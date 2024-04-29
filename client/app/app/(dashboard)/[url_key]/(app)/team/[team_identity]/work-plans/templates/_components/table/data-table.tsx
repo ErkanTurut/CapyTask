@@ -31,23 +31,18 @@ import { useSearchParams } from "next/navigation";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { trpc } from "@/trpc/server";
 import { api } from "@/trpc/client";
-import { Button } from "@/components/ui/button";
 
 interface DataTableProps {
   columns: ColumnDef<
     NonNullable<
       Awaited<
-        ReturnType<
-          (typeof trpc)["db"]["work_plan_template"]["get"]["byId"]["query"]
-        >
+        ReturnType<(typeof trpc)["db"]["work_plan_template"]["get"]["byId"]>
       >["data"]
     >
   >[];
   initialData: NonNullable<
     Awaited<
-      ReturnType<
-        (typeof trpc)["db"]["work_plan_template"]["get"]["byTeamId"]["query"]
-      >
+      ReturnType<(typeof trpc)["db"]["work_plan_template"]["get"]["byTeamId"]>
     >
   >;
 

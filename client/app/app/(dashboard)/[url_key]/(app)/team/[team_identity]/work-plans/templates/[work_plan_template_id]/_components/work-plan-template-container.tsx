@@ -30,7 +30,7 @@ const WorkPlanTemplateContainer: React.FC<StepsContainerProps> = async ({
   //   });
 
   const { data: work_plan_template } =
-    await trpc.db.work_plan_template.get.withSteps.query({
+    await trpc.db.work_plan_template.get.withSteps({
       id: params.work_plan_template_id,
     });
 

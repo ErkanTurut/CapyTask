@@ -23,7 +23,7 @@ interface PageProps {
 
 export default async function Page({ searchParams, params }: PageProps) {
   if (searchParams.step_id) {
-    const { data: step } = await trpc.db.work_step_template.get.query({
+    const { data: step } = await trpc.db.work_step_template.get({
       id: searchParams.step_id,
     });
     if (!step) return null;

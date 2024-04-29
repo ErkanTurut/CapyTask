@@ -16,7 +16,7 @@ const WorkOrderTable: FC<plansTableProps> = async ({
   searchParams,
   params,
 }) => {
-  const data = await trpc.db.work_order.get.byTeamIdentity.query({
+  const data = await trpc.db.work_order.get.byTeamIdentity({
     team_identity: params.team_identity,
     range: {
       start: (searchParams.page - 1) * searchParams.limit,

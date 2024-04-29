@@ -23,7 +23,7 @@ interface createTeamProps {
 }
 
 export default async function createTeam({ params }: createTeamProps) {
-  const { data: workspace } = await trpc.db.workspace.getByUrlKey.query({
+  const { data: workspace } = await trpc.db.workspace.getByUrlKey({
     url_key: params.url_key,
   });
   if (!workspace) redirect("/create");

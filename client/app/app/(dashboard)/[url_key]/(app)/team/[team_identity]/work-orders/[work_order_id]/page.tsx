@@ -10,6 +10,7 @@ import { Suspense } from "react";
 import StepTable from "./_components/StepTable";
 import WorkOrderDetail from "./_components/WorkOrderDetail";
 import WorkOrderHeader from "./_components/WorkOrderHeader";
+import BuddyComment from "./_components/BuddyComment";
 
 interface PageProps {
   params: {
@@ -20,7 +21,7 @@ interface PageProps {
 }
 
 export default async function Page({ params }: PageProps) {
-  const { data: work_order } = await trpc.db.work_order.get.withSteps.query({
+  const { data: work_order } = await trpc.db.work_order.get.withSteps({
     id: params.work_order_id,
   });
 
@@ -28,8 +29,8 @@ export default async function Page({ params }: PageProps) {
     return notFound();
   }
   return (
-    <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
-      <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
+    <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0  lg:grid-cols-3 xl:grid-cols-5">
+      <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2 xl:col-span-3">
         <div className="grid gap-4 sm:grid-cols-2 ">
           <WorkOrderHeader params={params} work_order={work_order} />
         </div>
@@ -90,7 +91,8 @@ export default async function Page({ params }: PageProps) {
           </TabsContent>
         </Tabs>
       </div>
-      <div>
+      <div className="grid auto-rows-max items-start gap-4 xl:col-span-2">
+        <BuddyComment />
         <WorkOrderDetail params={params} work_order={work_order} />
       </div>
     </main>

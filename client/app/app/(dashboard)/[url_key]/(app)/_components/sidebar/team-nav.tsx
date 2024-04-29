@@ -10,7 +10,7 @@ interface TeamNavProps {
 }
 
 export default async function TeamNav({ params }: TeamNavProps) {
-  const { data: teams } = await trpc.db.team.getByWorkspaceUrlKey.query({
+  const { data: teams } = await trpc.db.team.getByWorkspaceUrlKey({
     url_key: params.url_key,
   });
   return (

@@ -39,7 +39,7 @@ interface WorkOrderDetailProps {
   };
   work_order: NonNullable<
     Awaited<
-      ReturnType<(typeof trpc)["db"]["work_order"]["get"]["withSteps"]["query"]>
+      ReturnType<(typeof trpc)["db"]["work_order"]["get"]["withSteps"]>
     >["data"]
   >;
 }

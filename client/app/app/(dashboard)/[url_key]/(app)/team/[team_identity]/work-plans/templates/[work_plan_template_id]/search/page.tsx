@@ -16,11 +16,10 @@ interface pageProps {
 export default async function Page({ searchParams, params }: pageProps) {
   dynamic();
 
-  const { data: searchStep } =
-    await trpc.db.work_step_template.searchSteps.query({
-      q: searchParams.q,
-      team_identity: params.team_identity,
-    });
+  const { data: searchStep } = await trpc.db.work_step_template.searchSteps({
+    q: searchParams.q,
+    team_identity: params.team_identity,
+  });
 
   return (
     <SearchStep

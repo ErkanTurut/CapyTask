@@ -36,15 +36,13 @@ interface DataTableProps {
   columns: ColumnDef<
     NonNullable<
       Awaited<
-        ReturnType<(typeof trpc)["db"]["work_order"]["get"]["byId"]["query"]>
+        ReturnType<(typeof trpc)["db"]["work_order"]["get"]["byId"]>
       >["data"]
     >
   >[];
   initialData: NonNullable<
     Awaited<
-      ReturnType<
-        (typeof trpc)["db"]["work_order"]["get"]["byTeamIdentity"]["query"]
-      >
+      ReturnType<(typeof trpc)["db"]["work_order"]["get"]["byTeamIdentity"]>
     >
   >;
   params: {

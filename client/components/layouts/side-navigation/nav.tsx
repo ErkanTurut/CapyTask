@@ -90,35 +90,37 @@ export function Nav({ items, size, className, rootPath, level = 0 }: NavProps) {
                     "group h-6 justify-between",
                   )}
                 >
-                  <span className="flex w-full justify-start ">
-                    {item.image_url && (
-                      <Avatar className="mr-2 h-4 w-4 rounded-sm">
-                        <AvatarImage
-                          src={item.image_url}
-                          alt={item.title ?? ""}
+                  <Link href={item.href ? href : "#"}>
+                    <span className="flex w-full justify-start ">
+                      {item.image_url && (
+                        <Avatar className="mr-2 h-4 w-4 rounded-sm">
+                          <AvatarImage
+                            src={item.image_url}
+                            alt={item.title ?? ""}
+                          />
+                        </Avatar>
+                      )}
+                      {Icon && (
+                        <Icon
+                          className="mr-2 h-4 w-4 shrink-0"
+                          aria-hidden="true"
                         />
-                      </Avatar>
-                    )}
-                    {Icon && (
-                      <Icon
-                        className="mr-2 h-4 w-4 shrink-0"
-                        aria-hidden="true"
-                      />
-                    )}
-                    {item.title}
+                      )}
+                      {item.title}
 
-                    {item.label && (
-                      <span
-                        className={cn(
-                          "ml-auto",
-                          item.variant === "default" &&
-                            "text-background dark:text-white",
-                        )}
-                      >
-                        {item.label}
-                      </span>
-                    )}
-                  </span>
+                      {item.label && (
+                        <span
+                          className={cn(
+                            "ml-auto",
+                            item.variant === "default" &&
+                              "text-background dark:text-white",
+                          )}
+                        >
+                          {item.label}
+                        </span>
+                      )}
+                    </span>
+                  </Link>
                 </AccordionTrigger>
                 <AccordionContent className="py-1">
                   <span
