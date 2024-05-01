@@ -12,6 +12,7 @@ import { experimental_nextCacheLink } from "@trpc/next/app-dir/links/nextCache";
 import { createClient } from "@/lib/supabase/server";
 import { createContext } from "./context";
 import { createCallerFactory } from "./trpc";
+import { cache } from "react";
 // export const trpc = experimental_createTRPCNextAppDirServer<typeof appRouter>({
 //   config() {
 //     return {
@@ -65,11 +66,10 @@ import { createCallerFactory } from "./trpc";
 
 export const trpc = createCallerFactory(appRouter)(async () => {
   const supabase = createClient();
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  const getSession = cache(() => supabase.auth.getSession());
+
   return {
-    session: session,
+    session: (await getSession()).data?.session,
     headers: {
       cookie: cookies().toString(),
       "x-trpc-source": "rsc-invoke",
