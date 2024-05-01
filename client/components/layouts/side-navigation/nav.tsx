@@ -89,6 +89,7 @@ export function Nav({ items, size, className, rootPath, level = 0 }: NavProps) {
                     }),
                     "group h-6 justify-between",
                   )}
+                  disabled={item.disabled}
                 >
                   <Link href={item.href ? href : "#"}>
                     <span className="flex w-full justify-start ">

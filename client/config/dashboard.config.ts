@@ -66,7 +66,7 @@ export const appNavItems: {
       title: "Locations",
       icon: "SewingPin",
       variant: "ghost",
-      href: "/maps",
+      disabled: true,
       id: "maps",
     },
     {

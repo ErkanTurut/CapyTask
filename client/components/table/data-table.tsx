@@ -30,16 +30,22 @@ import { DataTablePagination } from "@/components/table/data-table-pagination";
 import { useSearchParams } from "next/navigation";
 import { DataTableToolbar } from "./data-table-toolbar";
 
+type A<T> = Partial<{
+  [P in keyof T]: boolean;
+}>;
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   count: number;
+  filter?: { columnVisibility: A<TData> };
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   count,
+  filter = { columnVisibility: {} as A<TData> },
 }: DataTableProps<TData, TValue>) {
   const searchParams = useSearchParams();
 
@@ -68,7 +74,8 @@ export function DataTable<TData, TValue>({
 
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
+    React.useState<VisibilityState>(filter.columnVisibility as VisibilityState);
+
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   );
