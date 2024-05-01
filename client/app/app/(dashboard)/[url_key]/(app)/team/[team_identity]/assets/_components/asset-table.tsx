@@ -2,7 +2,7 @@ import { FC } from "react";
 import { columns } from "./columns";
 import { trpc } from "@/trpc/server";
 import { DataTable } from "@/components/table/data-table";
-interface plansTableProps {
+interface TableProps {
   searchParams: {
     limit: number;
     page: number;
@@ -12,17 +12,15 @@ interface plansTableProps {
   };
 }
 
-const WorkOrderTable: FC<plansTableProps> = async ({
-  searchParams,
-  params,
-}) => {
-  const { data, count } = await trpc.db.work_order.get.byTeamIdentity({
+const AssetTable: FC<TableProps> = async ({ searchParams, params }) => {
+  const { data, count } = await trpc.db.asset.get.byTeam({
     team_identity: params.team_identity,
     range: {
       start: (searchParams.page - 1) * searchParams.limit,
       end: (searchParams.page - 1) * searchParams.limit + searchParams.limit,
     },
   });
+
   return (
     <DataTable
       filter={{ columnVisibility: { description: false } }}
@@ -33,4 +31,4 @@ const WorkOrderTable: FC<plansTableProps> = async ({
   );
 };
 
-export default WorkOrderTable;
+export default AssetTable;
