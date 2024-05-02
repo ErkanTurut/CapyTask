@@ -42,6 +42,74 @@ export type Database = {
         }
         Relationships: []
       }
+      asset: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          public_id: string
+          updated_at: string
+          workspace_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          public_id?: string
+          updated_at?: string
+          workspace_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          public_id?: string
+          updated_at?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "asset_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspace"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      asset_team: {
+        Row: {
+          asset_id: string
+          team_id: string
+        }
+        Insert: {
+          asset_id: string
+          team_id: string
+        }
+        Update: {
+          asset_id?: string
+          team_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "asset_team_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "asset"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "asset_team_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "team"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       role: {
         Row: {
           description: string

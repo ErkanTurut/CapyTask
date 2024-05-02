@@ -1,7 +1,8 @@
-import { DataTable } from "./data-table";
-import { FC } from "react";
-import { columns } from "./columns";
 import { trpc } from "@/trpc/server";
+import { FC } from "react";
+import { columns } from "./table/columns";
+import { DataTable } from "./table/data-table";
+
 interface plansTableProps {
   props: {
     offset: number;
@@ -17,17 +18,13 @@ const WorkPlanTemplateTable: FC<plansTableProps> = async ({
   props,
   params,
 }) => {
-  const initialData = await trpc.db.work_plan_template.get.byTeamId.query({
+  const initialData = await trpc.db.work_plan_template.get.byTeamId({
     team_identity: params.team_identity,
     range: { start: props.offset, end: props.offset + props.limit * 2 },
   });
 
   return (
-    <DataTable
-      columns={columns}
-      initialData={initialData || { data: [], count: 0 }}
-      params={params}
-    />
+    <DataTable params={params} columns={columns} initialData={initialData} />
   );
 };
 

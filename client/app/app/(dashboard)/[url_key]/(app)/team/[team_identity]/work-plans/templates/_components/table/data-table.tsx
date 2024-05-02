@@ -27,26 +27,25 @@ import {
 } from "@/ui/table";
 
 import { DataTablePagination } from "@/components/table/data-table-pagination";
-import { trpc } from "@/trpc/server";
 import { useSearchParams } from "next/navigation";
 import { DataTableToolbar } from "./data-table-toolbar";
+import { trpc } from "@/trpc/server";
 import { api } from "@/trpc/client";
 
 interface DataTableProps {
   columns: ColumnDef<
     NonNullable<
       Awaited<
-        ReturnType<(typeof trpc)["db"]["work_order"]["get"]["byId"]["query"]>
+        ReturnType<(typeof trpc)["db"]["work_plan_template"]["get"]["byId"]>
       >["data"]
     >
   >[];
   initialData: NonNullable<
     Awaited<
-      ReturnType<
-        (typeof trpc)["db"]["work_order"]["get"]["byTeamIdentity"]["query"]
-      >
+      ReturnType<(typeof trpc)["db"]["work_plan_template"]["get"]["byTeamId"]>
     >
   >;
+
   params: {
     team_identity: string;
   };
@@ -54,7 +53,6 @@ interface DataTableProps {
 
 export function DataTable({ columns, initialData, params }: DataTableProps) {
   const searchParams = useSearchParams();
-
   const page = parseInt(searchParams.get("page") as string) || 1;
   const limit = parseInt(searchParams.get("limit") as string) || 10;
   const [{ pageIndex, pageSize }, setPagination] = React.useState({
@@ -64,7 +62,7 @@ export function DataTable({ columns, initialData, params }: DataTableProps) {
 
   const {
     data: { data, count },
-  } = api.db.work_order.get.byTeamIdentity.useQuery(
+  } = api.db.work_plan_template.get.byTeamId.useQuery(
     {
       team_identity: params.team_identity,
       range: {
@@ -77,9 +75,7 @@ export function DataTable({ columns, initialData, params }: DataTableProps) {
 
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({
-      description: false,
-    });
+    React.useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   );
@@ -116,9 +112,10 @@ export function DataTable({ columns, initialData, params }: DataTableProps) {
   return (
     <div className="space-y-4">
       <DataTableToolbar table={table} />
+
       <div className="rounded-md border bg-background">
         <Table>
-          <TableHeader className=" bg-muted/50 ">
+          <TableHeader className="  border-foreground bg-muted/50">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {

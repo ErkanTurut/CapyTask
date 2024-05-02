@@ -82,8 +82,25 @@ export async function getWorkOrderStepsHandler({
     .select("*, work_step_status(*, work_step(*))")
     .eq("id", input.id)
     .order("step_order", {
-      referencedTable: "work_step_status.work_step",
+      referencedTable: "work_step_status",
     })
+    .single()
+    .throwOnError();
+}
+
+export async function getWorkOrderStatusHandler({
+  input,
+  db,
+}: {
+  input: {
+    id: TGetWorkOrderSchema["id"];
+  };
+  db: SupabaseClient;
+}) {
+  return await db
+    .from("work_order")
+    .select("status")
+    .eq("id", input.id)
     .single()
     .throwOnError();
 }

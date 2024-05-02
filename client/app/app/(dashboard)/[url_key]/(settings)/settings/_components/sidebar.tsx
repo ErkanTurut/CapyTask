@@ -10,7 +10,7 @@ import type { trpc } from "@/trpc/server";
 export interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   url_key: string;
   teams: Awaited<
-    ReturnType<(typeof trpc)["db"]["team"]["getByWorkspaceUrlKey"]["query"]>
+    ReturnType<(typeof trpc)["db"]["team"]["getByWorkspaceUrlKey"]>
   >["data"];
 }
 

@@ -1,4 +1,3 @@
-import CreateWorkOrderForm from "@/components/work-order/work-order-create-form";
 import {
   PageHeader,
   PageHeaderDescription,
@@ -12,9 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { trpc } from "@/trpc/server";
-import { notFound } from "next/navigation";
-import { Suspense } from "react";
 
 interface createWorkOrderProps {
   params: {
@@ -26,12 +22,13 @@ interface createWorkOrderProps {
 export default async function createWorkOrder({
   params,
 }: createWorkOrderProps) {
-  const { data: team } = await trpc.db.team.getByIdentity.query({
-    identity: params.team_identity,
-  });
-  if (!team) {
-    notFound();
-  }
+  // unstable_noStore();
+  // const { data: team } = await trpc.db.team.getByIdentity.query({
+  //   identity: params.team_identity,
+  // });
+  // if (!team) {
+  //   notFound();
+  // }
   return (
     <Shell variant="markdown" className="gap-2">
       <PageHeader
@@ -53,9 +50,9 @@ export default async function createWorkOrder({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Suspense fallback="loading...">
+          {/* <Suspense fallback="loading...">
             <CreateWorkOrderForm team_id={team.id} />
-          </Suspense>
+          </Suspense> */}
         </CardContent>
       </Card>
     </Shell>

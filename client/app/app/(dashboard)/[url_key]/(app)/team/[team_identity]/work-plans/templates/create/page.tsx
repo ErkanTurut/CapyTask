@@ -20,9 +20,10 @@ interface createPageProps {
 }
 
 export default async function createPage({ params }: createPageProps) {
-  const { data: team } = await trpc.db.team.getByIdentity.query({
+  const { data: team } = await trpc.db.team.getByIdentity({
     identity: params.team_identity,
   });
+
   if (!team) return null;
   return (
     <Shell variant={"markdown"}>

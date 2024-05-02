@@ -13,7 +13,7 @@ export default async function SettingsLayout({
   children,
   params,
 }: SettingsLayoutProps) {
-  const { data: teams } = await trpc.db.team.getByWorkspaceUrlKey.query({
+  const { data: teams } = await trpc.db.team.getByWorkspaceUrlKey({
     url_key: params.url_key,
   });
 

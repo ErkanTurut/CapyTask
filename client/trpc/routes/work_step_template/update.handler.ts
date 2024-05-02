@@ -11,7 +11,10 @@ type opts = {
 export const updateWorkStepTemplateHandler = async ({ input, db }: opts) => {
   return await db
     .from("work_step_template")
-    .update(input)
+    .update({
+      name: input.name,
+      description: input.description,
+    })
     .eq("id", input.id)
     .select("*")
     .single()

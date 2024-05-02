@@ -1,25 +1,29 @@
 import { useCallback, useState } from "react";
 
-// Custom hook to copy text to clipboard
-const useCopyToClipboard = (timeoutDuration: number = 1000) => {
-  const [copied, setCopied] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+type CopiedValue = string | null;
 
-  const copyToClipboard = useCallback(
-    async (text: string) => {
-      try {
-        await navigator.clipboard.writeText(text);
-        setCopied(true);
-        setError(null);
-        setTimeout(() => setCopied(false), timeoutDuration);
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error("Failed to copy text"));
-      }
-    },
-    [timeoutDuration],
-  );
+type CopyFn = (text: string) => Promise<boolean>;
 
-  return { copied, error, copyToClipboard };
-};
+export function useCopyToClipboard(): [CopiedValue, CopyFn] {
+  const [copiedText, setCopiedText] = useState<CopiedValue>(null);
 
-export default useCopyToClipboard;
+  const copy: CopyFn = useCallback(async (text) => {
+    if (!navigator?.clipboard) {
+      console.warn("Clipboard not supported");
+      return false;
+    }
+
+    // Try to save to clipboard then save it in the state if worked
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedText(text);
+      return true;
+    } catch (error) {
+      console.warn("Copy failed", error);
+      setCopiedText(null);
+      return false;
+    }
+  }, []);
+
+  return [copiedText, copy];
+}

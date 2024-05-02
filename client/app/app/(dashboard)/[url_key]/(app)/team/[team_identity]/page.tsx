@@ -1,11 +1,5 @@
-import { redirect } from "next/navigation";
-interface DashboardLayoutProps {
-  params: {
-    url_key: string;
-    team_identity: string;
-  };
-}
+interface PageProps {}
 
-export default async function RedirectPage({ params }: DashboardLayoutProps) {
-  redirect(`./${params.team_identity}/templates/plans`);
+export default function Page({}: PageProps) {
+  return <div>page</div>;
 }

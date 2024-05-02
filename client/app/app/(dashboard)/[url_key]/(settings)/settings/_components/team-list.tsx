@@ -23,7 +23,7 @@ import { Nav } from "./nav";
 interface TeamListProps {
   items: NavItem[];
   teams: Awaited<
-    ReturnType<(typeof trpc)["db"]["team"]["getByWorkspaceUrlKey"]["query"]>
+    ReturnType<(typeof trpc)["db"]["team"]["getByWorkspaceUrlKey"]>
   >["data"];
   rootPath: string;
   isCollapsed?: boolean;

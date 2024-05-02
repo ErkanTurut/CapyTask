@@ -11,7 +11,7 @@ interface WorkspaceSelectorProps {
 export default async function WorkspaceSelector({
   params,
 }: WorkspaceSelectorProps) {
-  const { data: workspaces } = await trpc.db.workspace.getByCurrentUser.query();
+  const { data: workspaces } = await trpc.db.workspace.getByCurrentUser();
   if (!workspaces) {
     redirect("/create");
   }

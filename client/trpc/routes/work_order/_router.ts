@@ -1,6 +1,7 @@
 import { protectedProcedure, router } from "@/trpc/trpc";
 import {
   getWorkOrderHandler,
+  getWorkOrderStatusHandler,
   getWorkOrderStepsHandler,
   getWorkOrdersByIdentityHandler,
   searchWorkOrderHandler,
@@ -10,6 +11,8 @@ import { ZCreateWorkOrderSchema } from "./create.schema";
 import { createWorkOrderHandler } from "./create.handler";
 import { ZDeleteWorkOrderSchema } from "./delete.schema";
 import { deleteWorkOrderHandler } from "./delete.handler";
+import { updateWorkOrderStatusHandler } from "./update.handler";
+import { ZUpdateWorkOrderSchema } from "./update.schema";
 
 export const work_order = router({
   test: protectedProcedure.query(async ({ ctx }) => {
@@ -41,6 +44,15 @@ export const work_order = router({
           db: ctx.db,
         });
       }),
+    status: protectedProcedure
+      .input(ZGetWorkOrderSchema.pick({ id: true }))
+      .query(async ({ ctx, input }) => {
+        const { data } = await getWorkOrderStatusHandler({
+          input,
+          db: ctx.db,
+        });
+        return data;
+      }),
   },
   create: protectedProcedure
     .input(ZCreateWorkOrderSchema)
@@ -66,4 +78,15 @@ export const work_order = router({
         db: ctx.db,
       });
     }),
+
+  update: {
+    status: protectedProcedure
+      .input(ZUpdateWorkOrderSchema.pick({ id: true, status: true }))
+      .mutation(async ({ ctx, input }) => {
+        updateWorkOrderStatusHandler({
+          input,
+          db: ctx.db,
+        });
+      }),
+  },
 });

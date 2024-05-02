@@ -29,7 +29,7 @@ import { Textarea } from "@/ui/textarea";
 interface StepUpdateFormProps extends React.HTMLAttributes<HTMLFormElement> {
   step: NonNullable<
     Awaited<
-      ReturnType<(typeof trpc)["db"]["work_step_template"]["get"]["query"]>
+      ReturnType<(typeof trpc)["db"]["work_step_template"]["get"]>
     >["data"]
   >;
 }
