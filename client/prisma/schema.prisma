@@ -176,18 +176,20 @@ model work_step {
 }
 
 model work_order {
-  id               String             @id @default(dbgenerated("nanoid(10)"))
-  public_id        String             @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name             String
-  description      String?
-  created_at       DateTime           @default(now()) @db.Timestamptz(6)
-  updated_at       DateTime           @default(now()) @updatedAt @db.Timestamptz(6)
-  status           Status             @default(OPEN)
-  team_id          String
-  work_plan_id     String?
-  team             team               @relation(fields: [team_id], references: [id], onDelete: Cascade)
-  work_plan        work_plan?         @relation(fields: [work_plan_id], references: [id])
+  id           String     @id @default(dbgenerated("nanoid(10)"))
+  public_id    String     @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name         String
+  description  String?
+  created_at   DateTime   @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime   @default(now()) @updatedAt @db.Timestamptz(6)
+  status       Status     @default(OPEN)
+  team_id      String
+  work_plan_id String?
+  team         team       @relation(fields: [team_id], references: [id], onDelete: Cascade)
+  work_plan    work_plan? @relation(fields: [work_plan_id], references: [id])
+
   work_step_status work_step_status[]
+  work_order_asset work_order_asset[]
 
   @@index([team_id])
 }
@@ -211,6 +213,17 @@ model work_step_status {
   @@index([work_order_id])
 }
 
+model work_order_asset {
+  work_order_id String
+  asset_id      String
+  work_order    work_order @relation(fields: [work_order_id], references: [id])
+  asset         asset      @relation(fields: [asset_id], references: [id])
+
+  @@id([work_order_id, asset_id])
+  @@index([asset_id])
+  @@index([work_order_id])
+}
+
 model asset {
   id        String @id @default(dbgenerated("nanoid(17)"))
   public_id String @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
@@ -224,7 +237,8 @@ model asset {
   workspace_id String
   workspace    workspace @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
 
-  asset_team asset_team[]
+  asset_team       asset_team[]
+  work_order_asset work_order_asset[]
 }
 
 model asset_team {
