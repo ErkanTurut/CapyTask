@@ -1,3 +1,4 @@
+import AssetCreateForm from "@/components/asset/AssetCreateForm";
 import {
   PageHeader,
   PageHeaderDescription,
@@ -19,6 +20,7 @@ import { Suspense } from "react";
 interface createTeamProps {
   params: {
     url_key: string;
+    team_identity: string;
   };
 }
 
@@ -45,20 +47,6 @@ export default async function createTeam({ params }: createTeamProps) {
       </PageHeader>
       <Card>
         <CardHeader>
-          <CardTitle>Team information</CardTitle>
-          <CardDescription>
-            Fill in the details below to create your new team. This information
-            will be displayed to your team members.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Suspense fallback="loading...">
-            <CreateTeamForm workspace_id={workspace.id} />
-          </Suspense>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader>
           <CardTitle>Invite team members</CardTitle>
           <CardDescription>
             Fill the team information that will be displayed{" "}
@@ -66,9 +54,11 @@ export default async function createTeam({ params }: createTeamProps) {
         </CardHeader>
         <CardContent>
           <Suspense fallback="loading...">
-            <CreateTeamForm workspace_id={workspace.id} />
+            <AssetCreateForm
+              team_id={params.team_identity}
+              workspace_id={workspace.id}
+            />
           </Suspense>
-          {/* i will add team invitation section here with form */}
         </CardContent>
       </Card>
     </Shell>
