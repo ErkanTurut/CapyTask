@@ -3,21 +3,21 @@ import "server-only";
 import { SupabaseClient } from "@/lib/supabase/server";
 
 import { TCreateWorkspaceSchema } from "./create.schema";
-import type { Session } from "@supabase/supabase-js";
+import type { User } from "@supabase/supabase-js";
 
 type opts = {
   input: TCreateWorkspaceSchema;
   db: SupabaseClient;
-  session: Session;
+  user: User;
 };
 
-export const createWorkspaceHandler = async ({ input, db, session }: opts) => {
+export const createWorkspaceHandler = async ({ input, db, user }: opts) => {
   return await db
     .from("workspace")
     .insert({
       name: input.name,
       url_key: input.url_key,
-      created_by: session.user.id,
+      created_by: user.id,
     })
     .throwOnError();
 };

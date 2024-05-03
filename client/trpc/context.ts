@@ -4,11 +4,11 @@ import { cookies } from "next/headers";
 
 export async function createContext(opts?: FetchCreateContextFnOptions) {
   const {
-    data: { session },
-  } = await createClient(cookies()).auth.getSession();
+    data: { user },
+  } = await createClient(cookies()).auth.getUser();
 
   return {
-    session,
+    user,
     headers: opts && Object.fromEntries(opts.req.headers),
     db: createClient(cookies()),
   };

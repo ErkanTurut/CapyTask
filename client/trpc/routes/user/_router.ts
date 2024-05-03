@@ -22,7 +22,7 @@ export const user = router({
     }),
   getCurrentUser: protectedProcedure.query(async ({ ctx }) => {
     return getUserHandler({
-      input: { id: ctx.session.user.id },
+      input: { id: ctx.user.id },
       db: ctx.db,
     });
   }),
