@@ -14,12 +14,15 @@ export default async function BuddyComment({}: BuddyCommentProps) {
     <Card x-chunk="dashboard-05-chunk-3">
       <CardHeader>
         <CardTitle>Buddy Insights</CardTitle>
-        <CardDescription></CardDescription>
       </CardHeader>
-      <CardContent>
-        Hey there! Work Order #123 is currently in progress. Technician John
-        Smith is on-site and working hard to resolve the issue. Estimated
-        completion is in 2 days.
+      <CardContent className="text-pretty text-sm">
+        The work order is currently in progress with the status marked as "In
+        Progress." As of the latest update on May 3, 2024, routine maintenance
+        has been completed, and repair work is underway. One task remains open,
+        indicating a pending activity. The assigned team is actively working on
+        resolving the issues, and the system unit requiring maintenance is
+        identified as Model AC-1234. Close monitoring of progress and timely
+        resolution of any issues are recommended to ensure smooth completion.
       </CardContent>
       <CardFooter>not this summary</CardFooter>
     </Card>
