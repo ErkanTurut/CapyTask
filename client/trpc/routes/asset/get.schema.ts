@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-export const ZGetWorkOrderSchema = z
+export const ZGetAssetSchema = z
   .object({
     id: z.string(),
     team_identity: z
@@ -18,7 +18,8 @@ export const ZGetWorkOrderSchema = z
       end: z.number().int().positive(),
     }),
     q: z.string(),
+    work_order_id: z.string(),
   })
   .strict();
 
-export type TGetWorkOrderSchema = z.infer<typeof ZGetWorkOrderSchema>;
+export type TGetAssetSchema = z.infer<typeof ZGetAssetSchema>;
