@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import type { trpc } from "@/trpc/server";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
-import { DataTableRowActions } from "./data-table-row-actions";
+import { DataTableRowActions } from "./DataTableRowActions";
 
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Database } from "@/types/supabase.types";

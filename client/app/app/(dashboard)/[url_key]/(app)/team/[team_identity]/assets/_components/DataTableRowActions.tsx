@@ -8,21 +8,15 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/ui/dropdown-menu";
 import { api } from "@/trpc/client";
-import { ZGetWorkOrderSchema } from "@/trpc/routes/work_order/get.schema";
 import { toast } from "sonner";
 import { catchError } from "@/lib/utils";
-import { trpc } from "@/trpc/server";
 import { Database } from "@/types/supabase.types";
+import { useParams } from "next/navigation";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<Database["public"]["Tables"]["asset"]["Row"]>;
@@ -33,20 +27,27 @@ export function DataTableRowActions<TData>({
   row,
   table,
 }: DataTableRowActionsProps<TData>) {
-  const work_order = row.original;
+  const asset = row.original;
   const utils = api.useUtils();
+  const params = useParams<{ team_identity: string }>();
 
-  const { mutate: remove } = api.db.work_order.delete.useMutation({
-    onSuccess: async (data) => {
-      toast.success("Work order deleted successfully!");
+  const { mutate: remove } = api.db.asset.delete.useMutation({
+    onSuccess: async () => {
+      toast.success("Asset deleted successfully!");
     },
     onError: (err) => {
       catchError(new Error(err.message));
     },
     onSettled: async () => {
-      await utils.db.work_order.get.invalidate();
+      await utils.db.asset.get.invalidate();
     },
   });
+
+  const { data: team } = api.db.team.getByIdentity.useQuery({
+    identity: params.team_identity,
+  });
+
+  if (!team) return null;
 
   return (
     <DropdownMenu>
@@ -77,7 +78,9 @@ export function DataTableRowActions<TData>({
           </DropdownMenuSubContent>
         </DropdownMenuSub> */}
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => remove({ id: [work_order.id] })}>
+        <DropdownMenuItem
+          onClick={() => remove({ asset_id: [asset.id], team_id: team.id })}
+        >
           Delete
           <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
         </DropdownMenuItem>
