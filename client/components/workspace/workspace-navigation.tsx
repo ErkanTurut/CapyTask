@@ -62,12 +62,12 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({
           )}
           size={isCollapsed ? "icon" : "default"}
         >
-          <Avatar className="h-5 w-5 rounded-sm">
+          <Avatar className="h-5 w-5 rounded-md">
             <AvatarImage
               src={selectedWorkspace.image_uri || image_url}
               alt={selectedWorkspace.url_key}
             />
-            <AvatarFallback className="h-5 w-5 rounded-sm">
+            <AvatarFallback className="h-5 w-5 rounded-md">
               {initials}
             </AvatarFallback>
           </Avatar>
@@ -99,7 +99,7 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({
                       router.push(`/${workspace.url_key}/team`);
                     }}
                   >
-                    <Avatar className="mr-2 h-5 w-5 rounded-sm">
+                    <Avatar className="mr-2 h-5 w-5 rounded-md">
                       <AvatarImage
                         src={
                           generateAvatar({
@@ -108,7 +108,7 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({
                         }
                         alt={workspace.url_key}
                       />
-                      <AvatarFallback className="mr-2 h-5 w-5 rounded-sm">
+                      <AvatarFallback className="mr-2 h-5 w-5 rounded-md">
                         {initials}
                       </AvatarFallback>
                     </Avatar>

@@ -38,6 +38,7 @@ import {
   TimerIcon,
   CrossCircledIcon,
   SewingPinIcon,
+  MagicWandIcon,
 } from "@radix-ui/react-icons";
 import { Loader2, Banknote, Route } from "lucide-react";
 
@@ -108,6 +109,7 @@ export const Icons = {
   timer: TimerIcon,
   CrossCircled: CrossCircledIcon,
   SewingPin: SewingPinIcon,
+  MagicWand: MagicWandIcon,
 
   logo: (props: LucideProps & logoProps) => {
     const { size, className } = props;

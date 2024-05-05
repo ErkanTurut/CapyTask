@@ -66,14 +66,14 @@ export function Providers({
             defaultTheme="system"
             enableSystem
           >
-            <TailwindIndicator />
+            {/* <TailwindIndicator /> */}
             {children}
             <Toaster
               closeButton
               position={isMobile ? "top-center" : "bottom-right"}
             />
           </NextThemesProvider>
-          <ReactQueryDevtools initialIsOpen={false} />
+          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         </ReactQueryStreamedHydration>
       </QueryClientProvider>
     </api.Provider>

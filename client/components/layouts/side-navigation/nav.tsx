@@ -20,7 +20,6 @@ import {
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { useSidebar } from "@/lib/store";
-import { usePathname } from "next/navigation";
 
 interface NavProps extends React.HTMLAttributes<HTMLDivElement> {
   items: NavItem[];
@@ -33,8 +32,14 @@ interface NavProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function Nav({ items, size, className, rootPath, level = 0 }: NavProps) {
   const isCollapsed = useSidebar()((state) => state.isCollapsed);
-  const pathname = usePathname();
-  const decomposedPath = pathname.split("/");
+  const pathname = "";
+
+  const decomposedPath = [
+    "/dashboard",
+    "/dashboard/ai",
+    "/dashboard/ai/page",
+    "/dashboard/ai/page/",
+  ];
 
   return (
     <nav
@@ -94,7 +99,7 @@ export function Nav({ items, size, className, rootPath, level = 0 }: NavProps) {
                   <Link href={item.href ? href : "#"}>
                     <span className="flex w-full justify-start ">
                       {item.image_url && (
-                        <Avatar className="mr-2 h-4 w-4 rounded-sm">
+                        <Avatar className="mr-2 h-4 w-4 rounded-md">
                           <AvatarImage
                             src={item.image_url}
                             alt={item.title ?? ""}

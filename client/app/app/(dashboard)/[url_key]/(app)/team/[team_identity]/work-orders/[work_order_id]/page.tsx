@@ -79,10 +79,7 @@ export default async function Page({ params }: PageProps) {
           </div>
           <TabsContent value="step">
             <Suspense fallback={<CardSkeleton />}>
-              <StepTable
-                params={params}
-                work_step_status={work_order.work_step_status}
-              />
+              <StepTable work_step_status={work_order.work_step_status} />
             </Suspense>
           </TabsContent>
           <TabsContent value="asset">

@@ -12,6 +12,10 @@ import Toolbar from "@/components/layouts/toolbar/top-toolbar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Sidebar from "./_components/sidebar";
 import { Suspense } from "react";
+import { AI } from "./ai/actions";
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
+import { Icons } from "@/components/icons";
 interface DashboardLayoutProps {
   children: React.ReactNode;
   params: {
@@ -33,21 +37,32 @@ export default async function DashboardLayout({
     : undefined;
 
   return (
-    <SidebarProvider isCollapsed={defaultCollapsed || false}>
-      <TooltipProvider delayDuration={0}>
-        <ResizableGroup>
-          <Sidebar params={params} />
-          {/* <DotPattern className="absolute top-0 z-[-2] h-screen w-screen bg-background  "> */}
-          <Resizable defaultLayout={defaultLayout}>
-            <ScrollArea className="h-screen">
-              <Toolbar className="sticky top-0 z-40 hidden p-2 pb-4 sm:block  " />
-              {children}
-              <Toolbar className="sticky bottom-0 z-40 mt-4 block rounded-md border bg-muted p-2 pt-4 sm:hidden " />
-            </ScrollArea>
-          </Resizable>
-          {/* </DotPattern> */}
-        </ResizableGroup>
-      </TooltipProvider>
-    </SidebarProvider>
+    <AI>
+      <SidebarProvider isCollapsed={defaultCollapsed || false}>
+        <TooltipProvider delayDuration={0}>
+          <ResizableGroup>
+            <Sidebar params={params} />
+            <DotPattern className="absolute top-0 z-[-2] h-screen w-screen bg-background  ">
+              <Resizable defaultLayout={defaultLayout}>
+                <ScrollArea className="h-screen">
+                  <Toolbar className="sticky top-0 z-40 hidden p-2 pb-4 sm:block  " />
+                  <Link
+                    className={buttonVariants({
+                      size: "icon",
+                      className: "absolute bottom-4 right-4 z-40 rounded-lg",
+                    })}
+                    href={`/${params.url_key}/ai`}
+                  >
+                    <Icons.MagicWand className="h-6 w-6" />
+                  </Link>
+                  {children}
+                  <Toolbar className="sticky bottom-0 z-40 mt-4 block rounded-md border bg-muted p-2 pt-4 sm:hidden " />
+                </ScrollArea>
+              </Resizable>
+            </DotPattern>
+          </ResizableGroup>
+        </TooltipProvider>
+      </SidebarProvider>
+    </AI>
   );
 }

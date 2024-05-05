@@ -26,9 +26,6 @@ import { formatDate, formatTimeToNow } from "@/lib/utils";
 import { trpc } from "@/trpc/server";
 
 interface StepTableProps {
-  params: {
-    work_order_id: string;
-  };
   work_step_status: NonNullable<
     Awaited<
       ReturnType<(typeof trpc)["db"]["work_order"]["get"]["withSteps"]>
@@ -75,10 +72,7 @@ const options = Object.entries(status_config).map(
   }),
 );
 
-export default async function StepTable({
-  params,
-  work_step_status,
-}: StepTableProps) {
+export default async function StepTable({ work_step_status }: StepTableProps) {
   return (
     <TooltipProvider>
       <Card x-chunk="dashboard-05-chunk-3">
