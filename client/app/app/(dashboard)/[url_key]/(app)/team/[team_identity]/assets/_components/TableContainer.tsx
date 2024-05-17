@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { trpc } from "@/trpc/server";
-import AssetTable from "./AssetTable";
+import { TableData } from "./TableData";
 interface TableProps {
   searchParams: {
     limit: number;
@@ -21,7 +21,7 @@ const TableContainer: FC<TableProps> = async ({ searchParams, params }) => {
   });
 
   return (
-    <AssetTable
+    <TableData
       initialData={initialData}
       params={params}
       searchParams={searchParams}
