@@ -29,7 +29,6 @@ export default async function Page({ params }: PageProps) {
   const { data: work_order } = await trpc.db.work_order.get.detail({
     id: params.work_order_id,
   });
-  console.log(work_order);
 
   if (!work_order) {
     return notFound();
@@ -93,7 +92,7 @@ export default async function Page({ params }: PageProps) {
         </Tabs>
       </div>
       <div className="grid auto-rows-max items-start gap-4 xl:col-span-2">
-        <BuddyComment />
+        {/* <BuddyComment /> */}
         <WorkOrderDetail params={params} work_order={work_order} />
       </div>
     </main>

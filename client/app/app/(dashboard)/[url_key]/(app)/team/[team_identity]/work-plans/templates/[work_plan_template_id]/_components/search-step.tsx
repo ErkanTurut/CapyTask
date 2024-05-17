@@ -122,9 +122,7 @@ export function StepCommand({
               className="cursor-pointer"
               key={step.id}
               value={step.id}
-              onSelect={(e) => {
-                console.log(e);
-              }}
+              onSelect={(e) => {}}
             >
               {step.work_plan_template_id === work_plan_template_id && (
                 <Icons.checkCircled className="mr-2 h-4 w-4" />
