@@ -1,54 +1,31 @@
 import "server-only";
 
 import { SupabaseClient } from "@/lib/supabase/server";
-import { TGetAssetSchema } from "./get.schema";
+import { TGetLocationSchema } from "./get.schema";
 import { TRPCError } from "@trpc/server";
 
 type opts = {
-  input: TGetAssetSchema;
+  input: TGetLocationSchema;
   db: SupabaseClient;
 };
 
-export async function getAssetByTeamHandler({
+export async function getLocationByWorkspaceHandler({
   db,
   input,
 }: {
   input: {
-    team_identity: TGetAssetSchema["team_identity"];
-    range: TGetAssetSchema["range"];
+    url_key: TGetLocationSchema["url_key"];
+    range: TGetLocationSchema["range"];
   };
   db: SupabaseClient;
 }) {
   const { data, count, error } = await db
-    .from("asset")
-    .select("*, team!inner(*)", { count: "estimated" })
-    .eq("team.identity", input.team_identity)
+    .from("location")
+    .select("*, workspace!inner(*)", { count: "estimated" })
+    .eq("workspace.url_key", input.url_key)
     .range(input.range.start, input.range.end)
-    .order("updated_at", { ascending: false });
-
-  if (error) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      cause: error,
-    });
-  }
-
-  return { data, count };
-}
-
-export async function getAssetByWorkOrderHandler({
-  db,
-  input,
-}: {
-  input: {
-    work_order_id: TGetAssetSchema["work_order_id"];
-  };
-  db: SupabaseClient;
-}) {
-  const { data, count, error } = await db
-    .from("asset")
-    .select("*, work_order!inner(id)")
-    .eq("work_order.id", input.work_order_id);
+    .order("updated_at", { ascending: false })
+    .throwOnError();
 
   if (error) {
     throw new TRPCError({
