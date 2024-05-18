@@ -1,7 +1,5 @@
 import { cookies } from "next/headers";
 
-import { TooltipProvider } from "@/components/ui/tooltip";
-
 import ResizableGroup from "./_components/resizableGroup";
 import Resizable from "./_components/rezisable";
 
@@ -15,6 +13,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
+import { TooltipProvider } from "@/components/ui/tooltip";
 interface DashboardLayoutProps {
   children: React.ReactNode;
   params: {

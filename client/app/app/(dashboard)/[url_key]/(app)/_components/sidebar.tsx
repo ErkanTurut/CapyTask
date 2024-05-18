@@ -37,23 +37,25 @@ export default async function Sidebar({ params }: sidebarProps) {
     <SidebarLayout
       defaultLayout={defaultLayout}
       defaultCollapsed={defaultCollapsed}
-      className=" hidden h-screen bg-muted/50 backdrop-blur-[2px] lg:flex"
+      className=" hidden h-screen bg-muted/50 p-2 backdrop-blur-[2px] lg:flex"
     >
       <div>
-        <SidebarHeader className="flex flex-col gap-2 p-2">
+        <SidebarHeader className="flex flex-col gap-2 pb-2">
           <Suspense fallback={<WorkspaceSkeleton />}>
             <WorkspaceSelector params={params} />
           </Suspense>
           <Nav rootPath={`/${params.url_key}`} items={appNavItems.header} />
           <Separator />
         </SidebarHeader>
-        <SidebarBody className="flex flex-col gap-2 overflow-x-auto overflow-ellipsis whitespace-nowrap	 p-2	">
+        <SidebarBody className="flex flex-col gap-1 overflow-x-auto overflow-ellipsis whitespace-nowrap	 	">
+          <Nav rootPath={`/${params.url_key}`} items={appNavItems.main} />
+          <Separator />
           <Suspense fallback={<TeamListSkeleton />}>
             <TeamNav params={params} />
           </Suspense>
         </SidebarBody>
       </div>
-      <SidebarFooter className="flex flex-col gap-1 p-2">
+      <SidebarFooter className="flex flex-col gap-1 ">
         <Separator />
         <Nav rootPath={`/${params.url_key}`} items={appNavItems.footer} />
         <Separator />
