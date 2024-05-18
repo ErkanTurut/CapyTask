@@ -31,13 +31,38 @@ export const appNavItems: {
       id: "research",
     },
     {
-      title: "Account",
-      href: "/account",
-      icon: "user",
-      id: "account",
+      title: "Settings",
+      href: "/settings",
+      icon: "gear",
+      id: "settings",
     },
   ],
-  main: [],
+  main: [
+    {
+      title: "Customers",
+      variant: "ghost",
+      icon: "user",
+      href: "/customers",
+      id: "customer",
+      items: [
+        {
+          title: "Locations",
+          href: "/locations",
+          icon: "SewingPin",
+          variant: "ghost",
+          disabled: true,
+          id: "maps",
+        },
+        {
+          title: "Assets",
+          icon: "mix",
+          variant: "ghost",
+          href: "/assets",
+          id: "assets",
+        },
+      ],
+    },
+  ],
   teamNav: [
     {
       title: "Work plans",
@@ -61,21 +86,6 @@ export const appNavItems: {
           id: "reports",
         },
       ],
-    },
-    {
-      title: "Locations",
-      href: "/locations",
-      icon: "SewingPin",
-      variant: "ghost",
-      disabled: true,
-      id: "maps",
-    },
-    {
-      title: "Assets",
-      icon: "mix",
-      variant: "ghost",
-      href: "/assets",
-      id: "assets",
     },
     // {
     //   title: "Inspections",

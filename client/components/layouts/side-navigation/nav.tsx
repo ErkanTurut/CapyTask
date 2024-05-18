@@ -20,6 +20,7 @@ import {
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { useSidebar } from "@/lib/store";
+import { usePathname } from "next/navigation";
 
 interface NavProps extends React.HTMLAttributes<HTMLDivElement> {
   items: NavItem[];
@@ -32,14 +33,8 @@ interface NavProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function Nav({ items, size, className, rootPath, level = 0 }: NavProps) {
   const isCollapsed = useSidebar()((state) => state.isCollapsed);
-  const pathname = "";
-
-  const decomposedPath = [
-    "/dashboard",
-    "/dashboard/ai",
-    "/dashboard/ai/page",
-    "/dashboard/ai/page/",
-  ];
+  const pathname = usePathname() ?? "";
+  const decomposedPath = pathname.split("/");
 
   return (
     <nav
@@ -83,9 +78,13 @@ export function Nav({ items, size, className, rootPath, level = 0 }: NavProps) {
               key={index}
               type="single"
               collapsible
-              defaultValue={decomposedPath.includes(item.id) ? item.id : "all"}
+              defaultValue={
+                item.href && decomposedPath.includes(item.href.replace("/", ""))
+                  ? item.href
+                  : undefined
+              }
             >
-              <AccordionItem value={item.id}>
+              <AccordionItem value={item.href || item.id}>
                 <AccordionTrigger
                   className={cn(
                     buttonVariants({
@@ -96,7 +95,7 @@ export function Nav({ items, size, className, rootPath, level = 0 }: NavProps) {
                   )}
                   disabled={item.disabled}
                 >
-                  <Link href={item.href ? href : "#"}>
+                  <Link href={item.href ? href : rootPath}>
                     <span className="flex w-full justify-start ">
                       {item.image_url && (
                         <Avatar className="mr-2 h-4 w-4 rounded-md">
