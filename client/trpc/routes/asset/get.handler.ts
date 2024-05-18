@@ -59,3 +59,31 @@ export async function getAssetByWorkOrderHandler({
 
   return { data, count };
 }
+
+export async function getAssetByWorkspaceHandler({
+  db,
+  input,
+}: {
+  input: {
+    url_key: TGetAssetSchema["url_key"];
+    range: TGetAssetSchema["range"];
+  };
+  db: SupabaseClient;
+}) {
+  const { data, count, error } = await db
+    .from("asset")
+    .select("*, workspace!inner(*)", { count: "estimated" })
+    .eq("workspace.url_key", input.url_key)
+    .range(input.range.start, input.range.end)
+    .order("updated_at", { ascending: false })
+    .throwOnError();
+
+  if (error) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      cause: error,
+    });
+  }
+
+  return { data, count };
+}

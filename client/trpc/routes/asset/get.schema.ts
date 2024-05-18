@@ -19,6 +19,7 @@ export const ZGetAssetSchema = z
     }),
     q: z.string(),
     work_order_id: z.string(),
+    url_key: z.string(),
   })
   .strict();
 

@@ -2,6 +2,7 @@ import { protectedProcedure, router } from "@/trpc/trpc";
 import {
   getAssetByTeamHandler,
   getAssetByWorkOrderHandler,
+  getAssetByWorkspaceHandler,
 } from "./get.handler";
 import { ZGetAssetSchema } from "./get.schema";
 import { createAssetHandler } from "./create.handler";
@@ -23,6 +24,14 @@ export const asset = router({
       .input(ZGetAssetSchema.pick({ work_order_id: true }))
       .query(async ({ ctx, input }) => {
         return await getAssetByWorkOrderHandler({
+          input,
+          db: ctx.db,
+        });
+      }),
+    byWorkspace: protectedProcedure
+      .input(ZGetAssetSchema.pick({ url_key: true, range: true }))
+      .query(async ({ ctx, input }) => {
+        return await getAssetByWorkspaceHandler({
           input,
           db: ctx.db,
         });

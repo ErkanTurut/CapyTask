@@ -13,6 +13,7 @@ import { work_plan_template } from "./work_plan_template/_router";
 import { work_step_template } from "./work_step_template/_router";
 import { asset } from "./asset/_router";
 import { ai } from "./ai/_router";
+import { location } from "./location/_router";
 
 export const appRouter = router({
   auth: authMutationRouter,
@@ -30,6 +31,7 @@ export const appRouter = router({
     work_step_template,
 
     asset,
+    location,
   }),
   test: protectedProcedure.query(() => {
     return { hello: "world" };
