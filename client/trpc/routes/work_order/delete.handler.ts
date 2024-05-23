@@ -2,6 +2,7 @@ import "server-only";
 
 import { SupabaseClient } from "@/lib/supabase/server";
 import { TDeleteWorkOrderSchema } from "./delete.schema";
+import { TRPCError } from "@trpc/server";
 
 type opts = {
   input: TDeleteWorkOrderSchema;
@@ -9,5 +10,5 @@ type opts = {
 };
 
 export const deleteWorkOrderHandler = async ({ input, db }: opts) => {
-  return await db.from("work_order").delete().in("id", input.id).throwOnError();
+  await db.from("work_order").delete().in("id", input.id).throwOnError();
 };

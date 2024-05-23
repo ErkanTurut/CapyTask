@@ -1,7 +1,6 @@
 import { FC } from "react";
-import { columns } from "./columns";
 import { trpc } from "@/trpc/server";
-import { DataTable } from "@/components/table/data-table";
+import { TableData } from "./TableData";
 interface TableProps {
   searchParams: {
     limit: number;
@@ -12,8 +11,8 @@ interface TableProps {
   };
 }
 
-const AssetTable: FC<TableProps> = async ({ searchParams, params }) => {
-  const { data, count } = await trpc.db.asset.get.byTeam({
+const TableContainer: FC<TableProps> = async ({ searchParams, params }) => {
+  const initialData = await trpc.db.asset.get.byTeam({
     team_identity: params.team_identity,
     range: {
       start: (searchParams.page - 1) * searchParams.limit,
@@ -22,13 +21,12 @@ const AssetTable: FC<TableProps> = async ({ searchParams, params }) => {
   });
 
   return (
-    <DataTable
-      filter={{ columnVisibility: { description: false } }}
-      columns={columns}
-      data={data}
-      count={count || 0}
+    <TableData
+      initialData={initialData}
+      params={params}
+      searchParams={searchParams}
     />
   );
 };
 
-export default AssetTable;
+export default TableContainer;

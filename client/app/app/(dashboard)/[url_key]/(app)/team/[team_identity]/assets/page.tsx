@@ -1,5 +1,7 @@
 import { Shell } from "@/components/shells";
-import AssetTable from "./_components/asset-table";
+import TableContainer from "./_components/TableContainer";
+import { Suspense } from "react";
+import TableSkeleton from "@/components/skeletons/table-skeleton";
 
 interface PageProps {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -18,7 +20,9 @@ export default function Page({ params, searchParams }: PageProps) {
   return (
     <Shell>
       <Shell variant={"bento"}>
-        <AssetTable params={params} searchParams={{ limit, page }} />
+        <Suspense fallback={<TableSkeleton />}>
+          <TableContainer params={params} searchParams={{ limit, page }} />
+        </Suspense>
       </Shell>
     </Shell>
   );

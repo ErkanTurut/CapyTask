@@ -19,9 +19,8 @@ export default async function TeamNav({ params }: TeamNavProps) {
       items={[
         {
           title: "Teams",
-          icon: "plusCircled",
           id: "all",
-          variant: "default",
+          icon: "lightning",
           items: teams?.map((team) => ({
             image_url: generateAvatar({
               name: team.name,

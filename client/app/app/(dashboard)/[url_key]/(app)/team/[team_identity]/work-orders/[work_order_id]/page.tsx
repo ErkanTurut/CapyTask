@@ -11,6 +11,7 @@ import StepTable from "./_components/StepTable";
 import WorkOrderDetail from "./_components/WorkOrderDetail";
 import WorkOrderHeader from "./_components/WorkOrderHeader";
 import BuddyComment from "./_components/BuddyComment";
+import AssetTable from "./_components/AssetTable";
 
 interface PageProps {
   params: {
@@ -21,7 +22,11 @@ interface PageProps {
 }
 
 export default async function Page({ params }: PageProps) {
-  const { data: work_order } = await trpc.db.work_order.get.withSteps({
+  // const { data: work_order } = await trpc.db.work_order.get.withSteps({
+  //   id: params.work_order_id,
+  // });
+
+  const { data: work_order } = await trpc.db.work_order.get.detail({
     id: params.work_order_id,
   });
 
@@ -73,16 +78,11 @@ export default async function Page({ params }: PageProps) {
           </div>
           <TabsContent value="step">
             <Suspense fallback={<CardSkeleton />}>
-              <StepTable
-                params={params}
-                work_step_status={work_order.work_step_status}
-              />
+              <StepTable work_step_status={work_order.work_step_status} />
             </Suspense>
           </TabsContent>
           <TabsContent value="asset">
-            <p className="p-6 text-center text-muted-foreground">
-              No orders found.
-            </p>
+            <AssetTable params={params} assets={work_order.asset} />
           </TabsContent>
           <TabsContent value="service_ressource">
             <p className="p-6 text-center text-muted-foreground">
@@ -92,7 +92,7 @@ export default async function Page({ params }: PageProps) {
         </Tabs>
       </div>
       <div className="grid auto-rows-max items-start gap-4 xl:col-span-2">
-        <BuddyComment />
+        {/* <BuddyComment /> */}
         <WorkOrderDetail params={params} work_order={work_order} />
       </div>
     </main>

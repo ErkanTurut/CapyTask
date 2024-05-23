@@ -42,6 +42,42 @@ export type Database = {
         }
         Relationships: []
       }
+      address: {
+        Row: {
+          city: string
+          country: string
+          createdDate: string
+          geography: unknown
+          id: string
+          postal_code: string
+          public_id: string
+          state: string
+          street: string
+        }
+        Insert: {
+          city: string
+          country: string
+          createdDate?: string
+          geography: unknown
+          id?: string
+          postal_code: string
+          public_id?: string
+          state: string
+          street: string
+        }
+        Update: {
+          city?: string
+          country?: string
+          createdDate?: string
+          geography?: unknown
+          id?: string
+          postal_code?: string
+          public_id?: string
+          state?: string
+          street?: string
+        }
+        Relationships: []
+      }
       asset: {
         Row: {
           created_at: string
@@ -106,6 +142,70 @@ export type Database = {
             columns: ["team_id"]
             isOneToOne: false
             referencedRelation: "team"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      location: {
+        Row: {
+          address_id: string
+          created_at: string
+          description: string | null
+          id: string
+          location_level: number
+          location_type: Database["public"]["Enums"]["LocationType"]
+          name: string
+          parent_location_id: string | null
+          public_id: string
+          updated_at: string
+          workspace_id: string
+        }
+        Insert: {
+          address_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          location_level?: number
+          location_type?: Database["public"]["Enums"]["LocationType"]
+          name: string
+          parent_location_id?: string | null
+          public_id?: string
+          updated_at?: string
+          workspace_id: string
+        }
+        Update: {
+          address_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          location_level?: number
+          location_type?: Database["public"]["Enums"]["LocationType"]
+          name?: string
+          parent_location_id?: string | null
+          public_id?: string
+          updated_at?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "location_address_id_fkey"
+            columns: ["address_id"]
+            isOneToOne: false
+            referencedRelation: "address"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "location_parent_location_id_fkey"
+            columns: ["parent_location_id"]
+            isOneToOne: false
+            referencedRelation: "location"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "location_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspace"
             referencedColumns: ["id"]
           },
         ]
@@ -335,6 +435,36 @@ export type Database = {
             columns: ["work_plan_id"]
             isOneToOne: false
             referencedRelation: "work_plan"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      work_order_asset: {
+        Row: {
+          asset_id: string
+          work_order_id: string
+        }
+        Insert: {
+          asset_id: string
+          work_order_id: string
+        }
+        Update: {
+          asset_id?: string
+          work_order_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "work_order_asset_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "asset"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "work_order_asset_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "work_order"
             referencedColumns: ["id"]
           },
         ]
@@ -663,6 +793,7 @@ export type Database = {
     }
     Enums: {
       inspectionType: "INSPECTION" | "MAINTENANCE" | "OTHER"
+      LocationType: "BUILDING" | "FLOOR" | "ROOM" | "AREA" | "OTHER"
       Permission:
         | "FULL_ACCESS"
         | "CAN_EDIT"

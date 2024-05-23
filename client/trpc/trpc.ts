@@ -25,11 +25,11 @@ export const publicProcedure = t.procedure;
 export const createCallerFactory = t.createCallerFactory;
 
 export const protectedProcedure = publicProcedure.use((opts) => {
-  const { session } = opts.ctx;
-  if (!session?.user) {
+  const { user } = opts.ctx;
+  if (!user) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
     });
   }
-  return opts.next({ ctx: { session } });
+  return opts.next({ ctx: { user } });
 });

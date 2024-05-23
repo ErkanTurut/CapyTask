@@ -8,6 +8,11 @@ module.exports = {
     },
     // ppr: true,
   },
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
+  },
   images: {
     remotePatterns: [
       { hostname: "public.blob.vercel-storage.com" },

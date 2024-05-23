@@ -39,6 +39,10 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   count: number;
   filter?: { columnVisibility: A<TData> };
+  searchParams?: {
+    page: number;
+    limit: number;
+  };
 }
 
 export function DataTable<TData, TValue>({
@@ -46,15 +50,10 @@ export function DataTable<TData, TValue>({
   data,
   count,
   filter = { columnVisibility: {} as A<TData> },
+  searchParams,
 }: DataTableProps<TData, TValue>) {
-  const searchParams = useSearchParams();
-
-  const page = searchParams.get("page")
-    ? parseInt(searchParams.get("page") as string)
-    : 1;
-  const limit = searchParams.get("limit")
-    ? parseInt(searchParams.get("limit") as string)
-    : 10;
+  const page = searchParams?.page || 1;
+  const limit = searchParams?.limit || 10;
   const createQueryString = React.useCallback(
     (params: Record<string, string | number | null>) => {
       const newSearchParams = new URLSearchParams(searchParams?.toString());

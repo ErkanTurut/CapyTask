@@ -31,13 +31,37 @@ export const appNavItems: {
       id: "research",
     },
     {
-      title: "Account",
-      href: "/account",
-      icon: "user",
-      id: "account",
+      title: "Settings",
+      href: "/settings",
+      icon: "gear",
+      id: "settings",
     },
   ],
-  main: [],
+  main: [
+    {
+      title: "Customers",
+      variant: "ghost",
+      icon: "user",
+      href: "/customers",
+      id: "customer",
+      items: [
+        {
+          title: "Locations",
+          href: "/locations",
+          icon: "SewingPin",
+          variant: "ghost",
+          id: "maps",
+        },
+        {
+          title: "Assets",
+          icon: "mix",
+          variant: "ghost",
+          href: "/assets",
+          id: "assets",
+        },
+      ],
+    },
+  ],
   teamNav: [
     {
       title: "Work plans",
@@ -63,46 +87,13 @@ export const appNavItems: {
       ],
     },
     {
-      title: "Locations",
-      icon: "SewingPin",
+      title: "Service contracts",
+      icon: "fileText",
       variant: "ghost",
+      href: "/service-contracts",
+      id: "service-contracts",
       disabled: true,
-      id: "maps",
     },
-    {
-      title: "Assets",
-      icon: "mix",
-      variant: "ghost",
-      href: "/assets",
-      id: "assets",
-    },
-    // {
-    //   title: "Inspections",
-    //   icon: "checkCircled",
-    //   variant: "ghost",
-    //   href: "/inspections",
-    //   id: "inspections",
-    //   items: [
-    //     {
-    //       title: "Work orders",
-    //       href: "/work-orders",
-    //       variant: "ghost",
-    //       id: "work-orders",
-    //     },
-    //     {
-    //       title: "Reports",
-    //       href: "/reports",
-    //       variant: "ghost",
-    //       id: "reports",
-    //     },
-    //     {
-    //       title: "Schedules",
-    //       href: "/schedules",
-    //       variant: "ghost",
-    //       id: "schedules",
-    //     },
-    //   ],
-    // },
   ],
   footer: [
     {

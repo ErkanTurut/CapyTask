@@ -65,11 +65,17 @@ import { cache } from "react";
 // });
 
 export const trpc = createCallerFactory(appRouter)(async () => {
+  loggerLink({
+    enabled: (opts) =>
+      process.env.NODE_ENV === "development" ||
+      (opts.direction === "down" && opts.result instanceof Error),
+  });
+
   const supabase = createClient();
-  const getSession = cache(() => supabase.auth.getSession());
+  const getUser = cache(() => supabase.auth.getUser());
 
   return {
-    session: (await getSession()).data?.session,
+    user: (await getUser()).data.user,
     headers: {
       cookie: cookies().toString(),
       "x-trpc-source": "rsc-invoke",

@@ -17,6 +17,7 @@ import {
 } from "@trpc/client";
 import { experimental_nextHttpLink } from "@trpc/next/app-dir/links/nextHttp";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 export function Providers({
   children,
@@ -66,14 +67,15 @@ export function Providers({
             defaultTheme="system"
             enableSystem
           >
-            <TailwindIndicator />
+            {/* <TailwindIndicator /> */}
+
             {children}
             <Toaster
               closeButton
               position={isMobile ? "top-center" : "bottom-right"}
             />
           </NextThemesProvider>
-          <ReactQueryDevtools initialIsOpen={false} />
+          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         </ReactQueryStreamedHydration>
       </QueryClientProvider>
     </api.Provider>

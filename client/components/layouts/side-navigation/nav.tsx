@@ -1,6 +1,6 @@
 "use client";
 import { Icons } from "@/components/icons";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
@@ -33,7 +33,7 @@ interface NavProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function Nav({ items, size, className, rootPath, level = 0 }: NavProps) {
   const isCollapsed = useSidebar()((state) => state.isCollapsed);
-  const pathname = usePathname();
+  const pathname = usePathname() ?? "";
   const decomposedPath = pathname.split("/");
 
   return (
@@ -78,9 +78,13 @@ export function Nav({ items, size, className, rootPath, level = 0 }: NavProps) {
               key={index}
               type="single"
               collapsible
-              defaultValue={decomposedPath.includes(item.id) ? item.id : "all"}
+              defaultValue={
+                item.href && decomposedPath.includes(item.href.replace("/", ""))
+                  ? item.href
+                  : undefined
+              }
             >
-              <AccordionItem value={item.id}>
+              <AccordionItem value={item.href || item.id}>
                 <AccordionTrigger
                   className={cn(
                     buttonVariants({
@@ -91,10 +95,10 @@ export function Nav({ items, size, className, rootPath, level = 0 }: NavProps) {
                   )}
                   disabled={item.disabled}
                 >
-                  <Link href={item.href ? href : "#"}>
+                  <Link href={item.href ? href : rootPath}>
                     <span className="flex w-full justify-start ">
                       {item.image_url && (
-                        <Avatar className="mr-2 h-4 w-4 rounded-sm">
+                        <Avatar className="mr-2 h-4 w-4 rounded-md">
                           <AvatarImage
                             src={item.image_url}
                             alt={item.title ?? ""}
@@ -143,17 +147,36 @@ export function Nav({ items, size, className, rootPath, level = 0 }: NavProps) {
             </Accordion>
           );
         } else {
-          return (
+          return item.disabled ? (
+            <Button
+              key={index}
+              variant="ghost"
+              size="sm"
+              className="h-6 justify-start"
+              disabled
+            >
+              {Icon && (
+                <Icon className="mr-2 h-4 w-4 shrink-0" aria-hidden="true" />
+              )}
+              <span className="overflow-x-auto overflow-ellipsis whitespace-nowrap	">
+                {item.title}
+              </span>
+
+              {item.label && (
+                <span className={cn("ml-auto")}>{item.label}</span>
+              )}
+            </Button>
+          ) : (
             <Link
               key={index}
               href={href}
               className={cn(
                 buttonVariants({
                   variant:
-                    pathname === href ? "secondary" : item.variant || "ghost",
+                    pathname === href ? "outline" : item.variant || "ghost",
                   size: size || "sm",
                 }),
-                "h-6 justify-start ",
+                "h-6 justify-start shadow-none",
               )}
             >
               {Icon && (

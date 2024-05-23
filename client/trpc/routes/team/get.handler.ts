@@ -4,6 +4,7 @@ import { unstable_cache as cache } from "next/cache";
 import { SupabaseClient } from "@/lib/supabase/server";
 import { sleep } from "@/lib/utils";
 import { TGetTeamSchema } from "./get.schema";
+import { TRPCError } from "@trpc/server";
 // import { cache } from "react";
 
 type opts = {
@@ -28,11 +29,21 @@ export const getTeamByIdentityHandler = async ({
   input: { identity: TGetTeamSchema["identity"] };
   db: SupabaseClient;
 }) => {
-  return await db
+  const { data, error } = await db
     .from("team")
     .select("*")
     .eq("identity", input.identity)
-    .single();
+    .single()
+    .throwOnError();
+
+  if (error) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "Team not found",
+    });
+  }
+
+  return data;
 };
 
 export const getTeamsByWorkspaceUrlKeyHandler = async ({

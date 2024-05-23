@@ -19,7 +19,7 @@ export const workspace = router({
       return await createWorkspaceHandler({
         input,
         db: ctx.db,
-        session: ctx.session,
+        user: ctx.user,
       });
     }),
   getByUrlKey: protectedProcedure
@@ -41,7 +41,7 @@ export const workspace = router({
   getByCurrentUser: protectedProcedure.query(async ({ ctx }) => {
     return await getWorkspaceByUserHandler({
       db: ctx.db,
-      input: { user_id: ctx.session.user.id },
+      input: { user_id: ctx.user.id },
     });
   }),
 });
