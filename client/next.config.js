@@ -6,7 +6,9 @@ module.exports = {
     serverActions: {
       allowedOrigins: ["app.localhost:3000"],
     },
-    // ppr: true,
+    reactCompiler: true,
+
+    ppr: true,
   },
   logging: {
     fetches: {
