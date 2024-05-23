@@ -1,6 +1,6 @@
 "use client";
 import { Icons } from "@/components/icons";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
@@ -147,17 +147,36 @@ export function Nav({ items, size, className, rootPath, level = 0 }: NavProps) {
             </Accordion>
           );
         } else {
-          return (
+          return item.disabled ? (
+            <Button
+              key={index}
+              variant="ghost"
+              size="sm"
+              className="h-6 justify-start"
+              disabled
+            >
+              {Icon && (
+                <Icon className="mr-2 h-4 w-4 shrink-0" aria-hidden="true" />
+              )}
+              <span className="overflow-x-auto overflow-ellipsis whitespace-nowrap	">
+                {item.title}
+              </span>
+
+              {item.label && (
+                <span className={cn("ml-auto")}>{item.label}</span>
+              )}
+            </Button>
+          ) : (
             <Link
               key={index}
               href={href}
               className={cn(
                 buttonVariants({
                   variant:
-                    pathname === href ? "secondary" : item.variant || "ghost",
+                    pathname === href ? "outline" : item.variant || "ghost",
                   size: size || "sm",
                 }),
-                "h-6 justify-start ",
+                "h-6 justify-start shadow-none",
               )}
             >
               {Icon && (

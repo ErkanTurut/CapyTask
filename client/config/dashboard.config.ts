@@ -50,7 +50,6 @@ export const appNavItems: {
           href: "/locations",
           icon: "SewingPin",
           variant: "ghost",
-          disabled: true,
           id: "maps",
         },
         {
@@ -87,33 +86,14 @@ export const appNavItems: {
         },
       ],
     },
-    // {
-    //   title: "Inspections",
-    //   icon: "checkCircled",
-    //   variant: "ghost",
-    //   href: "/inspections",
-    //   id: "inspections",
-    //   items: [
-    //     {
-    //       title: "Work orders",
-    //       href: "/work-orders",
-    //       variant: "ghost",
-    //       id: "work-orders",
-    //     },
-    //     {
-    //       title: "Reports",
-    //       href: "/reports",
-    //       variant: "ghost",
-    //       id: "reports",
-    //     },
-    //     {
-    //       title: "Schedules",
-    //       href: "/schedules",
-    //       variant: "ghost",
-    //       id: "schedules",
-    //     },
-    //   ],
-    // },
+    {
+      title: "Service contracts",
+      icon: "fileText",
+      variant: "ghost",
+      href: "/service-contracts",
+      id: "service-contracts",
+      disabled: true,
+    },
   ],
   footer: [
     {
