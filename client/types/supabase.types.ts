@@ -393,6 +393,7 @@ export type Database = {
           created_at: string
           description: string | null
           id: string
+          location_id: string | null
           name: string
           public_id: string
           status: Database["public"]["Enums"]["Status"]
@@ -404,6 +405,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          location_id?: string | null
           name: string
           public_id?: string
           status?: Database["public"]["Enums"]["Status"]
@@ -415,6 +417,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          location_id?: string | null
           name?: string
           public_id?: string
           status?: Database["public"]["Enums"]["Status"]
@@ -423,6 +426,13 @@ export type Database = {
           work_plan_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "work_order_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "location"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "work_order_team_id_fkey"
             columns: ["team_id"]

@@ -11,21 +11,18 @@ datasource db {
 }
 
 generator zod {
-  provider = "zod-prisma-types"
+  provider = "zod-prisma"
+  output   = "./zod" // (default) the directory where generated zod schemas will be saved
 
-  useMultipleFiles                 = true // default is false
-  createInputTypes                 = true // default is true
-  createModelTypes                 = true // default is true
-  addInputTypeValidation           = false // default is true
-  addIncludeType                   = false // default is true
-  addSelectType                    = false // default is true
-  validateWhereUniqueInput         = false // default is true
-  createOptionalDefaultValuesTypes = true // default is false
-  createRelationValuesTypes        = true // default is false
-  createPartialTypes               = true // default is false
-  useDefaultValidators             = false // default is true
-  coerceDate                       = false // default is true
-  writeNullishInModelTypes         = true // default is false
+  relationModel = true // (default) Create and export both plain and related models.
+
+  modelCase = "PascalCase" // (default) Output models using pascal case (ex. UserModel, PostModel)
+
+  modelSuffix = "Model" // (default) Suffix to apply to your prisma models when naming Zod schemas
+
+  useDecimalJs = true // represent the prisma Decimal type using Decimal.js (as Prisma does)
+
+  prismaJsonNullability = true // (default) uses prisma's scheme for JSON field nullability
 }
 
 model user {
@@ -195,43 +192,26 @@ model work_step {
 }
 
 model work_order {
-  /// The unique identifier for the work order, generated using nanoid(10).
-  id String @id @default(dbgenerated("nanoid(10)"))
-
-  /// A public unique identifier for the work order, generated using gen_random_uuid() and stored as a UUID.
-  public_id String @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-
-  /// The name of the work order.
-  name String
-
-  /// An optional description of the work order.
+  id          String  @id @default(dbgenerated("nanoid(10)"))
+  public_id   String  @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
   description String?
 
-  /// The timestamp indicating when the work order was created, with a default value of the current time (now()).
-  created_at DateTime @default(now()) @db.Timestamptz(6)
+  location_id String?
+  location    location? @relation(fields: [location_id], references: [id])
 
-  /// The timestamp indicating when the work order was last updated, with a default value of the current time (now()) and updated automatically.
+  created_at DateTime @default(now()) @db.Timestamptz(6)
   updated_at DateTime @default(now()) @updatedAt @db.Timestamptz(6)
 
-  /// The current status of the work order, with a default value of OPEN.
   status Status @default(OPEN)
 
-  /// The identifier of the team responsible for the work order.
-  team_id String
-
-  /// An optional identifier of the associated work plan.
+  team_id      String
   work_plan_id String?
 
-  /// The team object associated with the work order, linked via the team_id field, with cascade deletion.
-  team team @relation(fields: [team_id], references: [id], onDelete: Cascade)
-
-  /// The optional work plan object associated with the work order, linked via the work_plan_id field.
+  team      team       @relation(fields: [team_id], references: [id], onDelete: Cascade)
   work_plan work_plan? @relation(fields: [work_plan_id], references: [id])
 
-  /// An array of work order assets associated with the work order.
   work_order_asset work_order_asset[]
-
-  /// An array of work step statuses associated with the work order.
   work_step_status work_step_status[]
 
   @@index([team_id])
@@ -307,6 +287,12 @@ model location {
 
   address_id String
   address    address @relation(fields: [address_id], references: [id])
+
+  work_order work_order[]
+
+  @@index([parent_location_id])
+  @@index([workspace_id])
+  @@index([address_id])
 }
 
 model address {
