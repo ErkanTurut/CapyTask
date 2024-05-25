@@ -29,9 +29,17 @@ interface NavProps extends React.HTMLAttributes<HTMLDivElement> {
   isCollapsed?: boolean;
   isChild?: boolean;
   level?: number;
+  defaultValue?: string | undefined;
 }
 
-export function Nav({ items, size, className, rootPath, level = 0 }: NavProps) {
+export function Nav({
+  items,
+  size,
+  className,
+  rootPath,
+  level = 0,
+  defaultValue,
+}: NavProps) {
   const isCollapsed = useSidebar()((state) => state.isCollapsed);
   const pathname = usePathname() ?? "";
   const decomposedPath = pathname.split("/");
@@ -81,7 +89,7 @@ export function Nav({ items, size, className, rootPath, level = 0 }: NavProps) {
               defaultValue={
                 item.href && decomposedPath.includes(item.href.replace("/", ""))
                   ? item.href
-                  : undefined
+                  : defaultValue
               }
             >
               <AccordionItem value={item.href || item.id}>
@@ -173,7 +181,7 @@ export function Nav({ items, size, className, rootPath, level = 0 }: NavProps) {
               className={cn(
                 buttonVariants({
                   variant:
-                    pathname === href ? "outline" : item.variant || "ghost",
+                    pathname === href ? "default" : item.variant || "ghost",
                   size: size || "sm",
                 }),
                 "h-6 justify-start shadow-none",
