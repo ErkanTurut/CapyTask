@@ -37,6 +37,7 @@ model user {
   user_team      user_team[]
   user_workspace user_workspace[]
   workspaces     workspace[]
+  company_user   company_user[]
 }
 
 model team {
@@ -49,7 +50,6 @@ model team {
   workspace_id       String
   identity           String
   public_id          String               @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  asset_team         asset_team[]
   workspace          workspace            @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
   users              user_team[]
   work_order         work_order[]
@@ -208,6 +208,9 @@ model work_order {
   team_id      String
   work_plan_id String?
 
+  customer_id String?
+  customer    company? @relation(fields: [customer_id], references: [id])
+
   team      team       @relation(fields: [team_id], references: [id], onDelete: Cascade)
   work_plan work_plan? @relation(fields: [work_plan_id], references: [id])
 
@@ -236,7 +239,7 @@ model work_order_asset {
   work_order_id String
   asset_id      String
   asset         asset      @relation(fields: [asset_id], references: [id])
-  work_order    work_order @relation(fields: [work_order_id], references: [id])
+  work_order    work_order @relation(fields: [work_order_id], references: [id], onDelete: Cascade)
 
   @@id([work_order_id, asset_id])
   @@index([asset_id])
@@ -252,18 +255,18 @@ model asset {
   updated_at       DateTime           @default(now()) @updatedAt @db.Timestamptz(6)
   workspace_id     String
   workspace        workspace          @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
-  asset_team       asset_team[]
   work_order_asset work_order_asset[]
+  asset_location   asset_location[]
 }
 
-model asset_team {
-  asset_id String
-  team_id  String
-  asset    asset  @relation(fields: [asset_id], references: [id])
-  team     team   @relation(fields: [team_id], references: [id], onDelete: Cascade)
+model asset_location {
+  asset_id    String
+  location_id String
+  asset       asset    @relation(fields: [asset_id], references: [id])
+  location    location @relation(fields: [location_id], references: [id])
 
-  @@id([asset_id, team_id])
-  @@index([team_id])
+  @@id([asset_id, location_id])
+  @@index([location_id])
   @@index([asset_id])
 }
 
@@ -288,11 +291,38 @@ model location {
   address_id String
   address    address @relation(fields: [address_id], references: [id])
 
-  work_order work_order[]
+  company_id String?
+  company    company? @relation(fields: [company_id], references: [id])
+
+  work_order     work_order[]
+  asset_location asset_location[]
 
   @@index([parent_location_id])
   @@index([workspace_id])
   @@index([address_id])
+}
+
+model company {
+  id           String         @id @default(dbgenerated("nanoid(10)"))
+  public_id    String         @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name         String
+  description  String?
+  created_at   DateTime       @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime       @default(now()) @updatedAt @db.Timestamptz(6)
+  location     location[]
+  company_user company_user[]
+  work_order   work_order[]
+}
+
+model company_user {
+  company_id String
+  user_id    String  @db.Uuid
+  company    company @relation(fields: [company_id], references: [id])
+  user       user    @relation(fields: [user_id], references: [id])
+
+  @@id([company_id, user_id])
+  @@index([company_id])
+  @@index([user_id])
 }
 
 model address {

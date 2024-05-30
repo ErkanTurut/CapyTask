@@ -1,5 +1,5 @@
 import * as z from "zod"
-import { Completeworkspace, RelatedworkspaceModel, Completeasset_team, Relatedasset_teamModel, Completework_order_asset, Relatedwork_order_assetModel } from "./index"
+import { Completeworkspace, RelatedworkspaceModel, Completework_order_asset, Relatedwork_order_assetModel, Completeasset_location, Relatedasset_locationModel } from "./index"
 
 export const assetModel = z.object({
   id: z.string(),
@@ -13,8 +13,8 @@ export const assetModel = z.object({
 
 export interface Completeasset extends z.infer<typeof assetModel> {
   workspace: Completeworkspace
-  asset_team: Completeasset_team[]
   work_order_asset: Completework_order_asset[]
+  asset_location: Completeasset_location[]
 }
 
 /**
@@ -24,6 +24,6 @@ export interface Completeasset extends z.infer<typeof assetModel> {
  */
 export const RelatedassetModel: z.ZodSchema<Completeasset> = z.lazy(() => assetModel.extend({
   workspace: RelatedworkspaceModel,
-  asset_team: Relatedasset_teamModel.array(),
   work_order_asset: Relatedwork_order_assetModel.array(),
+  asset_location: Relatedasset_locationModel.array(),
 }))

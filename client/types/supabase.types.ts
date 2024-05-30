@@ -116,32 +116,89 @@ export type Database = {
           },
         ]
       }
-      asset_team: {
+      asset_location: {
         Row: {
           asset_id: string
-          team_id: string
+          location_id: string
         }
         Insert: {
           asset_id: string
-          team_id: string
+          location_id: string
         }
         Update: {
           asset_id?: string
-          team_id?: string
+          location_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "asset_team_asset_id_fkey"
+            foreignKeyName: "asset_location_asset_id_fkey"
             columns: ["asset_id"]
             isOneToOne: false
             referencedRelation: "asset"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "asset_team_team_id_fkey"
-            columns: ["team_id"]
+            foreignKeyName: "asset_location_location_id_fkey"
+            columns: ["location_id"]
             isOneToOne: false
-            referencedRelation: "team"
+            referencedRelation: "location"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      company: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          public_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          public_id?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          public_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      company_user: {
+        Row: {
+          company_id: string
+          user_id: string
+        }
+        Insert: {
+          company_id: string
+          user_id: string
+        }
+        Update: {
+          company_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_user_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "company"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "company_user_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user"
             referencedColumns: ["id"]
           },
         ]
@@ -149,6 +206,7 @@ export type Database = {
       location: {
         Row: {
           address_id: string
+          company_id: string | null
           created_at: string
           description: string | null
           id: string
@@ -162,6 +220,7 @@ export type Database = {
         }
         Insert: {
           address_id: string
+          company_id?: string | null
           created_at?: string
           description?: string | null
           id?: string
@@ -175,6 +234,7 @@ export type Database = {
         }
         Update: {
           address_id?: string
+          company_id?: string | null
           created_at?: string
           description?: string | null
           id?: string
@@ -192,6 +252,13 @@ export type Database = {
             columns: ["address_id"]
             isOneToOne: false
             referencedRelation: "address"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "location_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "company"
             referencedColumns: ["id"]
           },
           {
@@ -391,6 +458,7 @@ export type Database = {
       work_order: {
         Row: {
           created_at: string
+          customer_id: string | null
           description: string | null
           id: string
           location_id: string | null
@@ -403,6 +471,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          customer_id?: string | null
           description?: string | null
           id?: string
           location_id?: string | null
@@ -415,6 +484,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          customer_id?: string | null
           description?: string | null
           id?: string
           location_id?: string | null
@@ -426,6 +496,13 @@ export type Database = {
           work_plan_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "work_order_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "company"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "work_order_location_id_fkey"
             columns: ["location_id"]
