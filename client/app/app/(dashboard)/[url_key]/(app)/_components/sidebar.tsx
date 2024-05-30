@@ -48,7 +48,11 @@ export default async function Sidebar({ params }: sidebarProps) {
           <Separator />
         </SidebarHeader>
         <SidebarBody className="flex flex-col gap-1 overflow-x-auto overflow-ellipsis whitespace-nowrap	 	">
-          <Nav rootPath={`/${params.url_key}`} items={appNavItems.main} />
+          <Nav
+            level={1}
+            rootPath={`/${params.url_key}`}
+            items={appNavItems.main}
+          />
           <Separator />
           <Suspense fallback={<TeamListSkeleton />}>
             <TeamNav params={params} />

@@ -1,5 +1,6 @@
 "use client";
 
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 
@@ -10,5 +11,5 @@ export function Providers({ children }: { children: React.ReactNode }) {
     document.cookie = `workspace_url_key=${JSON.stringify(url_key)};path=/`;
   }, [url_key]);
 
-  return <>{children}</>;
+  return <TooltipProvider delayDuration={0}>{children}</TooltipProvider>;
 }
