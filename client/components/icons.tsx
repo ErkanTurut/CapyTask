@@ -40,7 +40,7 @@ import {
   SewingPinIcon,
   MagicWandIcon,
 } from "@radix-ui/react-icons";
-import { Loader2, Banknote, Route } from "lucide-react";
+import { Loader2, Banknote, Route, Building } from "lucide-react";
 
 type logoProps = {
   // color: "light" | "dark";
@@ -110,6 +110,7 @@ export const Icons = {
   CrossCircled: CrossCircledIcon,
   SewingPin: SewingPinIcon,
   MagicWand: MagicWandIcon,
+  building: Building,
   Loading2: () => {
     return (
       <svg

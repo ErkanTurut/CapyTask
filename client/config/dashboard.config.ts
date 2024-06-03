@@ -42,9 +42,16 @@ export const appNavItems: {
       title: "Customers",
       variant: "ghost",
       icon: "user",
-      href: "/customers",
       id: "customer",
+      href: "/customers",
       items: [
+        {
+          title: "Companies",
+          href: "/companies",
+          icon: "building",
+          variant: "ghost",
+          id: "companies",
+        },
         {
           title: "Locations",
           href: "/locations",

@@ -64,7 +64,13 @@ const NavLink = ({
         "h-6 justify-start shadow-none",
       )}
     >
-      {Icon && <Icon className="mr-2 h-4 w-4 shrink-0" aria-hidden="true" />}
+      {Icon && (
+        <Icon
+          className="mr-2 h-4 w-4 shrink-0"
+          aria-hidden="true"
+          strokeWidth={1.5}
+        />
+      )}
       <span className="overflow-x-auto overflow-ellipsis whitespace-nowrap">
         {item.title}
       </span>
@@ -92,7 +98,7 @@ const NavItemWithTooltip = ({
             "h-8 w-8",
           )}
         >
-          {Icon && <Icon className="h-4 w-4 shrink-0" />}
+          {Icon && <Icon strokeWidth={1} className="h-4 w-4 shrink-0" />}
           <span className="sr-only">{item.title}</span>
         </Link>
       </TooltipTrigger>
@@ -164,6 +170,7 @@ export function Nav({
                         <Icon
                           className="mr-2 h-4 w-4 shrink-0"
                           aria-hidden="true"
+                          strokeWidth={1}
                         />
                       )}
                       {item.title}
