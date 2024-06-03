@@ -11,6 +11,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import CreateWorkOrderForm from "@/components/work-order/work-order-create-form";
+import { Suspense } from "react";
 
 interface createWorkOrderProps {
   params: {
@@ -50,9 +52,9 @@ export default async function createWorkOrder({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {/* <Suspense fallback="loading...">
-            <CreateWorkOrderForm team_id={team.id} />
-          </Suspense> */}
+          <Suspense fallback="loading...">
+            <CreateWorkOrderForm />
+          </Suspense>
         </CardContent>
       </Card>
     </Shell>

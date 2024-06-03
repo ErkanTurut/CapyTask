@@ -96,7 +96,7 @@ export default async function WorkOrderDetail({
           <dl className="grid gap-3">
             <div className="flex items-center justify-between">
               <dt className="text-muted-foreground">Customer</dt>
-              <dd>ACME CORP</dd>
+              <dd>{work_order.company?.name} </dd>
             </div>
             <div className="flex items-center justify-between">
               <dt className="text-muted-foreground">Email</dt>

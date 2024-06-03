@@ -92,21 +92,13 @@ export default async function WorkOrderHeader({
           >
             Work plan :
           </Label>
-          <Button id="work_plan" variant={"link"} size={"sm"}>
-            {work_order.work_plan_id}
-          </Button>
-        </div>
-        <Separator orientation="vertical" className="h-auto" />
-        <div className="flex flex-col gap-0.5 text-pretty  rounded-md text-center ">
-          <Label
-            className="text-pretty text-xs text-muted-foreground "
-            htmlFor="status"
-            id="asset"
+          <Button
+            id="work_plan"
+            variant={"link"}
+            size={"sm"}
+            disabled={work_order.work_plan_id == null}
           >
-            Asset :
-          </Label>
-          <Button id="asset" variant={"link"} size={"sm"}>
-            {work_order.work_plan_id}
+            {work_order.work_plan_id ? work_order.work_plan_id : "No work plan"}
           </Button>
         </div>
       </CardFooter>
