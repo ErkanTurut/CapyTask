@@ -10,9 +10,8 @@ type opts = {
 
 export const deleteAssetHandler = async ({ input, db }: opts) => {
   await db
-    .from("asset_team")
+    .from("asset")
     .delete()
     .in("asset_id", [input.asset_id])
-    .eq("team_id", input.team_id)
     .throwOnError();
 };

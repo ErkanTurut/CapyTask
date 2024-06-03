@@ -8,7 +8,9 @@ const getUser = cache(async () => {
 });
 
 export async function createContext(opts?: FetchCreateContextFnOptions) {
-  const { data: user } = await getUser();
+  const {
+    data: { user },
+  } = await getUser();
 
   return {
     user,

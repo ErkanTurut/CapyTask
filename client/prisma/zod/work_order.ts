@@ -13,12 +13,12 @@ export const work_orderModel = z.object({
   status: z.nativeEnum(Status),
   team_id: z.string(),
   work_plan_id: z.string().nullish(),
-  customer_id: z.string().nullish(),
+  company_id: z.string(),
 })
 
 export interface Completework_order extends z.infer<typeof work_orderModel> {
   location?: Completelocation | null
-  customer?: Completecompany | null
+  company: Completecompany
   team: Completeteam
   work_plan?: Completework_plan | null
   work_order_asset: Completework_order_asset[]
@@ -32,7 +32,7 @@ export interface Completework_order extends z.infer<typeof work_orderModel> {
  */
 export const Relatedwork_orderModel: z.ZodSchema<Completework_order> = z.lazy(() => work_orderModel.extend({
   location: RelatedlocationModel.nullish(),
-  customer: RelatedcompanyModel.nullish(),
+  company: RelatedcompanyModel,
   team: RelatedteamModel,
   work_plan: Relatedwork_planModel.nullish(),
   work_order_asset: Relatedwork_order_assetModel.array(),

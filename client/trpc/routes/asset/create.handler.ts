@@ -35,15 +35,5 @@ export async function createAssetHandler({
     });
   }
 
-  if (input.team_id) {
-    await db
-      .from("asset_team")
-      .insert({
-        team_id: "4pGki9KGYX",
-        asset_id: data.id,
-      })
-      .throwOnError();
-  }
-
   return { data };
 }

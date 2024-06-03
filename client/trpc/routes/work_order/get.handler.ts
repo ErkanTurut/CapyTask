@@ -117,7 +117,7 @@ export async function getWorkOrderDetailHandler({
   return await db
     .from("work_order")
     .select(
-      "*, work_step_status(*, work_step(*)), asset(*), location(*, address(*))",
+      "*, work_step_status(*, work_step(*)), asset(*), location(*, address(*)), company(*)",
     )
     .eq("id", input.id)
     .order("step_order", {

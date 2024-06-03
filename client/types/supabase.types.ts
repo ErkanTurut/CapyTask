@@ -154,6 +154,7 @@ export type Database = {
           name: string
           public_id: string
           updated_at: string
+          workspace_id: string
         }
         Insert: {
           created_at?: string
@@ -162,6 +163,7 @@ export type Database = {
           name: string
           public_id?: string
           updated_at?: string
+          workspace_id: string
         }
         Update: {
           created_at?: string
@@ -170,8 +172,17 @@ export type Database = {
           name?: string
           public_id?: string
           updated_at?: string
+          workspace_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "company_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspace"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       company_user: {
         Row: {
@@ -457,8 +468,8 @@ export type Database = {
       }
       work_order: {
         Row: {
+          company_id: string
           created_at: string
-          customer_id: string | null
           description: string | null
           id: string
           location_id: string | null
@@ -470,8 +481,8 @@ export type Database = {
           work_plan_id: string | null
         }
         Insert: {
+          company_id: string
           created_at?: string
-          customer_id?: string | null
           description?: string | null
           id?: string
           location_id?: string | null
@@ -483,8 +494,8 @@ export type Database = {
           work_plan_id?: string | null
         }
         Update: {
+          company_id?: string
           created_at?: string
-          customer_id?: string | null
           description?: string | null
           id?: string
           location_id?: string | null
@@ -497,8 +508,8 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "work_order_customer_id_fkey"
-            columns: ["customer_id"]
+            foreignKeyName: "work_order_company_id_fkey"
+            columns: ["company_id"]
             isOneToOne: false
             referencedRelation: "company"
             referencedColumns: ["id"]
