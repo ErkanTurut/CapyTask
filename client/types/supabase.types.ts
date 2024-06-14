@@ -665,6 +665,7 @@ export type Database = {
           step_order: number | null
           updated_at: string
           work_plan_id: string
+          work_step_template_id: string | null
         }
         Insert: {
           created_at?: string
@@ -677,6 +678,7 @@ export type Database = {
           step_order?: number | null
           updated_at?: string
           work_plan_id: string
+          work_step_template_id?: string | null
         }
         Update: {
           created_at?: string
@@ -689,6 +691,7 @@ export type Database = {
           step_order?: number | null
           updated_at?: string
           work_plan_id?: string
+          work_step_template_id?: string | null
         }
         Relationships: [
           {
@@ -703,6 +706,13 @@ export type Database = {
             columns: ["work_plan_id"]
             isOneToOne: false
             referencedRelation: "work_plan"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "work_step_work_step_template_id_fkey"
+            columns: ["work_step_template_id"]
+            isOneToOne: false
+            referencedRelation: "work_step_template"
             referencedColumns: ["id"]
           },
         ]
@@ -858,18 +868,27 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      create_work_plan: {
-        Args: {
-          work_plan_template_id_param: string
-        }
-        Returns: string
-      }
       create_work_step: {
         Args: {
           work_plan_template_id_param: string
           work_plan_id: string
         }
         Returns: undefined
+      }
+      manage_work_plan: {
+        Args: {
+          _work_plan_template_id: string
+          _team_id: string
+        }
+        Returns: {
+          work_plan_id: string
+          name: string
+          team_id: string
+          work_plan_template_id: string
+          description: string
+          created_at: string
+          updated_at: string
+        }[]
       }
       nanoid: {
         Args: {
