@@ -1,4 +1,16 @@
+import {
+  work_orderModel,
+  work_plan_templateModel,
+  work_stepModel,
+} from "@/prisma/zod";
 import { protectedProcedure, router } from "@/trpc/trpc";
+import { Database } from "@/types/supabase.types";
+import { TRPCError } from "@trpc/server";
+import { z } from "zod";
+import { createWorkOrderHandler } from "./create.handler";
+import { ZCreateWorkOrderSchema } from "./create.schema";
+import { deleteWorkOrderHandler } from "./delete.handler";
+import { ZDeleteWorkOrderSchema } from "./delete.schema";
 import {
   getWorkOrderDetailHandler,
   getWorkOrderHandler,
@@ -8,22 +20,9 @@ import {
   searchWorkOrderHandler,
 } from "./get.handler";
 import { ZGetWorkOrderSchema } from "./get.schema";
-import { ZCreateWorkOrderSchema } from "./create.schema";
-import { ZDeleteWorkOrderSchema } from "./delete.schema";
-import { deleteWorkOrderHandler } from "./delete.handler";
 import { updateWorkOrderStatusHandler } from "./update.handler";
 import { ZUpdateWorkOrderSchema } from "./update.schema";
-import {
-  work_orderModel,
-  Relatedwork_orderModel,
-  work_plan_templateModel,
-  work_planModel,
-  work_stepModel,
-  work_step_statusModel,
-} from "@/prisma/zod";
-import { z } from "zod";
-import { TRPCError } from "@trpc/server";
-import { Database } from "@/types/supabase.types";
+import { Database } from "@/lib/supabase/server";
 export const work_order = router({
   get: {
     byId: protectedProcedure
@@ -69,14 +68,6 @@ export const work_order = router({
         });
       }),
   },
-  // create: protectedProcedure
-  //   .input(ZCreateWorkOrderSchema)
-  //   .mutation(async ({ ctx, input }) => {
-  //     // return await createWorkOrderHandler({
-  //     //   input,
-  //     //   db: ctx.db,
-  //     // });
-  //   }),
   search: protectedProcedure
     .input(ZGetWorkOrderSchema.pick({ q: true, team_identity: true }))
     .query(async ({ ctx, input }) => {
@@ -103,46 +94,47 @@ export const work_order = router({
         });
       }),
   },
-  create: {
+  // create: protectedProcedure
+  //   .input(ZCreateWorkOrderSchema)
+  //   .mutation(async ({ ctx, input }) => {
+  //     const { data: work_plan } = await ctx.db.rpc("manage_work_plan", {
+  //       input_work_plan_template_id: input.work_plan_template_id,
+  //       input_team_id: input.team_id,
+  //     });
+  //   }),
+  createdd: {
     withTemplate: protectedProcedure
       .input(
-        z.object({
-          name: z.string(),
-          description: z.string(),
-          work_plan_template_id: z.string(),
-          team_id: z.string(),
-          company_id: z.string(),
-          location_id: z.string(),
-        }),
+        work_orderModel
+          .pick({
+            name: true,
+            description: true,
+            team_id: true,
+            company_id: true,
+            location_id: true,
+          })
+          .merge(
+            z.object({
+              work_plan_template: work_plan_templateModel.pick({
+                id: true,
+              }),
+            }),
+          ),
       )
       .mutation(async ({ ctx, input }) => {
         let work_plan = null as
           | Database["public"]["Tables"]["work_plan"]["Row"]
           | null;
 
-        const { data: work_order, error } = await ctx.db
-          .from("work_order")
-          .insert({
-            name: input.name,
-            team_id: input.team_id,
-            description: input.description,
-            company_id: input.company_id,
-            location_id: input.location_id,
-          })
-          .select("*")
-          .single();
-
-        if (error) {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: error.message,
-          });
-        }
+        const work_order = await createWorkOrderHandler({
+          input,
+          db: ctx.db,
+        });
 
         const { data: work_plan_template } = await ctx.db
           .from("work_plan_template")
           .select("*")
-          .eq("id", input.work_plan_template_id)
+          .eq("id", input.work_plan_template.id)
           .single();
 
         if (!work_plan_template) {
@@ -155,7 +147,7 @@ export const work_order = router({
         const { data } = await ctx.db
           .from("work_plan")
           .select("*")
-          .eq("work_plan_template_id", input.work_plan_template_id)
+          .eq("work_plan_template_id", input.work_plan_template.id)
           .eq("created_at", work_plan_template.updated_at)
           .single();
 
@@ -183,20 +175,25 @@ export const work_order = router({
           work_plan = data;
         }
 
-        const { data: work_step_template } = await ctx.db
-          .from("work_step_template")
+        // handle work steps
+        const { data: work_step } = await ctx.db
+          .from("work_step")
           .select("*")
-          .eq("work_plan_template_id", work_plan_template.id);
+          .eq("work_plan_id", work_plan.id);
 
-        if (work_step_template) {
-          const steps = work_step_template.map((step) => {
+        // if there are already work steps related to the work plan, then we will use them
+        if (work_step) {
+          // create work step status that will be used to track the progress of the work order
+          const steps = work_step.map((step) => {
             return {
-              ...step,
-              work_plan_id: work_plan.id,
+              work_step_id: step.id,
+              work_order_id: work_order.id,
+              step_order: step.step_order,
             };
-          });
-          const { data: work_step, error } = await ctx.db
-            .from("work_step")
+          }) as Database["public"]["Tables"]["work_step_status"]["Insert"][];
+
+          const { data: work_step_status, error } = await ctx.db
+            .from("work_step_status")
             .upsert(steps)
             .select("*");
 
@@ -204,6 +201,41 @@ export const work_order = router({
             throw new TRPCError({
               code: "INTERNAL_SERVER_ERROR",
               message: error.message,
+            });
+          }
+        } else {
+          // if there are no work steps related to the work plan, then we will create them
+          const { data: work_step_template, error } = await ctx.db
+            .from("work_step_template")
+            .select("*")
+            .eq("work_plan_template_id", work_plan_template.id);
+
+          if (error) {
+            throw new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: error.message,
+            });
+          }
+
+          const steps = work_step_template.map((step) => {
+            return {
+              name: step.name,
+              description: step.description,
+              step_order: step.step_order,
+              work_step_template_id: step.id,
+              parent_step_id: step.parent_step_id,
+              work_plan_id: work_plan.id,
+            };
+          }) as Database["public"]["Tables"]["work_step"]["Insert"][];
+          const { data: work_step, error: work_step_error } = await ctx.db
+            .from("work_step")
+            .upsert(steps)
+            .select("*");
+
+          if (work_step_error) {
+            throw new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: work_step_error.message,
             });
           }
 
@@ -218,6 +250,42 @@ export const work_order = router({
             .upsert(stepStatus)
             .select("*");
         }
+
+        // const { data: work_step_template } = await ctx.db
+        //   .from("work_step_template")
+        //   .select("*")
+        //   .eq("work_plan_template_id", work_plan_template.id);
+
+        // if (work_step_template) {
+        //   const steps = work_step_template.map((step) => {
+        //     return {
+        //       ...step,
+        //       work_plan_id: work_plan.id,
+        //     };
+        //   });
+        //   const { data: work_step, error } = await ctx.db
+        //     .from("work_step")
+        //     .upsert(steps)
+        //     .select("*");
+
+        //   if (error) {
+        //     throw new TRPCError({
+        //       code: "INTERNAL_SERVER_ERROR",
+        //       message: error.message,
+        //     });
+        //   }
+
+        //   const stepStatus = work_step.map((step) => {
+        //     return {
+        //       work_step_id: step.id,
+        //       work_order_id: work_order.id,
+        //     };
+        //   });
+        //   const { data: work_step_status } = await ctx.db
+        //     .from("work_step_status")
+        //     .upsert(stepStatus)
+        //     .select("*");
+        // }
       }),
     withSteps: protectedProcedure
       .input(
@@ -300,228 +368,4 @@ export const work_order = router({
         }
       }),
   },
-
-  // t: protectedProcedure
-  //   .input(
-  //     z.object({
-  //       name: z.string(),
-  //       description: z.string(),
-  //       work_plan_template_id: z.string().optional(),
-  //       team_id: z.string(),
-  //       work_step: z.array(work_stepModel).optional(),
-  //       company_id: z.string(),
-  //       location_id: z.string().optional(),
-  //     }),
-  //   )
-  //   .mutation(async ({ ctx, input }) => {
-  //     let work_plan = null as
-  //       | Database["public"]["Tables"]["work_plan"]["Row"]
-  //       | null;
-
-  //     const { data: work_order, error } = await ctx.db
-  //       .from("work_order")
-  //       .insert({
-  //         name: input.name,
-  //         team_id: input.team_id,
-  //         description: input.description,
-  //         company_id: input.company_id,
-  //         location_id: input.location_id,
-  //       })
-  //       .select("*")
-  //       .single();
-
-  //     if (error) {
-  //       throw new TRPCError({
-  //         code: "INTERNAL_SERVER_ERROR",
-  //         message: error.message,
-  //       });
-  //     }
-
-  //     if (input.work_plan_template_id) {
-  //       const { data: work_plan_template } = await ctx.db
-  //         .from("work_plan_template")
-  //         .select("*")
-  //         .eq("id", input.work_plan_template_id)
-  //         .single();
-
-  //       if (!work_plan_template) {
-  //         throw new TRPCError({
-  //           code: "INTERNAL_SERVER_ERROR",
-  //           message: "Work plan template not found",
-  //         });
-  //       }
-
-  //       const { data } = await ctx.db
-  //         .from("work_plan")
-  //         .select("*")
-  //         .eq("work_plan_template_id", input.work_plan_template_id)
-  //         .eq("created_at", work_plan_template.updated_at)
-  //         .single();
-
-  //       work_plan = data;
-
-  //       if (!work_plan) {
-  //         const { data, error } = await ctx.db
-  //           .from("work_plan")
-  //           .insert({
-  //             name: work_plan_template.name,
-  //             team_id: input.team_id,
-  //             work_plan_template_id: work_plan_template.id,
-  //             description: work_plan_template.description,
-  //             created_at: work_plan_template.updated_at,
-  //             updated_at: work_plan_template.updated_at,
-  //           })
-  //           .select("*")
-  //           .single();
-  //         if (error) {
-  //           throw new TRPCError({
-  //             code: "INTERNAL_SERVER_ERROR",
-  //             message: error.message,
-  //           });
-  //         }
-  //         work_plan = data;
-  //       }
-
-  //       if (!work_plan) {
-  //         throw new TRPCError({
-  //           code: "INTERNAL_SERVER_ERROR",
-  //           message: "Work plan not found",
-  //         });
-  //       }
-
-  //       const { data: work_step_template } = await ctx.db
-  //         .from("work_step_template")
-  //         .select("*")
-  //         .eq("work_plan_template_id", work_plan_template.id);
-
-  //       if (work_step_template) {
-  //         const steps = work_step_template.map((step) => {
-  //           return {
-  //             ...step,
-  //             work_plan_id: work_plan!.id,
-  //           };
-  //         });
-  //         const { data: work_step, error } = await ctx.db
-  //           .from("work_step")
-  //           .upsert(steps)
-  //           .select("*");
-
-  //         if (error) {
-  //           throw new TRPCError({
-  //             code: "INTERNAL_SERVER_ERROR",
-  //             message: error.message,
-  //           });
-  //         }
-
-  //         const stepStatus = work_step.map((step) => {
-  //           return {
-  //             work_step_id: step.id,
-  //             work_order_id: work_order.id,
-  //           };
-  //         });
-  //         const { data: work_step_status } = await ctx.db
-  //           .from("work_step_status")
-  //           .upsert(stepStatus)
-  //           .select("*");
-  //       }
-  //     } else {
-  //       const { data: work_plan, error } = await ctx.db
-  //         .from("work_plan")
-  //         .insert({
-  //           name: input.name,
-  //           description: input.description,
-  //           team_id: input.team_id,
-  //         })
-  //         .select("*")
-  //         .single();
-
-  //       if (error) {
-  //         throw new TRPCError({
-  //           code: "INTERNAL_SERVER_ERROR",
-  //           message: error.message,
-  //         });
-  //       }
-
-  //       if (input.work_step) {
-  //         const steps = input.work_step.map((step) => {
-  //           return {
-  //             ...step,
-  //             work_plan_id: work_plan.id,
-  //           };
-  //         });
-  //         const { data: work_step, error } = await ctx.db
-  //           .from("work_step")
-  //           .upsert(steps)
-  //           .select("*");
-
-  //         if (error) {
-  //           throw new TRPCError({
-  //             code: "INTERNAL_SERVER_ERROR",
-  //             message: error.message,
-  //           });
-  //         }
-
-  //         // upsert work step status for each work step
-  //         const stepStatus = work_step.map((step) => {
-  //           return {
-  //             work_step_id: step.id,
-  //             work_order_id: work_order.id,
-  //           };
-  //         });
-  //         const { data: work_step_status } = await ctx.db
-  //           .from("work_step_status")
-  //           .upsert(stepStatus)
-  //           .select("*");
-  //       }
-  //     }
-  //     return { work_order, work_plan };
-  //   }),
 });
-
-// DECLARE
-//     work_plan_id TEXT;
-//     work_plan_created_at TIMESTAMP WITH TIME ZONE;
-// BEGIN
-//     -- Fetch creation timestamp from the work plan template
-//     SELECT updated_at INTO work_plan_created_at
-//     FROM work_plan_template
-//     WHERE id = work_plan_template_id_param;
-
-//     -- Check if a snapshot already exists for the given work plan template
-//     SELECT id INTO work_plan_id
-//     FROM work_plan
-//     WHERE work_plan.work_plan_template_id = work_plan_template_id_param
-//     AND work_plan.created_at = work_plan_created_at;
-
-//     -- If snapshot doesn't exist, create a new one
-//     IF work_plan_id IS NULL THEN
-//         INSERT INTO work_plan (id, work_plan_template_id,team_id, name, description, created_at, updated_at)
-//         SELECT nanoid(10), work_plan_template_id_param, team_id, name, description, work_plan_created_at, work_plan_created_at
-//         FROM work_plan_template
-//         WHERE id = work_plan_template_id_param
-//         RETURNING id INTO work_plan_id;
-
-//         -- Call create_step_template_snapshot function
-//         PERFORM create_work_step(work_plan_template_id_param, work_plan_id);
-
-//     END IF;
-
-//     RETURN work_plan_id;
-
-// END;
-
-// BEGIN
-//     -- Copy step_template records linked to the inspection_template
-//     INSERT INTO work_step (id, name, description, created_at, updated_at, parent_step_id, created_by_id, step_order, work_plan_id)
-//     SELECT nanoid(17),
-//            name,
-//            description,
-//            created_at,
-//            updated_at,
-//            parent_step_id,
-//            created_by_id,
-//            step_order,
-//            work_plan_id
-//     FROM work_step_template
-//     WHERE work_step_template.work_plan_template_id = work_plan_template_id_param;
-// END;

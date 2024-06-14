@@ -1,5 +1,5 @@
 import * as z from "zod"
-import { Completework_plan_template, Relatedwork_plan_templateModel } from "./index"
+import { Completework_plan_template, Relatedwork_plan_templateModel, Completework_step, Relatedwork_stepModel } from "./index"
 
 export const work_step_templateModel = z.object({
   id: z.string(),
@@ -18,6 +18,7 @@ export interface Completework_step_template extends z.infer<typeof work_step_tem
   parent_step?: Completework_step_template | null
   sub_steps: Completework_step_template[]
   work_plan_template: Completework_plan_template
+  work_step: Completework_step[]
 }
 
 /**
@@ -29,4 +30,5 @@ export const Relatedwork_step_templateModel: z.ZodSchema<Completework_step_templ
   parent_step: Relatedwork_step_templateModel.nullish(),
   sub_steps: Relatedwork_step_templateModel.array(),
   work_plan_template: Relatedwork_plan_templateModel,
+  work_step: Relatedwork_stepModel.array(),
 }))
