@@ -14,8 +14,8 @@ DECLARE
 BEGIN
     -- Fetch work_plan_template by id
     SELECT * INTO work_plan_template
-    FROM work_plan_template
-    WHERE id = _work_plan_template_id;
+    FROM work_plan_template wpt
+    WHERE wpt.id = _work_plan_template_id;
 
     IF NOT FOUND THEN
         RAISE EXCEPTION 'Work plan template not found';
@@ -23,9 +23,9 @@ BEGIN
 
     -- Fetch work_plan by work_plan_template_id and created_at
     SELECT * INTO work_plan
-    FROM work_plan
-    WHERE work_plan_template_id = _work_plan_template_id
-    AND created_at = work_plan_template.updated_at;
+    FROM work_plan wp
+    WHERE wp.work_plan_template_id = _work_plan_template_id
+    AND wp.created_at = work_plan_template.updated_at;
 
     -- If work_plan is not found, insert a new one
     IF NOT FOUND THEN
@@ -42,8 +42,10 @@ BEGIN
 
     -- Return the final work_plan
     RETURN QUERY
-    SELECT work_plan.id, work_plan.name, work_plan.team_id,
-           work_plan.work_plan_template_id, work_plan.description,
-           work_plan.created_at, work_plan.updated_at;
+    SELECT wp.id, wp.name, wp.team_id,
+           wp.work_plan_template_id, wp.description,
+           wp.created_at, wp.updated_at
+    FROM work_plan wp
+    WHERE wp.id = work_plan.id;
 END;
 $$ LANGUAGE plpgsql;

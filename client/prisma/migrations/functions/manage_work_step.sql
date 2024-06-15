@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION manage_work_step(work_plan_id TEXT, work_plan_template_id TEXT)
+CREATE OR REPLACE FUNCTION manage_work_step(_work_plan_id TEXT, _work_plan_template_id TEXT)
 RETURNS TABLE (
     work_step_id TEXT,
     name TEXT,
@@ -15,20 +15,23 @@ DECLARE
 BEGIN
     -- Check if there are already work steps related to the work plan
     SELECT TRUE INTO work_step_exists
-    FROM work_step
-    WHERE work_plan_id = work_plan_id
+    FROM work_step ws
+    WHERE ws.work_plan_id = _work_plan_id
     LIMIT 1;
 
     IF work_step_exists THEN
         -- Return existing work steps
         RETURN QUERY
-        SELECT * FROM work_step WHERE work_plan_id = work_plan_id;
+        SELECT ws.id, ws.name, ws.description, ws.step_order, ws.work_step_template_id,
+               ws.parent_step_id, ws.work_plan_id
+        FROM work_step ws
+        WHERE ws.work_plan_id = _work_plan_id;
     ELSE
         -- Fetch work_step_template by work_plan_template_id
         FOR work_step_template IN
             SELECT *
-            FROM work_step_template
-            WHERE work_plan_template_id = work_plan_template_id
+            FROM work_step_template wst
+            WHERE wst.work_plan_template_id = _work_plan_template_id
         LOOP
             -- Insert new work steps based on the templates
             INSERT INTO work_step (
@@ -36,7 +39,7 @@ BEGIN
             ) VALUES (
                 work_step_template.name, work_step_template.description,
                 work_step_template.step_order, work_step_template.id,
-                work_step_template.parent_step_id, work_plan_id
+                work_step_template.parent_step_id, _work_plan_id
             )
             RETURNING * INTO work_step;
 
