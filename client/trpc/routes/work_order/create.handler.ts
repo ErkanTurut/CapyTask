@@ -66,6 +66,7 @@ const inputZod = work_orderModel.pick({
   team_id: true,
   company_id: true,
   location_id: true,
+  work_plan_id: true,
 });
 
 export async function createWorkOrderHandler({
@@ -75,7 +76,7 @@ export async function createWorkOrderHandler({
   input: z.infer<typeof inputZod>;
   db: SupabaseClient;
 }) {
-  const { data: work_order, error } = await db
+  return await db
     .from("work_order")
     .insert({
       name: input.name,
@@ -83,16 +84,8 @@ export async function createWorkOrderHandler({
       description: input.description,
       company_id: input.company_id,
       location_id: input.location_id,
+      work_plan_id: input.work_plan_id,
     })
     .select("*")
     .single();
-
-  if (error) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: error.message,
-    });
-  }
-
-  return work_order;
 }

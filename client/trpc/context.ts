@@ -7,16 +7,30 @@ const getUser = cache(async () => {
   return await createClient(cookies()).auth.getUser();
 });
 
-export async function createContext(opts?: FetchCreateContextFnOptions) {
-  const {
-    data: { user },
-  } = await getUser();
+// export async function createContext(opts?: FetchCreateContextFnOptions) {
+//   const {
+//     data: { user },
+//   } = await getUser();
 
-  return {
-    user,
-    headers: opts && Object.fromEntries(opts.req.headers),
-    db: createClient(cookies()),
-  };
-}
+//   return {
+//     user,
+//     headers: opts && Object.fromEntries(opts.req.headers),
+//     db: createClient(cookies()),
+//   };
+// }
+
+export const createContext = cache(
+  async (opts?: FetchCreateContextFnOptions) => {
+    const {
+      data: { user },
+    } = await getUser();
+
+    return {
+      user,
+      headers: opts && Object.fromEntries(opts.req.headers),
+      db: createClient(cookies()),
+    };
+  },
+);
 
 export type Context = Awaited<ReturnType<typeof createContext>>;

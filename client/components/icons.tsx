@@ -42,6 +42,8 @@ import {
 } from "@radix-ui/react-icons";
 import { Loader2, Banknote, Route, Building } from "lucide-react";
 
+// Default values shown
+
 type logoProps = {
   // color: "light" | "dark";
   size?: "s" | "m" | "l" | "xl";
@@ -111,84 +113,6 @@ export const Icons = {
   SewingPin: SewingPinIcon,
   MagicWand: MagicWandIcon,
   building: Building,
-  Loading2: () => {
-    return (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        version="1.0"
-        width="64px"
-        height="64px"
-        viewBox="0 0 128 128"
-      >
-        <g>
-          <path d="M59.6 0h8v40h-8V0z" fill="#111827" />
-          <path
-            d="M59.6 0h8v40h-8V0z"
-            fill="#cfd1d4"
-            transform="rotate(30 64 64)"
-          />
-          <path
-            d="M59.6 0h8v40h-8V0z"
-            fill="#cfd1d4"
-            transform="rotate(60 64 64)"
-          />
-          <path
-            d="M59.6 0h8v40h-8V0z"
-            fill="#cfd1d4"
-            transform="rotate(90 64 64)"
-          />
-          <path
-            d="M59.6 0h8v40h-8V0z"
-            fill="#cfd1d4"
-            transform="rotate(120 64 64)"
-          />
-          <path
-            d="M59.6 0h8v40h-8V0z"
-            fill="#b7b9be"
-            transform="rotate(150 64 64)"
-          />
-          <path
-            d="M59.6 0h8v40h-8V0z"
-            fill="#a0a3a9"
-            transform="rotate(180 64 64)"
-          />
-          <path
-            d="M59.6 0h8v40h-8V0z"
-            fill="#888b93"
-            transform="rotate(210 64 64)"
-          />
-          <path
-            d="M59.6 0h8v40h-8V0z"
-            fill="#70747d"
-            transform="rotate(240 64 64)"
-          />
-          <path
-            d="M59.6 0h8v40h-8V0z"
-            fill="#585d67"
-            transform="rotate(270 64 64)"
-          />
-          <path
-            d="M59.6 0h8v40h-8V0z"
-            fill="#414652"
-            transform="rotate(300 64 64)"
-          />
-          <path
-            d="M59.6 0h8v40h-8V0z"
-            fill="#282f3c"
-            transform="rotate(330 64 64)"
-          />
-          <animateTransform
-            attributeName="transform"
-            type="rotate"
-            values="0 64 64;30 64 64;60 64 64;90 64 64;120 64 64;150 64 64;180 64 64;210 64 64;240 64 64;270 64 64;300 64 64;330 64 64"
-            calcMode="discrete"
-            dur="1080ms"
-            repeatCount="indefinite"
-          ></animateTransform>
-        </g>
-      </svg>
-    );
-  },
 
   logo: (props: LucideProps & logoProps) => {
     const { size, className } = props;
