@@ -167,6 +167,9 @@ dependencies:
   geist:
     specifier: ^1.3.0
     version: 1.3.0(next@14.3.0-canary.14)
+  ldrs:
+    specifier: ^1.0.2
+    version: 1.0.2
   livekit-client:
     specifier: ^2.1.5
     version: 2.1.5
@@ -230,6 +233,9 @@ dependencies:
   zod-prisma:
     specifier: ^0.5.4
     version: 0.5.4(prisma@5.15.0)(zod@3.23.8)
+  zod-prisma-types:
+    specifier: ^3.1.8
+    version: 3.1.8
   zustand:
     specifier: ^4.5.2
     version: 4.5.2(@types/react@18.3.3)(react@18.3.1)
@@ -1062,6 +1068,12 @@ packages:
       kleur: 4.1.5
     transitivePeerDependencies:
       - supports-color
+    dev: false
+
+  /@prisma/generator-helper@5.15.0:
+    resolution: {integrity: sha512-7pB3v57GU4Q/iBauGbvQQGenMJSu2ArQboge4Ca6bw0gA7nConfIHP48MdNIYCrBbNPcIVFmrNomyhqCb3IuWQ==}
+    dependencies:
+      '@prisma/debug': 5.15.0
     dev: false
 
   /@prisma/get-platform@4.16.2:
@@ -3362,6 +3374,10 @@ packages:
     resolution: {integrity: sha512-NiujjUFB4SwScJq2bwbYUtXbZhBSlY6vYzm++3Q6oC+U+injTqfPYFK8wS9COOmb2lueqp0ZRB4nK1VYeHgNyw==}
     dev: false
 
+  /code-block-writer@12.0.0:
+    resolution: {integrity: sha512-q4dMFMlXtKR3XNBHyMHt/3pwYNA69EDk00lloMOaaUMKPUXBw6lpXtbu3MMVG6/uOihGnRDOlkyqsONEUj60+w==}
+    dev: false
+
   /code-red@1.0.4:
     resolution: {integrity: sha512-7qJWqItLA8/VPVlKJlFXU+NBlo/qyfs39aJcuMT/2ere32ZqvF5OSxgdM5xOfJJ7O429gg2HM47y8v9P+9wrNw==}
     dependencies:
@@ -5078,6 +5094,10 @@ packages:
     engines: {node: '>= 0.6.3'}
     dependencies:
       readable-stream: 2.3.8
+    dev: false
+
+  /ldrs@1.0.2:
+    resolution: {integrity: sha512-sYJmivdkIiHrUEqTrEWccBoLdaENpzbzkABI5rk8rRxTXrg9i2xVuDvUUuhOhJY3RmQyaoxs046pM1DCRdcIpg==}
     dev: false
 
   /levn@0.4.1:
@@ -7437,6 +7457,16 @@ packages:
       archiver-utils: 3.0.4
       compress-commons: 4.1.2
       readable-stream: 3.6.2
+    dev: false
+
+  /zod-prisma-types@3.1.8:
+    resolution: {integrity: sha512-5oe0ays3ur4u2GtuUqlhgCraKBcsuMaMI8o7VMV4YAnFeOuVid7K2zGvjI19V0ue9PeNF2ICyVREQVohaQm5dw==}
+    hasBin: true
+    dependencies:
+      '@prisma/generator-helper': 5.15.0
+      code-block-writer: 12.0.0
+      lodash: 4.17.21
+      zod: 3.23.8
     dev: false
 
   /zod-prisma@0.5.4(prisma@5.15.0)(zod@3.23.8):
