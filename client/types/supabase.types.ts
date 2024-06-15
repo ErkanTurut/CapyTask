@@ -890,6 +890,28 @@ export type Database = {
           updated_at: string
         }[]
       }
+      manage_work_step: {
+        Args: {
+          _work_plan_id: string
+          _work_plan_template_id: string
+        }
+        Returns: {
+          work_step_id: string
+          name: string
+          description: string
+          step_order: number
+          work_step_template_id: string
+          parent_step_id: string
+          work_plan_id: string
+        }[]
+      }
+      manage_work_step_status: {
+        Args: {
+          _work_plan_id: string
+          _work_order_id: string
+        }
+        Returns: undefined
+      }
       nanoid: {
         Args: {
           size?: number
