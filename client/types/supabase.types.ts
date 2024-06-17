@@ -116,32 +116,100 @@ export type Database = {
           },
         ]
       }
-      asset_team: {
+      asset_location: {
         Row: {
           asset_id: string
-          team_id: string
+          location_id: string
         }
         Insert: {
           asset_id: string
-          team_id: string
+          location_id: string
         }
         Update: {
           asset_id?: string
-          team_id?: string
+          location_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "asset_team_asset_id_fkey"
+            foreignKeyName: "asset_location_asset_id_fkey"
             columns: ["asset_id"]
             isOneToOne: false
             referencedRelation: "asset"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "asset_team_team_id_fkey"
-            columns: ["team_id"]
+            foreignKeyName: "asset_location_location_id_fkey"
+            columns: ["location_id"]
             isOneToOne: false
-            referencedRelation: "team"
+            referencedRelation: "location"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      company: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          public_id: string
+          updated_at: string
+          workspace_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          public_id?: string
+          updated_at?: string
+          workspace_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          public_id?: string
+          updated_at?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspace"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      company_user: {
+        Row: {
+          company_id: string
+          user_id: string
+        }
+        Insert: {
+          company_id: string
+          user_id: string
+        }
+        Update: {
+          company_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_user_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "company"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "company_user_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user"
             referencedColumns: ["id"]
           },
         ]
@@ -149,6 +217,7 @@ export type Database = {
       location: {
         Row: {
           address_id: string
+          company_id: string | null
           created_at: string
           description: string | null
           id: string
@@ -162,6 +231,7 @@ export type Database = {
         }
         Insert: {
           address_id: string
+          company_id?: string | null
           created_at?: string
           description?: string | null
           id?: string
@@ -175,6 +245,7 @@ export type Database = {
         }
         Update: {
           address_id?: string
+          company_id?: string | null
           created_at?: string
           description?: string | null
           id?: string
@@ -192,6 +263,13 @@ export type Database = {
             columns: ["address_id"]
             isOneToOne: false
             referencedRelation: "address"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "location_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "company"
             referencedColumns: ["id"]
           },
           {
@@ -390,9 +468,11 @@ export type Database = {
       }
       work_order: {
         Row: {
+          company_id: string
           created_at: string
           description: string | null
           id: string
+          location_id: string | null
           name: string
           public_id: string
           status: Database["public"]["Enums"]["Status"]
@@ -401,9 +481,11 @@ export type Database = {
           work_plan_id: string | null
         }
         Insert: {
+          company_id: string
           created_at?: string
           description?: string | null
           id?: string
+          location_id?: string | null
           name: string
           public_id?: string
           status?: Database["public"]["Enums"]["Status"]
@@ -412,9 +494,11 @@ export type Database = {
           work_plan_id?: string | null
         }
         Update: {
+          company_id?: string
           created_at?: string
           description?: string | null
           id?: string
+          location_id?: string | null
           name?: string
           public_id?: string
           status?: Database["public"]["Enums"]["Status"]
@@ -423,6 +507,20 @@ export type Database = {
           work_plan_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "work_order_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "company"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "work_order_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "location"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "work_order_team_id_fkey"
             columns: ["team_id"]
@@ -567,6 +665,7 @@ export type Database = {
           step_order: number | null
           updated_at: string
           work_plan_id: string
+          work_step_template_id: string | null
         }
         Insert: {
           created_at?: string
@@ -579,6 +678,7 @@ export type Database = {
           step_order?: number | null
           updated_at?: string
           work_plan_id: string
+          work_step_template_id?: string | null
         }
         Update: {
           created_at?: string
@@ -591,6 +691,7 @@ export type Database = {
           step_order?: number | null
           updated_at?: string
           work_plan_id?: string
+          work_step_template_id?: string | null
         }
         Relationships: [
           {
@@ -605,6 +706,13 @@ export type Database = {
             columns: ["work_plan_id"]
             isOneToOne: false
             referencedRelation: "work_plan"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "work_step_work_step_template_id_fkey"
+            columns: ["work_step_template_id"]
+            isOneToOne: false
+            referencedRelation: "work_step_template"
             referencedColumns: ["id"]
           },
         ]
@@ -760,16 +868,47 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      create_work_plan: {
-        Args: {
-          work_plan_template_id_param: string
-        }
-        Returns: string
-      }
       create_work_step: {
         Args: {
           work_plan_template_id_param: string
           work_plan_id: string
+        }
+        Returns: undefined
+      }
+      manage_work_plan: {
+        Args: {
+          _work_plan_template_id: string
+          _team_id: string
+        }
+        Returns: {
+          work_plan_id: string
+          name: string
+          team_id: string
+          work_plan_template_id: string
+          description: string
+          created_at: string
+          updated_at: string
+        }[]
+      }
+      manage_work_step: {
+        Args: {
+          _work_plan_id: string
+          _work_plan_template_id: string
+        }
+        Returns: {
+          work_step_id: string
+          name: string
+          description: string
+          step_order: number
+          work_step_template_id: string
+          parent_step_id: string
+          work_plan_id: string
+        }[]
+      }
+      manage_work_step_status: {
+        Args: {
+          _work_plan_id: string
+          _work_order_id: string
         }
         Returns: undefined
       }

@@ -39,7 +39,7 @@ interface WorkOrderDetailProps {
   };
   work_order: NonNullable<
     Awaited<
-      ReturnType<(typeof trpc)["db"]["work_order"]["get"]["withSteps"]>
+      ReturnType<(typeof trpc)["db"]["work_order"]["get"]["detail"]>
     >["data"]
   >;
 }
@@ -96,7 +96,7 @@ export default async function WorkOrderDetail({
           <dl className="grid gap-3">
             <div className="flex items-center justify-between">
               <dt className="text-muted-foreground">Customer</dt>
-              <dd>ACME CORP</dd>
+              <dd>{work_order.company?.name} </dd>
             </div>
             <div className="flex items-center justify-between">
               <dt className="text-muted-foreground">Email</dt>
@@ -113,70 +113,45 @@ export default async function WorkOrderDetail({
           </dl>
         </div>
         <Separator className="my-4" />
-        <div className="grid gap-3">
-          <div className="font-semibold">Status and Timeline</div>
-          <ul className="grid gap-3">
-            <li className="flex items-center justify-between">
-              <span className="text-muted-foreground">Current Status</span>
-              <span>{work_order.status}</span>
-            </li>
-            <li className="flex items-center justify-between">
-              <span className="text-muted-foreground">SLA</span>
-              <span>2d left</span>
-            </li>
-            <li className="flex items-center justify-between">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-3">
-                  <div className="font-semibold">Start date</div>
-                  <div className="text-muted-foreground">
-                    {formatDate({ date: work_order.created_at, format: "lll" })}
-                  </div>
-                </div>
-                <div className="grid auto-rows-max gap-3">
-                  <div className="font-semibold">End date</div>
-                  <div className="text-muted-foreground">
-                    {formatDate({ date: work_order.created_at, format: "lll" })}
-                  </div>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div>
 
-        <Separator className="my-4" />
         <div className="grid grid-cols-2 gap-4">
           <div className="grid auto-rows-max gap-3">
-            <div className="font-semibold">Location name</div>
-            <Link
-              className="text-xs font-medium text-primary underline underline-offset-4"
-              href="/app/team/1/work-orders/1"
-            >
-              ACME CORP - Main Office
-            </Link>
+            <div className="font-semibold">Start date</div>
+            <div className="text-muted-foreground">
+              {formatDate({ date: work_order.created_at, format: "lll" })}
+            </div>
           </div>
           <div className="grid gap-3">
-            <div className="font-semibold">Shipping Information</div>
-            <address className="grid gap-0.5 not-italic text-muted-foreground">
-              <span>Liam Johnson</span>
-              <span>1234 Main St.</span>
-              <span>Anytown, CA 12345</span>
-            </address>
+            <div className="font-semibold">End date</div>
+            <div className="text-muted-foreground">
+              {formatDate({ date: work_order.created_at, format: "lll" })}
+            </div>
           </div>
         </div>
 
         <Separator className="my-4" />
-        <div className="grid gap-3">
-          <div className="font-semibold">Payment Information</div>
-          <dl className="grid gap-3">
-            <div className="flex items-center justify-between">
-              <dt className="flex items-center gap-1 text-muted-foreground">
-                <CreditCard className="h-4 w-4" />
-                Visa
-              </dt>
-              <dd>**** **** **** 4532</dd>
+        {work_order.location && (
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid auto-rows-max gap-3">
+              <div className="font-semibold">Location name</div>
+              <Link
+                className="text-xs font-medium text-primary underline underline-offset-4"
+                href={`/${work_order.location.workspace_id}/locations/customers/${work_order.location.id}`}
+              >
+                {work_order.location.name}
+              </Link>
             </div>
-          </dl>
-        </div>
+            <div className="grid gap-3">
+              <div className="font-semibold">Location address</div>
+              <address className="grid gap-0.5 not-italic text-muted-foreground">
+                <span>{work_order.location.address?.street}</span>
+                <span>{work_order.location.address?.state}</span>
+                <span>{work_order.location.address?.postal_code}</span>
+                <span>{work_order.location.address?.country}</span>
+              </address>
+            </div>
+          </div>
+        )}
       </CardContent>
       <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
         <div className="text-xs text-muted-foreground">

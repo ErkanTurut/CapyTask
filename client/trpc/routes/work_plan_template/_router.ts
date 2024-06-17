@@ -65,9 +65,9 @@ export const work_plan_template = router({
     }),
 
   search: protectedProcedure
-    .input(ZGetWorkPlanTemplateSchema.pick({ q: true, team_id: true }))
+    .input(ZGetWorkPlanTemplateSchema.pick({ q: true, team_identity: true }))
     .query(async ({ ctx, input }) => {
-      const { data, count } = await searchWorkPlanTemplateHandler({
+      const { data } = await searchWorkPlanTemplateHandler({
         input,
         db: ctx.db,
       });

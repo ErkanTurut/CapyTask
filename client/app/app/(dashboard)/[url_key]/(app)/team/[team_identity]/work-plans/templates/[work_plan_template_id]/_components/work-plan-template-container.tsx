@@ -12,6 +12,7 @@ import { trpc } from "@/trpc/server";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import StepList from "./steps-list";
+import { StepsDemo } from "./steps";
 
 interface StepsContainerProps {
   params: {
@@ -77,10 +78,11 @@ const WorkPlanTemplateContainer: React.FC<StepsContainerProps> = async ({
         </div>
       </CardHeader>
       <CardContent>
-        <StepList
+        <StepsDemo />
+        {/* <StepList
           initialData={work_plan_template.work_step_template || []}
           work_plan_template_id={params.work_plan_template_id}
-        />
+        /> */}
       </CardContent>
     </Card>
   );

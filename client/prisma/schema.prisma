@@ -11,21 +11,18 @@ datasource db {
 }
 
 generator zod {
-  provider = "zod-prisma-types"
+  provider = "zod-prisma"
+  output   = "./zod" // (default) the directory where generated zod schemas will be saved
 
-  useMultipleFiles                 = true // default is false
-  createInputTypes                 = true // default is true
-  createModelTypes                 = true // default is true
-  addInputTypeValidation           = false // default is true
-  addIncludeType                   = false // default is true
-  addSelectType                    = false // default is true
-  validateWhereUniqueInput         = false // default is true
-  createOptionalDefaultValuesTypes = true // default is false
-  createRelationValuesTypes        = true // default is false
-  createPartialTypes               = true // default is false
-  useDefaultValidators             = false // default is true
-  coerceDate                       = false // default is true
-  writeNullishInModelTypes         = true // default is false
+  relationModel = true // (default) Create and export both plain and related models.
+
+  modelCase = "PascalCase" // (default) Output models using pascal case (ex. UserModel, PostModel)
+
+  modelSuffix = "Model" // (default) Suffix to apply to your prisma models when naming Zod schemas
+
+  useDecimalJs = true // represent the prisma Decimal type using Decimal.js (as Prisma does)
+
+  prismaJsonNullability = true // (default) uses prisma's scheme for JSON field nullability
 }
 
 model user {
@@ -40,6 +37,7 @@ model user {
   user_team      user_team[]
   user_workspace user_workspace[]
   workspaces     workspace[]
+  company_user   company_user[]
 }
 
 model team {
@@ -52,7 +50,6 @@ model team {
   workspace_id       String
   identity           String
   public_id          String               @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  asset_team         asset_team[]
   workspace          workspace            @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
   users              user_team[]
   work_order         work_order[]
@@ -79,6 +76,7 @@ model workspace {
   user_workspace user_workspace[]
   user           user             @relation(fields: [created_by], references: [id])
   location       location[]
+  company        company[]
 
   @@index([url_key])
 }
@@ -149,6 +147,7 @@ model work_step_template {
   parent_step           work_step_template?  @relation("step_sub_steps", fields: [parent_step_id], references: [id], onDelete: Cascade)
   sub_steps             work_step_template[] @relation("step_sub_steps")
   work_plan_template    work_plan_template   @relation(fields: [work_plan_template_id], references: [id], onDelete: Cascade)
+  work_step             work_step[]
 
   @@index([parent_step_id])
   @@index([created_by_id])
@@ -174,16 +173,20 @@ model work_plan {
 }
 
 model work_step {
-  id               String             @id @default(dbgenerated("nanoid(17)"))
-  public_id        String             @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name             String
-  description      String?
-  created_at       DateTime           @default(now()) @db.Timestamptz(6)
-  updated_at       DateTime           @default(now()) @updatedAt @db.Timestamptz(6)
-  parent_step_id   String?
-  created_by_id    String?            @db.Uuid
-  step_order       Int?
-  work_plan_id     String
+  id             String   @id @default(dbgenerated("nanoid(17)"))
+  public_id      String   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name           String
+  description    String?
+  created_at     DateTime @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  parent_step_id String?
+  created_by_id  String?  @db.Uuid
+  step_order     Int?
+  work_plan_id   String
+
+  work_step_template_id String?
+  work_step_template    work_step_template? @relation(fields: [work_step_template_id], references: [id])
+
   parent_step      work_step?         @relation("step_sub_steps", fields: [parent_step_id], references: [id], onDelete: Cascade)
   sub_steps        work_step[]        @relation("step_sub_steps")
   work_plan        work_plan          @relation(fields: [work_plan_id], references: [id], onDelete: Cascade)
@@ -195,43 +198,29 @@ model work_step {
 }
 
 model work_order {
-  /// The unique identifier for the work order, generated using nanoid(10).
-  id String @id @default(dbgenerated("nanoid(10)"))
-
-  /// A public unique identifier for the work order, generated using gen_random_uuid() and stored as a UUID.
-  public_id String @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-
-  /// The name of the work order.
-  name String
-
-  /// An optional description of the work order.
+  id          String  @id @default(dbgenerated("nanoid(10)"))
+  public_id   String  @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
   description String?
 
-  /// The timestamp indicating when the work order was created, with a default value of the current time (now()).
-  created_at DateTime @default(now()) @db.Timestamptz(6)
+  location_id String?
+  location    location? @relation(fields: [location_id], references: [id])
 
-  /// The timestamp indicating when the work order was last updated, with a default value of the current time (now()) and updated automatically.
+  created_at DateTime @default(now()) @db.Timestamptz(6)
   updated_at DateTime @default(now()) @updatedAt @db.Timestamptz(6)
 
-  /// The current status of the work order, with a default value of OPEN.
   status Status @default(OPEN)
 
-  /// The identifier of the team responsible for the work order.
-  team_id String
-
-  /// An optional identifier of the associated work plan.
+  team_id      String
   work_plan_id String?
 
-  /// The team object associated with the work order, linked via the team_id field, with cascade deletion.
-  team team @relation(fields: [team_id], references: [id], onDelete: Cascade)
+  company_id String
+  company    company @relation(fields: [company_id], references: [id])
 
-  /// The optional work plan object associated with the work order, linked via the work_plan_id field.
+  team      team       @relation(fields: [team_id], references: [id], onDelete: Cascade)
   work_plan work_plan? @relation(fields: [work_plan_id], references: [id])
 
-  /// An array of work order assets associated with the work order.
   work_order_asset work_order_asset[]
-
-  /// An array of work step statuses associated with the work order.
   work_step_status work_step_status[]
 
   @@index([team_id])
@@ -256,7 +245,7 @@ model work_order_asset {
   work_order_id String
   asset_id      String
   asset         asset      @relation(fields: [asset_id], references: [id])
-  work_order    work_order @relation(fields: [work_order_id], references: [id])
+  work_order    work_order @relation(fields: [work_order_id], references: [id], onDelete: Cascade)
 
   @@id([work_order_id, asset_id])
   @@index([asset_id])
@@ -272,18 +261,18 @@ model asset {
   updated_at       DateTime           @default(now()) @updatedAt @db.Timestamptz(6)
   workspace_id     String
   workspace        workspace          @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
-  asset_team       asset_team[]
   work_order_asset work_order_asset[]
+  asset_location   asset_location[]
 }
 
-model asset_team {
-  asset_id String
-  team_id  String
-  asset    asset  @relation(fields: [asset_id], references: [id])
-  team     team   @relation(fields: [team_id], references: [id], onDelete: Cascade)
+model asset_location {
+  asset_id    String
+  location_id String
+  asset       asset    @relation(fields: [asset_id], references: [id])
+  location    location @relation(fields: [location_id], references: [id])
 
-  @@id([asset_id, team_id])
-  @@index([team_id])
+  @@id([asset_id, location_id])
+  @@index([location_id])
   @@index([asset_id])
 }
 
@@ -307,6 +296,43 @@ model location {
 
   address_id String
   address    address @relation(fields: [address_id], references: [id])
+
+  company_id String?
+  company    company? @relation(fields: [company_id], references: [id])
+
+  work_order     work_order[]
+  asset_location asset_location[]
+
+  @@index([parent_location_id])
+  @@index([workspace_id])
+  @@index([address_id])
+}
+
+model company {
+  id          String   @id @default(dbgenerated("nanoid(10)"))
+  public_id   String   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  description String?
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+
+  workspace_id String
+  workspace    workspace @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
+
+  location     location[]
+  company_user company_user[]
+  work_order   work_order[]
+}
+
+model company_user {
+  company_id String
+  user_id    String  @db.Uuid
+  company    company @relation(fields: [company_id], references: [id])
+  user       user    @relation(fields: [user_id], references: [id])
+
+  @@id([company_id, user_id])
+  @@index([company_id])
+  @@index([user_id])
 }
 
 model address {

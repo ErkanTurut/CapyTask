@@ -14,6 +14,7 @@ import { work_step_template } from "./work_step_template/_router";
 import { asset } from "./asset/_router";
 import { ai } from "./ai/_router";
 import { location } from "./location/_router";
+import { company } from "./company/_router";
 
 export const appRouter = router({
   auth: authMutationRouter,
@@ -32,6 +33,8 @@ export const appRouter = router({
 
     asset,
     location,
+
+    company,
   }),
   test: protectedProcedure.query(() => {
     return { hello: "world" };

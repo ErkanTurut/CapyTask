@@ -1,7 +1,9 @@
 "use server";
 
 import { createAI, getMutableAIState, streamUI } from "ai/rsc";
-import { mistral } from "@ai-sdk/mistral";
+// import { mistral } from "@ai-sdk/mistral";
+import { openai } from "@ai-sdk/openai";
+
 import { ReactNode } from "react";
 import { z } from "zod";
 import { nanoid } from "nanoid";
@@ -35,7 +37,7 @@ export async function continueConversation({
   history.update([...history.get(), { role: "user", content: input }]);
 
   const result = await streamUI({
-    model: mistral("mistral-large-latest"),
+    model: openai("gpt-4o"),
     maxTokens: 1000,
     system: `you'r a friendly Assistant named Buddy and work for a company called Gembuddy. You'r to help users with your work orders. the name of the user talking to you is ${user.first_name!}.`,
     messages: [...history.get(), { role: "user", content: input }],

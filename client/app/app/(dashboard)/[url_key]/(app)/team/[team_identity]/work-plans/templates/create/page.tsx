@@ -20,11 +20,6 @@ interface createPageProps {
 }
 
 export default async function createPage({ params }: createPageProps) {
-  const { data: team } = await trpc.db.team.getByIdentity({
-    identity: params.team_identity,
-  });
-
-  if (!team) return null;
   return (
     <Shell variant={"markdown"}>
       <Card>
@@ -37,7 +32,7 @@ export default async function createPage({ params }: createPageProps) {
         </CardHeader>
         <CardContent>
           <Suspense fallback="loading...">
-            <CreateWorkPlanTemplateForm team={team} url_key={params.url_key} />
+            {/* <CreateWorkPlanTemplateForm team={team} url_key={params.url_key} /> */}
           </Suspense>
         </CardContent>
       </Card>

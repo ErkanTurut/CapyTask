@@ -11,6 +11,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import CreateWorkOrderForm from "@/components/work-order/work-order-create-form";
+import { Suspense } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { CreateWorkOrderWithTemplate } from "@/components/work-order/CreateWorkOrderWithTemplate";
+import { trpc } from "@/trpc/server";
 
 interface createWorkOrderProps {
   params: {
@@ -22,13 +27,11 @@ interface createWorkOrderProps {
 export default async function createWorkOrder({
   params,
 }: createWorkOrderProps) {
-  // unstable_noStore();
-  // const { data: team } = await trpc.db.team.getByIdentity.query({
-  //   identity: params.team_identity,
-  // });
-  // if (!team) {
-  //   notFound();
-  // }
+  const { data: work_plan_template } =
+    await trpc.db.work_plan_template.getWorkPlanTemplatesByIdentity({
+      team_identity: params.team_identity,
+      range: { start: 0, end: 10 },
+    });
   return (
     <Shell variant="markdown" className="gap-2">
       <PageHeader
@@ -41,20 +44,46 @@ export default async function createWorkOrder({
         </PageHeaderHeading>
         <PageHeaderDescription size="sm">Create</PageHeaderDescription>
       </PageHeader>
-      <Card>
-        <CardHeader>
-          <CardTitle>Create work order</CardTitle>
-          <CardDescription>
-            Fill in the details below to create your new work order. This
-            information will be displayed to your team members.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {/* <Suspense fallback="loading...">
-            <CreateWorkOrderForm team_id={team.id} />
-          </Suspense> */}
-        </CardContent>
-      </Card>
+
+      <Tabs defaultValue="auto" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="auto">Auto</TabsTrigger>
+          <TabsTrigger value="manual">Manual</TabsTrigger>
+        </TabsList>
+        <TabsContent value="auto">
+          <Card>
+            <CardHeader>
+              <CardTitle>Auto work order creation</CardTitle>
+              <CardDescription>
+                Create a work order automatically by selecting a template.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Suspense fallback="loading...">
+                <CreateWorkOrderWithTemplate
+                  initialData={work_plan_template || []}
+                />
+              </Suspense>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="manual">
+          <Card>
+            <CardHeader>
+              <CardTitle>Create work order manually</CardTitle>
+              <CardDescription>
+                Create a work order manually by filling out the form and
+                creating steps.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Suspense fallback="loading...">
+                <CreateWorkOrderForm />
+              </Suspense>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </Shell>
   );
 }

@@ -45,40 +45,55 @@ import { useDebouncedCallback } from "use-debounce";
 import { useRouter } from "next/navigation";
 
 interface CreateWorkOrderFormProps
-  extends React.HTMLAttributes<HTMLFormElement> {
-  team_id: string;
-}
+  extends React.HTMLAttributes<HTMLFormElement> {}
 
-const CreateWorkOrderForm: FC<CreateWorkOrderFormProps> = ({
-  className,
-  team_id,
-}) => {
+const CreateWorkOrderForm: FC<CreateWorkOrderFormProps> = ({ className }) => {
   const router = useRouter();
   const [search, setSearch] = useState("");
 
   const utils = api.useUtils();
-  const { mutate, isPending } = api.db.work_order.create.useMutation({
-    onSuccess: async (data) => {
-      toast.success("Team created successfully");
-      form.reset();
-      utils.db.work_order.get.invalidate(undefined, {
-        refetchType: "all",
-      });
-      router.push(`./${data.id}`);
-    },
-    onError: (err) => {
-      catchError(new Error(err.message));
-    },
-  });
-
-  const { data: work_plan_template } =
-    api.db.work_plan_template.search.useQuery(
-      {
-        q: search,
-        team_id,
+  const { mutate: mutateWithTemplate, isPending } =
+    api.db.work_order.create.withTemplate.useMutation({
+      onSuccess: async (data) => {
+        toast.success("work order created successfully");
+        form.reset();
+        utils.db.work_order.get.invalidate(undefined, {
+          refetchType: "all",
+        });
+        // router.push(`./${data.id}`);
+        console.log(data);
       },
-      { placeholderData: [], refetchOnWindowFocus: false },
-    );
+      onError: (err) => {
+        console.log(err);
+        catchError(new Error(err.message));
+      },
+    });
+
+  const { mutate: mutateWithSteps } =
+    api.db.work_order.create.withSteps.useMutation({
+      onSuccess: async (data) => {
+        toast.success("work order created successfully");
+        form.reset();
+        utils.db.work_order.get.invalidate(undefined, {
+          refetchType: "all",
+        });
+        // router.push(`./${data.id}`);
+        console.log(data);
+      },
+      onError: (err) => {
+        console.log(err);
+        catchError(new Error(err.message));
+      },
+    });
+
+  // const { data: work_plan_template } =
+  //   api.db.work_plan_template.search.useQuery(
+  //     {
+  //       q: search,
+  //       team_id,
+  //     },
+  //     { placeholderData: [], refetchOnWindowFocus: false },
+  //   );
 
   const debouncedSearch = useDebouncedCallback(
     (query: string) => setSearch(query),
@@ -90,15 +105,76 @@ const CreateWorkOrderForm: FC<CreateWorkOrderFormProps> = ({
     resolver: zodResolver(ZCreateWorkOrderSchema),
     defaultValues: {
       name: "",
-      team_id,
       description: "",
       work_plan_template_id: "",
     },
   });
 
-  async function onSubmit(data: TCreateWorkOrderSchema) {
-    mutate(data);
+  async function onSubmit() {
+    mutateWithTemplate({
+      company_id: "4doRuGC8pE",
+      name: "test",
+      team_id: "4pGki9KGYX",
+      description: "test",
+      work_plan_template: {
+        id: "efuiU3kPV8",
+      },
+      location_id: "yg8wK77wMX",
+    });
   }
+
+  // return (
+  //   <div className="flex flex-col gap-2">
+  //     <Button
+  //       onClick={() =>
+  //         mutateWithTemplate({
+  //           company_id: "4doRuGC8pE",
+  //           name: "test",
+  //           team_id: "4pGki9KGYX",
+  //           description: "test",
+  //           work_plan_template: {
+  //             id: "efuiU3kPV8",
+  //           },
+  //           location_id: "yg8wK77wMX",
+  //         })
+  //       }
+  //       isLoading={isPending}
+  //     >
+  //       test withTemplate
+  //     </Button>
+  //     <Button
+  //       onClick={() =>
+  //         mutateWithSteps({
+  //           company_id: "4doRuGC8pE",
+  //           name: "test",
+  //           team_id: "4pGki9KGYX",
+  //           description: "test",
+  //           location_id: "yg8wK77wMX",
+  //           work_step: [
+  //             {
+  //               name: "test 1",
+  //               description: "test 1",
+  //               step_order: 1,
+  //             },
+  //             {
+  //               name: "test 2",
+  //               description: "test 2",
+  //               step_order: 2,
+  //             },
+  //             {
+  //               name: "test 3",
+  //               description: "test 3",
+  //               step_order: 3,
+  //             },
+  //           ],
+  //         })
+  //       }
+  //       isLoading={isPending}
+  //     >
+  //       test with steps
+  //     </Button>
+  //   </div>
+  // );
 
   return (
     <Form {...form}>
@@ -133,7 +209,7 @@ const CreateWorkOrderForm: FC<CreateWorkOrderFormProps> = ({
           )}
         />
 
-        <FormField
+        {/* <FormField
           control={form.control}
           name="work_plan_template_id"
           render={({ field }) => (
@@ -202,7 +278,7 @@ const CreateWorkOrderForm: FC<CreateWorkOrderFormProps> = ({
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
 
         <Button disabled={!form.formState.isDirty} isLoading={isPending}>
           Create now

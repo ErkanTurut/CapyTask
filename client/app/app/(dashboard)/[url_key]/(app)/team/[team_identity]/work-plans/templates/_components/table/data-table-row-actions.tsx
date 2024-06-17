@@ -22,6 +22,7 @@ import { ZGetWorkPlanTemplateSchema } from "@/trpc/routes/work_plan_template/get
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { catchError } from "@/lib/utils";
+import { work_plan_templateModel } from "@/prisma/zod";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -30,14 +31,16 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  const plan = ZGetWorkPlanTemplateSchema.pick({
-    created_at: true,
-    description: true,
-    id: true,
-    name: true,
-    team_id: true,
-    updated_at: true,
-  }).parse(row.original);
+  const plan = work_plan_templateModel
+    .pick({
+      created_at: true,
+      description: true,
+      id: true,
+      name: true,
+      team_id: true,
+      updated_at: true,
+    })
+    .parse(row.original);
   const router = useRouter();
   const utils = api.useUtils();
 

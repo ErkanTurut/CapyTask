@@ -22,5 +22,11 @@ export default async function WorkspaceSelector({
   if (!workspace) {
     redirect("/create");
   }
-  return <WorkspaceNav workspaces={workspaces} workspace={workspace} />;
+  return (
+    <WorkspaceNav
+      className="shadow-none"
+      workspaces={workspaces}
+      workspace={workspace}
+    />
+  );
 }

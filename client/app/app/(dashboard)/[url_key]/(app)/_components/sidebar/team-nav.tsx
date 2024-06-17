@@ -16,22 +16,18 @@ export default async function TeamNav({ params }: TeamNavProps) {
   return (
     <Nav
       size={"sm"}
-      items={[
-        {
-          title: "Teams",
-          id: "all",
-          icon: "lightning",
-          items: teams?.map((team) => ({
-            image_url: generateAvatar({
-              name: team.name,
-            }).image_url,
-            title: team.name,
-            href: `/${team.identity}`,
-            items: appNavItems.teamNav,
-            id: team.identity,
-          })),
-        },
-      ]}
+      items={
+        teams?.map((team) => ({
+          image_url: generateAvatar({
+            name: team.name,
+          }).image_url,
+          title: team.name,
+          href: `/${team.identity}`,
+          items: appNavItems.teamNav,
+          id: team.identity,
+        })) || []
+      }
+      defaultValue="teams"
       rootPath={`/${params.url_key}/team`}
     />
   );

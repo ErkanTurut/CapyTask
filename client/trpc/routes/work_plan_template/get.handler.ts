@@ -78,15 +78,15 @@ export async function searchWorkPlanTemplateHandler({
 }: {
   input: {
     q: TGetWorkPlanTemplateSchema["q"];
-    team_id: TGetWorkPlanTemplateSchema["team_id"];
+    team_identity: TGetWorkPlanTemplateSchema["team_identity"];
   };
 
   db: SupabaseClient;
 }) {
   return await db
     .from("work_plan_template")
-    .select("*")
-    .eq("team_id", input.team_id)
+    .select("*, team!inner(*)")
+    .eq("team.identity", input.team_identity)
     .textSearch("name", input.q, {
       type: "websearch",
     })

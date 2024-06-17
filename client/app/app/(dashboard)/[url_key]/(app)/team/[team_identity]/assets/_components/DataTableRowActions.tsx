@@ -43,12 +43,6 @@ export function DataTableRowActions<TData>({
     },
   });
 
-  const { data: team } = api.db.team.getByIdentity.useQuery({
-    identity: params.team_identity,
-  });
-
-  if (!team) return null;
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -78,12 +72,12 @@ export function DataTableRowActions<TData>({
           </DropdownMenuSubContent>
         </DropdownMenuSub> */}
         <DropdownMenuSeparator />
-        <DropdownMenuItem
+        {/* <DropdownMenuItem
           onClick={() => remove({ asset_id: [asset.id], team_id: team.id })}
         >
           Delete
           <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
       </DropdownMenuContent>
     </DropdownMenu>
   );
