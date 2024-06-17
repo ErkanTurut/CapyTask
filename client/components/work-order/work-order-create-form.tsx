@@ -123,58 +123,58 @@ const CreateWorkOrderForm: FC<CreateWorkOrderFormProps> = ({ className }) => {
     });
   }
 
-  return (
-    <div className="flex flex-col gap-2">
-      <Button
-        onClick={() =>
-          mutateWithTemplate({
-            company_id: "4doRuGC8pE",
-            name: "test",
-            team_id: "4pGki9KGYX",
-            description: "test",
-            work_plan_template: {
-              id: "efuiU3kPV8",
-            },
-            location_id: "yg8wK77wMX",
-          })
-        }
-        isLoading={isPending}
-      >
-        test withTemplate
-      </Button>
-      <Button
-        onClick={() =>
-          mutateWithSteps({
-            company_id: "4doRuGC8pE",
-            name: "test",
-            team_id: "4pGki9KGYX",
-            description: "test",
-            location_id: "yg8wK77wMX",
-            work_step: [
-              {
-                name: "test 1",
-                description: "test 1",
-                step_order: 1,
-              },
-              {
-                name: "test 2",
-                description: "test 2",
-                step_order: 2,
-              },
-              {
-                name: "test 3",
-                description: "test 3",
-                step_order: 3,
-              },
-            ],
-          })
-        }
-        isLoading={isPending}
-      >
-        test with steps
-      </Button>
-    </div>
-  );
+  // return (
+  //   <div className="flex flex-col gap-2">
+  //     <Button
+  //       onClick={() =>
+  //         mutateWithTemplate({
+  //           company_id: "4doRuGC8pE",
+  //           name: "test",
+  //           team_id: "4pGki9KGYX",
+  //           description: "test",
+  //           work_plan_template: {
+  //             id: "efuiU3kPV8",
+  //           },
+  //           location_id: "yg8wK77wMX",
+  //         })
+  //       }
+  //       isLoading={isPending}
+  //     >
+  //       test withTemplate
+  //     </Button>
+  //     <Button
+  //       onClick={() =>
+  //         mutateWithSteps({
+  //           company_id: "4doRuGC8pE",
+  //           name: "test",
+  //           team_id: "4pGki9KGYX",
+  //           description: "test",
+  //           location_id: "yg8wK77wMX",
+  //           work_step: [
+  //             {
+  //               name: "test 1",
+  //               description: "test 1",
+  //               step_order: 1,
+  //             },
+  //             {
+  //               name: "test 2",
+  //               description: "test 2",
+  //               step_order: 2,
+  //             },
+  //             {
+  //               name: "test 3",
+  //               description: "test 3",
+  //               step_order: 3,
+  //             },
+  //           ],
+  //         })
+  //       }
+  //       isLoading={isPending}
+  //     >
+  //       test with steps
+  //     </Button>
+  //   </div>
+  // );
 
   return (
     <Form {...form}>

@@ -39,7 +39,6 @@ export const work_order = router({
           db: ctx.db,
         });
       }),
-
     withSteps: protectedProcedure
       .input(ZGetWorkOrderSchema.pick({ id: true }))
       .query(async ({ ctx, input }) => {

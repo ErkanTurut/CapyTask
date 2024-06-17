@@ -3,9 +3,9 @@ import { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
 import { cookies } from "next/headers";
 import { cache } from "react";
 
-const getUser = cache(async () => {
-  return await createClient(cookies()).auth.getUser();
-});
+// const getUser = cache(async () => {
+//   return await createClient(cookies()).auth.getUser();
+// });
 
 // export async function createContext(opts?: FetchCreateContextFnOptions) {
 //   const {
@@ -23,7 +23,7 @@ export const createContext = cache(
   async (opts?: FetchCreateContextFnOptions) => {
     const {
       data: { user },
-    } = await getUser();
+    } = await createClient(cookies()).auth.getUser();
 
     return {
       user,
