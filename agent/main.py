@@ -31,7 +31,7 @@ async def entrypoint(ctx: JobContext):
         vad=silero.VAD(),  # Voice Activity Detection
         stt=deepgram.STT(),  # Speech-to-Text
         llm=openai.LLM(),  # Language Model
-        tts=elevenlabs.TTS(),  # Text-to-Speech
+        tts=openai.TTS(voice="alloy"),  # Text-to-Speech
         chat_ctx=initial_ctx,  # Chat history context
     )
 
