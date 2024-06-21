@@ -1,7 +1,7 @@
 import asyncio
 import logging
 
-from livekit.agents import JobContext, JobRequest, WorkerOptions, cli
+from livekit.agents import JobContext, JobRequest, WorkerOptions, cli, stt
 from livekit.agents.llm import (
     ChatContext,
     ChatMessage,
@@ -9,6 +9,8 @@ from livekit.agents.llm import (
 )
 from livekit.agents.voice_assistant import VoiceAssistant
 from livekit.plugins import deepgram, elevenlabs, openai, silero
+
+from livekit import agents
 
 # This function is the entrypoint for the agent.
 
@@ -29,9 +31,10 @@ async def entrypoint(ctx: JobContext):
     # for details on how it works.
     assistant = VoiceAssistant(
         vad=silero.VAD(),  # Voice Activity Detection
-        stt=deepgram.STT(),  # Speech-to-Text
+        stt=stt.StreamAdapter(
+            stt=openai.STT(), vad=silero.VAD()),  # Speech-to-Text
         llm=openai.LLM(),  # Language Model
-        tts=openai.TTS(voice="alloy"),  # Text-to-Speech
+        tts=openai.TTS(voice="onyx"),  # Text-to-Speech
         chat_ctx=initial_ctx,  # Chat history context
     )
 
