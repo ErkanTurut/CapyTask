@@ -21,6 +21,7 @@ import { ZGetWorkOrderSchema } from "./get.schema";
 import { updateWorkOrderStatusHandler } from "./update.handler";
 import { ZUpdateWorkOrderSchema } from "./update.schema";
 import { Database } from "@/types/supabase.types";
+import { ZCreateWorkOrderWithTemplateSchema } from "./create.schema";
 export const work_order = router({
   get: {
     byId: protectedProcedure
@@ -94,23 +95,7 @@ export const work_order = router({
 
   create: {
     withTemplate: protectedProcedure
-      .input(
-        work_orderModel
-          .pick({
-            name: true,
-            description: true,
-            team_id: true,
-            company_id: true,
-            location_id: true,
-          })
-          .merge(
-            z.object({
-              work_plan_template: work_plan_templateModel.pick({
-                id: true,
-              }),
-            }),
-          ),
-      )
+      .input(ZCreateWorkOrderWithTemplateSchema)
       .mutation(async ({ ctx, input }) => {
         const { data: work_plan, error: work_plan_error } = await ctx.db
           .rpc("manage_work_plan", {

@@ -1,3 +1,4 @@
+import { work_plan_templateModel, work_orderModel } from "@/prisma/zod";
 import * as z from "zod";
 
 export const ZCreateWorkOrderSchema = z
@@ -31,3 +32,24 @@ export const ZCreateWorkOrderSchema = z
   .strict();
 
 export type TCreateWorkOrderSchema = z.infer<typeof ZCreateWorkOrderSchema>;
+
+export const ZCreateWorkOrderWithTemplateSchema = work_orderModel
+  .pick({
+    name: true,
+    description: true,
+    team_id: true,
+    company_id: true,
+    location_id: true,
+  })
+  .merge(
+    z.object({
+      work_plan_template: work_plan_templateModel.pick({
+        id: true,
+      }),
+    }),
+  )
+  .strict();
+
+export type TCreateWorkOrderWithTemplateSchema = z.infer<
+  typeof ZCreateWorkOrderWithTemplateSchema
+>;

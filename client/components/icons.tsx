@@ -39,6 +39,7 @@ import {
   CrossCircledIcon,
   SewingPinIcon,
   MagicWandIcon,
+  ArrowTopRightIcon,
 } from "@radix-ui/react-icons";
 import { Loader2, Banknote, Route, Building } from "lucide-react";
 
@@ -113,6 +114,7 @@ export const Icons = {
   SewingPin: SewingPinIcon,
   MagicWand: MagicWandIcon,
   building: Building,
+  ArrowTopRight: ArrowTopRightIcon,
 
   logo: (props: LucideProps & logoProps) => {
     const { size, className } = props;
