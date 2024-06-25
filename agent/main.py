@@ -1,16 +1,14 @@
 import asyncio
 import logging
 
-from livekit.agents import JobContext, JobRequest, WorkerOptions, cli, stt
+from livekit.agents import JobContext, JobRequest, WorkerOptions, cli
 from livekit.agents.llm import (
     ChatContext,
     ChatMessage,
     ChatRole,
 )
 from livekit.agents.voice_assistant import VoiceAssistant
-from livekit.plugins import deepgram, elevenlabs, openai, silero
-
-from livekit import agents
+from livekit.plugins import deepgram, elevenlabs, openai, silero  # type: ignore
 
 # This function is the entrypoint for the agent.
 
@@ -31,11 +29,13 @@ async def entrypoint(ctx: JobContext):
     # for details on how it works.
     assistant = VoiceAssistant(
         vad=silero.VAD(),  # Voice Activity Detection
-        stt=stt.StreamAdapter(
-            stt=openai.STT(), vad=silero.VAD()),  # Speech-to-Text
+        stt=deepgram.STT(min_silence_duration=1000),  # Speech-to-Text
         llm=openai.LLM(),  # Language Model
-        tts=openai.TTS(voice="onyx"),  # Text-to-Speech
+        tts=openai.TTS(voice="alloy"),  # Text-to-Speech
         chat_ctx=initial_ctx,  # Chat history context
+
+
+
     )
 
     # Start the voice assistant with the LiveKit room
@@ -45,6 +45,10 @@ async def entrypoint(ctx: JobContext):
 
     # Greets the user with an initial message
     await assistant.say("Hey, how can I help you today?", allow_interruptions=True)
+
+    @assistant.on("user_stopped_speaking")
+    def _user_speech_stopped():
+        logging.info(assistant.chat_context)
 
 
 # This function is called when the worker receives a job request
