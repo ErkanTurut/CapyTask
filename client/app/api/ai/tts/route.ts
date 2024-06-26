@@ -38,13 +38,21 @@ interface ChatContext {
 }
 
 export async function POST(req: Request) {
-  const chatContext = (await req.json()) as ChatContext;
-  if (!chatContext || !Array.isArray(chatContext.messages)) {
-    return NextResponse.json(
-      { message: "Invalid messages format" },
-      { status: 400 },
-    );
-  }
+  const input = await req.json();
+
+  // return NextResponse.json(
+  //   {
+  //     text: "Hello, I am a voice assistant created by Gembuddy. How can I help you today?",
+  //   },
+  //   { status: 200 },
+  // );
+  // const chatContext = (await req.json()) as string;
+  // if (!chatContext || !Array.isArray(chatContext.messages)) {
+  //   return NextResponse.json(
+  //     { message: "Invalid messages format" },
+  //     { status: 400 },
+  //   );
+  // }
 
   const { text, toolResults } = await generateText({
     model: openai("gpt-4-turbo"),
@@ -52,10 +60,10 @@ export async function POST(req: Request) {
     system:
       "You are a voice assistant created by Gembuddy. Your interface with users will be voice. Pretend we're having a conversation, no special formatting or headings, just natural speech.",
     messages: [
-      ...chatContext.messages.map((message) => ({
-        role: message.role,
-        content: message.text,
-      })),
+      {
+        role: ChatRole.USER,
+        content: input,
+      },
     ],
     tools: {
       work_order_detail: {
@@ -82,12 +90,11 @@ export async function POST(req: Request) {
     },
   });
 
-  console.log(text);
-  console.log(toolResults);
+  // console.log(text);
+  // console.log(toolResults);
   return NextResponse.json(
     {
-      text,
-      role: ChatRole.ASSISTANT,
+      result: text,
     },
     { status: 200 },
   );

@@ -33,10 +33,7 @@ async def entrypoint(ctx: JobContext):
         llm=openai.LLM(),  # Language Model
         tts=openai.TTS(voice="alloy"),  # Text-to-Speech
         chat_ctx=initial_ctx,  # Chat history context
-
-
-
-    )
+        plotting=)
 
     # Start the voice assistant with the LiveKit room
     assistant.start(ctx.room)
