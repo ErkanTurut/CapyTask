@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ClientMessage } from "./actions";
+import { ClientMessage } from "../../(app)/_components/ai/actions";
 import { useActions, useUIState } from "ai/rsc";
 import { nanoid } from "nanoid";
 import { Shell } from "@/components/shells";
@@ -17,7 +17,7 @@ export default function Home() {
   const { data } = api.db.user.getCurrentUser.useQuery();
 
   return (
-    <div className="flex h-[100dvh] flex-col gap-2 px-60 ">
+    <div className="flex h-[100dvh] flex-col gap-2 px-60">
       <div className="flex-1 overflow-y-auto rounded-lg border bg-background p-4">
         <div className="flex flex-col gap-4">
           {conversation.map((message: ClientMessage) => {

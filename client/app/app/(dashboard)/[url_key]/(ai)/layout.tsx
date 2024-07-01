@@ -1,4 +1,4 @@
-import { AI } from "./ai/actions";
+import { AI } from "../(app)/_components/ai/actions";
 
 interface layoutProps {
   children: React.ReactNode;
