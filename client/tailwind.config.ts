@@ -86,7 +86,17 @@ module.exports = {
         "fade-in-right": {
           from: {
             opacity: "0",
-            transform: "translateX(-20px)",
+            transform: "translateX(-400px)",
+          },
+          to: {
+            opacity: "1",
+            transform: "translateX(0)",
+          },
+        },
+        "fade-in-left": {
+          from: {
+            opacity: "0",
+            transform: "translateX(400px)",
           },
           to: {
             opacity: "1",
@@ -111,7 +121,8 @@ module.exports = {
         },
       },
       animation: {
-        "fade-in-right": "fade-in-right 0.6s ease-in-out",
+        "fade-in-right": "fade-in-right 0.2s ease-in-out",
+        "fade-in-left": "fade-in-left 0.2s ease-in-out",
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "background-shine": "background-shine 4s linear infinite",
