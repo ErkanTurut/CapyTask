@@ -1,4 +1,4 @@
-import { LucideProps } from "lucide-react";
+import { LucideProps, Mic } from "lucide-react";
 import {
   PersonIcon,
   EyeOpenIcon,
@@ -40,6 +40,7 @@ import {
   SewingPinIcon,
   MagicWandIcon,
   ArrowTopRightIcon,
+  PaperPlaneIcon,
 } from "@radix-ui/react-icons";
 import { Loader2, Banknote, Route, Building } from "lucide-react";
 
@@ -115,6 +116,8 @@ export const Icons = {
   MagicWand: MagicWandIcon,
   building: Building,
   ArrowTopRight: ArrowTopRightIcon,
+  PaperPlane: PaperPlaneIcon,
+  mic: Mic,
 
   logo: (props: LucideProps & logoProps) => {
     const { size, className } = props;
