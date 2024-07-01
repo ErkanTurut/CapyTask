@@ -37,8 +37,28 @@ interface ChatContext {
   messages: ChatMessage[];
 }
 
+const ChatMessage = z.object({
+  role: z.nativeEnum(ChatRole),
+  text: z.string(),
+  images: z.array(
+    z.object({
+      image: z.string(),
+      inference_width: z.number().nullable(),
+      inference_height: z.number().nullable(),
+      _cache: z.record(z.any()),
+    }),
+  ),
+});
+
+const ChatContext = z.object({
+  messages: z.array(ChatMessage),
+});
+
 export async function POST(req: Request) {
   const input = await req.json();
+  const chatContext = ChatContext.parse(input);
+
+  console.log(chatContext);
 
   // return NextResponse.json(
   //   {
@@ -56,15 +76,14 @@ export async function POST(req: Request) {
 
   const { text, toolResults } = await generateText({
     model: openai("gpt-4-turbo"),
-    maxAutomaticRoundtrips: 2,
+    maxAutomaticRoundtrips: 5,
     system:
       "You are a voice assistant created by Gembuddy. Your interface with users will be voice. Pretend we're having a conversation, no special formatting or headings, just natural speech.",
-    messages: [
-      {
-        role: ChatRole.USER,
-        content: input,
-      },
-    ],
+    messages: chatContext.messages.map((message) => ({
+      role: message.role,
+      content: message.text,
+    })),
+
     tools: {
       work_order_detail: {
         description: "Get work order details",
@@ -87,14 +106,47 @@ export async function POST(req: Request) {
           return work_order;
         },
       },
+      current_time: {
+        description: "Get the current time",
+        parameters: z.object({}),
+        execute: async () => {
+          return new Date().toISOString();
+        },
+      },
     },
   });
 
-  // console.log(text);
-  // console.log(toolResults);
+  const text_result = ChatMessage.parse({
+    role: ChatRole.ASSISTANT,
+    text,
+    images: [],
+  });
+
+  console.log(text, toolResults);
+
+  let tool_result;
+  if (toolResults.length > 0) {
+    tool_result = ChatMessage.parse({
+      role: ChatRole.TOOL,
+      text: toolResults[0],
+    });
+  }
+
+  const messages = [text_result];
+  if (tool_result) {
+    messages.push(tool_result);
+  }
+
+  const response_ChatContext = ChatContext.parse({
+    messages,
+  });
+
+  console.log(response_ChatContext);
+
+  // return NextResponse.json(response_ChatContext, { status: 200 });
   return NextResponse.json(
     {
-      result: text,
+      result: response_ChatContext,
     },
     { status: 200 },
   );
