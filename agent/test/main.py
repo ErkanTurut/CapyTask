@@ -1,11 +1,12 @@
 import asyncio
 import logging
 
-from livekit.agents import JobContext, JobRequest, WorkerOptions, cli
+from livekit.agents import JobContext, JobRequest, WorkerOptions, cli, tts, tokenize
 from livekit.agents.llm import (
     ChatContext,
     ChatMessage,
     ChatRole,
+
 )
 from livekit.agents.voice_assistant import VoiceAssistant
 from livekit.plugins import deepgram, elevenlabs, openai, silero  # type: ignore
@@ -14,6 +15,7 @@ from livekit.plugins import deepgram, elevenlabs, openai, silero  # type: ignore
 
 
 async def entrypoint(ctx: JobContext):
+    ctx.room.on
     # Create an initial chat context with a system prompt
     initial_ctx = ChatContext(
         messages=[
@@ -24,16 +26,23 @@ async def entrypoint(ctx: JobContext):
         ]
     )
 
+    openai_tts = tts.StreamAdapter(
+        tts=openai.TTS(voice="alloy"),
+        sentence_tokenizer=tokenize.basic.SentenceTokenizer(),
+    )
+
     # VoiceAssistant is a class that creates a full conversational AI agent.
     # See https://github.com/livekit/agents/blob/main/livekit-agents/livekit/agents/voice_assistant/assistant.py
     # for details on how it works.
     assistant = VoiceAssistant(
         vad=silero.VAD(),  # Voice Activity Detection
-        stt=deepgram.STT(min_silence_duration=1000),  # Speech-to-Text
+        stt=deepgram.STT(),  # Speech-to-Text
+
         llm=openai.LLM(),  # Language Model
-        tts=openai.TTS(voice="alloy"),  # Text-to-Speech
+        tts=openai_tts,  # Text-to-Speech
         chat_ctx=initial_ctx,  # Chat history context
-        plotting=)
+        transcription=False
+    )
 
     # Start the voice assistant with the LiveKit room
     assistant.start(ctx.room)

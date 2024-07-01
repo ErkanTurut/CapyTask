@@ -10,6 +10,7 @@ from livekit.agents import (
     stt,
     tts,
     transcription,
+    tokenize
 )
 from livekit.agents.llm import (
     ChatContext,
@@ -36,32 +37,40 @@ def chat_context_to_dict(context: ChatContext) -> dict:
     }
 
 
-def dict_to_chat_message(data: dict) -> ChatMessage:
-    return ChatMessage(
-        role=ChatRole(data['role']),
-        text=data['text'],
-        images=[ChatImage(image=image) for image in data.get('images', [])]
-    )
-
-
 async def _forward_transcription(
     stt_stream: stt.SpeechStream,
     stt_forwarder: transcription.STTSegmentsForwarder,
     tts: tts.TTS,
-    source: rtc.AudioSource
+    source: rtc.AudioSource,
+    ctx: ChatContext,
 ):
     async for ev in stt_stream:
         stt_forwarder.update(ev)
         if ev.type == stt.SpeechEventType.INTERIM_TRANSCRIPT:
             print(ev.alternatives[0].text, end="")
         elif ev.type == stt.SpeechEventType.END_OF_SPEECH:
-            logging.info(ev.alternatives[0].text)
+            ctx.messages.append(ChatMessage(
+                role=ChatRole.USER, text=ev.alternatives[0].text))
+
             url_post = "http://localhost:3000/api/ai/tts"
             try:
+
+                messages_serializable = chat_context_to_dict(ctx)
+
                 response = requests.post(
-                    url_post, json=ev.alternatives[0].text)
-                logging.info(response.text)
-                await _forward_audio(tts, source, response.json()["result"])
+                    url_post, json=messages_serializable)
+                data = response.json()["result"]["messages"]
+                logging.info(data)
+
+                message = ChatMessage(
+                    role=ChatRole(data[0]['role']),
+                    text=data[0]['text'],
+                    images=[ChatImage(image=image)
+                            for image in data[0].get('images', [])]
+                )
+
+                ctx.messages.append(message)
+                await _forward_audio(tts, source, message.text)
             except Exception as e:
                 logging.error(e)
 
@@ -77,12 +86,22 @@ async def _forward_audio(
 
 
 async def entrypoint(job: JobContext):
-    # TTS
-    tts = openai.TTS(
-        model="tts-1",
-        voice="nova",
+    initial_ctx = ChatContext(
+        messages=[
+            ChatMessage(
+                role=ChatRole.SYSTEM,
+                text="You are a voice assistant created by Gembuddy. Your interface with users will be voice. Pretend we're having a conversation, no special formatting or headings, just natural speech.",
+            )
+        ]
     )
-    source = rtc.AudioSource(tts.sample_rate, tts.num_channels)
+
+    # TTS
+    openai_tts = tts.StreamAdapter(
+        tts=openai.TTS(voice="alloy"),
+        sentence_tokenizer=tokenize.basic.SentenceTokenizer(),
+    )
+
+    source = rtc.AudioSource(openai_tts.sample_rate, openai_tts.num_channels)
     track = rtc.LocalAudioTrack.create_audio_track("agent-mic", source)
     options = rtc.TrackPublishOptions()
     options.source = rtc.TrackSource.SOURCE_MICROPHONE
@@ -100,7 +119,7 @@ async def entrypoint(job: JobContext):
 
         stt_task = asyncio.create_task(
             _forward_transcription(
-                stt_stream, stt_forwarder, tts, source)
+                stt_stream=stt_stream, stt_forwarder=stt_forwarder, tts=openai_tts, source=source, ctx=initial_ctx)
         )
         tasks.append(stt_task)
 
@@ -119,9 +138,9 @@ async def entrypoint(job: JobContext):
 
     await job.room.local_participant.publish_track(track, options)
 
-    await asyncio.sleep(3)
+    await asyncio.sleep(2)
     logging.info('Saying "Hello!"')
-    async for output in tts.synthesize("Hello Buddy how can i help you ?"):
+    async for output in openai_tts.synthesize("Hello how can I help you today?"):
         await source.capture_frame(output.data)
 
 

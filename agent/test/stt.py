@@ -64,7 +64,7 @@ async def _forward_transcription(
             url_post = "http://localhost:3000/api/ai/tts"
             try:
                 response = requests.post(
-                    url_post, json=chat_context_to_dict(chat_ctx))
+                    url_post, json=chat_context_to_dict(chat_ctx), stream=True)
                 response.raise_for_status()
                 logging.info(response.json())
                 chat_message_response = dict_to_chat_message(response.json())
