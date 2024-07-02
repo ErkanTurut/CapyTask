@@ -4,11 +4,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
 
 // import { Thread } from "@/components/ui/assistant-ui/thread";
 import { Icons } from "@/components/icons";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
   Tooltip,
@@ -22,15 +21,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { api } from "@/trpc/client";
 
-import { z } from "zod";
-
-import Chat from "./chat";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Input } from "@/components/ui/input";
 import { VoiceAgent } from "./call";
+import Chat from "./chat";
+import { useConnectionState } from "@livekit/components-react";
 
 export function AssistantModal() {
   const [isOpen, setIsOpen] = useState(false);
+  const connectionState = useConnectionState();
 
   const { data } = api.db.user.getCurrentUser.useQuery(void 0, {
     refetchOnWindowFocus: false,
@@ -47,8 +44,12 @@ export function AssistantModal() {
           <TooltipTrigger asChild>
             <PopoverTrigger
               className={cn(
-                buttonVariants({ size: "icon" }),
-                "fixed bottom-4 right-4 z-40 rounded-lg",
+                buttonVariants({
+                  size: "icon",
+                  variant:
+                    connectionState === "connected" ? "default" : "secondary",
+                }),
+                "fixed bottom-4 right-4 z-40 rounded-lg border border-border",
               )}
               onClick={() => setIsOpen(!isOpen)}
             >
@@ -57,7 +58,7 @@ export function AssistantModal() {
           </TooltipTrigger>
           <PopoverContent className="mr-2 flex h-[32rem] w-[32rem] flex-col gap-2 p-2">
             <Tabs
-              defaultValue="chat"
+              defaultValue={connectionState === "connected" ? "call" : "chat"}
               className="flex h-full flex-col overflow-clip"
             >
               <TabsList className="grid grid-cols-2">
@@ -66,7 +67,7 @@ export function AssistantModal() {
               </TabsList>
               <TabsContent
                 value="chat"
-                className="animate-fade-in-left h-full overflow-hidden"
+                className="h-full animate-fade-in-left overflow-hidden"
               >
                 <Chat user={data.data} />
               </TabsContent>
@@ -79,7 +80,13 @@ export function AssistantModal() {
             </Tabs>
           </PopoverContent>
         </Popover>
-        <TooltipContent side="left">Talk to AI Buddy</TooltipContent>
+        <TooltipContent side="left">
+          {connectionState === "connected" ? (
+            <span>Connected to AI Buddy</span>
+          ) : (
+            <span>Go Talk to AI Buddy</span>
+          )}
+        </TooltipContent>
       </Tooltip>
     </TooltipProvider>
   );
