@@ -1,4 +1,3 @@
-import { LucideProps, Mic } from "lucide-react";
 import {
   PersonIcon,
   EyeOpenIcon,
@@ -41,8 +40,18 @@ import {
   MagicWandIcon,
   ArrowTopRightIcon,
   PaperPlaneIcon,
+  PlayIcon,
+  StopIcon,
 } from "@radix-ui/react-icons";
-import { Loader2, Banknote, Route, Building } from "lucide-react";
+import {
+  LucideProps,
+  Loader2,
+  RouteIcon,
+  BuildingIcon,
+  MicOffIcon,
+  MicIcon,
+  BanknoteIcon,
+} from "lucide-react";
 
 // Default values shown
 
@@ -87,7 +96,7 @@ export const Icons = {
   chevronLeft: ChevronLeftIcon,
   chevronRight: ChevronRightIcon,
   backpack: BackpackIcon,
-  banknote: Banknote,
+  banknote: BanknoteIcon,
   externalLink: ExternalLinkIcon,
   gear: GearIcon,
   file: FileIcon,
@@ -103,7 +112,7 @@ export const Icons = {
   check: CheckIcon,
   rocket: RocketIcon,
   dotsHorizontal: DotsHorizontalIcon,
-  route: Route,
+  route: RouteIcon,
   cross: Cross2Icon,
   arrowRight: ArrowRightIcon,
   trash: TrashIcon,
@@ -114,10 +123,13 @@ export const Icons = {
   CrossCircled: CrossCircledIcon,
   SewingPin: SewingPinIcon,
   MagicWand: MagicWandIcon,
-  building: Building,
+  building: BuildingIcon,
   ArrowTopRight: ArrowTopRightIcon,
   PaperPlane: PaperPlaneIcon,
-  mic: Mic,
+  mic: MicIcon,
+  micOff: MicOffIcon,
+  play: PlayIcon,
+  stop: StopIcon,
 
   logo: (props: LucideProps & logoProps) => {
     const { size, className } = props;
