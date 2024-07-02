@@ -58,22 +58,6 @@ export async function POST(req: Request) {
   const input = await req.json();
   const chatContext = ChatContext.parse(input);
 
-  console.log(chatContext);
-
-  // return NextResponse.json(
-  //   {
-  //     text: "Hello, I am a voice assistant created by Gembuddy. How can I help you today?",
-  //   },
-  //   { status: 200 },
-  // );
-  // const chatContext = (await req.json()) as string;
-  // if (!chatContext || !Array.isArray(chatContext.messages)) {
-  //   return NextResponse.json(
-  //     { message: "Invalid messages format" },
-  //     { status: 400 },
-  //   );
-  // }
-
   const { text, toolResults } = await generateText({
     model: openai("gpt-4-turbo"),
     maxAutomaticRoundtrips: 5,
@@ -92,6 +76,12 @@ export async function POST(req: Request) {
         }),
         execute: async ({ workOrderName }) => {
           const db = createClient(cookies());
+          const {
+            data: { session },
+          } = await db.auth.getSession();
+          if (!session) {
+            return "You are not logged in";
+          }
           const { data: work_order } = await db
             .from("work_order")
             .select("*, work_step_status(*, work_step(*)), asset(*)")
@@ -106,11 +96,23 @@ export async function POST(req: Request) {
           return work_order;
         },
       },
-      current_time: {
-        description: "Get the current time",
+      get_user_company: {
+        description: "Get current user company",
         parameters: z.object({}),
         execute: async () => {
-          return new Date().toISOString();
+          const db = createClient(cookies());
+          const {
+            data: { session },
+          } = await db.auth.getSession();
+          if (!session) {
+            return "You are not logged in";
+          }
+          const { data: company } = await db
+            .from("company")
+            .select("*, company_user(*)")
+            .eq("company_user.user_id", session.user.id)
+            .single();
+          return company;
         },
       },
     },
