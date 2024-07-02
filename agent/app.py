@@ -22,6 +22,21 @@ from livekit.plugins import deepgram, openai  # type: ignore
 
 import requests
 
+import json
+
+
+class ChatRole(enum.Enum):
+    SYSTEM = "system"
+    USER = "user"
+    ASSISTANT = "assistant"
+    TOOL = "tool"
+
+
+class MetadataType(dict):
+    {
+        user_session: str,
+    }
+
 
 def chat_message_to_dict(message: ChatMessage) -> dict:
     return {
@@ -58,7 +73,7 @@ async def _forward_transcription(
                 messages_serializable = chat_context_to_dict(ctx)
 
                 response = requests.post(
-                    url_post, json=messages_serializable)
+                    url_post, json=messages_serializable, cookies={})
                 data = response.json()["result"]["messages"]
                 logging.info(data)
 
@@ -86,6 +101,8 @@ async def _forward_audio(
 
 
 async def entrypoint(job: JobContext):
+    json.loads(job.room.metadata)
+
     initial_ctx = ChatContext(
         messages=[
             ChatMessage(
