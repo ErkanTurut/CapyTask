@@ -83,6 +83,7 @@ export type Database = {
           created_at: string
           description: string | null
           id: string
+          location_id: string | null
           name: string
           public_id: string
           updated_at: string
@@ -92,6 +93,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          location_id?: string | null
           name: string
           public_id?: string
           updated_at?: string
@@ -101,6 +103,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          location_id?: string | null
           name?: string
           public_id?: string
           updated_at?: string
@@ -108,40 +111,17 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "asset_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "location"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "asset_workspace_id_fkey"
             columns: ["workspace_id"]
             isOneToOne: false
             referencedRelation: "workspace"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      asset_location: {
-        Row: {
-          asset_id: string
-          location_id: string
-        }
-        Insert: {
-          asset_id: string
-          location_id: string
-        }
-        Update: {
-          asset_id?: string
-          location_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "asset_location_asset_id_fkey"
-            columns: ["asset_id"]
-            isOneToOne: false
-            referencedRelation: "asset"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "asset_location_location_id_fkey"
-            columns: ["location_id"]
-            isOneToOne: false
-            referencedRelation: "location"
             referencedColumns: ["id"]
           },
         ]
