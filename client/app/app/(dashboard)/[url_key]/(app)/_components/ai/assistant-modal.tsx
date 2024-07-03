@@ -67,12 +67,12 @@ export function AssistantModal() {
               </TabsList>
               <TabsContent
                 value="chat"
-                className="h-full animate-fade-in-left overflow-hidden"
+                className="h-full animate-fade-in-left overflow-hidden p-1"
               >
                 <Chat user={data.data} />
               </TabsContent>
               <TabsContent
-                className="h-full animate-fade-in-right overflow-hidden"
+                className="h-full animate-fade-in-right overflow-hidden p-1"
                 value="call"
               >
                 <VoiceAgent />

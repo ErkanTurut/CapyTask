@@ -25,19 +25,6 @@ import requests
 import json
 
 
-class ChatRole(enum.Enum):
-    SYSTEM = "system"
-    USER = "user"
-    ASSISTANT = "assistant"
-    TOOL = "tool"
-
-
-class MetadataType(dict):
-    {
-        user_session: str,
-    }
-
-
 def chat_message_to_dict(message: ChatMessage) -> dict:
     return {
         'role': message.role.value,
@@ -58,6 +45,7 @@ async def _forward_transcription(
     tts: tts.TTS,
     source: rtc.AudioSource,
     ctx: ChatContext,
+    job: JobContext
 ):
     async for ev in stt_stream:
         stt_forwarder.update(ev)
@@ -73,7 +61,8 @@ async def _forward_transcription(
                 messages_serializable = chat_context_to_dict(ctx)
 
                 response = requests.post(
-                    url_post, json=messages_serializable, cookies={})
+                    url_post, json=messages_serializable, cookies={
+                        "user_session": next(iter(job.room.participants.values())).metadata})
                 data = response.json()["result"]["messages"]
                 logging.info(data)
 
@@ -85,6 +74,8 @@ async def _forward_transcription(
                 )
 
                 ctx.messages.append(message)
+
+                logging.info(ctx.messages)
                 await _forward_audio(tts, source, message.text)
             except Exception as e:
                 logging.error(e)
@@ -101,13 +92,12 @@ async def _forward_audio(
 
 
 async def entrypoint(job: JobContext):
-    json.loads(job.room.metadata)
 
     initial_ctx = ChatContext(
         messages=[
             ChatMessage(
                 role=ChatRole.SYSTEM,
-                text="You are a voice assistant created by Gembuddy. Your interface with users will be voice. Pretend we're having a conversation, no special formatting or headings, just natural speech.",
+                text="You are a voice assistant created by Gembuddy. Your interface with users will be voice. Pretend we're having a conversation, no special formatting or headings, just natural speech. Before using a tool, tell the user what you're about to do and that it may take a few seconds. ",
             )
         ]
     )
@@ -136,7 +126,7 @@ async def entrypoint(job: JobContext):
 
         stt_task = asyncio.create_task(
             _forward_transcription(
-                stt_stream=stt_stream, stt_forwarder=stt_forwarder, tts=openai_tts, source=source, ctx=initial_ctx)
+                stt_stream=stt_stream, stt_forwarder=stt_forwarder, tts=openai_tts, source=source, ctx=initial_ctx, job=job)
         )
         tasks.append(stt_task)
 
@@ -154,6 +144,9 @@ async def entrypoint(job: JobContext):
                 transcribe_track(participant, track)))
 
     await job.room.local_participant.publish_track(track, options)
+
+    # for participant in job.room.participants.items():
+    #     logging.info(f"Participant: {participant[1].metadata}")
 
     await asyncio.sleep(2)
     logging.info('Saying "Hello!"')

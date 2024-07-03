@@ -59,14 +59,14 @@ export default function Chat({ user }: ChatProps) {
   };
   return (
     <div className="flex h-full flex-col gap-2">
-      <ScrollArea className="h-full overflow-hidden rounded-md border">
-        <div className="flex h-full w-full flex-col gap-2 p-1">
+      <ScrollArea className="h-full overflow-hidden rounded-md border bg-muted/50 p-2">
+        <div className="flex h-full w-full flex-col gap-2">
           {conversation.map((message: ClientMessage) => {
             if (message.role === "assistant") {
               return (
                 <div
                   key={message.id}
-                  className="max-w-[70%] rounded-lg bg-muted p-3 text-sm"
+                  className="max-w-[70%] rounded-lg border bg-secondary p-3 text-sm"
                 >
                   <b>Buddy : </b>
                   {message.display}
@@ -77,7 +77,7 @@ export default function Chat({ user }: ChatProps) {
             return (
               <div
                 key={message.id}
-                className="ml-auto max-w-[70%] rounded-lg bg-primary p-3 text-sm text-primary-foreground"
+                className="ml-auto max-w-[70%] rounded-lg border bg-primary p-3 text-sm text-primary-foreground"
               >
                 <b>You : </b>
                 {message.display}

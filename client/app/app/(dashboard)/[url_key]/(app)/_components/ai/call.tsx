@@ -29,8 +29,6 @@ export function VoiceAgent() {
   const agentParticipant = participants.find((p) => p.isAgent);
   const isAgentConnected = agentParticipant !== undefined;
 
-  Room.metadata;
-
   let agentAudioTrack: TrackReferenceOrPlaceholder | undefined;
   const aat = tracks.find(
     (trackRef) =>
@@ -54,13 +52,13 @@ export function VoiceAgent() {
   const AudioTileContent = useMemo(() => {
     const disconnectedContent = (
       <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-center text-muted-foreground">
-        No audio track. Connect to get started.
+        Connect to get started.
       </div>
     );
 
     const waitingContent = (
       <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-center text-muted-foreground">
-        Waiting for audio track
+        Waiting for agent to connect.
       </div>
     );
 
@@ -94,7 +92,7 @@ export function VoiceAgent() {
 
   return (
     <div className="flex h-full flex-col gap-2">
-      <div className="h-full overflow-hidden rounded-md border bg-muted/50">
+      <div className="border-bord h-full overflow-hidden rounded-md border bg-muted/50">
         {AudioTileContent}
       </div>
 
@@ -125,7 +123,7 @@ export function VoiceAgent() {
             className="col-span-2"
           >
             <Icons.play className="mr-2 h-4 w-4" />
-            Start call
+            Connect
           </Button>
         )}
 
