@@ -11,5 +11,5 @@ export function Providers({ children }: { children: React.ReactNode }) {
     document.cookie = `workspace_url_key=${JSON.stringify(url_key)};path=/`;
   }, [url_key]);
 
-  return <TooltipProvider delayDuration={0}>{children}</TooltipProvider>;
+  return <TooltipProvider>{children}</TooltipProvider>;
 }

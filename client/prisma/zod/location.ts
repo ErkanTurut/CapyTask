@@ -1,6 +1,6 @@
 import * as z from "zod"
 import { LocationType } from "@prisma/client"
-import { Completeworkspace, RelatedworkspaceModel, Completeaddress, RelatedaddressModel, Completecompany, RelatedcompanyModel, Completework_order, Relatedwork_orderModel, Completeasset_location, Relatedasset_locationModel } from "./index"
+import { Completeworkspace, RelatedworkspaceModel, Completeaddress, RelatedaddressModel, Completecompany, RelatedcompanyModel, Completework_order, Relatedwork_orderModel, Completeasset, RelatedassetModel } from "./index"
 
 export const locationModel = z.object({
   id: z.string(),
@@ -24,7 +24,7 @@ export interface Completelocation extends z.infer<typeof locationModel> {
   address: Completeaddress
   company?: Completecompany | null
   work_order: Completework_order[]
-  asset_location: Completeasset_location[]
+  asset: Completeasset[]
 }
 
 /**
@@ -39,5 +39,5 @@ export const RelatedlocationModel: z.ZodSchema<Completelocation> = z.lazy(() => 
   address: RelatedaddressModel,
   company: RelatedcompanyModel.nullish(),
   work_order: Relatedwork_orderModel.array(),
-  asset_location: Relatedasset_locationModel.array(),
+  asset: RelatedassetModel.array(),
 }))

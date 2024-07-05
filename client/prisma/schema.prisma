@@ -260,20 +260,13 @@ model asset {
   created_at       DateTime           @default(now()) @db.Timestamptz(6)
   updated_at       DateTime           @default(now()) @updatedAt @db.Timestamptz(6)
   workspace_id     String
+  location_id      String?
+  location         location?          @relation(fields: [location_id], references: [id])
   workspace        workspace          @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
   work_order_asset work_order_asset[]
-  asset_location   asset_location[]
-}
 
-model asset_location {
-  asset_id    String
-  location_id String
-  asset       asset    @relation(fields: [asset_id], references: [id])
-  location    location @relation(fields: [location_id], references: [id])
-
-  @@id([asset_id, location_id])
+  @@index([workspace_id])
   @@index([location_id])
-  @@index([asset_id])
 }
 
 model location {
@@ -300,12 +293,13 @@ model location {
   company_id String?
   company    company? @relation(fields: [company_id], references: [id])
 
-  work_order     work_order[]
-  asset_location asset_location[]
+  work_order work_order[]
+  asset      asset[]
 
   @@index([parent_location_id])
   @@index([workspace_id])
   @@index([address_id])
+  @@index([company_id])
 }
 
 model company {
@@ -322,6 +316,8 @@ model company {
   location     location[]
   company_user company_user[]
   work_order   work_order[]
+
+  @@index([workspace_id])
 }
 
 model company_user {

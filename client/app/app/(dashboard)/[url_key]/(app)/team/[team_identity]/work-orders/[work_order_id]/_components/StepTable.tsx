@@ -40,7 +40,7 @@ const status_config: Record<
   OPEN: {
     icon: "view",
     label: "Open",
-    variant: "default",
+    variant: "secondary",
   },
   IN_PROGRESS: {
     icon: "timer",
@@ -112,9 +112,9 @@ export default async function StepTable({ work_step_status }: StepTableProps) {
                           {step.work_step.description} {step.work_step.id}
                         </div>
                       </TableCell>
-                      <TableCell className="table-cell ">
+                      <TableCell className="table-cell">
                         <Badge
-                          className="text-xs "
+                          className="text-xs"
                           variant={status_config[step.status].variant}
                         >
                           {status_config[step.status].label}

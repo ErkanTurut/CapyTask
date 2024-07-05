@@ -30,13 +30,15 @@ export default async function Page({ params }: PageProps) {
     id: params.work_order_id,
   });
 
+  console.log(work_order);
+
   if (!work_order) {
     return notFound();
   }
   return (
-    <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0  lg:grid-cols-3 xl:grid-cols-5">
+    <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 lg:grid-cols-3 xl:grid-cols-5">
       <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2 xl:col-span-3">
-        <div className="grid gap-4 sm:grid-cols-2 ">
+        <div className="grid gap-4 sm:grid-cols-2">
           <WorkOrderHeader params={params} work_order={work_order} />
         </div>
         <Tabs defaultValue="step">

@@ -13,5 +13,10 @@ type opts = {
 };
 
 export const getUserHandler = async ({ input, db }: opts) => {
-  return await db.from("user").select("*").eq("id", input.id).single();
+  return await db
+    .from("user")
+    .select("*")
+    .eq("id", input.id)
+    .single()
+    .throwOnError();
 };

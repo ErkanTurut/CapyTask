@@ -7,10 +7,10 @@ import { openai } from "@ai-sdk/openai";
 import { ReactNode } from "react";
 import { z } from "zod";
 import { nanoid } from "nanoid";
-import StepTable from "../../(app)/team/[team_identity]/work-orders/[work_order_id]/_components/StepTable";
+import StepTable from "../../team/[team_identity]/work-orders/[work_order_id]/_components/StepTable";
 import { Database, createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
-import WorkOrderHeader from "../../(app)/team/[team_identity]/work-orders/[work_order_id]/_components/WorkOrderHeader";
+import WorkOrderHeader from "../../team/[team_identity]/work-orders/[work_order_id]/_components/WorkOrderHeader";
 import CardSkeleton from "@/components/skeletons/card-skeleton";
 
 export interface ServerMessage {
@@ -65,7 +65,7 @@ export async function continueConversation({
             },
           ]);
           yield (
-            <div className="grid ">
+            <div className="grid">
               Fetching work order steps for {workOrderId}...
               <CardSkeleton />
             </div>
@@ -102,7 +102,7 @@ export async function continueConversation({
             },
           ]);
           yield (
-            <div className="grid ">
+            <div className="grid">
               Fetching work order details for {workOrderId}...
               <CardSkeleton />
             </div>

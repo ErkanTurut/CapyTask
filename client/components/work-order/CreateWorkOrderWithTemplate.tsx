@@ -33,20 +33,27 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 
 import { api } from "@/trpc/client";
 import {
-  TCreateWorkOrderSchema,
-  ZCreateWorkOrderSchema,
+  TCreateWorkOrderWithTemplateSchema,
+  ZCreateWorkOrderWithTemplateSchema,
 } from "@/trpc/routes/work_order/create.schema";
-import { FC } from "react";
-import { Icons } from "../icons";
-import { useDebouncedCallback } from "use-debounce";
-import { useRouter } from "next/navigation";
-import { Textarea } from "../ui/textarea";
-import { AutoComplete } from "../autoComplete";
 import type { trpc } from "@/trpc/server";
+import { useParams, useRouter } from "next/navigation";
+import { useDebouncedCallback } from "use-debounce";
+import { z } from "zod";
+import { Icons } from "../icons";
+import { Textarea } from "@/ui/textarea";
+import Link from "next/link";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
+
 interface CreateWorkOrderWithTemplateProps
   extends React.HTMLAttributes<HTMLFormElement> {
   initialData: NonNullable<
@@ -59,10 +66,11 @@ export function CreateWorkOrderWithTemplate({
   initialData,
 }: CreateWorkOrderWithTemplateProps) {
   const router = useRouter();
-  const [search, setSearch] = useState("");
+  const [query, setQuery] = useState("");
 
+  const { team_identity } = useParams() as { team_identity: string };
   const utils = api.useUtils();
-  const { mutate: mutateWithTemplate, isPending } =
+  const { mutate, isPending } =
     api.db.work_order.create.withTemplate.useMutation({
       onSuccess: async (data) => {
         toast.success("work order created successfully");
@@ -81,8 +89,8 @@ export function CreateWorkOrderWithTemplate({
   const { data: work_plan_template } =
     api.db.work_plan_template.search.useQuery(
       {
-        q: search,
-        team_identity: "ddd",
+        q: query,
+        team_identity,
       },
       {
         refetchOnWindowFocus: false,
@@ -90,23 +98,33 @@ export function CreateWorkOrderWithTemplate({
         initialData,
       },
     );
-  console.log(work_plan_template);
-  const debouncedSearch = useDebouncedCallback((query: string) => {
-    console.log("searching", query);
-    // setSearch(query);
+
+  const debouncedSearch = useDebouncedCallback((value: string) => {
+    const parsedValue = z.string().min(4).safeParse(value);
+    if (parsedValue.success) {
+      console.log(parsedValue.data);
+      setQuery(parsedValue.data);
+    }
   }, 1000);
 
   // react-hook-form
-  const form = useForm<TCreateWorkOrderSchema>({
-    resolver: zodResolver(ZCreateWorkOrderSchema),
+
+  const form = useForm<TCreateWorkOrderWithTemplateSchema>({
+    resolver: zodResolver(ZCreateWorkOrderWithTemplateSchema),
     defaultValues: {
       name: "",
       description: "",
-      work_plan_template_id: "",
+      work_plan_template: {
+        id: "",
+      },
+      company_id: "",
+      location_id: "",
     },
   });
 
-  async function onSubmit() {}
+  function onSubmit(data: TCreateWorkOrderWithTemplateSchema) {
+    mutate(data);
+  }
   return (
     <Form {...form}>
       <form
@@ -133,7 +151,11 @@ export function CreateWorkOrderWithTemplate({
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Textarea placeholder="Type your message here." {...field} />
+                <Textarea
+                  placeholder="Type your message here."
+                  {...field}
+                  value={field.value || undefined}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -142,32 +164,92 @@ export function CreateWorkOrderWithTemplate({
 
         <FormField
           control={form.control}
-          name="work_plan_template_id"
+          name="company_id"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Company</FormLabel>
+              <FormControl>
+                <Input placeholder="example" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="location_id"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Location</FormLabel>
+              <FormControl>
+                <Input placeholder="example" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="team_id"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Team</FormLabel>
+              <FormControl>
+                <Input placeholder="example" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="work_plan_template.id"
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel>Work order template</FormLabel>
               <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      className={cn(
-                        "w-[200px] justify-between",
-                        !field.value && "text-muted-foreground",
-                      )}
-                    >
-                      ss
-                      {/* {field.value && work_plan_template
-                        ? work_plan_template.find(
-                            (work_plan_template) =>
-                              work_plan_template.id === field.value,
-                          )?.name
-                        : "Select template"} */}
-                      <Icons.caretSort className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
+                <div className="flex items-center gap-2">
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className={cn(
+                          "w-[200px] justify-between",
+                          !field.value && "text-muted-foreground",
+                        )}
+                      >
+                        {field.value && work_plan_template
+                          ? work_plan_template.find(
+                              (work_plan_template) =>
+                                work_plan_template.id === field.value,
+                            )?.name
+                          : "Select template"}
+                        <Icons.caretSort className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  {field.value && (
+                    <Tooltip>
+                      <TooltipTrigger className="group">
+                        <Link
+                          className={buttonVariants({
+                            size: "icon",
+                            variant: "ghost",
+                          })}
+                          href={`/work-plan-template/${field.value}`}
+                        >
+                          <Icons.ArrowTopRight className="h-4 w-4 animate-fade-in-right transition duration-300 group-hover:-rotate-45" />
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>view selected template</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
+                </div>
                 <PopoverContent className="w-[200px] p-0">
                   <Command>
                     <CommandInput
@@ -184,10 +266,14 @@ export function CreateWorkOrderWithTemplate({
                               value={work_plan_template.name}
                               key={work_plan_template.id}
                               onSelect={() => {
-                                form.setValue(
-                                  "work_plan_template_id",
-                                  work_plan_template.id,
-                                );
+                                if (work_plan_template.id === field.value) {
+                                  form.setValue("work_plan_template.id", "");
+                                } else {
+                                  form.setValue(
+                                    "work_plan_template.id",
+                                    work_plan_template.id,
+                                  );
+                                }
                               }}
                             >
                               {work_plan_template.name}
