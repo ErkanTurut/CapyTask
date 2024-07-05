@@ -97,6 +97,92 @@ export function VoiceAgent() {
       </div>
 
       <div className="col2 grid w-full grid-cols-4 gap-2">
+        <Button
+          onClick={() =>
+            fetch("/api/ai/tts", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                messages: [
+                  {
+                    role: "system",
+                    text: "You are a voice assistant created by Gembuddy. Your interface with users will be voice. Pretend we're having a conversation, no special formatting or headings, just natural speech. Before using a tool, tell the user what you're about to do and that it may take a few seconds. ",
+                    images: [],
+                  },
+                  { role: "user", text: "Hi.", images: [] },
+                  {
+                    role: "assistant",
+                    text: '{"type":"text","text":"Hello! How can I assist you today?"}',
+                    images: [],
+                  },
+                  { role: "user", text: "How are you?", images: [] },
+                  {
+                    role: "assistant",
+                    text: `{"type":"text","text":"I'm just a program, so I don't have feelings, but thanks for asking! How can I assist you today?"}`,
+                    images: [],
+                  },
+                  {
+                    role: "user",
+                    text: "Can you give me the name of my company?",
+                    images: [],
+                  },
+                  {
+                    role: "assistant",
+                    text: `{"type":"text","text":"I'll need a few seconds to fetch the name of your company. Let me get that information for you."}`,
+                    images: [],
+                  },
+                  {
+                    role: "assistant",
+                    text: JSON.stringify({
+                      type: "tool-call",
+                      toolCallId: "call_4e3k31WnGz9K6KC4wvhCxkrH",
+                      toolName: "get_user_company",
+                      args: {},
+                    }),
+                    images: [],
+                  },
+                  {
+                    role: "tool",
+                    text: JSON.stringify({
+                      type: "tool-result",
+                      toolCallId: "call_4e3k31WnGz9K6KC4wvhCxkrH",
+                      toolName: "get_user_company",
+                      result: [
+                        {
+                          id: "4doRuGC8pE",
+                          public_id: "47200263-44c5-497a-9cc3-961169201d73",
+                          name: "ACME CORP.",
+                          description: "a cool IT company",
+                          created_at: "2024-06-01T17:32:44.801557+00:00",
+                          updated_at: "2024-06-01T17:32:44.801557+00:00",
+                          workspace_id: "vyhsM7Ce4u",
+                          company_user: [
+                            { user_id: "a20f9c18-78a0-4dc6-8253-ffee591247a5" },
+                          ],
+                        },
+                      ],
+                    }),
+                    images: [],
+                  },
+                  {
+                    role: "assistant",
+                    text: '{"type":"text","text":"Your company is named ACME CORP. How else can I assist you today?"}',
+                    images: [],
+                  },
+                  {
+                    role: "user",
+                    text: "And do you have the description?",
+                    images: [],
+                  },
+                ],
+              }),
+            })
+          }
+        >
+          TEST
+        </Button>
         {roomState === ConnectionState.Connected ? (
           <Button
             onClick={async () => {

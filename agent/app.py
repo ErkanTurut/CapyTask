@@ -52,31 +52,34 @@ async def _forward_transcription(
         if ev.type == stt.SpeechEventType.INTERIM_TRANSCRIPT:
             print(ev.alternatives[0].text, end="")
         elif ev.type == stt.SpeechEventType.END_OF_SPEECH:
+
+            # transcribe the text
             ctx.messages.append(ChatMessage(
-                role=ChatRole.USER, text=ev.alternatives[0].text))
+                role=ChatRole.USER, text=json.dumps({
+                    "text": ev.alternatives[0].text,
+                    "type": "text"
+                })
+            ))
 
             url_post = "http://localhost:3000/api/ai/tts"
             try:
-
                 messages_serializable = chat_context_to_dict(ctx)
-
                 response = requests.post(
                     url_post, json=messages_serializable, cookies={
                         "user_session": next(iter(job.room.participants.values())).metadata})
-                data = response.json()["result"]["messages"]
-                logging.info(data)
+                result = response.json()["result"]
 
-                message = ChatMessage(
-                    role=ChatRole(data[0]['role']),
-                    text=data[0]['text'],
-                    images=[ChatImage(image=image)
-                            for image in data[0].get('images', [])]
-                )
+                ctx.messages.clear()
+                for chat in result["chatContext"]["messages"]:
+                    role = ChatRole(chat['role'])
+                    text = chat['text']
+                    images = [ChatImage(image=image)
+                              for image in chat.get('images', [])]
+                    ctx.messages.append(ChatMessage(
+                        role=role, text=text, images=images))
 
-                ctx.messages.append(message)
+                await _forward_audio(tts, source, result["messages"][0]['text'])
 
-                logging.info(ctx.messages)
-                await _forward_audio(tts, source, message.text)
             except Exception as e:
                 logging.error(e)
 
@@ -95,10 +98,10 @@ async def entrypoint(job: JobContext):
 
     initial_ctx = ChatContext(
         messages=[
-            ChatMessage(
-                role=ChatRole.SYSTEM,
-                text="You are a voice assistant created by Gembuddy. Your interface with users will be voice. Pretend we're having a conversation, no special formatting or headings, just natural speech. Before using a tool, tell the user what you're about to do and that it may take a few seconds. ",
-            )
+            # ChatMessage(
+            #     role=ChatRole.SYSTEM,
+            #     text=json.dumps({"You are a voice assistant created by Gembuddy. Your interface with users will be voice. Pretend we're having a conversation, no special formatting or headings, just natural speech. Before using a tool, tell the user what you're about to do and that it may take a few seconds. "},)
+            # )
         ]
     )
 
