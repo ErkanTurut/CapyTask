@@ -127,7 +127,7 @@ export function formatDate({
   date: Date | string;
   format?: "LL" | "LLL" | "LLLL" | "LT" | "LTS" | "L" | "l" | "ll" | "lll";
 }) {
-  return dayjs(date).locale("nl-be").format(format);
+  return dayjs(date).locale("fr-be").format(format);
 }
 
 export function catchError(err: unknown) {

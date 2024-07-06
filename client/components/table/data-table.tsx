@@ -43,6 +43,8 @@ interface DataTableProps<TData, TValue> {
     page: number;
     limit: number;
   };
+  refetch?: () => void;
+  isFetching?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -51,6 +53,8 @@ export function DataTable<TData, TValue>({
   count,
   filter = { columnVisibility: {} as A<TData> },
   searchParams,
+  refetch,
+  isFetching,
 }: DataTableProps<TData, TValue>) {
   const page = searchParams?.page || 1;
   const limit = searchParams?.limit || 10;
@@ -114,10 +118,14 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} />
+      <DataTableToolbar
+        refetch={refetch}
+        isFetching={isFetching}
+        table={table}
+      />
       <div className="rounded-md border bg-background">
         <Table>
-          <TableHeader className="  border-foreground bg-muted/50">
+          <TableHeader className="border-foreground bg-muted/50">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
@@ -143,7 +151,7 @@ export function DataTable<TData, TValue>({
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell className=" text-xs" key={cell.id}>
+                    <TableCell className="text-xs" key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),

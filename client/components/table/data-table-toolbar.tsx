@@ -7,16 +7,20 @@ import { Button, buttonVariants } from "@/ui/button";
 import { Input } from "@/ui/input";
 import { DataTableViewOptions } from "@/components/table/data-table-view-options";
 
-import { Database } from "@/types/supabase.types";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
+  refetch?: () => void;
+  isFetching?: boolean;
 }
 
 export function DataTableToolbar<TData>({
   table,
+  refetch,
+  isFetching,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
   const pathname = usePathname() ?? "";
@@ -32,20 +36,6 @@ export function DataTableToolbar<TData>({
           }
           className="h-8 w-[150px] lg:w-[250px]"
         />
-        {/* {table.getColumn("status") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("status")}
-            title="Status"
-            options={statuses}
-          />
-        )}
-        {table.getColumn("priority") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("priority")}
-            title="Priority"
-            options={priorities}
-          />
-        )} */}
         {isFiltered && (
           <Button
             variant="ghost"
@@ -58,6 +48,22 @@ export function DataTableToolbar<TData>({
         )}
       </div>
       <div className="flex items-center space-x-2">
+        {refetch && (
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-7 w-7"
+            onClick={() => refetch()}
+          >
+            <Icons.spinner
+              className={cn(
+                "h-4 w-4",
+                isFetching && "animate-spin duration-700 ease-in-out",
+              )}
+            />
+          </Button>
+        )}
+
         <DataTableViewOptions table={table} />
         <Link
           className={buttonVariants({ size: "sm" })}

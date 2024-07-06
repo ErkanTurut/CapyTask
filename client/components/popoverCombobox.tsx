@@ -20,6 +20,7 @@ import {
 import * as React from "react";
 
 import { Icons } from "./icons";
+import { cn } from "@/lib/utils";
 
 interface Option<T> {
   value: T;
@@ -115,8 +116,8 @@ export function ComboBox<T extends string>({
               }
               setSearchValue(searchValue);
             }}
-            className="text-[0.8125rem] leading-normal"
-            placeholder="Set priority..."
+            className="text-xs leading-normal"
+            placeholder="Set status..."
           >
             {!isSearching && (
               <span className="flex size-[18px] items-center justify-center rounded-sm border text-xs text-primary">
@@ -135,16 +136,18 @@ export function ComboBox<T extends string>({
                       options.find((status) => status.value === value)!,
                     );
                   }}
-                  className="group flex w-full items-center justify-between rounded-md text-[0.8125rem] leading-normal text-primary"
+                  className={cn(
+                    "group flex w-full items-center justify-between rounded-md text-xs leading-normal text-muted-foreground",
+                    selectedOption.value === status.value &&
+                      "text-primary aria-selected:text-primary aria-selected:underline",
+                  )}
                 >
                   <div className="flex items-center">
                     {status.icon && (
                       <>
                         {(() => {
                           const Icon = Icons[status.icon];
-                          return (
-                            <Icon className="mr-2 size-4 fill-muted-foreground group-hover:fill-primary" />
-                          );
+                          return <Icon className="mr-2 size-4" />;
                         })()}
                       </>
                     )}
