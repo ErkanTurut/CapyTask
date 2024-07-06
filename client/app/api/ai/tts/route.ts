@@ -60,6 +60,7 @@ export type TChatMessage = z.infer<typeof ChatMessage>;
 export type TChatContext = z.infer<typeof ChatContext>;
 
 export async function POST(req: Request) {
+  console.log("requested");
   const db = createClient(cookies());
   // const {
   //   data: { session },
@@ -73,103 +74,105 @@ export async function POST(req: Request) {
     console.log(message, ",");
   });
 
-  const { text, responseMessages } = await generateText({
-    model: openai("gpt-4-turbo"),
-    maxToolRoundtrips: 10,
-    system:
-      "You are a voice assistant created by Gembuddy. Your interface with users will be voice. Pretend we're having a conversation, no special formatting or headings, just natural speech.",
+  const { text, responseMessages, warnings, finishReason } = await generateText(
+    {
+      model: openai("gpt-4-turbo"),
+      maxToolRoundtrips: 10,
+      system:
+        "You are a voice assistant created by Gembuddy. Your interface with users will be voice. Pretend we're having a conversation, no special formatting or headings, just natural speech.",
 
-    // @ts-ignore
-    messages: chatContext.messages.map((message) => {
-      return {
-        role: message.role,
-        content: [JSON.parse(message.text)],
-      };
-    }),
-    tools: {
-      work_order_detail: {
-        description: "Get work order details",
-        parameters: z.object({
-          workOrderName: z.string().describe("The Name of the work order"),
-        }),
-        execute: async ({ workOrderName }) => {
-          if (!session) {
-            return "You are not logged in";
-          }
-          const { data: work_order } = await db
-            .from("work_order")
-            .select("*, work_step_status(*, work_step(*)), asset(*)")
-            .textSearch("name", workOrderName, {
-              type: "websearch",
-            })
-            .order("step_order", {
-              referencedTable: "work_step_status",
+      // @ts-ignore
+      messages: chatContext.messages.map((message) => {
+        return {
+          role: message.role,
+          content: [JSON.parse(message.text)],
+        };
+      }),
+      tools: {
+        work_order_detail: {
+          description: "Get work order details",
+          parameters: z.object({
+            workOrderName: z.string().describe("The Name of the work order"),
+          }),
+          execute: async ({ workOrderName }) => {
+            if (!session) {
+              return "You are not logged in";
+            }
+            const { data: work_order } = await db
+              .from("work_order")
+              .select("*, work_step_status(*, work_step(*)), asset(*)")
+              .textSearch("name", workOrderName, {
+                type: "websearch",
+              })
+              .order("step_order", {
+                referencedTable: "work_step_status",
+              });
+
+            return work_order;
+          },
+        },
+        get_user_company: {
+          description: "Get user company",
+          parameters: z.object({}),
+          execute: async () => {
+            if (!session) {
+              return "You are not logged in";
+            }
+            const { data: company } = await db
+              .from("company")
+              .select("*, company_user(user_id)")
+              .eq("company_user.user_id", session.user.id);
+
+            return company;
+          },
+        },
+        get_company_locations: {
+          description: "Get user location",
+          parameters: z.object({
+            company_id: z.string().describe("The ID of the company"),
+          }),
+          execute: async (input: { company_id: string }) => {
+            const { data: location } = await db
+              .from("location")
+              .select("*")
+              .eq("company_id", input.company_id);
+
+            return location;
+          },
+        },
+        get_location_assets: {
+          description: "Get location assets",
+          parameters: z.object({
+            location_id: z.string().describe("The ID of the location"),
+          }),
+          execute: async (input: { location_id: string }) => {
+            const { data: asset } = await db
+              .from("asset")
+              .select("*")
+              .eq("location_id", input.location_id);
+            return asset;
+          },
+        },
+        get_team: {
+          description: "Get team for the related user",
+          parameters: z.object({}),
+          execute: async (input: { team_id: string }) => {
+            return "4pGki9KGYX";
+          },
+        },
+        create_work_order: {
+          description: "create work order with steps",
+          parameters: ZCreateWorkOrderWithStepsSchema,
+          execute: async (input: TCreateWorkOrderWithStepsSchema) => {
+            return await createWorkOrderWithStepsHandler({
+              input,
+              db,
             });
-
-          return work_order;
-        },
-      },
-      get_user_company: {
-        description: "Get user company",
-        parameters: z.object({}),
-        execute: async () => {
-          if (!session) {
-            return "You are not logged in";
-          }
-          const { data: company } = await db
-            .from("company")
-            .select("*, company_user(user_id)")
-            .eq("company_user.user_id", session.user.id);
-
-          return company;
-        },
-      },
-      get_company_locations: {
-        description: "Get user location",
-        parameters: z.object({
-          company_id: z.string().describe("The ID of the company"),
-        }),
-        execute: async (input: { company_id: string }) => {
-          const { data: location } = await db
-            .from("location")
-            .select("*")
-            .eq("company_id", input.company_id);
-
-          return location;
-        },
-      },
-      get_location_assets: {
-        description: "Get location assets",
-        parameters: z.object({
-          location_id: z.string().describe("The ID of the location"),
-        }),
-        execute: async (input: { location_id: string }) => {
-          const { data: asset } = await db
-            .from("asset")
-            .select("*")
-            .eq("location_id", input.location_id);
-          return asset;
-        },
-      },
-      get_team: {
-        description: "Get team for the related user",
-        parameters: z.object({}),
-        execute: async (input: { team_id: string }) => {
-          return "4pGki9KGYX";
-        },
-      },
-      create_work_order: {
-        description: "create work order with steps",
-        parameters: ZCreateWorkOrderWithStepsSchema,
-        execute: async (input: TCreateWorkOrderWithStepsSchema) => {
-          return await createWorkOrderWithStepsHandler({
-            input,
-            db,
-          });
+          },
         },
       },
     },
-  });
+  );
 
   responseMessages.forEach((message) => {
     if (message.role === "assistant") {
@@ -216,6 +219,10 @@ export async function POST(req: Request) {
       }
     }
   });
+
+  console.log("responseMessages", responseMessages);
+  console.log("warnings", warnings);
+  console.log("finishReason", finishReason);
 
   return NextResponse.json(
     {

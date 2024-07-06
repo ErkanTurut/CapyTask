@@ -17,6 +17,7 @@ import { useMultibandTrackVolume } from "@/lib/hooks/use-track-volume";
 import { RoomEvent, Track, ConnectionState } from "livekit-client";
 import { useMemo } from "react";
 import { AgentMultibandAudioVisualizer } from "./AgentMultibandAudioVisualizer";
+import { BorderBeam } from "@/components/ui/border-beam";
 
 export function VoiceAgent() {
   const Room = useRoomContext();

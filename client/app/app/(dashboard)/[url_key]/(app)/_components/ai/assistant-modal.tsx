@@ -49,14 +49,20 @@ export function AssistantModal() {
                   variant:
                     connectionState === "connected" ? "default" : "secondary",
                 }),
-                "fixed bottom-4 right-4 z-40 rounded-lg border border-border",
+                "group fixed bottom-4 right-4 z-40 rounded-lg border border-border",
+
+                "transform-gpu transition-transform duration-300 ease-in-out active:translate-y-[1px]",
               )}
               onClick={() => setIsOpen(!isOpen)}
             >
               <Icons.logo className="h-6 w-6" />
             </PopoverTrigger>
           </TooltipTrigger>
-          <PopoverContent className="mr-2 flex h-[32rem] w-[32rem] flex-col gap-2 p-2">
+          <PopoverContent
+            className="flex h-[32rem] w-[32rem] flex-col gap-2 p-2"
+            sideOffset={4}
+            align="end"
+          >
             <Tabs
               defaultValue={connectionState === "connected" ? "call" : "chat"}
               className="flex h-full flex-col overflow-clip"
