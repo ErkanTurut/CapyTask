@@ -41,10 +41,8 @@ export default async function AssetTable({ params, assets }: AssetTableProps) {
     <TooltipProvider>
       <Card x-chunk="dashboard-05-chunk-3">
         <CardHeader className="px-7">
-          <CardTitle>Work steps</CardTitle>
-          <CardDescription>
-            Current status of the work steps in this order
-          </CardDescription>
+          <CardTitle>Assets</CardTitle>
+          <CardDescription>Related assets to this work order.</CardDescription>
         </CardHeader>
         <CardContent>
           {assets.length > 0 ? (

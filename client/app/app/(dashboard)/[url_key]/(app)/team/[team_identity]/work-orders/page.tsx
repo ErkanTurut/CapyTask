@@ -8,6 +8,7 @@ import {
 import WorkOrderTable from "./_components/work-order-table";
 import { Suspense } from "react";
 import TableSkeleton from "@/components/skeletons/table-skeleton";
+import TableContainer from "./_components/table/TableContainer";
 interface PageProps {
   searchParams: { [key: string]: string | string[] | undefined };
   params: {
@@ -35,7 +36,7 @@ export default function Page({ searchParams, params }: PageProps) {
 
       <Shell variant={"bento"}>
         <Suspense fallback={<TableSkeleton />}>
-          <WorkOrderTable searchParams={{ limit, page }} params={params} />
+          <TableContainer params={params} searchParams={{ limit, page }} />
         </Suspense>
       </Shell>
     </Shell>

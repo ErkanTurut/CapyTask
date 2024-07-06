@@ -66,14 +66,14 @@ export default async function WorkOrderHeader({
     <Card className="sm:col-span-2" x-chunk="dashboard-05-chunk-0">
       <CardHeader className="pb-3">
         <CardTitle>{work_order.name}</CardTitle>
-        <CardDescription className="line-clamp-4 text-pretty  leading-relaxed">
+        <CardDescription className="line-clamp-4 text-pretty leading-relaxed">
           {work_order.description}
         </CardDescription>
       </CardHeader>
       <CardFooter>
-        <div className="flex flex-col gap-0.5 rounded-md  text-center">
+        <div className="flex flex-col gap-0.5 rounded-md text-center">
           <Label
-            className="text-pretty text-xs text-muted-foreground "
+            className="text-pretty text-xs text-muted-foreground"
             htmlFor="status"
           >
             Status :
@@ -84,10 +84,10 @@ export default async function WorkOrderHeader({
             work_order_id={params.work_order_id}
           />
         </div>
-        <Separator orientation="vertical" className="h-auto" />
-        <div className="flex flex-col gap-0.5 rounded-md  text-center">
+
+        <div className="flex flex-col gap-0.5 rounded-md text-center">
           <Label
-            className="text-pretty text-xs text-muted-foreground "
+            className="text-pretty text-xs text-muted-foreground"
             htmlFor="work_plan"
           >
             Work plan :

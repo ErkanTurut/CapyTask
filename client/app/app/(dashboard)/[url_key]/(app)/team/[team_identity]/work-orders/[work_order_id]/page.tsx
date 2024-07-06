@@ -30,8 +30,6 @@ export default async function Page({ params }: PageProps) {
     id: params.work_order_id,
   });
 
-  console.log(work_order);
-
   if (!work_order) {
     return notFound();
   }
@@ -46,7 +44,7 @@ export default async function Page({ params }: PageProps) {
             <TabsList>
               <TabsTrigger value="step">Steps</TabsTrigger>
               <TabsTrigger value="asset">Assets</TabsTrigger>
-              <TabsTrigger value="service_ressource">
+              <TabsTrigger disabled value="service_ressource">
                 Service Ressources
               </TabsTrigger>
             </TabsList>

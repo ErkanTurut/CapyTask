@@ -64,7 +64,8 @@ export default async function WorkOrderDetail({
             </Button>
           </CardTitle>
           <CardDescription>
-            {formatDate({ date: work_order.created_at })}
+            Created at{" "}
+            {formatDate({ date: work_order.created_at, format: "LLLL" })}
           </CardDescription>
         </div>
         <div className="ml-auto flex items-center gap-1">
@@ -86,6 +87,24 @@ export default async function WorkOrderDetail({
       </CardHeader>
       <CardContent className="p-6 text-sm">
         <div className="grid gap-3">
+          <div className="font-semibold">Contract Information</div>
+          <dl className="grid gap-3">
+            <div className="flex items-center justify-between">
+              <dt className="text-muted-foreground">Service contract</dt>
+              <dd>{work_order.company?.name}</dd>
+            </div>
+            <div className="flex items-center justify-between">
+              <dt className="text-muted-foreground">Activity line</dt>
+              <dd>ABC</dd>
+            </div>
+            <div className="flex items-center justify-between">
+              <dt className="text-muted-foreground">WBS</dt>
+              <dd>ABC-123</dd>
+            </div>
+          </dl>
+        </div>
+        <Separator className="my-4" />
+        <div className="grid gap-3">
           <div className="font-semibold">Customer Information</div>
           <dl className="grid gap-3">
             <div className="flex items-center justify-between">
@@ -95,13 +114,17 @@ export default async function WorkOrderDetail({
             <div className="flex items-center justify-between">
               <dt className="text-muted-foreground">Email</dt>
               <dd>
-                <a href="mailto:">contact@acme.com</a>
+                <a className="underline" href="mailto:">
+                  contact@acme.com
+                </a>
               </dd>
             </div>
             <div className="flex items-center justify-between">
               <dt className="text-muted-foreground">Phone</dt>
               <dd>
-                <a href="tel:">+1 234 567 890</a>
+                <a className="underline" href="tel:">
+                  +1 234 567 890
+                </a>
               </dd>
             </div>
           </dl>
@@ -112,44 +135,55 @@ export default async function WorkOrderDetail({
           <div className="grid auto-rows-max gap-3">
             <div className="font-semibold">Start date</div>
             <div className="text-muted-foreground">
-              {formatDate({ date: work_order.created_at, format: "lll" })}
+              {work_order.sheduled_start
+                ? formatDate({ date: work_order.sheduled_start, format: "lll" })
+                : "Not scheduled yet"}
             </div>
           </div>
           <div className="grid gap-3">
             <div className="font-semibold">End date</div>
             <div className="text-muted-foreground">
-              {formatDate({ date: work_order.created_at, format: "lll" })}
+              {work_order.sheduled_end
+                ? formatDate({ date: work_order.sheduled_end, format: "lll" })
+                : "Not scheduled yet"}
             </div>
           </div>
         </div>
 
         <Separator className="my-4" />
-        {work_order.location && (
-          <div className="grid grid-cols-2 gap-4">
-            <div className="grid auto-rows-max gap-3">
-              <div className="font-semibold">Location name</div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="grid auto-rows-max gap-3">
+            <div className="font-semibold">Location name</div>
+            {work_order.location ? (
               <Link
                 className="text-xs font-medium text-primary underline underline-offset-4"
                 href={`/${work_order.location.workspace_id}/locations/customers/${work_order.location.id}`}
               >
                 {work_order.location.name}
               </Link>
-            </div>
-            <div className="grid gap-3">
-              <div className="font-semibold">Location address</div>
+            ) : (
+              <p className="text-muted-foreground">Not assigned yet</p>
+            )}
+          </div>
+          <div className="grid gap-3">
+            <div className="font-semibold">Location address</div>
+            {work_order.location ? (
               <address className="grid gap-0.5 not-italic text-muted-foreground">
                 <span>{work_order.location.address?.street}</span>
                 <span>{work_order.location.address?.state}</span>
                 <span>{work_order.location.address?.postal_code}</span>
                 <span>{work_order.location.address?.country}</span>
               </address>
-            </div>
+            ) : (
+              <p className="text-muted-foreground">Not assigned yet</p>
+            )}
           </div>
-        )}
+        </div>
       </CardContent>
       <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
         <div className="text-xs text-muted-foreground">
-          Updated{" "}
+          Updated at{" "}
           <time dateTime="2023-11-23">
             {formatDate({ date: work_order.updated_at, format: "LLL" })}
           </time>
