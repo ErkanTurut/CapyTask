@@ -198,27 +198,31 @@ model work_step {
 }
 
 model work_order {
-  id          String  @id @default(dbgenerated("nanoid(10)"))
-  public_id   String  @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id          String         @id @default(dbgenerated("nanoid(10)"))
+  public_id   String         @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name        String
   description String?
-
+  status      Status         @default(OPEN)
   location_id String?
-  location    location? @relation(fields: [location_id], references: [id])
+  priority    Priority       @default(LOW)
+  type        inspectionType @default(INSPECTION)
 
   created_at DateTime @default(now()) @db.Timestamptz(6)
   updated_at DateTime @default(now()) @updatedAt @db.Timestamptz(6)
 
-  status Status @default(OPEN)
+  sheduled_start DateTime?
+  sheduled_end   DateTime?
 
-  team_id      String
+  location location? @relation(fields: [location_id], references: [id])
+
+  team_id String
+  team    team   @relation(fields: [team_id], references: [id], onDelete: Cascade)
+
   work_plan_id String?
+  work_plan    work_plan? @relation(fields: [work_plan_id], references: [id])
 
   company_id String
   company    company @relation(fields: [company_id], references: [id])
-
-  team      team       @relation(fields: [team_id], references: [id], onDelete: Cascade)
-  work_plan work_plan? @relation(fields: [work_plan_id], references: [id])
 
   work_order_asset work_order_asset[]
   work_step_status work_step_status[]

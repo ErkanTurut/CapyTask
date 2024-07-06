@@ -454,9 +454,13 @@ export type Database = {
           id: string
           location_id: string | null
           name: string
+          priority: Database["public"]["Enums"]["Priority"]
           public_id: string
+          sheduled_end: string | null
+          sheduled_start: string | null
           status: Database["public"]["Enums"]["Status"]
           team_id: string
+          type: Database["public"]["Enums"]["inspectionType"]
           updated_at: string
           work_plan_id: string | null
         }
@@ -467,9 +471,13 @@ export type Database = {
           id?: string
           location_id?: string | null
           name: string
+          priority?: Database["public"]["Enums"]["Priority"]
           public_id?: string
+          sheduled_end?: string | null
+          sheduled_start?: string | null
           status?: Database["public"]["Enums"]["Status"]
           team_id: string
+          type?: Database["public"]["Enums"]["inspectionType"]
           updated_at?: string
           work_plan_id?: string | null
         }
@@ -480,9 +488,13 @@ export type Database = {
           id?: string
           location_id?: string | null
           name?: string
+          priority?: Database["public"]["Enums"]["Priority"]
           public_id?: string
+          sheduled_end?: string | null
+          sheduled_start?: string | null
           status?: Database["public"]["Enums"]["Status"]
           team_id?: string
+          type?: Database["public"]["Enums"]["inspectionType"]
           updated_at?: string
           work_plan_id?: string | null
         }
