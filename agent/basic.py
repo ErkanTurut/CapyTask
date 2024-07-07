@@ -38,10 +38,13 @@ async def entrypoint(ctx: JobContext):
         vad=silero.VAD(),  # Voice Activity Detection
         stt=deepgram.STT(),  # Speech-to-Text
 
-        llm=openai.LLM(),  # Language Model
+        # Language Model
+        # llm=openai.LLM(base_url="http://localhost:3000/api/ai"),
+        llm=openai.LLM(),
+
         tts=openai_tts,  # Text-to-Speech
         chat_ctx=initial_ctx,  # Chat history context
-        transcription=False
+
     )
 
     # Start the voice assistant with the LiveKit room

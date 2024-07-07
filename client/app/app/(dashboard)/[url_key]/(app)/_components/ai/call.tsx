@@ -98,7 +98,7 @@ export function VoiceAgent() {
       </div>
 
       <div className="col2 grid w-full grid-cols-4 gap-2">
-        <Button
+        {/* <Button
           onClick={() =>
             fetch("/api/ai/tts", {
               method: "POST",
@@ -183,7 +183,7 @@ export function VoiceAgent() {
           }
         >
           TEST
-        </Button>
+        </Button> */}
         {roomState === ConnectionState.Connected ? (
           <Button
             onClick={async () => {

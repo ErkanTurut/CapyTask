@@ -18,8 +18,8 @@ from livekit.agents.llm import (
     ChatRole,
     ChatImage
 )
-from livekit.plugins import deepgram, openai  # type: ignore
-
+from livekit.plugins import deepgram, openai, cartesia  # type: ignore
+import time
 import requests
 
 import json
@@ -52,7 +52,7 @@ async def _forward_transcription(
         if ev.type == stt.SpeechEventType.INTERIM_TRANSCRIPT:
             print(ev.alternatives[0].text, end="")
         elif ev.type == stt.SpeechEventType.END_OF_SPEECH:
-
+            start = time.time()
             # transcribe the text
             ctx.messages.append(ChatMessage(
                 role=ChatRole.USER, text=json.dumps({
@@ -78,6 +78,9 @@ async def _forward_transcription(
                     ctx.messages.append(ChatMessage(
                         role=role, text=text, images=images))
 
+                end = time.time()
+                logging.info(f"Time taken to process: {end - start}")
+
                 await _forward_audio(tts, source, result["messages"][0]['text'])
 
             except Exception as e:
@@ -100,18 +103,21 @@ async def entrypoint(job: JobContext):
         messages=[
             # ChatMessage(
             #     role=ChatRole.SYSTEM,
-            #     text=json.dumps({"You are a voice assistant created by Gembuddy. Your interface with users will be voice. Pretend we're having a conversation, no special formatting or headings, just natural speech. Before using a tool, tell the user what you're about to do and that it may take a few seconds. "},)
+            #     text=json.dumps({"text": "You are a voice assistant created by Gembuddy. Your interface with users will be voice. Pretend we're having a conversation, no special formatting or headings, just natural speech. Before using a tool, tell the user what you're about to do and that it may take a few seconds.",
+            #                     "type": "text"})
             # )
         ]
     )
 
     # TTS
-    openai_tts = tts.StreamAdapter(
+    tts_model = tts.StreamAdapter(
         tts=openai.TTS(voice="alloy"),
         sentence_tokenizer=tokenize.basic.SentenceTokenizer(),
     )
 
-    source = rtc.AudioSource(openai_tts.sample_rate, openai_tts.num_channels)
+    tts_model = cartesia.TTS(model="sonic-english")
+
+    source = rtc.AudioSource(tts_model.sample_rate, tts_model.num_channels)
     track = rtc.LocalAudioTrack.create_audio_track("agent-mic", source)
     options = rtc.TrackPublishOptions()
     options.source = rtc.TrackSource.SOURCE_MICROPHONE
@@ -129,7 +135,7 @@ async def entrypoint(job: JobContext):
 
         stt_task = asyncio.create_task(
             _forward_transcription(
-                stt_stream=stt_stream, stt_forwarder=stt_forwarder, tts=openai_tts, source=source, ctx=initial_ctx, job=job)
+                stt_stream=stt_stream, stt_forwarder=stt_forwarder, tts=tts_model, source=source, ctx=initial_ctx, job=job)
         )
         tasks.append(stt_task)
 
@@ -153,7 +159,7 @@ async def entrypoint(job: JobContext):
 
     await asyncio.sleep(2)
     logging.info('Saying "Hello!"')
-    async for output in openai_tts.synthesize("Hello how can I help you today?"):
+    async for output in tts_model.synthesize("Hello how can I help you today?"):
         await source.capture_frame(output.data)
 
 
