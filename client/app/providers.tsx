@@ -46,7 +46,7 @@ export function Providers({
         }),
         unstable_httpBatchStreamLink({
           transformer: superjson,
-          url: `${process.env.NEXT_PUBLIC_APP_ROOT_DOMAIN}/api/trpc`,
+          url: `/api/trpc`,
           headers() {
             const header = new Map(headers);
             header.set("x-trpc-source", "nextjs-react");
