@@ -7,6 +7,7 @@ module.exports = {
       allowedOrigins: ["app.localhost:3000"],
     },
     ppr: true,
+    after: true,
   },
   logging: {
     fetches: {

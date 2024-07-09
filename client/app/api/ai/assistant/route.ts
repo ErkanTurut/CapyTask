@@ -1,7 +1,9 @@
 import { generateText, streamText, CoreMessage } from "ai";
 
 import { openai, createOpenAI } from "@ai-sdk/openai";
+import { unstable_after as after } from "next/server";
 
+export const maxDuration = 15;
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
@@ -11,7 +13,12 @@ import {
   TCreateWorkOrderWithStepsSchema,
   ZCreateWorkOrderWithStepsSchema,
 } from "@/trpc/routes/work_order/create.schema";
-import { createWorkOrderWithStepsHandler } from "@/trpc/routes/work_order/create.handler";
+import {
+  createWorkOrderHandler,
+  createWorkOrderStepsHandler,
+  createWorkOrderWithStepsHandler,
+  createWorkPlanHandler,
+} from "@/trpc/routes/work_order/create.handler";
 import { sleep } from "@/lib/utils";
 
 enum ChatRole {
@@ -77,8 +84,8 @@ export async function POST(req: Request) {
 
   const { text, responseMessages, toolCalls } = await generateText({
     model: openai("gpt-4o"),
-    maxToolRoundtrips: 5,
-
+    maxToolRoundtrips: 10,
+    temperature: 1,
     system: `\
       You are a voice assistant created by Gembuddy, you are inside a field service application. 
       You help customers with their assets, providing support for troubleshooting, maintenance, and work order information. 
@@ -88,6 +95,9 @@ export async function POST(req: Request) {
       For example: If a user asks about the status of a work order, respond with: 'Your work order is in progress and should be completed by tomorrow afternoon.' 
       If a user requests maintenance, respond with: 'Sure, I can help with that. Can you please provide the asset number and describe the issue?' 
       If a user has an issue with an asset, respond with: 'Let's start by identifying the problem. Can you tell me what issue you are experiencing with the asset?'
+      If the user doesn't provide enough information, ask for clarification.
+      If the user doesn't have the asset number, ask for the location of the asset.
+      If there is more than one location, ask for the specific location.
       If a user needs troubleshooting assistance, respond with: 'Let's start by identifying the problem. Can you tell me what issue you are experiencing with the asset?',
     `,
 
@@ -168,7 +178,7 @@ export async function POST(req: Request) {
         description: "Get team for the related user",
         parameters: z.object({}),
         execute: async (input: { team_id: string }) => {
-          await sleep(1000);
+          await sleep(20);
           return "4pGki9KGYX";
         },
       },
@@ -177,13 +187,58 @@ export async function POST(req: Request) {
           "create work order with steps, ask for confirmation before doing it",
         parameters: ZCreateWorkOrderWithStepsSchema,
         execute: async (input: TCreateWorkOrderWithStepsSchema) => {
-          return await createWorkOrderWithStepsHandler({
-            input: {
-              ...input,
-              requested_by_id: session.user.id,
-            },
-            db,
+          const { data: work_order, error: work_order_error } =
+            await createWorkOrderHandler({
+              db,
+              input: {
+                company_id: input.company_id,
+                description: input.description,
+                location_id: input.location_id,
+                name: input.name,
+                source: input.source,
+                team_id: input.team_id,
+                type: input.type,
+                requested_by_id: session.user.id,
+              },
+            });
+
+          if (!work_order || work_order_error) {
+            return "Failed to create work order";
+          }
+
+          after(async () => {
+            const { data: work_plan, error: work_plan_error } =
+              await createWorkPlanHandler({
+                db,
+                input: {
+                  name: input.name,
+                  description: input.description,
+                  team_id: input.team_id,
+                },
+              });
+            if (!work_plan || work_plan_error) {
+              return "Failed to create work plan";
+            }
+
+            await db
+              .from("work_order")
+              .update({ work_plan_id: work_plan.id })
+              .eq("id", work_order.id);
+
+            await createWorkOrderStepsHandler({
+              db,
+              input: {
+                work_order: {
+                  id: work_order.id,
+                  work_plan_id: work_plan.id,
+                },
+                asset: input.asset,
+                work_step: input.work_step,
+              },
+            });
           });
+
+          return { work_order };
         },
       },
     },

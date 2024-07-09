@@ -1,7 +1,7 @@
 import "server-only";
 
 import { Database, SupabaseClient } from "@/lib/supabase/server";
-import { work_orderModel } from "@/prisma/zod";
+import { assetModel, work_orderModel, work_stepModel } from "@/prisma/zod";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { TCreateWorkOrderWithStepsSchema } from "./create.schema";
@@ -97,14 +97,20 @@ export async function createWorkOrderHandler({
     .single();
 }
 
-export async function createWorkOrderWithStepsHandler({
+const workPlanZod = work_orderModel.pick({
+  name: true,
+  description: true,
+  team_id: true,
+});
+
+export async function createWorkPlanHandler({
   input,
   db,
 }: {
-  input: TCreateWorkOrderWithStepsSchema;
+  input: z.infer<typeof workPlanZod>;
   db: SupabaseClient;
 }) {
-  const { data: work_plan, error: work_plan_error } = await db
+  return await db
     .from("work_plan")
     .insert({
       name: input.name,
@@ -113,11 +119,41 @@ export async function createWorkOrderWithStepsHandler({
     })
     .select("*")
     .single();
+}
+
+export async function createWorkOrderWithStepsHandler({
+  input,
+  db,
+}: {
+  input: TCreateWorkOrderWithStepsSchema;
+  db: SupabaseClient;
+}) {
+  const { data: work_plan, error: work_plan_error } =
+    await createWorkPlanHandler({
+      input,
+      db: db,
+    });
 
   if (work_plan_error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message: work_plan_error.message,
+    });
+  }
+
+  const { data: work_order, error: work_order_error } =
+    await createWorkOrderHandler({
+      input: {
+        ...input,
+        work_plan_id: work_plan.id,
+      },
+      db: db,
+    });
+
+  if (work_order_error) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: work_order_error.message,
     });
   }
 
@@ -140,22 +176,6 @@ export async function createWorkOrderWithStepsHandler({
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: error.message,
-      });
-    }
-
-    const { data: work_order, error: work_order_error } =
-      await createWorkOrderHandler({
-        input: {
-          ...input,
-          work_plan_id: work_plan.id,
-        },
-        db: db,
-      });
-
-    if (work_order_error) {
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: work_order_error.message,
       });
     }
 
@@ -189,4 +209,87 @@ export async function createWorkOrderWithStepsHandler({
       work_step_status,
     };
   }
+}
+
+export const ZCreateWorkOrderStepsSchema = z.object({
+  work_order: work_orderModel.pick({
+    id: true,
+    work_plan_id: true,
+  }),
+  work_step: z.array(
+    work_stepModel.pick({
+      name: true,
+      description: true,
+      parent_step_id: true,
+      step_order: true,
+    }),
+  ),
+  asset: z
+    .array(
+      assetModel.pick({
+        id: true,
+      }),
+    )
+    .nullable(),
+});
+
+export type TCreateWorkOrderStepsSchema = z.infer<
+  typeof ZCreateWorkOrderStepsSchema
+>;
+
+export async function createWorkOrderStepsHandler({
+  input,
+  db,
+}: {
+  input: TCreateWorkOrderStepsSchema;
+  db: SupabaseClient;
+}) {
+  const steps = input.work_step.map((step) => {
+    return {
+      work_plan_id: input.work_order.work_plan_id,
+      name: step.name,
+      description: step.description,
+      parent_step_id: step.parent_step_id,
+    };
+  }) as Database["public"]["Tables"]["work_step"]["Insert"][];
+
+  const { data: work_step, error } = await db
+    .from("work_step")
+    .upsert(steps)
+    .select("*");
+
+  if (error) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: error.message,
+    });
+  }
+
+  //upsert work order assets for each asset
+  if (input.asset && input.asset.length > 0) {
+    const assets = input.asset.map((asset) => {
+      return {
+        asset_id: asset.id,
+        work_order_id: input.work_order.id,
+      };
+    });
+    await db.from("work_order_asset").upsert(assets).select("*");
+  }
+
+  // upsert work step status for each work step
+  const stepStatus = work_step.map((step) => {
+    return {
+      work_step_id: step.id,
+      work_order_id: input.work_order.id,
+    };
+  });
+  const { data: work_step_status } = await db
+    .from("work_step_status")
+    .upsert(stepStatus)
+    .select("*");
+
+  return {
+    work_step,
+    work_step_status,
+  };
 }

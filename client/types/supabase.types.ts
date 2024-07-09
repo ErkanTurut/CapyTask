@@ -873,6 +873,75 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_work_order: {
+        Args: {
+          _name: string
+          _team_id: string
+          _description: string
+          _company_id: string
+          _location_id: string
+          _work_plan_id: string
+          _source: string
+          _requested_by_id: string
+          _type: string
+        }
+        Returns: {
+          work_order_id: string
+          name: string
+          team_id: string
+          description: string
+          company_id: string
+          location_id: string
+          work_plan_id: string
+          source: string
+          requested_by_id: string
+          type: string
+          created_at: string
+          updated_at: string
+        }[]
+      }
+      create_work_order_with_steps: {
+        Args: {
+          _name: string
+          _description: string
+          _team_id: string
+          _company_id: string
+          _location_id: string
+          _source: string
+          _requested_by_id: string
+          _type: string
+          _work_step: Json
+          _assets: Json
+        }
+        Returns: {
+          work_order_id: string
+          work_order_name: string
+          work_order_description: string
+          work_order_team_id: string
+          work_order_company_id: string
+          work_order_location_id: string
+          work_order_source: string
+          work_order_requested_by_id: string
+          work_order_type: string
+          work_plan_id: string
+          work_step_status: Json
+        }[]
+      }
+      create_work_plan: {
+        Args: {
+          _name: string
+          _description: string
+          _team_id: string
+        }
+        Returns: {
+          work_plan_id: string
+          name: string
+          description: string
+          team_id: string
+          created_at: string
+          updated_at: string
+        }[]
+      }
       create_work_step: {
         Args: {
           work_plan_template_id_param: string
@@ -933,6 +1002,50 @@ export type Database = {
           step: number
         }
         Returns: string
+      }
+      upsert_work_order_assets: {
+        Args: {
+          _work_order_id: string
+          _assets: Json
+        }
+        Returns: {
+          work_order_asset_id: string
+          asset_id: string
+          work_order_id: string
+          created_at: string
+          updated_at: string
+        }[]
+      }
+      upsert_work_step_statuses: {
+        Args: {
+          _work_order_id: string
+          _step_statuses: Json
+        }
+        Returns: {
+          work_step_status_id: string
+          work_step_id: string
+          work_order_id: string
+          step_order: number
+          created_at: string
+          updated_at: string
+        }[]
+      }
+      upsert_work_steps: {
+        Args: {
+          _work_plan_id: string
+          _steps: Json
+        }
+        Returns: {
+          work_step_id: string
+          name: string
+          description: string
+          step_order: number
+          work_step_template_id: string
+          parent_step_id: string
+          work_plan_id: string
+          created_at: string
+          updated_at: string
+        }[]
       }
     }
     Enums: {

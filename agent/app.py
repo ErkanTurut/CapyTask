@@ -61,12 +61,13 @@ async def _forward_transcription(
                 })
             ))
 
-            ping = requests.post(
-                "http://localhost:3000/api/ping", json=chat_context_to_dict(ctx))
-            logging.info(f"PING  : Time taken to process: {
-                         time.time() - start}")
+            # url_post = "http://app.gembuddy.co/api/ai/assistant"
 
             url_post = "http://localhost:3000/api/ai/assistant"
+            ping = requests.post(
+                "http://localhost:3000/api/ai/assistant", json=chat_context_to_dict(ctx))
+            logging.info(f"PING  : Time taken to process: {
+                         time.time() - start}")
             try:
                 messages_serializable = chat_context_to_dict(ctx)
                 response = requests.post(
@@ -143,6 +144,7 @@ async def entrypoint(job: JobContext):
                 stt_stream=stt_stream, stt_forwarder=stt_forwarder, tts=tts_model, source=source, ctx=initial_ctx, job=job)
         )
         tasks.append(stt_task)
+        logging.info("task", tasks)
 
         async for ev in audio_stream:
             stt_stream.push_frame(ev.frame)
