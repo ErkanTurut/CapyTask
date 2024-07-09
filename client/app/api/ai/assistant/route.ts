@@ -61,6 +61,9 @@ export type TChatMessage = z.infer<typeof ChatMessage>;
 export type TChatContext = z.infer<typeof ChatContext>;
 
 export async function POST(req: Request) {
+  // First define
+  const startTime = process.hrtime();
+
   const db = createClient(cookies());
   // const {
   //   data: { session },
@@ -186,7 +189,6 @@ export async function POST(req: Request) {
     },
   });
   responseMessages.forEach(async (message) => {
-    console.log(message.role);
     if (message.role === "assistant") {
       if (Array.isArray(message.content)) {
         message.content.forEach((content) => {
@@ -231,6 +233,13 @@ export async function POST(req: Request) {
       }
     }
   });
+
+  // To start it:
+  const elapsed = process.hrtime(startTime);
+
+  // To end it:
+  const responseTimeInMs = elapsed[0] * 1000 + elapsed[1] / 1000000;
+  console.log("Response Time:", responseTimeInMs, "ms");
 
   return NextResponse.json(
     {
