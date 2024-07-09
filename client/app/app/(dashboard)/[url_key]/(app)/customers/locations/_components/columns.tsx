@@ -13,7 +13,7 @@ import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Database } from "@/types/supabase.types";
 
 export const columns: ColumnDef<
-  NonNullable<Database["public"]["Tables"]["asset"]["Row"]>
+  NonNullable<Database["public"]["Tables"]["location"]["Row"]>
 >[] = [
   {
     id: "select",

@@ -1,5 +1,5 @@
 import * as z from "zod"
-import { Completeuser_team, Relateduser_teamModel, Completeuser_workspace, Relateduser_workspaceModel, Completeworkspace, RelatedworkspaceModel, Completecompany_user, Relatedcompany_userModel } from "./index"
+import { Completeuser_team, Relateduser_teamModel, Completeuser_workspace, Relateduser_workspaceModel, Completeworkspace, RelatedworkspaceModel, Completecompany_user, Relatedcompany_userModel, Completework_order, Relatedwork_orderModel } from "./index"
 
 export const userModel = z.object({
   id: z.string(),
@@ -17,6 +17,7 @@ export interface Completeuser extends z.infer<typeof userModel> {
   user_workspace: Completeuser_workspace[]
   workspaces: Completeworkspace[]
   company_user: Completecompany_user[]
+  work_order: Completework_order[]
 }
 
 /**
@@ -29,4 +30,5 @@ export const RelateduserModel: z.ZodSchema<Completeuser> = z.lazy(() => userMode
   user_workspace: Relateduser_workspaceModel.array(),
   workspaces: RelatedworkspaceModel.array(),
   company_user: Relatedcompany_userModel.array(),
+  work_order: Relatedwork_orderModel.array(),
 }))

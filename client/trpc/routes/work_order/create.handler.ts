@@ -68,6 +68,9 @@ const inputZod = work_orderModel.pick({
   company_id: true,
   location_id: true,
   work_plan_id: true,
+  source: true,
+  requested_by_id: true,
+  type: true,
 });
 
 export async function createWorkOrderHandler({
@@ -86,6 +89,9 @@ export async function createWorkOrderHandler({
       company_id: input.company_id,
       location_id: input.location_id,
       work_plan_id: input.work_plan_id,
+      source: input.source,
+      requested_by_id: input.requested_by_id,
+      type: input.type,
     })
     .select("*")
     .single();

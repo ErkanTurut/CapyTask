@@ -456,11 +456,13 @@ export type Database = {
           name: string
           priority: Database["public"]["Enums"]["Priority"]
           public_id: string
+          requested_by_id: string | null
           sheduled_end: string | null
           sheduled_start: string | null
+          source: Database["public"]["Enums"]["WorkOrderSource"]
           status: Database["public"]["Enums"]["Status"]
           team_id: string
-          type: Database["public"]["Enums"]["inspectionType"]
+          type: Database["public"]["Enums"]["WorkOrderType"]
           updated_at: string
           work_plan_id: string | null
         }
@@ -473,11 +475,13 @@ export type Database = {
           name: string
           priority?: Database["public"]["Enums"]["Priority"]
           public_id?: string
+          requested_by_id?: string | null
           sheduled_end?: string | null
           sheduled_start?: string | null
+          source: Database["public"]["Enums"]["WorkOrderSource"]
           status?: Database["public"]["Enums"]["Status"]
           team_id: string
-          type?: Database["public"]["Enums"]["inspectionType"]
+          type?: Database["public"]["Enums"]["WorkOrderType"]
           updated_at?: string
           work_plan_id?: string | null
         }
@@ -490,11 +494,13 @@ export type Database = {
           name?: string
           priority?: Database["public"]["Enums"]["Priority"]
           public_id?: string
+          requested_by_id?: string | null
           sheduled_end?: string | null
           sheduled_start?: string | null
+          source?: Database["public"]["Enums"]["WorkOrderSource"]
           status?: Database["public"]["Enums"]["Status"]
           team_id?: string
-          type?: Database["public"]["Enums"]["inspectionType"]
+          type?: Database["public"]["Enums"]["WorkOrderType"]
           updated_at?: string
           work_plan_id?: string | null
         }
@@ -511,6 +517,13 @@ export type Database = {
             columns: ["location_id"]
             isOneToOne: false
             referencedRelation: "location"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "work_order_requested_by_id_fkey"
+            columns: ["requested_by_id"]
+            isOneToOne: false
+            referencedRelation: "user"
             referencedColumns: ["id"]
           },
           {
@@ -923,7 +936,6 @@ export type Database = {
       }
     }
     Enums: {
-      inspectionType: "INSPECTION" | "MAINTENANCE" | "OTHER"
       LocationType: "BUILDING" | "FLOOR" | "ROOM" | "AREA" | "OTHER"
       Permission:
         | "FULL_ACCESS"
@@ -942,6 +954,13 @@ export type Database = {
         | "OPERATOR"
         | "OTHER"
       Status: "OPEN" | "IN_PROGRESS" | "COMPLETED" | "ON_HOLD" | "CANCELED"
+      WorkOrderSource:
+        | "MAINTENANCE_PLAN"
+        | "AI_CHAT"
+        | "AI_VOICE_ASSISTANT"
+        | "MANUAL_ENTRY"
+        | "OTHER"
+      WorkOrderType: "INSPECTION" | "MAINTENANCE" | "OTHER"
     }
     CompositeTypes: {
       [_ in never]: never

@@ -12,6 +12,7 @@ import {
   ZCreateWorkOrderWithStepsSchema,
 } from "@/trpc/routes/work_order/create.schema";
 import { createWorkOrderWithStepsHandler } from "@/trpc/routes/work_order/create.handler";
+import { sleep } from "@/lib/utils";
 
 enum ChatRole {
   SYSTEM = "system",
@@ -60,7 +61,6 @@ export type TChatMessage = z.infer<typeof ChatMessage>;
 export type TChatContext = z.infer<typeof ChatContext>;
 
 export async function POST(req: Request) {
-  console.log("requested");
   const db = createClient(cookies());
   // const {
   //   data: { session },
@@ -70,16 +70,23 @@ export async function POST(req: Request) {
   await db.auth.setSession(session);
   const chatContext = ChatContext.parse(await req.json());
 
-  chatContext.messages.forEach((message) => {
-    console.log(message, ",");
-  });
+  console.log(chatContext.messages);
 
   const { text, responseMessages, toolCalls } = await generateText({
     model: openai("gpt-4o"),
-    maxToolRoundtrips: 10,
+    maxToolRoundtrips: 5,
 
-    system:
-      "You are a voice assistant created by Gembuddy. You help customers with their assets, providing support for troubleshooting, maintenance, and work order information. Communicate as if you are having a natural, spoken conversation. Use clear and conversational language without any special formatting or headings. Prioritize ease of understanding and smooth interaction. For example: If a user asks about the status of a work order, respond with: 'Your work order is in progress and should be completed by tomorrow afternoon.' If a user requests maintenance, respond with: 'Sure, I can help with that. Can you please provide the asset number and describe the issue?' If a user needs troubleshooting assistance, respond with: 'Let's start by identifying the problem. Can you tell me what issue you are experiencing with the asset?'",
+    system: `\
+      You are a voice assistant created by Gembuddy, you are inside a field service application. 
+      You help customers with their assets, providing support for troubleshooting, maintenance, and work order information. 
+      Communicate as if you are having a natural, spoken conversation. 
+      Use clear and conversational language without any special formatting , headings or asterisk. 
+      Prioritize ease of understanding and smooth interaction. 
+      For example: If a user asks about the status of a work order, respond with: 'Your work order is in progress and should be completed by tomorrow afternoon.' 
+      If a user requests maintenance, respond with: 'Sure, I can help with that. Can you please provide the asset number and describe the issue?' 
+      If a user has an issue with an asset, respond with: 'Let's start by identifying the problem. Can you tell me what issue you are experiencing with the asset?'
+      If a user needs troubleshooting assistance, respond with: 'Let's start by identifying the problem. Can you tell me what issue you are experiencing with the asset?',
+    `,
 
     // @ts-ignore
     messages: chatContext.messages.map((message) => {
@@ -134,22 +141,23 @@ export async function POST(req: Request) {
         execute: async (input: { company_id: string }) => {
           const { data: location } = await db
             .from("location")
-            .select("*")
+            .select("*, location(*, location(*))")
+            .is("parent_location_id", null)
             .eq("company_id", input.company_id);
-
           return location;
         },
       },
       get_location_assets: {
         description: "Get location assets",
         parameters: z.object({
-          location_id: z.string().describe("The ID of the location"),
+          location_id: z.string().describe("The ID of the locations").array(),
         }),
-        execute: async (input: { location_id: string }) => {
+        execute: async (input: { location_id: string[] }) => {
           const { data: asset } = await db
             .from("asset")
             .select("*")
-            .eq("location_id", input.location_id);
+            .in("location_id", input.location_id);
+
           return asset;
         },
       },
@@ -157,6 +165,7 @@ export async function POST(req: Request) {
         description: "Get team for the related user",
         parameters: z.object({}),
         execute: async (input: { team_id: string }) => {
+          await sleep(1000);
           return "4pGki9KGYX";
         },
       },
@@ -166,15 +175,18 @@ export async function POST(req: Request) {
         parameters: ZCreateWorkOrderWithStepsSchema,
         execute: async (input: TCreateWorkOrderWithStepsSchema) => {
           return await createWorkOrderWithStepsHandler({
-            input,
+            input: {
+              ...input,
+              requested_by_id: session.user.id,
+            },
             db,
           });
         },
       },
     },
   });
-
-  responseMessages.forEach((message) => {
+  responseMessages.forEach(async (message) => {
+    console.log(message.role);
     if (message.role === "assistant") {
       if (Array.isArray(message.content)) {
         message.content.forEach((content) => {
@@ -219,8 +231,6 @@ export async function POST(req: Request) {
       }
     }
   });
-
-  console.log(toolCalls, responseMessages);
 
   return NextResponse.json(
     {

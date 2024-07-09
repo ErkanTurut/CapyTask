@@ -1,13 +1,13 @@
-generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["postgresqlExtensions"]
-}
-
 datasource db {
   provider   = "postgresql"
   url        = env("DATABASE_URL")
   directUrl  = env("DIRECT_URL")
   extensions = [pgcrypto, postgis(schema: "extensions"), uuid_ossp(map: "uuid-ossp", schema: "extensions")]
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 generator zod {
@@ -38,6 +38,7 @@ model user {
   user_workspace user_workspace[]
   workspaces     workspace[]
   company_user   company_user[]
+  work_order     work_order[]
 }
 
 model team {
@@ -198,22 +199,28 @@ model work_step {
 }
 
 model work_order {
-  id          String         @id @default(dbgenerated("nanoid(10)"))
-  public_id   String         @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id          String  @id @default(dbgenerated("nanoid(10)"))
+  public_id   String  @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name        String
   description String?
-  status      Status         @default(OPEN)
-  location_id String?
-  priority    Priority       @default(LOW)
-  type        inspectionType @default(INSPECTION)
-
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-  updated_at DateTime @default(now()) @updatedAt @db.Timestamptz(6)
 
   sheduled_start DateTime?
   sheduled_end   DateTime?
 
-  location location? @relation(fields: [location_id], references: [id])
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+
+  status   Status        @default(OPEN)
+  priority Priority      @default(LOW)
+  type     WorkOrderType @default(INSPECTION)
+
+  location_id String?
+  location    location? @relation(fields: [location_id], references: [id])
+
+  requested_by_id String? @db.Uuid
+  requested_by    user?   @relation(fields: [requested_by_id], references: [id])
+
+  source WorkOrderSource
 
   team_id String
   team    team   @relation(fields: [team_id], references: [id], onDelete: Cascade)
@@ -389,8 +396,16 @@ enum Priority {
   HIGH
 }
 
-enum inspectionType {
+enum WorkOrderType {
   INSPECTION
   MAINTENANCE
+  OTHER
+}
+
+enum WorkOrderSource {
+  MAINTENANCE_PLAN
+  AI_CHAT
+  AI_VOICE_ASSISTANT
+  MANUAL_ENTRY
   OTHER
 }

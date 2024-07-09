@@ -61,7 +61,12 @@ async def _forward_transcription(
                 })
             ))
 
-            url_post = "http://localhost:3000/api/ai/tts"
+            ping = requests.post(
+                "http://localhost:3000/api/ping", json=chat_context_to_dict(ctx))
+            logging.info(f"PING  : Time taken to process: {
+                         time.time() - start}")
+
+            url_post = "http://localhost:3000/api/ai/assistant"
             try:
                 messages_serializable = chat_context_to_dict(ctx)
                 response = requests.post(
@@ -103,7 +108,7 @@ async def entrypoint(job: JobContext):
         messages=[
             # ChatMessage(
             #     role=ChatRole.SYSTEM,
-            #     text=json.dumps({"text": "You are a voice assistant created by Gembuddy. Your interface with users will be voice. Pretend we're having a conversation, no special formatting or headings, just natural speech. Before using a tool, tell the user what you're about to do and that it may take a few seconds.",
+            #     text=json.dumps({"text": "You are a voice assistant created by Gembuddy. You help customers with their assets, providing support for troubleshooting, maintenance, and work order information. Communicate as if you are having a natural, spoken conversation. Use clear and conversational language without any special formatting , headings or asterisk. Prioritize ease of understanding and smooth interaction. For example: If a user asks about the status of a work order, respond with: 'Your work order is in progress and should be completed by tomorrow afternoon.' If a user requests maintenance, respond with: 'Sure, I can help with that. Can you please provide the asset number and describe the issue?' If a user needs troubleshooting assistance, respond with: 'Let's start by identifying the problem. Can you tell me what issue you are experiencing with the asset?'",
             #                     "type": "text"})
             # )
         ]
@@ -111,11 +116,11 @@ async def entrypoint(job: JobContext):
 
     # TTS
     tts_model = tts.StreamAdapter(
-        tts=openai.TTS(voice="alloy"),
+        tts=openai.TTS(voice="nova"),
         sentence_tokenizer=tokenize.basic.SentenceTokenizer(),
     )
 
-    tts_model = cartesia.TTS(model="sonic-english")
+    # tts_model = cartesia.TTS(model="sonic-english")
 
     source = rtc.AudioSource(tts_model.sample_rate, tts_model.num_channels)
     track = rtc.LocalAudioTrack.create_audio_track("agent-mic", source)
@@ -123,7 +128,7 @@ async def entrypoint(job: JobContext):
     options.source = rtc.TrackSource.SOURCE_MICROPHONE
 
     # STT
-    stt = deepgram.STT(min_silence_duration=200, interim_results=False)
+    stt = deepgram.STT(min_silence_duration=200, interim_results=True)
     tasks = []
 
     async def transcribe_track(participant: rtc.RemoteParticipant, track: rtc.Track):

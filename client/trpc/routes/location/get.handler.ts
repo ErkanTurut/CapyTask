@@ -21,8 +21,9 @@ export async function getLocationByWorkspaceHandler({
 }) {
   const { data, count, error } = await db
     .from("location")
-    .select("*, workspace!inner(*)", { count: "estimated" })
+    .select("*, location(*), workspace!inner(*)", { count: "estimated" })
     .eq("workspace.url_key", input.url_key)
+
     .range(input.range.start, input.range.end)
     .order("updated_at", { ascending: false })
     .throwOnError();

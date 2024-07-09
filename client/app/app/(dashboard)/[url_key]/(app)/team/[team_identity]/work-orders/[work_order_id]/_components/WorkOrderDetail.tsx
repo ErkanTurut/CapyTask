@@ -127,6 +127,17 @@ export default async function WorkOrderDetail({
                 </a>
               </dd>
             </div>
+            <div className="flex items-center justify-between">
+              <dt className="text-muted-foreground">Requestor</dt>
+              <dd>
+                <Link
+                  className="text-sm font-medium text-primary underline"
+                  href={"#"}
+                >
+                  {work_order.user?.first_name} {work_order.user?.last_name}
+                </Link>
+              </dd>
+            </div>
           </dl>
         </div>
         <Separator className="my-4" />

@@ -19,8 +19,8 @@ import { Database } from "@/types/supabase.types";
 import { useParams } from "next/navigation";
 
 interface DataTableRowActionsProps<TData> {
-  row: Row<Database["public"]["Tables"]["asset"]["Row"]>;
-  table: Table<Database["public"]["Tables"]["asset"]["Row"]>;
+  row: Row<Database["public"]["Tables"]["location"]["Row"]>;
+  table: Table<Database["public"]["Tables"]["location"]["Row"]>;
 }
 
 export function DataTableRowActions<TData>({

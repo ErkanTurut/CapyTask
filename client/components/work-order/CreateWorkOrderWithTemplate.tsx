@@ -175,19 +175,6 @@ export function CreateWorkOrderWithTemplate({
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="location_id"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Location</FormLabel>
-              <FormControl>
-                <Input placeholder="example" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
 
         <FormField
           control={form.control}

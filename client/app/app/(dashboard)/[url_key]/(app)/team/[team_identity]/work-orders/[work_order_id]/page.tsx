@@ -30,6 +30,8 @@ export default async function Page({ params }: PageProps) {
     id: params.work_order_id,
   });
 
+  console.log(work_order);
+
   if (!work_order) {
     return notFound();
   }
