@@ -10,20 +10,20 @@ generator client {
   previewFeatures = ["postgresqlExtensions"]
 }
 
-generator zod {
-  provider = "zod-prisma"
-  output   = "./zod" // (default) the directory where generated zod schemas will be saved
+// generator zod {
+//   provider = "zod-prisma"
+//   output   = "./zod" // (default) the directory where generated zod schemas will be saved
 
-  relationModel = true // (default) Create and export both plain and related models.
+//   relationModel = true // (default) Create and export both plain and related models.
 
-  modelCase = "PascalCase" // (default) Output models using pascal case (ex. UserModel, PostModel)
+//   modelCase = "PascalCase" // (default) Output models using pascal case (ex. UserModel, PostModel)
 
-  modelSuffix = "Model" // (default) Suffix to apply to your prisma models when naming Zod schemas
+//   modelSuffix = "Model" // (default) Suffix to apply to your prisma models when naming Zod schemas
 
-  useDecimalJs = true // represent the prisma Decimal type using Decimal.js (as Prisma does)
+//   useDecimalJs = true // represent the prisma Decimal type using Decimal.js (as Prisma does)
 
-  prismaJsonNullability = true // (default) uses prisma's scheme for JSON field nullability
-}
+//   prismaJsonNullability = true // (default) uses prisma's scheme for JSON field nullability
+// }
 
 model user {
   id             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
