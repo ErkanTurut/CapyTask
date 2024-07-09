@@ -18,8 +18,8 @@ from livekit.agents.llm import (
     ChatRole,
     ChatImage
 )
-from livekit.plugins import deepgram, openai  # type: ignore
-
+from livekit.plugins import deepgram, openai, cartesia  # type: ignore
+import time
 import requests
 
 import json
@@ -52,7 +52,7 @@ async def _forward_transcription(
         if ev.type == stt.SpeechEventType.INTERIM_TRANSCRIPT:
             print(ev.alternatives[0].text, end="")
         elif ev.type == stt.SpeechEventType.END_OF_SPEECH:
-
+            start = time.time()
             # transcribe the text
             ctx.messages.append(ChatMessage(
                 role=ChatRole.USER, text=json.dumps({
@@ -61,7 +61,12 @@ async def _forward_transcription(
                 })
             ))
 
-            url_post = "http://localhost:3000/api/ai/tts"
+            ping = requests.post(
+                "http://localhost:3000/api/ping", json=chat_context_to_dict(ctx))
+            logging.info(f"PING  : Time taken to process: {
+                         time.time() - start}")
+
+            url_post = "http://localhost:3000/api/ai/assistant"
             try:
                 messages_serializable = chat_context_to_dict(ctx)
                 response = requests.post(
@@ -77,6 +82,9 @@ async def _forward_transcription(
                               for image in chat.get('images', [])]
                     ctx.messages.append(ChatMessage(
                         role=role, text=text, images=images))
+
+                end = time.time()
+                logging.info(f"Time taken to process: {end - start}")
 
                 await _forward_audio(tts, source, result["messages"][0]['text'])
 
@@ -100,24 +108,27 @@ async def entrypoint(job: JobContext):
         messages=[
             # ChatMessage(
             #     role=ChatRole.SYSTEM,
-            #     text=json.dumps({"You are a voice assistant created by Gembuddy. Your interface with users will be voice. Pretend we're having a conversation, no special formatting or headings, just natural speech. Before using a tool, tell the user what you're about to do and that it may take a few seconds. "},)
+            #     text=json.dumps({"text": "You are a voice assistant created by Gembuddy. You help customers with their assets, providing support for troubleshooting, maintenance, and work order information. Communicate as if you are having a natural, spoken conversation. Use clear and conversational language without any special formatting , headings or asterisk. Prioritize ease of understanding and smooth interaction. For example: If a user asks about the status of a work order, respond with: 'Your work order is in progress and should be completed by tomorrow afternoon.' If a user requests maintenance, respond with: 'Sure, I can help with that. Can you please provide the asset number and describe the issue?' If a user needs troubleshooting assistance, respond with: 'Let's start by identifying the problem. Can you tell me what issue you are experiencing with the asset?'",
+            #                     "type": "text"})
             # )
         ]
     )
 
     # TTS
-    openai_tts = tts.StreamAdapter(
-        tts=openai.TTS(voice="alloy"),
+    tts_model = tts.StreamAdapter(
+        tts=openai.TTS(voice="nova"),
         sentence_tokenizer=tokenize.basic.SentenceTokenizer(),
     )
 
-    source = rtc.AudioSource(openai_tts.sample_rate, openai_tts.num_channels)
+    # tts_model = cartesia.TTS(model="sonic-english")
+
+    source = rtc.AudioSource(tts_model.sample_rate, tts_model.num_channels)
     track = rtc.LocalAudioTrack.create_audio_track("agent-mic", source)
     options = rtc.TrackPublishOptions()
     options.source = rtc.TrackSource.SOURCE_MICROPHONE
 
     # STT
-    stt = deepgram.STT(min_silence_duration=200, interim_results=False)
+    stt = deepgram.STT(min_silence_duration=200, interim_results=True)
     tasks = []
 
     async def transcribe_track(participant: rtc.RemoteParticipant, track: rtc.Track):
@@ -129,7 +140,7 @@ async def entrypoint(job: JobContext):
 
         stt_task = asyncio.create_task(
             _forward_transcription(
-                stt_stream=stt_stream, stt_forwarder=stt_forwarder, tts=openai_tts, source=source, ctx=initial_ctx, job=job)
+                stt_stream=stt_stream, stt_forwarder=stt_forwarder, tts=tts_model, source=source, ctx=initial_ctx, job=job)
         )
         tasks.append(stt_task)
 
@@ -153,7 +164,7 @@ async def entrypoint(job: JobContext):
 
     await asyncio.sleep(2)
     logging.info('Saying "Hello!"')
-    async for output in openai_tts.synthesize("Hello how can I help you today?"):
+    async for output in tts_model.synthesize("Hello how can I help you today?"):
         await source.capture_frame(output.data)
 
 

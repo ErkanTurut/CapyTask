@@ -45,6 +45,8 @@ export const ZCreateWorkOrderWithTemplateSchema = work_orderModel
     team_id: true,
     company_id: true,
     location_id: true,
+    source: true,
+    type: true,
   })
   .merge(
     z.object({
@@ -66,6 +68,9 @@ export const ZCreateWorkOrderWithStepsSchema = work_orderModel
     team_id: true,
     company_id: true,
     location_id: true,
+    requested_by_id: true,
+    source: true,
+    type: true,
   })
   .merge(
     z.object({

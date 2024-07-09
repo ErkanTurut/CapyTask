@@ -46,7 +46,7 @@ export default async function Page({ params }: PageProps) {
             <TabsList>
               <TabsTrigger value="step">Steps</TabsTrigger>
               <TabsTrigger value="asset">Assets</TabsTrigger>
-              <TabsTrigger value="service_ressource">
+              <TabsTrigger disabled value="service_ressource">
                 Service Ressources
               </TabsTrigger>
             </TabsList>

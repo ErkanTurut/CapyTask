@@ -19,7 +19,7 @@ interface WorkOrderHeaderProps {
   };
   work_order: NonNullable<
     Awaited<
-      ReturnType<(typeof trpc)["db"]["work_order"]["get"]["withSteps"]>
+      ReturnType<(typeof trpc)["db"]["work_order"]["get"]["detail"]>
     >["data"]
   >;
 }
@@ -50,6 +50,42 @@ const status_config: Record<
   },
 };
 
+const type_config: Record<
+  Database["public"]["Enums"]["WorkOrderType"],
+  { label: string }
+> = {
+  MAINTENANCE: {
+    label: "Maintenance",
+  },
+  INSPECTION: {
+    label: "Inspection",
+  },
+  OTHER: {
+    label: "Other",
+  },
+};
+
+const source_config: Record<
+  Database["public"]["Enums"]["WorkOrderSource"],
+  { label: string }
+> = {
+  AI_CHAT: {
+    label: "AI chat",
+  },
+  AI_VOICE_ASSISTANT: {
+    label: "AI voice assistant",
+  },
+  MAINTENANCE_PLAN: {
+    label: "Maintenance plan",
+  },
+  MANUAL_ENTRY: {
+    label: "Manual entry",
+  },
+  OTHER: {
+    label: "Other",
+  },
+};
+
 const options = Object.entries(status_config).map(
   ([status, { icon, label }]) => ({
     value: status as Database["public"]["Enums"]["Status"],
@@ -66,40 +102,61 @@ export default async function WorkOrderHeader({
     <Card className="sm:col-span-2" x-chunk="dashboard-05-chunk-0">
       <CardHeader className="pb-3">
         <CardTitle>{work_order.name}</CardTitle>
-        <CardDescription className="line-clamp-4 text-pretty  leading-relaxed">
+        <CardDescription className="line-clamp-4 text-pretty leading-relaxed">
           {work_order.description}
         </CardDescription>
       </CardHeader>
       <CardFooter>
-        <div className="flex flex-col gap-0.5 rounded-md  text-center">
-          <Label
-            className="text-pretty text-xs text-muted-foreground "
-            htmlFor="status"
-          >
-            Status :
-          </Label>
-          <StatusSelector
-            initialStatus={work_order.status}
-            status={options}
-            work_order_id={params.work_order_id}
-          />
-        </div>
-        <Separator orientation="vertical" className="h-auto" />
-        <div className="flex flex-col gap-0.5 rounded-md  text-center">
-          <Label
-            className="text-pretty text-xs text-muted-foreground "
-            htmlFor="work_plan"
-          >
-            Work plan :
-          </Label>
-          <Button
-            id="work_plan"
-            variant={"link"}
-            size={"sm"}
-            disabled={work_order.work_plan_id == null}
-          >
-            {work_order.work_plan_id ? work_order.work_plan_id : "No work plan"}
-          </Button>
+        <div className="flex h-full">
+          <div className="flex flex-col gap-0.5 text-center">
+            <Label
+              className="text-pretty text-xs text-muted-foreground"
+              htmlFor="status"
+            >
+              Status :
+            </Label>
+            <StatusSelector
+              initialStatus={work_order.status}
+              status={options}
+              work_order_id={params.work_order_id}
+            />
+          </div>
+          <div className="flex flex-col gap-0.5 rounded-md text-center">
+            <Label
+              className="text-pretty text-xs text-muted-foreground"
+              htmlFor="work_plan"
+            >
+              Work plan :
+            </Label>
+            <Button
+              id="work_plan"
+              variant={"link"}
+              size={"sm"}
+              disabled={work_order.work_plan_id == null}
+            >
+              {work_order.work_plan_id
+                ? work_order.work_plan_id
+                : "No work plan"}
+            </Button>
+          </div>
+
+          <div className="flex flex-col gap-0.5 rounded-md text-center">
+            <Label className="text-pretty text-xs text-muted-foreground">
+              Work type :
+            </Label>
+            <p className="px-3 py-1 text-xs text-muted-foreground">
+              {type_config[work_order.type].label}
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-0.5 rounded-md text-center">
+            <Label className="text-pretty text-xs text-muted-foreground">
+              Source :
+            </Label>
+            <p className="px-3 py-1 text-xs text-muted-foreground">
+              {source_config[work_order.source].label}
+            </p>
+          </div>
         </div>
       </CardFooter>
     </Card>

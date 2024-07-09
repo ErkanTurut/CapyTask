@@ -120,6 +120,8 @@ const CreateWorkOrderForm: FC<CreateWorkOrderFormProps> = ({ className }) => {
         id: "efuiU3kPV8",
       },
       location_id: "yg8wK77wMX",
+      source: "MANUAL_ENTRY",
+      type: "OTHER",
     });
   }
 

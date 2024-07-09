@@ -12,6 +12,7 @@ import { Database, createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import WorkOrderHeader from "../../team/[team_identity]/work-orders/[work_order_id]/_components/WorkOrderHeader";
 import CardSkeleton from "@/components/skeletons/card-skeleton";
+import { getWorkOrderDetailHandler } from "@/trpc/routes/work_order/get.handler";
 
 export interface ServerMessage {
   role: "user" | "assistant";
@@ -108,14 +109,10 @@ export async function continueConversation({
             </div>
           );
           const db = createClient(cookies());
-          const { data: work_order } = await db
-            .from("work_order")
-            .select("*, work_step_status(*, work_step(*)), asset(*)")
-            .eq("id", workOrderId)
-            .order("step_order", {
-              referencedTable: "work_step_status",
-            })
-            .single();
+          const { data: work_order } = await getWorkOrderDetailHandler({
+            db,
+            input: { id: workOrderId },
+          });
 
           if (!work_order) {
             return <div>Work order not found</div>;

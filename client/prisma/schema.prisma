@@ -1,13 +1,13 @@
-generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["postgresqlExtensions"]
-}
-
 datasource db {
   provider   = "postgresql"
   url        = env("DATABASE_URL")
   directUrl  = env("DIRECT_URL")
   extensions = [pgcrypto, postgis(schema: "extensions"), uuid_ossp(map: "uuid-ossp", schema: "extensions")]
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 generator zod {
@@ -38,6 +38,7 @@ model user {
   user_workspace user_workspace[]
   workspaces     workspace[]
   company_user   company_user[]
+  work_order     work_order[]
 }
 
 model team {
@@ -203,22 +204,32 @@ model work_order {
   name        String
   description String?
 
-  location_id String?
-  location    location? @relation(fields: [location_id], references: [id])
+  sheduled_start DateTime?
+  sheduled_end   DateTime?
 
   created_at DateTime @default(now()) @db.Timestamptz(6)
   updated_at DateTime @default(now()) @updatedAt @db.Timestamptz(6)
 
-  status Status @default(OPEN)
+  status   Status        @default(OPEN)
+  priority Priority      @default(LOW)
+  type     WorkOrderType @default(INSPECTION)
 
-  team_id      String
+  location_id String?
+  location    location? @relation(fields: [location_id], references: [id])
+
+  requested_by_id String? @db.Uuid
+  requested_by    user?   @relation(fields: [requested_by_id], references: [id])
+
+  source WorkOrderSource
+
+  team_id String
+  team    team   @relation(fields: [team_id], references: [id], onDelete: Cascade)
+
   work_plan_id String?
+  work_plan    work_plan? @relation(fields: [work_plan_id], references: [id])
 
   company_id String
   company    company @relation(fields: [company_id], references: [id])
-
-  team      team       @relation(fields: [team_id], references: [id], onDelete: Cascade)
-  work_plan work_plan? @relation(fields: [work_plan_id], references: [id])
 
   work_order_asset work_order_asset[]
   work_step_status work_step_status[]
@@ -385,8 +396,16 @@ enum Priority {
   HIGH
 }
 
-enum inspectionType {
+enum WorkOrderType {
   INSPECTION
   MAINTENANCE
+  OTHER
+}
+
+enum WorkOrderSource {
+  MAINTENANCE_PLAN
+  AI_CHAT
+  AI_VOICE_ASSISTANT
+  MANUAL_ENTRY
   OTHER
 }

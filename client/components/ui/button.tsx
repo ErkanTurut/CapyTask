@@ -66,7 +66,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       >
         {isLoading && size !== "icon" ? (
-          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+          <Icons.loading className="mr-2 h-4 w-4 animate-spin" />
         ) : null}
         {children}
       </Comp>

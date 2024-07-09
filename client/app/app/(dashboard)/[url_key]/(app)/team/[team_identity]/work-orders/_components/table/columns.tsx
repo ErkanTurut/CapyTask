@@ -13,7 +13,7 @@ import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Database } from "@/types/supabase.types";
 
 export const columns: ColumnDef<
-  NonNullable<Database["public"]["Tables"]["location"]["Row"]>
+  NonNullable<Database["public"]["Tables"]["work_order"]["Row"]>
 >[] = [
   {
     id: "select",
@@ -45,7 +45,7 @@ export const columns: ColumnDef<
     cell: ({ row }) => {
       return (
         <Link
-          href={{ pathname: `assets/${row.original.id}` }}
+          href={{ pathname: `work-orders/${row.original.id}` }}
           className={cn(
             buttonVariants({ variant: "link", size: "sm" }),
             "underline",
