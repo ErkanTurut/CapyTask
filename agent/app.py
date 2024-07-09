@@ -65,7 +65,7 @@ async def _forward_transcription(
 
             url_post = "http://localhost:3000/api/ai/assistant"
             ping = requests.post(
-                "http://localhost:3000/api/ping", json=chat_context_to_dict(ctx))
+                "http://localhost:3000/api/ai/assistant", json=chat_context_to_dict(ctx))
             logging.info(f"PING  : Time taken to process: {
                          time.time() - start}")
             try:
