@@ -19,6 +19,12 @@ const oauthProviders = [
 }[];
 
 export function OAuthSignIn() {
+  const getURL = () => {
+    let url = process?.env?.NEXT_PUBLIC_APP_DOMAIN ?? "http://localhost:3000/";
+    url = url.startsWith("http") ? url : `https://${url}`;
+    url = url.endsWith("/") ? url : `${url}/`;
+    return url;
+  };
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   async function oauthSignIn(provider: Provider) {
     const supabase = createClient();
@@ -28,7 +34,7 @@ export function OAuthSignIn() {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: provider,
         options: {
-          redirectTo: `${location.origin}/api/auth/callback`,
+          redirectTo: `${getURL()}/api/auth/callback`,
           queryParams: {
             access_type: "offline",
             prompt: "consent",
