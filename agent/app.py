@@ -63,16 +63,16 @@ async def _forward_transcription(
 
             # url_post = "http://app.gembuddy.co/api/ai/assistant"
 
-            url_post = "http://localhost:3000/api/ai/assistant"
+            url_post = "http://localhost:3000/api"
             ping = requests.post(
-                "http://localhost:3000/api/ai/assistant", json=chat_context_to_dict(ctx))
+                f'{url_post}/ping', json=chat_context_to_dict(ctx))
             logging.info(f"PING  : Time taken to process: {
                          time.time() - start}")
             try:
                 messages_serializable = chat_context_to_dict(ctx)
                 response = requests.post(
-                    url_post, json=messages_serializable, cookies={
-                        "user_session": next(iter(job.room.participants.values())).metadata})
+                    f'{url_post}/ai/assistant', json=messages_serializable, cookies={
+                        "livekit_session": next(iter(job.room.participants.values())).metadata})
                 result = response.json()["result"]
 
                 ctx.messages.clear()
@@ -116,12 +116,12 @@ async def entrypoint(job: JobContext):
     )
 
     # TTS
-    tts_model = tts.StreamAdapter(
-        tts=openai.TTS(voice="nova"),
-        sentence_tokenizer=tokenize.basic.SentenceTokenizer(),
-    )
+    # tts_model = tts.StreamAdapter(
+    #     tts=openai.TTS(voice="nova"),
+    #     sentence_tokenizer=tokenize.basic.SentenceTokenizer(),
+    # )
 
-    # tts_model = cartesia.TTS(model="sonic-english")
+    tts_model = cartesia.TTS(model="sonic-english")
 
     source = rtc.AudioSource(tts_model.sample_rate, tts_model.num_channels)
     track = rtc.LocalAudioTrack.create_audio_track("agent-mic", source)

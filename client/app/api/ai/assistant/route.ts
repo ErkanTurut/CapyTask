@@ -6,7 +6,7 @@ import { unstable_after as after } from "next/server";
 export const maxDuration = 15;
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, Database } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import type { Session, PostgrestResponse } from "@supabase/supabase-js";
 import {
@@ -75,11 +75,16 @@ export async function POST(req: Request) {
   // const {
   //   data: { session },
   // } = await db.auth.getSession();
-  const session = JSON.parse(cookies().get("user_session")?.value || "{}")
-    .session as Session;
-  await db.auth.setSession(session);
+  const livekit_session = JSON.parse(
+    cookies().get("livekit_session")?.value || "{}",
+  ) as {
+    session: Session;
+    company: Database["public"]["Tables"]["company"]["Row"];
+  };
+  await db.auth.setSession(livekit_session.session);
   const chatContext = ChatContext.parse(await req.json());
 
+  console.log(livekit_session.company);
   console.log(chatContext.messages);
 
   const { text, responseMessages, toolCalls } = await generateText({
@@ -100,14 +105,36 @@ export async function POST(req: Request) {
       If there is more than one location, ask for the specific location.
       If a user needs troubleshooting assistance, respond with: 'Let's start by identifying the problem. Can you tell me what issue you are experiencing with the asset?',
     `,
-
     // @ts-ignore
-    messages: chatContext.messages.map((message) => {
-      return {
-        role: message.role,
-        content: [JSON.parse(message.text)],
-      };
-    }),
+
+    messages: [
+      {
+        role: "system",
+        content: `\
+      You are a voice assistant created by Gembuddy, you are inside a field service application. 
+      You help customers with their assets, providing support for troubleshooting, maintenance, and work order information. 
+      Communicate as if you are having a natural, spoken conversation. 
+      Use clear and conversational language without any special formatting , headings or asterisk. 
+      Prioritize ease of understanding and smooth interaction. 
+      For example: If a user asks about the status of a work order, respond with: 'Your work order is in progress and should be completed by tomorrow afternoon.' 
+      If a user requests maintenance, respond with: 'Sure, I can help with that. Can you please provide the asset number and describe the issue?' 
+      If a user has an issue with an asset, respond with: 'Let's start by identifying the problem. Can you tell me what issue you are experiencing with the asset?'
+      If the user doesn't provide enough information, ask for clarification.
+      If the user doesn't have the asset number, ask for the location of the asset.
+      If there is more than one location, ask for the specific location.
+      If a user needs troubleshooting assistance, respond with: 'Let's start by identifying the problem. Can you tell me what issue you are experiencing with the asset?',
+      Do not use public_id when you do a query, use the id field instead.
+    `,
+      },
+      // @ts-ignore
+      ...chatContext.messages.map((message) => {
+        return {
+          role: message.role,
+          content: [JSON.parse(message.text)],
+        };
+      }),
+    ],
+
     tools: {
       work_order_detail: {
         description: "Get work order details",
@@ -115,7 +142,7 @@ export async function POST(req: Request) {
           workOrderName: z.string().describe("The Name of the work order"),
         }),
         execute: async ({ workOrderName }) => {
-          if (!session) {
+          if (!livekit_session.session) {
             return "You are not logged in";
           }
           const { data: work_order } = await db
@@ -135,15 +162,15 @@ export async function POST(req: Request) {
         description: "Get user company",
         parameters: z.object({}),
         execute: async () => {
-          if (!session) {
-            return "You are not logged in";
-          }
-          const { data: company } = await db
-            .from("company")
-            .select("*, company_user(user_id)")
-            .eq("company_user.user_id", session.user.id);
-
-          return company;
+          // if (!livekit_session.session) {
+          //   return "You are not logged in";
+          // }
+          // const { data: company } = await db
+          //   .from("company")
+          //   .select("*, company_user(user_id)")
+          //   .eq("company_user.user_id", livekit_session.session.user.id);
+          await sleep(100);
+          return livekit_session.company;
         },
       },
       get_company_locations: {
@@ -174,31 +201,26 @@ export async function POST(req: Request) {
           return asset;
         },
       },
-      get_team: {
-        description: "Get team for the related user",
-        parameters: z.object({}),
-        execute: async (input: { team_id: string }) => {
-          await sleep(20);
-          return "4pGki9KGYX";
-        },
-      },
       create_work_order: {
         description:
           "create work order with steps, ask for confirmation before doing it",
-        parameters: ZCreateWorkOrderWithStepsSchema,
+        parameters: ZCreateWorkOrderWithStepsSchema.omit({
+          team_id: true,
+          company_id: true,
+        }),
         execute: async (input: TCreateWorkOrderWithStepsSchema) => {
           const { data: work_order, error: work_order_error } =
             await createWorkOrderHandler({
               db,
               input: {
-                company_id: input.company_id,
+                company_id: livekit_session.company.id,
                 description: input.description,
                 location_id: input.location_id,
                 name: input.name,
                 source: input.source,
-                team_id: input.team_id,
+                team_id: "4pGki9KGYX",
                 type: input.type,
-                requested_by_id: session.user.id,
+                requested_by_id: livekit_session.session.user.id,
               },
             });
 
@@ -213,7 +235,7 @@ export async function POST(req: Request) {
                 input: {
                   name: input.name,
                   description: input.description,
-                  team_id: input.team_id,
+                  team_id: "4pGki9KGYX",
                 },
               });
             if (!work_plan || work_plan_error) {

@@ -16,6 +16,12 @@ export async function GET(request: Request) {
     return Response.json("Unauthorized", { status: 401 });
   }
 
+  const { data: company } = await db
+    .from("company")
+    .select("*, company_user(user_id)")
+    .eq("company_user.user_id", session.user.id)
+    .single();
+
   const roomName = Math.random().toString(36).substring(7);
   const apiKey = process.env.LIVEKIT_API_KEY;
   const apiSecret = process.env.LIVEKIT_API_SECRET;
@@ -24,6 +30,7 @@ export async function GET(request: Request) {
     identity: "human_user",
     metadata: JSON.stringify({
       session,
+      company,
     }),
   });
   at.addGrant({
