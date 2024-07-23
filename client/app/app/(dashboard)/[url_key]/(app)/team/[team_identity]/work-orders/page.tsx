@@ -5,9 +5,8 @@ import {
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/components/page-header";
-import WorkOrderTable from "./_components/work-order-table";
-import { Suspense } from "react";
 import TableSkeleton from "@/components/skeletons/table-skeleton";
+import { Suspense } from "react";
 import TableContainer from "./_components/table/TableContainer";
 interface PageProps {
   searchParams: { [key: string]: string | string[] | undefined };
