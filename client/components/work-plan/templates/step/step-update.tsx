@@ -22,7 +22,7 @@ import { api } from "@/trpc/client";
 import {
   TUpdateWorkStepTemplateSchema,
   ZUpdateWorkStepTemplateSchema,
-} from "@/trpc/routes/work_step_template/update.schema";
+} from "@/trpc/server/routes/work_step_template/update.schema";
 import { trpc } from "@/trpc/server";
 import { Textarea } from "@/ui/textarea";
 

@@ -12,13 +12,13 @@ import type { Session, PostgrestResponse } from "@supabase/supabase-js";
 import {
   TCreateWorkOrderWithStepsSchema,
   ZCreateWorkOrderWithStepsSchema,
-} from "@/trpc/routes/work_order/create.schema";
+} from "@/trpc/server/routes/work_order/create.schema";
 import {
   createWorkOrderHandler,
   createWorkOrderStepsHandler,
   createWorkOrderWithStepsHandler,
   createWorkPlanHandler,
-} from "@/trpc/routes/work_order/create.handler";
+} from "@/trpc/server/routes/work_order/create.handler";
 import { sleep } from "@/lib/utils";
 
 enum ChatRole {

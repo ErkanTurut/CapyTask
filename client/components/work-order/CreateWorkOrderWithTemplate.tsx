@@ -39,7 +39,7 @@ import { api } from "@/trpc/client";
 import {
   TCreateWorkOrderWithTemplateSchema,
   ZCreateWorkOrderWithTemplateSchema,
-} from "@/trpc/routes/work_order/create.schema";
+} from "@/trpc/server/routes/work_order/create.schema";
 import type { trpc } from "@/trpc/server";
 import { useParams, useRouter } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";

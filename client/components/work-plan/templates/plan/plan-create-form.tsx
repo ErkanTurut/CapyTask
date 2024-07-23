@@ -27,7 +27,7 @@ import { useRouter } from "next/navigation";
 import {
   TCreateWorkPlanTemplateSchema,
   ZCreateWorkPlanTemplateSchema,
-} from "@/trpc/routes/work_plan_template/create.schema";
+} from "@/trpc/server/routes/work_plan_template/create.schema";
 
 interface CreatePlanFormProps extends React.HTMLAttributes<HTMLFormElement> {
   team: Database["public"]["Tables"]["team"]["Row"];

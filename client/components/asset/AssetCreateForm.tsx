@@ -25,7 +25,7 @@ import { useRouter } from "next/navigation";
 import {
   TAssetCreateSchema,
   ZAssetCreateSchema,
-} from "@/trpc/routes/asset/create.schema";
+} from "@/trpc/server/routes/asset/create.schema";
 
 interface AssetCreateFormProps extends React.HTMLAttributes<HTMLFormElement> {
   team_id: string;

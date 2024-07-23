@@ -16,7 +16,7 @@ import { api } from "@/trpc/client";
 import {
   TDeleteWorkStepTemplateSchema,
   ZDeleteWorkStepTemplateSchema,
-} from "@/trpc/routes/work_step_template/delete.schema";
+} from "@/trpc/server/routes/work_step_template/delete.schema";
 import { useRouter } from "next/navigation";
 import { trpc } from "@/trpc/server";
 

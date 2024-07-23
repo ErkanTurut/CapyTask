@@ -21,7 +21,7 @@ import { toast } from "sonner";
 import {
   TCreateWorkStepTemplateSchema,
   ZCreateWorkStepTemplateSchema,
-} from "@/trpc/routes/work_step_template/create.schema";
+} from "@/trpc/server/routes/work_step_template/create.schema";
 import { api } from "@/trpc/client";
 import { useRouter } from "next/navigation";
 interface StepCreateProps extends React.HTMLAttributes<HTMLFormElement> {

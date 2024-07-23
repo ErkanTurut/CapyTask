@@ -1,0 +1,32 @@
+model work_plan_template {
+    id                 String               @id @default(dbgenerated("nanoid(10)"))
+    public_id          String               @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    name               String
+    description        String?
+    created_at         DateTime             @default(now()) @db.Timestamptz(6)
+    updated_at         DateTime             @default(now()) @updatedAt @db.Timestamptz(6)
+    team_id            String
+    work_plan          work_plan[]
+    team               team                 @relation(fields: [team_id], references: [id], onDelete: Cascade)
+    work_step_template work_step_template[]
+
+    @@index([team_id])
+}
+
+model work_plan {
+    id                    String              @id @default(dbgenerated("nanoid(10)"))
+    public_id             String              @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    name                  String
+    description           String?
+    created_at            DateTime            @default(now()) @db.Timestamptz(6)
+    updated_at            DateTime            @default(now()) @updatedAt @db.Timestamptz(6)
+    work_plan_template_id String?
+    team_id               String
+    work_order            work_order[]
+    team                  team                @relation(fields: [team_id], references: [id], onDelete: Cascade)
+    work_plan_template    work_plan_template? @relation(fields: [work_plan_template_id], references: [id])
+    work_step             work_step[]
+
+    @@unique([work_plan_template_id, created_at])
+    @@index([work_plan_template_id])
+}

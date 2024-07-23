@@ -18,7 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/ui/dropdown-menu";
 import { api } from "@/trpc/client";
-import { ZGetWorkOrderSchema } from "@/trpc/routes/work_order/get.schema";
+import { ZGetWorkOrderSchema } from "@/trpc/server/routes/work_order/get.schema";
 import { toast } from "sonner";
 import { catchError } from "@/lib/utils";
 import { trpc } from "@/trpc/server";

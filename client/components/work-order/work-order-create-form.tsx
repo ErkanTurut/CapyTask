@@ -38,7 +38,7 @@ import { api } from "@/trpc/client";
 import {
   TCreateWorkOrderSchema,
   ZCreateWorkOrderSchema,
-} from "@/trpc/routes/work_order/create.schema";
+} from "@/trpc/server/routes/work_order/create.schema";
 import { FC } from "react";
 import { Icons } from "../icons";
 import { useDebouncedCallback } from "use-debounce";

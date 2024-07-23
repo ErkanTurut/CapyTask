@@ -23,7 +23,7 @@ import { api } from "@/trpc/client";
 import {
   TCreateWorkspaceSchema,
   ZCreateWorkspaceSchema,
-} from "@/trpc/routes/workspace/create.schema";
+} from "@/trpc/server/routes/workspace/create.schema";
 
 export function CreateWorspaceForm() {
   const router = useRouter();

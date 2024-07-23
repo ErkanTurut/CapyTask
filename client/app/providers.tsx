@@ -18,7 +18,6 @@ import {
 import { experimental_nextHttpLink } from "@trpc/next/app-dir/links/nextHttp";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
 import { TooltipProvider } from "@/components/ui/tooltip";
-
 export function Providers({
   children,
   headers,

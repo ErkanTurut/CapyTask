@@ -18,7 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/ui/dropdown-menu";
 import { api } from "@/trpc/client";
-import { ZGetWorkPlanTemplateSchema } from "@/trpc/routes/work_plan_template/get.schema";
+import { ZGetWorkPlanTemplateSchema } from "@/trpc/server/routes/work_plan_template/get.schema";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { catchError } from "@/lib/utils";

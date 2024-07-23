@@ -1,1 +1,1 @@
-export * from "./routes/_app";
+export * from "./server/routes/_app";
