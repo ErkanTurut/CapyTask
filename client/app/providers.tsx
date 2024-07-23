@@ -74,7 +74,7 @@ export function Providers({
               position={isMobile ? "top-center" : "bottom-right"}
             />
           </NextThemesProvider>
-          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+          <ReactQueryDevtools initialIsOpen={false} />
         </ReactQueryStreamedHydration>
       </QueryClientProvider>
     </api.Provider>
