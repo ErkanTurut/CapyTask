@@ -1,7 +1,13 @@
-import { TRPCError, initTRPC } from "@trpc/server";
+import {
+  TRPCError,
+  inferRouterInputs,
+  inferRouterOutputs,
+  initTRPC,
+} from "@trpc/server";
 import superjson from "superjson";
 import { Context } from "./context";
 import { ZodError } from "zod";
+import { AppRouter } from "./routes/_app";
 
 const tRPCContext = initTRPC.context<Context>().create({
   transformer: superjson,
@@ -23,6 +29,9 @@ const tRPCContext = initTRPC.context<Context>().create({
 export const router = tRPCContext.router;
 export const publicProcedure = tRPCContext.procedure;
 export const createCallerFactory = tRPCContext.createCallerFactory;
+
+export type RouterOutput = inferRouterOutputs<AppRouter>;
+export type RouterInput = inferRouterInputs<AppRouter>;
 
 export const protectedProcedure = publicProcedure.use((opts) => {
   const { user } = opts.ctx;
