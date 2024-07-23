@@ -7,7 +7,7 @@ import {
 import { Shell } from "@/components/shells";
 import TableSkeleton from "@/components/skeletons/table-skeleton";
 import { Suspense } from "react";
-import WorkPlanTemplateTable from "./_components/work-plan-template-table";
+import { TableContainer } from "./_components/table/TableContainer";
 
 interface DashboardLayoutProps {
   params: {
@@ -40,10 +40,7 @@ export default async function DashboardPage({
       </PageHeader>
       <Shell variant="bento">
         <Suspense fallback={<TableSkeleton />}>
-          <WorkPlanTemplateTable
-            props={{ offset, limit, page }}
-            params={params}
-          />
+          <TableContainer searchParams={{ limit, page }} params={params} />
         </Suspense>
       </Shell>
     </Shell>
