@@ -1,6 +1,6 @@
 "use client";
 import { DataTable } from "@/components/table/data-table";
-import { api } from "@/trpc/client";
+import { api, RouterOutput } from "@/trpc/client";
 import type { trpc } from "@/trpc/server";
 import { columns } from "./columns";
 
@@ -8,9 +8,8 @@ interface AssetTableProps {
   params: {
     url_key: string;
   };
-  initialData: NonNullable<
-    Awaited<ReturnType<(typeof trpc)["db"]["company"]["get"]["byWorkspace"]>>
-  >;
+  initialData: RouterOutput["db"]["company"]["get"]["byWorkspace"];
+
   searchParams: {
     limit: number;
     page: number;
@@ -22,9 +21,7 @@ export function TableData({
   searchParams,
   initialData,
 }: AssetTableProps) {
-  const {
-    data: { data, count },
-  } = api.db.company.get.byWorkspace.useQuery(
+  const queryResult = api.db.company.get.byWorkspace.useQuery(
     {
       url_key: params.url_key,
       range: {
@@ -32,15 +29,18 @@ export function TableData({
         end: (searchParams.page - 1) * searchParams.limit + searchParams.limit,
       },
     },
-    { initialData },
+    { initialData, refetchOnMount: false, staleTime: 1000 * 60 },
   );
   return (
     <DataTable
       filter={{ columnVisibility: { description: false } }}
       columns={columns}
-      data={data}
-      count={count || 0}
+      data={{
+        data: queryResult.data.data || [],
+        count: queryResult.data.count || 0,
+      }}
       searchParams={searchParams}
+      queryResult={queryResult}
     />
   );
 }
