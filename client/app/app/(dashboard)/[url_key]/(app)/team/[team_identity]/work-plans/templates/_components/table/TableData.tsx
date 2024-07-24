@@ -1,6 +1,6 @@
 "use client";
 import { DataTable } from "@/components/table/data-table";
-import { api, RouterInput, RouterOutput } from "@/trpc/client";
+import { api, RouterOutput } from "@/trpc/client";
 import { columns } from "./columns";
 
 interface AssetTableProps {
@@ -29,11 +29,10 @@ export function TableData({
         end: (searchParams.page - 1) * searchParams.limit + searchParams.limit,
       },
     },
-    { initialData },
+    { initialData, refetchOnMount: false, staleTime: 1000 * 60 },
   );
   return (
     <DataTable
-      // data={queryResult.data || { data: [], count: 0 }}
       filter={{ columnVisibility: { description: false } }}
       columns={columns}
       data={{

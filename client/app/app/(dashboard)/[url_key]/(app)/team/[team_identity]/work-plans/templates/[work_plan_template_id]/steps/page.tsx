@@ -25,12 +25,12 @@ interface PageProps {
 }
 
 export default async function Page({ searchParams, params }: PageProps) {
-  const { data: work_plan_template } =
-    await trpc.db.work_plan_template.get.byId({
-      id: params.work_plan_template_id,
+  const { data: work_step_template } =
+    await trpc.db.work_step_template.getStepsByWorkPlanTemplate({
+      work_plan_template_id: params.work_plan_template_id,
     });
 
-  if (!work_plan_template) {
+  if (!work_step_template) {
     return notFound();
   }
 
@@ -40,8 +40,11 @@ export default async function Page({ searchParams, params }: PageProps) {
         <CardTitle>General</CardTitle>
       </CardHeader>
       <CardContent>
-        <Input value={work_plan_template.name} disabled />
-        <Input value={work_plan_template.description || ""} disabled />
+        {work_step_template.map((step) => (
+          <p>
+            {step.name} + {step.description}
+          </p>
+        ))}
       </CardContent>
     </Card>
   );
