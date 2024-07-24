@@ -42,11 +42,11 @@ export default async function DashboardLayout({
             <Resizable defaultLayout={defaultLayout}>
               <AssistantModal />
               <ScrollArea className="h-screen">
-                <Toolbar className="sticky top-0 z-40 hidden p-2 pb-4 sm:block" />
+                {/* <Toolbar className="sticky top-0 z-40 hidden p-2 pb-4 sm:block" /> */}
 
                 {children}
 
-                <Toolbar className="sticky bottom-0 z-40 mt-4 block rounded-md border bg-muted p-2 pt-4 sm:hidden" />
+                {/* <Toolbar className="sticky bottom-0 z-40 mt-4 block rounded-md border bg-muted p-2 pt-4 sm:hidden" /> */}
               </ScrollArea>
             </Resizable>
             {/* </DotPattern> */}

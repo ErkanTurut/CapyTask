@@ -31,11 +31,10 @@ export const work_step_template = router({
   getStepsByWorkPlanTemplate: protectedProcedure
     .input(ZGetWorkStepTemplateSchema.pick({ work_plan_template_id: true }))
     .query(async ({ ctx, input }) => {
-      const { data } = await getStepsByWorkPlanTemplateHandler({
+      return await getStepsByWorkPlanTemplateHandler({
         input,
         db: ctx.db,
       });
-      return data;
     }),
 
   getStepsByIdentity: protectedProcedure
