@@ -1,5 +1,5 @@
 import { Shell } from "@/components/shells";
-import TableContainer from "./_components/TableContainer";
+import TableContainer from "./_components/table/TableContainer";
 import { Suspense } from "react";
 import TableSkeleton from "@/components/skeletons/table-skeleton";
 

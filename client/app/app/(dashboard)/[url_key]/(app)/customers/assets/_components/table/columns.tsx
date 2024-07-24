@@ -4,16 +4,15 @@ import { DataTableColumnHeader } from "@/components/table/data-table-column-head
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
-import type { trpc } from "@/trpc/server";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { DataTableRowActions } from "./DataTableRowActions";
 
+import { RouterOutput } from "@/trpc/client";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
-import { Database } from "@/types/supabase.types";
 
 export const columns: ColumnDef<
-  NonNullable<Database["public"]["Tables"]["asset"]["Row"]>
+  RouterOutput["db"]["asset"]["get"]["byWorkspace"]["data"][number]
 >[] = [
   {
     id: "select",
