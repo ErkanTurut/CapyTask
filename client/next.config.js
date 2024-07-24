@@ -8,6 +8,10 @@ module.exports = {
     },
     ppr: true,
     after: true,
+    staleTimes: {
+      dynamic: 30,
+    },
+    reactCompiler: true,
   },
   logging: {
     fetches: {

@@ -77,6 +77,7 @@
     "openai-edge": "^1.2.2",
     "prisma-zod-generator": "^0.8.13",
     "react": "19.0.0-rc-c3cdbec0a7-20240708",
+    "react-compiler-healthcheck": "0.0.0-experimental-b130d5f-20240625",
     "react-dom": "19.0.0-rc-c3cdbec0a7-20240708",
     "react-hook-form": "^7.51.5",
     "react-resizable-panels": "^2.0.19",
