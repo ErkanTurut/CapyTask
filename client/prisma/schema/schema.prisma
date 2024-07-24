@@ -1,0 +1,11 @@
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DIRECT_URL")
+  extensions = [pgcrypto, postgis(schema: "extensions"), uuid_ossp(map: "uuid-ossp", schema: "extensions")]
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions", "prismaSchemaFolder"]
+}
