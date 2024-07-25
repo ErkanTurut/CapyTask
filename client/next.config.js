@@ -11,7 +11,7 @@ module.exports = {
     staleTimes: {
       dynamic: 30,
     },
-    reactCompiler: true,
+    // reactCompiler: true,
   },
   logging: {
     fetches: {
