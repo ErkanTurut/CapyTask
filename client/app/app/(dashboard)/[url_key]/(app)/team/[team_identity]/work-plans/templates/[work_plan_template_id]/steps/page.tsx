@@ -1,17 +1,8 @@
-import { ResponsiveCard } from "@/components/responsive-card";
-import StepDeleteForm from "@/components/work-plan/templates/step/step-delete";
-import StepUpdateForm from "@/components/work-plan/templates/step/step-update";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { StepsSortableTableForm } from "@/components/forms/work-step-template/steps-sortable-table-form";
+import { WorkStepTemplateForm } from "@/components/forms/work-step-template/work-step-template-form";
 import { trpc } from "@/trpc/server";
 import { notFound } from "next/navigation";
-import CreateWorkOrderForm from "@/components/work-order/work-order-create-form";
-import { Input } from "@/components/ui/input";
+import { Suspense } from "react";
 
 interface PageProps {
   searchParams: {
@@ -25,27 +16,42 @@ interface PageProps {
 }
 
 export default async function Page({ searchParams, params }: PageProps) {
-  const { data: work_step_template } =
-    await trpc.db.work_step_template.getStepsByWorkPlanTemplate({
+  const { data: work_step_templates } =
+    await trpc.db.work_step_template.get.byWorkPlanTemplate({
       work_plan_template_id: params.work_plan_template_id,
     });
 
-  if (!work_step_template) {
+  if (!work_step_templates) {
     return notFound();
   }
 
+  console.log(searchParams.step_id);
+
   return (
-    <Card className="shadow-sm">
-      <CardHeader>
-        <CardTitle>General</CardTitle>
-      </CardHeader>
-      <CardContent>
-        {work_step_template.map((step) => (
-          <p>
-            {step.name} + {step.description}
-          </p>
-        ))}
-      </CardContent>
-    </Card>
+    <div className="grid flex-1 items-start gap-2 md:gap-4 lg:grid-cols-3 xl:grid-cols-3">
+      <div className="lg:col-span-2">
+        <StepsSortableTableForm work_step_templates={work_step_templates} />
+      </div>
+      <div>
+        {searchParams.step_id && (
+          <Suspense fallback={<div>Loading...</div>}>
+            {(async () => {
+              console.log("work_step_templates");
+              if (!searchParams.step_id) return null;
+
+              const { data: work_step_template } =
+                await trpc.db.work_step_template.get.byId({
+                  id: searchParams.step_id,
+                });
+              console.log(work_step_template);
+              if (!work_step_template) return null;
+              return (
+                <WorkStepTemplateForm work_step_template={work_step_template} />
+              );
+            })()}
+          </Suspense>
+        )}
+      </div>
+    </div>
   );
 }

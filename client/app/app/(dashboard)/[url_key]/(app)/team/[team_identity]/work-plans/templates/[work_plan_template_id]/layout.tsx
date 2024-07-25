@@ -1,15 +1,11 @@
+import { NavTabs } from "@/components/dashboard/navigation/nav-tabs";
 import {
   PageHeader,
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/components/page-header";
-import CardSkeleton from "@/components/skeletons/card-skeleton";
-import { Suspense } from "react";
-import WorkPlanTemplateContainer from "./_components/work-plan-template-container";
 import { Shell } from "@/components/shells";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator";
-import { trpc } from "@/trpc/server";
+import CardSkeleton from "@/components/skeletons/card-skeleton";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -18,7 +14,10 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Separator } from "@/components/ui/separator";
+import { trpc } from "@/trpc/server";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 interface layoutProps {
   children: React.ReactNode;
@@ -30,17 +29,16 @@ interface layoutProps {
 }
 
 export default async function layoutPage({ children, params }: layoutProps) {
-  const { data: work_plan_template } =
-    await trpc.db.work_plan_template.get.byId({
-      id: params.work_plan_template_id,
-    });
+  const work_plan_template = await trpc.db.work_plan_template.get.byId({
+    id: params.work_plan_template_id,
+  });
 
   if (!work_plan_template) {
     return notFound();
   }
 
   return (
-    <Shell>
+    <Shell className="gap-4">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -65,28 +63,26 @@ export default async function layoutPage({ children, params }: layoutProps) {
           {work_plan_template.description}
         </PageHeaderDescription>
       </PageHeader>
-      <Tabs defaultValue="step">
-        <TabsList className="w-full justify-start rounded-none border-b bg-transparent p-0">
-          <TabsTrigger
-            className="relative rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-2 pt-2 font-semibold text-muted-foreground shadow-none transition-none data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
-            value="general"
-          >
-            General
-          </TabsTrigger>
-          <TabsTrigger
-            className="relative rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-2 pt-2 font-semibold text-muted-foreground shadow-none transition-none data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
-            value="step"
-          >
-            Steps
-          </TabsTrigger>
-          <TabsTrigger
-            className="relative rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-2 pt-2 font-semibold text-muted-foreground shadow-none transition-none data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
-            value="ressource"
-          >
-            Ressources
-          </TabsTrigger>
-        </TabsList>
-      </Tabs>
+      <Separator />
+      <NavTabs
+        items={[
+          {
+            id: "general",
+            title: "General",
+            href: `/${params.url_key}/team/${params.team_identity}/work-plans/templates/${params.work_plan_template_id}`,
+          },
+          {
+            id: "step",
+            title: "Steps",
+            href: `/${params.url_key}/team/${params.team_identity}/work-plans/templates/${params.work_plan_template_id}/steps`,
+          },
+          {
+            id: "ressource",
+            title: "Ressources",
+            href: `/${params.url_key}/team/${params.team_identity}/work-plans/templates/${params.work_plan_template_id}/ressources`,
+          },
+        ]}
+      />
 
       <Suspense fallback={<CardSkeleton />}>{children}</Suspense>
     </Shell>
