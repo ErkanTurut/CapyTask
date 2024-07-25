@@ -7,7 +7,7 @@ export const config = {
   matcher: ["/((?!api|_next/static|_next/image|home|public|favicon.ico).*)"],
 };
 
-const publicAppRoutes = ["/login", "/signup", "/logout"];
+const publicAppRoutes = ["/login", "/signup", "/logout", "/api"];
 
 async function getHostname(req: NextRequest): Promise<string> {
   let hostname = req.headers
