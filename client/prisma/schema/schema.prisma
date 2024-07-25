@@ -9,3 +9,10 @@ generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["postgresqlExtensions", "prismaSchemaFolder"]
 }
+
+// generator zod {
+//   provider                  = "zod-prisma-types"
+//   output                    = "./zod/2" // (default) the directory where generated zod schemas will be saved
+//   useMultipleFiles          = true
+//   createRelationValuesTypes = true
+// }
