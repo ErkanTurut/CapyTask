@@ -1,8 +1,8 @@
 import * as z from "zod";
 
 export const ZUpsertWorkStepTemplateSchema = z.object({
-  work_step_templates: z.array(
-    z.object({
+  work_step_templates: z
+    .object({
       id: z.string(),
       public_id: z.string(),
       name: z
@@ -27,8 +27,8 @@ export const ZUpsertWorkStepTemplateSchema = z.object({
       created_at: z.string(),
       updated_at: z.string(),
       created_by_id: z.string().nullable(),
-    }),
-  ),
+    })
+    .array(),
 });
 export type TUpsertWorkStepTemplateSchema = z.infer<
   typeof ZUpsertWorkStepTemplateSchema

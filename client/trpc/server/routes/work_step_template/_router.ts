@@ -1,3 +1,4 @@
+import { sleep } from "@/lib/utils";
 import { protectedProcedure, router } from "../../trpc";
 import { createWorkStepTemplateHandler } from "./create.handler";
 import { ZCreateWorkStepTemplateSchema } from "./create.schema";
@@ -14,21 +15,24 @@ import { updateWorkStepTemplateHandler } from "./update.handler";
 import { ZUpdateWorkStepTemplateSchema } from "./update.schema";
 import { upsertWorkStepTemplateHandler } from "./upsert.handler";
 import { ZUpsertWorkStepTemplateSchema } from "./upsert.schema";
+import { TRPCError } from "@trpc/server";
 
 export const work_step_template = router({
   get: {
     byId: protectedProcedure
       .input(ZGetWorkStepTemplateSchema.pick({ id: true }))
       .query(async ({ ctx, input }) => {
-        return await getStepHandler({ input, db: ctx.db });
+        const { data } = await getStepHandler({ input, db: ctx.db });
+        return data;
       }),
     byWorkPlanTemplate: protectedProcedure
       .input(ZGetWorkStepTemplateSchema.pick({ work_plan_template_id: true }))
       .query(async ({ ctx, input }) => {
-        return await getStepsByWorkPlanTemplateHandler({
+        const { data } = await getStepsByWorkPlanTemplateHandler({
           input,
           db: ctx.db,
         });
+        return data;
       }),
   },
 

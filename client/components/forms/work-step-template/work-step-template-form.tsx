@@ -3,7 +3,7 @@
 import type React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import {
   Form,
@@ -15,55 +15,47 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
+import { Button } from "@/components/ui/button";
 import { catchError, cn } from "@/lib/utils";
 import { toast } from "sonner";
-import {
-  Sortable,
-  SortableDragHandle,
-  SortableItem,
-} from "@/components/ui/sortable";
-import { Button, buttonVariants } from "@/components/ui/button";
 
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 import { api, RouterOutput } from "@/trpc/client";
-import {
-  TUpdateWorkPlanTemplateSchema,
-  ZUpdateWorkPlanTemplateSchema,
-} from "@/trpc/server/routes/work_plan_template/update.schema";
-import {
-  TUpsertWorkStepTemplateSchema,
-  ZUpsertWorkStepTemplateSchema,
-} from "@/trpc/server/routes/work_step_template/upsert.schema";
-import {
-  ChevronRightIcon,
-  DragHandleDots2Icon,
-  EyeOpenIcon,
-  TrashIcon,
-} from "@radix-ui/react-icons";
-import Link from "next/link";
 import {
   TUpdateWorkStepTemplateSchema,
   ZUpdateWorkStepTemplateSchema,
 } from "@/trpc/server/routes/work_step_template/update.schema";
-import { Textarea } from "@/components/ui/textarea";
 
 interface WorkStepTemplateFormProps
   extends React.HTMLAttributes<HTMLFormElement> {
-  work_step_template: NonNullable<
-    RouterOutput["db"]["work_step_template"]["get"]["byId"]["data"]
+  initialData: NonNullable<
+    RouterOutput["db"]["work_step_template"]["get"]["byId"]
   >;
+  work_step_template_id: string;
 }
 
 export function WorkStepTemplateForm({
-  work_step_template,
+  initialData,
+  work_step_template_id,
   className,
 }: WorkStepTemplateFormProps) {
+  const utils = api.useUtils();
+
+  const { data: work_step_template, refetch } =
+    api.db.work_step_template.get.byId.useQuery(
+      { id: work_step_template_id },
+      { initialData: initialData },
+    );
+  if (!work_step_template) return null;
+
   const form = useForm<TUpdateWorkStepTemplateSchema>({
     resolver: zodResolver(ZUpdateWorkStepTemplateSchema),
     values: {
@@ -74,12 +66,48 @@ export function WorkStepTemplateForm({
   });
 
   const { isPending, mutate } = api.db.work_step_template.update.useMutation({
+    onMutate: async (variables) => {
+      await utils.db.work_step_template.get.byWorkPlanTemplate.cancel({
+        work_plan_template_id: work_step_template.work_plan_template_id,
+      });
+
+      const prev_work_step_templates =
+        utils.db.work_step_template.get.byWorkPlanTemplate.getData({
+          work_plan_template_id: work_step_template.work_plan_template_id,
+        });
+      if (prev_work_step_templates) {
+        utils.db.work_step_template.get.byWorkPlanTemplate.setData(
+          {
+            work_plan_template_id: work_step_template.work_plan_template_id,
+          },
+          prev_work_step_templates.map((work_step_template) =>
+            work_step_template.id === variables.id
+              ? { ...work_step_template, ...variables }
+              : work_step_template,
+          ),
+        );
+      }
+      return { prev_work_step_templates };
+    },
     onSuccess: async (data, variables) => {
       toast.success("Updated successfully");
+
       form.reset(variables);
     },
-    onError: (err) => {
+    onError: (err, data, ctx) => {
+      utils.db.work_step_template.get.byWorkPlanTemplate.setData(
+        {
+          work_plan_template_id: work_step_template.work_plan_template_id,
+        },
+        ctx?.prev_work_step_templates,
+      );
       catchError(new Error(err.message));
+    },
+    onSettled: () => {
+      utils.db.work_step_template.get.byWorkPlanTemplate.invalidate({
+        work_plan_template_id: work_step_template.work_plan_template_id,
+      });
+      refetch();
     },
   });
 
@@ -95,7 +123,8 @@ export function WorkStepTemplateForm({
       >
         <Card className="shadow-sm">
           <CardHeader>
-            <CardTitle>General</CardTitle>
+            <CardTitle>{work_step_template.name}</CardTitle>
+            <CardDescription>{work_step_template.description}</CardDescription>
           </CardHeader>
           <CardContent>
             <FormField
@@ -103,7 +132,7 @@ export function WorkStepTemplateForm({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Step name</FormLabel>
+                  <FormLabel>Name</FormLabel>
                   <FormControl>
                     <Input placeholder="example" {...field} />
                   </FormControl>
@@ -125,8 +154,24 @@ export function WorkStepTemplateForm({
               )}
             />
           </CardContent>
-          <CardFooter>
-            <Button isLoading={isPending} disabled={!form.formState.isDirty}>
+          <CardFooter className="flex justify-end gap-2">
+            {form.formState.isDirty && (
+              <Button
+                variant={"outline"}
+                isLoading={isPending}
+                onClick={() => {
+                  form.reset();
+                }}
+                type="reset"
+              >
+                Cancel
+                <span className="sr-only">Cancel update</span>
+              </Button>
+            )}
+            <Button
+              disabled={!form.formState.isDirty || isPending}
+              isLoading={isPending}
+            >
               Save
               <span className="sr-only">Save update</span>
             </Button>
