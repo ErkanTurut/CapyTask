@@ -11,6 +11,13 @@ import { Suspense } from "react";
 
 import CreateWorkPlanTemplateForm from "@/components/work-plan/templates/plan/plan-create-form";
 import { trpc } from "@/trpc/server";
+import {
+  PageHeader,
+  PageHeaderDescription,
+  PageHeaderHeading,
+} from "@/components/page-header";
+import { Separator } from "@/components/ui/separator";
+import { WorkPlanTemplateCreateForm } from "@/components/forms/work-plan-template/work-plan-template-create-form";
 
 interface createPageProps {
   params: {
@@ -21,21 +28,22 @@ interface createPageProps {
 
 export default async function createPage({ params }: createPageProps) {
   return (
-    <Shell variant={"markdown"}>
-      <Card>
-        <CardHeader>
-          <CardTitle>Plan information</CardTitle>
-          <CardDescription>
-            Fill in the details below to create your new plan. This information
-            will be displayed to your team members.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Suspense fallback="loading...">
-            {/* <CreateWorkPlanTemplateForm team={team} url_key={params.url_key} /> */}
-          </Suspense>
-        </CardContent>
-      </Card>
+    <Shell>
+      <PageHeader
+        id="work-plan-template-header"
+        aria-labelledby="work-plan-template-header-heading"
+      >
+        <PageHeaderHeading size="sm">
+          Create work plan template
+        </PageHeaderHeading>
+        <PageHeaderDescription size="sm">
+          Work plan template are reusable templates that can be used to create
+          work plans for your work orders.
+        </PageHeaderDescription>
+      </PageHeader>
+      <Separator />
+
+      <WorkPlanTemplateCreateForm url_key={params.url_key} />
     </Shell>
   );
 }

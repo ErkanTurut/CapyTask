@@ -54,8 +54,10 @@ export default async function layoutPage({ children, params }: layoutProps) {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-
-      <PageHeader id="account-header" aria-labelledby="account-header-heading">
+      <PageHeader
+        id="work-plan-template-header"
+        aria-labelledby="work-plan-template-header-heading"
+      >
         <PageHeaderHeading size="sm" className="flex items-center gap-1">
           {work_plan_template.name}
         </PageHeaderHeading>

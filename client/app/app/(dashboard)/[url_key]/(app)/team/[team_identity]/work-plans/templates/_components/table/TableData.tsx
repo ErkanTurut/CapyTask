@@ -29,7 +29,7 @@ export function TableData({
         end: (searchParams.page - 1) * searchParams.limit + searchParams.limit,
       },
     },
-    { initialData, refetchOnMount: false, staleTime: 1000 * 60 },
+    { initialData, staleTime: 1000 * 60, refetchOnMount: true },
   );
   return (
     <DataTable
