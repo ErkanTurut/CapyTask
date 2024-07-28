@@ -7,9 +7,7 @@ import { ZDeleteWorkPlanTemplateSchema } from "./delete.schema";
 import {
   getWorkPlanTemplateHandler,
   getWorkPlanTemplateStepsHandler,
-  getWorkPlanTemplatesByIdentityHandler,
-  getWorkPlanTemplatesByTeamIdHandler,
-  searchWorkPlanTemplateHandler,
+  getWorkPlanTemplatesByWorkspaceHandler,
 } from "./get.handler";
 import { ZGetWorkPlanTemplateSchema } from "./get.schema";
 import { ZUpdateWorkPlanTemplateSchema } from "./update.schema";
@@ -34,27 +32,25 @@ export const work_plan_template = router({
           db: ctx.db,
         });
       }),
-    byTeamId: protectedProcedure
-      .input(
-        ZGetWorkPlanTemplateSchema.pick({ team_identity: true, range: true }),
-      )
+    byWorkspace: protectedProcedure
+      .input(ZGetWorkPlanTemplateSchema.pick({ url_key: true, range: true }))
       .query(async ({ ctx, input }) => {
-        const { data, count } = await getWorkPlanTemplatesByIdentityHandler({
+        const { data, count } = await getWorkPlanTemplatesByWorkspaceHandler({
           input,
           db: ctx.db,
         });
         return { data, count };
       }),
   }),
-  search: protectedProcedure
-    .input(ZGetWorkPlanTemplateSchema.pick({ q: true, team_identity: true }))
-    .query(async ({ ctx, input }) => {
-      const { data } = await searchWorkPlanTemplateHandler({
-        input,
-        db: ctx.db,
-      });
-      return data;
-    }),
+  // search: protectedProcedure
+  //   .input(ZGetWorkPlanTemplateSchema.pick({ q: true, team_identity: true }))
+  //   .query(async ({ ctx, input }) => {
+  //     const { data } = await searchWorkPlanTemplateHandler({
+  //       input,
+  //       db: ctx.db,
+  //     });
+  //     return data;
+  //   }),
 
   create: protectedProcedure
     .input(ZCreateWorkPlanTemplateSchema)

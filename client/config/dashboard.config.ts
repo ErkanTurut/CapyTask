@@ -68,15 +68,15 @@ export const appNavItems: {
         },
       ],
     },
-  ],
-  teamNav: [
     {
-      title: "Work plans",
+      title: "Work Plans",
+      id: "work-plan-template",
       icon: "dashboard",
       variant: "ghost",
       href: "/work-plans/templates",
-      id: "templates",
     },
+  ],
+  teamNav: [
     {
       title: "Work orders",
       icon: "checkCircled",

@@ -57,7 +57,7 @@ export function WorkPlanTemplateDeleteForm({
     onSuccess: async (data, variables) => {
       toast.success("Work plan template deleted successfully");
       router.back();
-      utils.db.work_plan_template.get.byTeamId.invalidate();
+      utils.db.work_plan_template.get.byWorkspace.invalidate();
     },
     onError: (err) => {
       catchError(new Error(err.message));

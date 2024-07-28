@@ -4,37 +4,20 @@ import { SupabaseClient } from "@/lib/supabase/server";
 import { TGetWorkPlanTemplateSchema } from "./get.schema";
 // import { cache } from "react";
 
-export async function getWorkPlanTemplatesByTeamIdHandler({
-  input,
+export async function getWorkPlanTemplatesByWorkspaceHandler({
   db,
+  input,
 }: {
   input: {
-    team_id: TGetWorkPlanTemplateSchema["team_id"];
+    url_key: TGetWorkPlanTemplateSchema["url_key"];
     range: TGetWorkPlanTemplateSchema["range"];
   };
   db: SupabaseClient;
 }) {
   return await db
     .from("work_plan_template")
-    .select("*", { count: "estimated" })
-    .eq("team_id", input.team_id)
-    .range(input.range.start, input.range.end);
-}
-
-export async function getWorkPlanTemplatesByIdentityHandler({
-  db,
-  input,
-}: {
-  input: {
-    team_identity: TGetWorkPlanTemplateSchema["team_identity"];
-    range: TGetWorkPlanTemplateSchema["range"];
-  };
-  db: SupabaseClient;
-}) {
-  return await db
-    .from("work_plan_template")
-    .select("*, team!inner(*)", { count: "estimated" })
-    .eq("team.identity", input.team_identity)
+    .select("*, workspace!inner(url_key)", { count: "estimated" })
+    .eq("workspace.url_key", input.url_key)
     .range(input.range.start, input.range.end)
     .order("updated_at", { ascending: false })
     .throwOnError();
@@ -72,23 +55,23 @@ export async function getWorkPlanTemplateStepsHandler({
     .single();
 }
 
-export async function searchWorkPlanTemplateHandler({
-  input,
-  db,
-}: {
-  input: {
-    q: TGetWorkPlanTemplateSchema["q"];
-    team_identity: TGetWorkPlanTemplateSchema["team_identity"];
-  };
+// export async function searchWorkPlanTemplateHandler({
+//   input,
+//   db,
+// }: {
+//   input: {
+//     q: TGetWorkPlanTemplateSchema["q"];
+//     team_identity: TGetWorkPlanTemplateSchema["team_identity"];
+//   };
 
-  db: SupabaseClient;
-}) {
-  return await db
-    .from("work_plan_template")
-    .select("*, team!inner(*)")
-    .eq("team.identity", input.team_identity)
-    .textSearch("name", input.q, {
-      type: "websearch",
-    })
-    .throwOnError();
-}
+//   db: SupabaseClient;
+// }) {
+//   return await db
+//     .from("work_plan_template")
+//     .select("*, team!inner(*)")
+//     .eq("team.identity", input.team_identity)
+//     .textSearch("name", input.q, {
+//       type: "websearch",
+//     })
+//     .throwOnError();
+// }
