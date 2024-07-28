@@ -138,6 +138,7 @@ module.exports = {
             transform: "translate(calc(100cqw - 100%), 0)",
           },
         },
+
         "border-beam": {
           "100%": {
             "offset-distance": "100%",

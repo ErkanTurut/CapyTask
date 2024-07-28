@@ -3,24 +3,26 @@
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Row, Table } from "@tanstack/react-table";
 
+import { catchError } from "@/lib/utils";
+import { api, RouterOutput } from "@/trpc/client";
 import { Button } from "@/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/ui/dropdown-menu";
-import { api } from "@/trpc/client";
-import { toast } from "sonner";
-import { catchError } from "@/lib/utils";
-import { Database } from "@/types/supabase.types";
 import { useParams } from "next/navigation";
+import { toast } from "sonner";
 
 interface DataTableRowActionsProps<TData> {
-  row: Row<Database["public"]["Tables"]["work_order"]["Row"]>;
-  table: Table<Database["public"]["Tables"]["work_order"]["Row"]>;
+  row: Row<
+    RouterOutput["db"]["work_order"]["get"]["byTeamIdentity"]["data"][number]
+  >;
+  table: Table<
+    RouterOutput["db"]["work_order"]["get"]["byTeamIdentity"]["data"][number]
+  >;
 }
 
 export function DataTableRowActions<TData>({

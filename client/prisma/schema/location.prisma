@@ -1,0 +1,32 @@
+model location {
+    id             String       @id @default(dbgenerated("nanoid(10)"))
+    public_id      String       @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    location_type  LocationType @default(BUILDING)
+    location_level Int          @default(1)
+
+    name        String
+    description String?
+    created_at  DateTime @default(now()) @db.Timestamptz(6)
+    updated_at  DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+
+    parent_location_id String?
+    parent_location    location?  @relation("location_sub_locations", fields: [parent_location_id], references: [id], onDelete: Cascade)
+    sub_locations      location[] @relation("location_sub_locations")
+
+    workspace_id String
+    workspace    workspace @relation(fields: [workspace_id], references: [id])
+
+    address_id String
+    address    address @relation(fields: [address_id], references: [id])
+
+    company_id String?
+    company    company? @relation(fields: [company_id], references: [id])
+
+    work_order work_order[]
+    asset      asset[]
+
+    @@index([parent_location_id])
+    @@index([workspace_id])
+    @@index([address_id])
+    @@index([company_id])
+}

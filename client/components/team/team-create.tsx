@@ -26,7 +26,7 @@ import { FC } from "react";
 import {
   TCreateTeamSchema,
   ZCreateTeamSchema,
-} from "@/trpc/routes/team/create.schema";
+} from "@/trpc/server/routes/team/create.schema";
 
 interface CreateTeamFormProps extends React.HTMLAttributes<HTMLFormElement> {
   workspace_id: string;

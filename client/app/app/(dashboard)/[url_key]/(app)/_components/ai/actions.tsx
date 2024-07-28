@@ -12,7 +12,7 @@ import { Database, createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import WorkOrderHeader from "../../team/[team_identity]/work-orders/[work_order_id]/_components/WorkOrderHeader";
 import CardSkeleton from "@/components/skeletons/card-skeleton";
-import { getWorkOrderDetailHandler } from "@/trpc/routes/work_order/get.handler";
+import { getWorkOrderDetailHandler } from "@/trpc/server/routes/work_order/get.handler";
 
 export interface ServerMessage {
   role: "user" | "assistant";

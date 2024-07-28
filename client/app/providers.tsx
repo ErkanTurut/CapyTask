@@ -10,14 +10,8 @@ import { PropsWithChildren, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { api } from "@/trpc/client";
 import superjson from "superjson";
-import {
-  httpBatchLink,
-  loggerLink,
-  unstable_httpBatchStreamLink,
-} from "@trpc/client";
-import { experimental_nextHttpLink } from "@trpc/next/app-dir/links/nextHttp";
+import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
-import { TooltipProvider } from "@/components/ui/tooltip";
 
 export function Providers({
   children,
@@ -30,6 +24,7 @@ export function Providers({
           queries: {
             staleTime: 5 * 1000,
             refetchOnMount: false,
+            refetchOnWindowFocus: false,
           },
         },
       }),
@@ -75,7 +70,7 @@ export function Providers({
               position={isMobile ? "top-center" : "bottom-right"}
             />
           </NextThemesProvider>
-          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+          <ReactQueryDevtools initialIsOpen={false} />
         </ReactQueryStreamedHydration>
       </QueryClientProvider>
     </api.Provider>

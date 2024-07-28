@@ -10,20 +10,49 @@ import { DataTableViewOptions } from "@/components/table/data-table-view-options
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { DefinedUseTRPCQueryResult } from "@trpc/react-query/dist/shared";
+import { useState } from "react";
 
-interface DataTableToolbarProps<TData> {
-  table: Table<TData>;
-  refetch?: () => void;
-  isFetching?: boolean;
+interface DataTableToolbarProps<TDataRow, TData, TError> {
+  table: Table<TDataRow>;
+  queryResult?: DefinedUseTRPCQueryResult<TData, TError>;
 }
 
-export function DataTableToolbar<TData>({
+export function DataTableToolbar<TDataRow, TData, TError>({
   table,
-  refetch,
-  isFetching,
-}: DataTableToolbarProps<TData>) {
+  queryResult,
+}: DataTableToolbarProps<TDataRow, TData, TError>) {
   const isFiltered = table.getState().columnFilters.length > 0;
   const pathname = usePathname() ?? "";
+
+  //disable refetch for 1 minute before enabling it again
+  const [isRefetchDisabled, setIsRefetchDisabled] = useState(false);
+
+  const FetchButton = () => {
+    if (!queryResult) {
+      return null;
+    }
+    const { isFetching, refetch, isStale } = queryResult;
+
+    return (
+      <Button
+        variant="outline"
+        size="icon"
+        className="h-7 w-7"
+        disabled={isRefetchDisabled || !isStale}
+        onClick={() => {
+          refetch();
+        }}
+      >
+        <Icons.spinner
+          className={cn(
+            "h-4 w-4",
+            isFetching && "animate-spin duration-700 ease-in-out",
+          )}
+        />
+      </Button>
+    );
+  };
 
   return (
     <div className="flex items-center justify-between">
@@ -48,21 +77,7 @@ export function DataTableToolbar<TData>({
         )}
       </div>
       <div className="flex items-center space-x-2">
-        {refetch && (
-          <Button
-            variant="outline"
-            size="icon"
-            className="h-7 w-7"
-            onClick={() => refetch()}
-          >
-            <Icons.spinner
-              className={cn(
-                "h-4 w-4",
-                isFetching && "animate-spin duration-700 ease-in-out",
-              )}
-            />
-          </Button>
-        )}
+        {<FetchButton />}
 
         <DataTableViewOptions table={table} />
         <Link

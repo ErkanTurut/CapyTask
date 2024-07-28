@@ -27,7 +27,7 @@ import { FC } from "react";
 import {
   TUpdateTeamSchema,
   ZUpdateTeamSchema,
-} from "@/trpc/routes/team/update.schema";
+} from "@/trpc/server/routes/team/update.schema";
 
 interface UpdateTeamFormProps extends React.HTMLAttributes<HTMLFormElement> {
   team: Database["public"]["Tables"]["team"]["Row"];

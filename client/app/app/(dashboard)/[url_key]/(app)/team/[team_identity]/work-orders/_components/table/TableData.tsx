@@ -24,11 +24,7 @@ export function TableData({
   searchParams,
   initialData,
 }: AssetTableProps) {
-  const {
-    data: { data, count },
-    refetch,
-    isFetching,
-  } = api.db.work_order.get.byTeamIdentity.useQuery(
+  const queryResult = api.db.work_order.get.byTeamIdentity.useQuery(
     {
       team_identity: params.team_identity,
       range: {
@@ -36,17 +32,18 @@ export function TableData({
         end: (searchParams.page - 1) * searchParams.limit + searchParams.limit,
       },
     },
-    { initialData, refetchOnMount: false },
+    { initialData, refetchOnMount: false, staleTime: 1000 * 60 },
   );
   return (
     <DataTable
       filter={{ columnVisibility: { description: false } }}
       columns={columns}
-      data={data}
-      count={count || 0}
+      data={{
+        data: queryResult.data.data || [],
+        count: queryResult.data.count || 0,
+      }}
+      queryResult={queryResult}
       searchParams={searchParams}
-      isFetching={isFetching}
-      refetch={refetch}
     />
   );
 }

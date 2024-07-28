@@ -627,8 +627,8 @@ export type Database = {
           id: string
           name: string
           public_id: string
-          team_id: string
           updated_at: string
+          workspace_id: string
         }
         Insert: {
           created_at?: string
@@ -636,8 +636,8 @@ export type Database = {
           id?: string
           name: string
           public_id?: string
-          team_id: string
           updated_at?: string
+          workspace_id: string
         }
         Update: {
           created_at?: string
@@ -645,15 +645,15 @@ export type Database = {
           id?: string
           name?: string
           public_id?: string
-          team_id?: string
           updated_at?: string
+          workspace_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "work_plan_template_team_id_fkey"
-            columns: ["team_id"]
+            foreignKeyName: "work_plan_template_workspace_id_fkey"
+            columns: ["workspace_id"]
             isOneToOne: false
-            referencedRelation: "team"
+            referencedRelation: "workspace"
             referencedColumns: ["id"]
           },
         ]

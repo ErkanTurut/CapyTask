@@ -27,35 +27,34 @@ import {
 } from "@/ui/table";
 
 import { DataTablePagination } from "@/components/table/data-table-pagination";
-import { useSearchParams } from "next/navigation";
 import { DataTableToolbar } from "./data-table-toolbar";
+import { DefinedUseTRPCQueryResult } from "@trpc/react-query/dist/shared";
 
 type A<T> = Partial<{
   [P in keyof T]: boolean;
 }>;
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  count: number;
-  filter?: { columnVisibility: A<TData> };
+interface DataTableProps<TData, TDataRow, TValue, TError> {
+  data: {
+    data: TDataRow[];
+    count: number;
+  };
+  columns: ColumnDef<TDataRow, TValue>[];
+  queryResult?: DefinedUseTRPCQueryResult<TData, TError>;
+  filter?: { columnVisibility: A<TDataRow> };
   searchParams?: {
     page: number;
     limit: number;
   };
-  refetch?: () => void;
-  isFetching?: boolean;
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData, TDataRow, TValue, TError>({
+  data: { data, count },
   columns,
-  data,
-  count,
-  filter = { columnVisibility: {} as A<TData> },
+  queryResult,
+  filter = { columnVisibility: {} as A<TDataRow> },
   searchParams,
-  refetch,
-  isFetching,
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<TData, TDataRow, TValue, TError>) {
   const page = searchParams?.page || 1;
   const limit = searchParams?.limit || 10;
   const createQueryString = React.useCallback(
@@ -89,7 +88,7 @@ export function DataTable<TData, TValue>({
   });
 
   const table = useReactTable({
-    data,
+    data: data,
     columns,
     state: {
       sorting,
@@ -118,11 +117,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar
-        refetch={refetch}
-        isFetching={isFetching}
-        table={table}
-      />
+      <DataTableToolbar table={table} queryResult={queryResult} />
       <div className="rounded-md border bg-background">
         <Table>
           <TableHeader className="border-foreground bg-muted/50">
