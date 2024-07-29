@@ -38,11 +38,11 @@ export function SidebarLayout({
         collapsedSize={navCollapsedSize}
         collapsible={true}
         minSize={13}
-        maxSize={20}
+        maxSize={13}
         onCollapse={() => handlePanelChange(true)}
         onExpand={() => handlePanelChange(false)}
         className={cn(
-          " flex h-screen min-w-[120px] flex-col justify-between",
+          "hidden h-screen w-48 min-w-[120px] flex-none flex-col justify-between bg-muted/50 p-2 backdrop-blur-[2px] md:block",
           isCollapsed && "min-w-[50px] transition-all duration-300 ease-in-out",
           className,
         )}

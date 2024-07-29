@@ -119,8 +119,9 @@ export function Nav({
   rootPath,
   level = 0,
   defaultValue,
+  isCollapsed,
 }: NavProps) {
-  const isCollapsed = useSidebar()((state) => state.isCollapsed);
+  // const isCollapsed = useSidebar()((state) => state.isCollapsed);
   const pathname = usePathname() ?? "";
   const decomposedPath = pathname.split("/");
 
@@ -157,7 +158,7 @@ export function Nav({
                   disabled={item.disabled}
                 >
                   <Link href={item.href ? href : rootPath}>
-                    <span className="flex w-full justify-start ">
+                    <span className="flex w-full justify-start">
                       {item.image_url && (
                         <Avatar className="mr-2 h-4 w-4 rounded-md">
                           <AvatarImage
@@ -193,7 +194,7 @@ export function Nav({
                     className={cn("flex w-full gap-1", level > 1 && "pl-2")}
                   >
                     {level > 0 && (
-                      <Separator orientation="vertical" className="h-auto " />
+                      <Separator orientation="vertical" className="h-auto" />
                     )}
                     <Nav
                       items={item.items}

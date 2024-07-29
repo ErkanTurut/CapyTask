@@ -10,7 +10,9 @@ interface AppProps {
 
 const Resizable: FC<AppProps> = ({ children, defaultLayout = [20, 80] }) => {
   return (
-    <ResizablePanel defaultSize={defaultLayout[1]}>{children}</ResizablePanel>
+    <ResizablePanel className="flex-1" defaultSize={defaultLayout[1]}>
+      {children}
+    </ResizablePanel>
   );
 };
 

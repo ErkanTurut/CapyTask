@@ -74,7 +74,7 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({
           </Avatar>
           <span
             className={cn(
-              "w-full cursor-pointer overflow-x-auto overflow-ellipsis whitespace-nowrap	", // Adjust the max-width as needed
+              "w-full cursor-pointer overflow-x-auto overflow-ellipsis whitespace-nowrap", // Adjust the max-width as needed
               isCollapsed && "hidden",
             )}
           >

@@ -1,28 +1,26 @@
 model company {
-    id          String   @id @default(dbgenerated("nanoid(10)"))
-    public_id   String   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-    name        String
-    description String?
-    created_at  DateTime @default(now()) @db.Timestamptz(6)
-    updated_at  DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  id           String         @id @default(dbgenerated("nanoid(10)"))
+  public_id    String         @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name         String
+  description  String?
+  created_at   DateTime       @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime       @default(now()) @updatedAt @db.Timestamptz(6)
+  workspace_id String
+  workspace    workspace      @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
+  company_user company_user[]
+  location     location[]
+  work_order   work_order[]
 
-    workspace_id String
-    workspace    workspace @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
-
-    location     location[]
-    company_user company_user[]
-    work_order   work_order[]
-
-    @@index([workspace_id])
+  @@index([workspace_id])
 }
 
 model company_user {
-    company_id String
-    user_id    String  @db.Uuid
-    company    company @relation(fields: [company_id], references: [id])
-    user       user    @relation(fields: [user_id], references: [id])
+  company_id String
+  user_id    String  @db.Uuid
+  company    company @relation(fields: [company_id], references: [id])
+  user       user    @relation(fields: [user_id], references: [id])
 
-    @@id([company_id, user_id])
-    @@index([company_id])
-    @@index([user_id])
+  @@id([company_id, user_id])
+  @@index([company_id])
+  @@index([user_id])
 }

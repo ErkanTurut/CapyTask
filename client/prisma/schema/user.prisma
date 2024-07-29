@@ -1,43 +1,43 @@
 model user {
-    id             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-    image_uri      String?
-    email          String           @unique
-    first_name     String?
-    last_name      String?
-    createdAt      DateTime         @default(now()) @db.Timestamptz(6)
-    updatedAt      DateTime         @default(now()) @updatedAt @db.Timestamptz(6)
-    external_id    String?          @unique @db.Uuid
-    user_team      user_team[]
-    user_workspace user_workspace[]
-    workspaces     workspace[]
-    company_user   company_user[]
-    work_order     work_order[]
+  id             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  image_uri      String?
+  email          String           @unique
+  first_name     String?
+  last_name      String?
+  createdAt      DateTime         @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime         @default(now()) @updatedAt @db.Timestamptz(6)
+  external_id    String?          @unique @db.Uuid
+  company_user   company_user[]
+  user_team      user_team[]
+  user_workspace user_workspace[]
+  work_order     work_order[]
+  workspaces     workspace[]
 }
 
 model user_team {
-    user_id String  @db.Uuid
-    team_id String
-    role_id String? @db.Uuid
-    role    role?   @relation(fields: [role_id], references: [id])
-    team    team    @relation(fields: [team_id], references: [id], onDelete: Cascade)
-    user    user    @relation(fields: [user_id], references: [id])
+  user_id String  @db.Uuid
+  team_id String
+  role_id String? @db.Uuid
+  role    role?   @relation(fields: [role_id], references: [id])
+  team    team    @relation(fields: [team_id], references: [id], onDelete: Cascade)
+  user    user    @relation(fields: [user_id], references: [id])
 
-    @@id([user_id, team_id])
-    @@index([team_id])
-    @@index([role_id])
-    @@index([user_id])
+  @@id([user_id, team_id])
+  @@index([team_id])
+  @@index([role_id])
+  @@index([user_id])
 }
 
 model user_workspace {
-    user_id      String    @db.Uuid
-    workspace_id String
-    role_id      String?   @db.Uuid
-    role         role?     @relation(fields: [role_id], references: [id])
-    user         user      @relation(fields: [user_id], references: [id])
-    workspace    workspace @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
+  user_id      String    @db.Uuid
+  workspace_id String
+  role_id      String?   @db.Uuid
+  role         role?     @relation(fields: [role_id], references: [id])
+  user         user      @relation(fields: [user_id], references: [id])
+  workspace    workspace @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
 
-    @@id([user_id, workspace_id])
-    @@index([user_id])
-    @@index([workspace_id])
-    @@index([role_id])
+  @@id([user_id, workspace_id])
+  @@index([user_id])
+  @@index([workspace_id])
+  @@index([role_id])
 }

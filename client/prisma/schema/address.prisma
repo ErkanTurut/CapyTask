@@ -1,12 +1,12 @@
 model address {
-    id          String                   @id @default(dbgenerated("nanoid(10)"))
-    public_id   String                   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-    street      String
-    city        String
-    state       String
-    country     String
-    postal_code String
-    geography   Unsupported("geography")
-    createdDate DateTime                 @default(now())
-    location    location[]
+  id          String                   @id @default(dbgenerated("nanoid(10)"))
+  public_id   String                   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  street      String
+  city        String
+  state       String
+  country     String
+  createdDate DateTime                 @default(now())
+  postal_code String
+  geography   Unsupported("geography")
+  location    location[]
 }

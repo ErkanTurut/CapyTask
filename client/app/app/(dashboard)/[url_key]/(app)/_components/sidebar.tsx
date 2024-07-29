@@ -37,7 +37,6 @@ export default async function Sidebar({ params }: sidebarProps) {
     <SidebarLayout
       defaultLayout={defaultLayout}
       defaultCollapsed={defaultCollapsed}
-      className=" hidden h-screen bg-muted/50 p-2 backdrop-blur-[2px] lg:flex"
     >
       <div>
         <SidebarHeader className="flex flex-col gap-2 pb-2">
@@ -47,7 +46,7 @@ export default async function Sidebar({ params }: sidebarProps) {
           <Nav rootPath={`/${params.url_key}`} items={appNavItems.header} />
           <Separator />
         </SidebarHeader>
-        <SidebarBody className="flex flex-col gap-1 overflow-x-auto overflow-ellipsis whitespace-nowrap	 	">
+        <SidebarBody className="flex flex-col gap-1 overflow-x-auto overflow-ellipsis whitespace-nowrap">
           <Nav
             level={1}
             rootPath={`/${params.url_key}`}
@@ -59,7 +58,7 @@ export default async function Sidebar({ params }: sidebarProps) {
           </Suspense>
         </SidebarBody>
       </div>
-      <SidebarFooter className="flex flex-col gap-1 ">
+      <SidebarFooter className="flex flex-col gap-1">
         <Separator />
         <Nav rootPath={`/${params.url_key}`} items={appNavItems.footer} />
         <Separator />
