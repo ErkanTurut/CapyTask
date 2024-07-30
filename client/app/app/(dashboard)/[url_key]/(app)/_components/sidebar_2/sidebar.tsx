@@ -1,43 +1,14 @@
-import Link from "next/link";
 import {
-  Bell,
-  CircleUser,
-  Home,
-  LineChart,
-  Menu,
-  Package,
-  Package2,
-  Search,
-  ShoppingCart,
-  Users,
-} from "lucide-react";
-
-import { Badge } from "@/components/ui/badge";
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { cn } from "@/lib/utils";
-import { Suspense } from "react";
-import WorkspaceSelector from "../sidebar/workspace-selector";
-import WorkspaceSkeleton from "@/components/workspace/workspace-skeleton";
 import { Separator } from "@/components/ui/separator";
-import { Nav } from "@/components/layouts/side-navigation/nav";
-import { appNavItems } from "@/config/dashboard.config";
+import { cn } from "@/lib/utils";
+import { NavItem, navItemVariants, NavLink, NavMenu } from "./nav-link";
+import { trpc } from "@/trpc/server";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   params: {
@@ -45,26 +16,120 @@ interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   };
 }
 
+const items: NavItem[] = [
+  {
+    href: "#",
+    label: "Dashboard",
+    icon: "PaperPlane",
+  },
+  {
+    href: "#",
+    label: "Dashboard",
+    icon: "PaperPlane",
+    subItems: [
+      {
+        href: "#",
+        label: "Dashboard",
+        icon: "PaperPlane",
+      },
+    ],
+  },
+];
+
+const mainNav: NavItem[] = [
+  {
+    label: "Customers",
+    icon: "user",
+    href: "/customers",
+    subItems: [
+      {
+        label: "Companies",
+        href: "/companies",
+        icon: "building",
+      },
+      {
+        label: "Locations",
+        href: "/locations",
+        icon: "SewingPin",
+      },
+      {
+        label: "Assets",
+        icon: "mix",
+        href: "/assets",
+      },
+    ],
+  },
+  {
+    label: "Work Plans",
+    icon: "dashboard",
+    href: "/work-plans/templates",
+  },
+];
+
+const headerNav: NavItem[] = [
+  {
+    label: "Research",
+    href: "/research",
+    icon: "search",
+    disabled: true,
+  },
+  {
+    label: "Settings",
+    href: "/settings",
+    icon: "gear",
+    disabled: true,
+  },
+];
+
+const teamNav: NavItem[] = [
+  {
+    label: "Work orders",
+    icon: "checkCircled",
+    href: "/work-orders",
+  },
+  {
+    label: "Service contracts",
+    icon: "fileText",
+
+    href: "/service-contracts",
+
+    disabled: true,
+  },
+];
+
 export default async function Sidebar({ className, params }: SidebarProps) {
+  const { data: teams } = await trpc.db.team.getByWorkspaceUrlKey({
+    url_key: params.url_key,
+  });
   return (
-    <aside
-      className={cn("hidden min-w-[240px] rounded-md md:block", className)}
-    >
+    <aside className={cn("hidden w-[240px] rounded-md md:block", className)}>
       <div className="flex h-full w-full flex-col justify-between">
         <div className="w-full p-2">
           <Button variant={"outline"} className="w-full shadow-none">
             dd
           </Button>
         </div>
-        <Separator />
-        <div className="flex-1 p-2">
-          <Nav
-            level={1}
-            rootPath={`/${params.url_key}`}
-            items={appNavItems.main}
-            isCollapsed={false}
+        <nav className="flex w-full flex-1 flex-col gap-1 p-2">
+          <NavMenu items={headerNav} params={params} />
+          <Separator />
+          <NavMenu items={mainNav} params={params} />
+          <Separator />
+          <NavMenu
+            items={[
+              {
+                label: "team",
+                href: `/team`,
+                subItems: teams?.map((team) => ({
+                  label: team.name,
+                  href: `/${team.identity}`,
+                  subItems: teamNav,
+                })),
+              },
+            ]}
+            params={params}
           />
-        </div>
+        </nav>
+        <Separator />
         <Separator />
         <div className="p-2">
           <Button variant={"outline"} className="w-full shadow-none">
