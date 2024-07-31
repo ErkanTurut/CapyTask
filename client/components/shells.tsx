@@ -2,7 +2,7 @@ import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
-const shellVariants = cva("grid gap-8", {
+const shellVariants = cva("grid gap-6", {
   variants: {
     variant: {
       default: "container pb-8 pt-6",

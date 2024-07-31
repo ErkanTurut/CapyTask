@@ -26,10 +26,9 @@ export default async function DashboardPage({
   const limit = searchParams["limit"]
     ? parseInt(searchParams["limit"] as string)
     : 10;
-  const offset = (page - 1) * limit;
 
   return (
-    <Shell variant="default">
+    <Shell>
       <PageHeader id="account-header" aria-labelledby="account-header-heading">
         <PageHeaderHeading size="sm" className="flex items-center gap-1">
           Work Plans Templates

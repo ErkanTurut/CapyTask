@@ -22,9 +22,7 @@ export default async function createPage({ params }: createPageProps) {
         id="work-plan-template-header"
         aria-labelledby="work-plan-template-header-heading"
       >
-        <PageHeaderHeading size="sm">
-          Create work plan template
-        </PageHeaderHeading>
+        <PageHeaderHeading size="sm">Work plan template</PageHeaderHeading>
         <PageHeaderDescription size="sm">
           Work plan template are reusable templates that can be used to create
           work plans for your work orders.
@@ -36,3 +34,13 @@ export default async function createPage({ params }: createPageProps) {
     </Shell>
   );
 }
+
+const session = {
+  user: {
+    id: "1",
+    email: "",
+    metadata: {
+      teams: [{}],
+    },
+  },
+};

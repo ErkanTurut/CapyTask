@@ -55,7 +55,7 @@ export function WorkPlanTemplateCreateForm({
     defaultValues: {
       name: "",
       description: "",
-      team_id: "",
+      workspace_id: "",
     },
   });
 
@@ -70,8 +70,10 @@ export function WorkPlanTemplateCreateForm({
         onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
       >
         <Card>
+          <CardHeader>
+            <CardTitle>Create</CardTitle>
+          </CardHeader>
           <CardContent>
-            <CardHeader></CardHeader>
             <FormField
               control={form.control}
               name="name"
@@ -100,7 +102,7 @@ export function WorkPlanTemplateCreateForm({
             />
             <FormField
               control={form.control}
-              name="team_id"
+              name="workspace_id"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
