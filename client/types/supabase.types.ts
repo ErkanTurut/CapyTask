@@ -268,24 +268,21 @@ export type Database = {
           },
         ]
       }
-      role: {
+      role_permission: {
         Row: {
-          description: string
           id: string
-          name: Database["public"]["Enums"]["Role"]
-          permissions: Database["public"]["Enums"]["Permission"][] | null
+          permission: Database["public"]["Enums"]["Permission"]
+          role: Database["public"]["Enums"]["role"]
         }
         Insert: {
-          description: string
           id?: string
-          name: Database["public"]["Enums"]["Role"]
-          permissions?: Database["public"]["Enums"]["Permission"][] | null
+          permission: Database["public"]["Enums"]["Permission"]
+          role: Database["public"]["Enums"]["role"]
         }
         Update: {
-          description?: string
           id?: string
-          name?: Database["public"]["Enums"]["Role"]
-          permissions?: Database["public"]["Enums"]["Permission"][] | null
+          permission?: Database["public"]["Enums"]["Permission"]
+          role?: Database["public"]["Enums"]["role"]
         }
         Relationships: []
       }
@@ -333,6 +330,39 @@ export type Database = {
           },
         ]
       }
+      team_user: {
+        Row: {
+          role: Database["public"]["Enums"]["role"]
+          team_id: string
+          user_id: string
+        }
+        Insert: {
+          role: Database["public"]["Enums"]["role"]
+          team_id: string
+          user_id: string
+        }
+        Update: {
+          role?: Database["public"]["Enums"]["role"]
+          team_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "team_user_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "team"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "team_user_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user: {
         Row: {
           createdAt: string
@@ -365,86 +395,6 @@ export type Database = {
           updatedAt?: string
         }
         Relationships: []
-      }
-      user_team: {
-        Row: {
-          role_id: string | null
-          team_id: string
-          user_id: string
-        }
-        Insert: {
-          role_id?: string | null
-          team_id: string
-          user_id: string
-        }
-        Update: {
-          role_id?: string | null
-          team_id?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_team_role_id_fkey"
-            columns: ["role_id"]
-            isOneToOne: false
-            referencedRelation: "role"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_team_team_id_fkey"
-            columns: ["team_id"]
-            isOneToOne: false
-            referencedRelation: "team"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_team_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      user_workspace: {
-        Row: {
-          role_id: string | null
-          user_id: string
-          workspace_id: string
-        }
-        Insert: {
-          role_id?: string | null
-          user_id: string
-          workspace_id: string
-        }
-        Update: {
-          role_id?: string | null
-          user_id?: string
-          workspace_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_workspace_role_id_fkey"
-            columns: ["role_id"]
-            isOneToOne: false
-            referencedRelation: "role"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_workspace_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_workspace_workspace_id_fkey"
-            columns: ["workspace_id"]
-            isOneToOne: false
-            referencedRelation: "workspace"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       work_order: {
         Row: {
@@ -868,86 +818,49 @@ export type Database = {
           },
         ]
       }
+      workspace_user: {
+        Row: {
+          role: Database["public"]["Enums"]["role"]
+          user_id: string
+          workspace_id: string
+        }
+        Insert: {
+          role: Database["public"]["Enums"]["role"]
+          user_id: string
+          workspace_id: string
+        }
+        Update: {
+          role?: Database["public"]["Enums"]["role"]
+          user_id?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workspace_user_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workspace_user_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspace"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      create_work_order: {
+      custom_access_token_hook: {
         Args: {
-          _name: string
-          _team_id: string
-          _description: string
-          _company_id: string
-          _location_id: string
-          _work_plan_id: string
-          _source: string
-          _requested_by_id: string
-          _type: string
+          event: Json
         }
-        Returns: {
-          work_order_id: string
-          name: string
-          team_id: string
-          description: string
-          company_id: string
-          location_id: string
-          work_plan_id: string
-          source: string
-          requested_by_id: string
-          type: string
-          created_at: string
-          updated_at: string
-        }[]
-      }
-      create_work_order_with_steps: {
-        Args: {
-          _name: string
-          _description: string
-          _team_id: string
-          _company_id: string
-          _location_id: string
-          _source: string
-          _requested_by_id: string
-          _type: string
-          _work_step: Json
-          _assets: Json
-        }
-        Returns: {
-          work_order_id: string
-          work_order_name: string
-          work_order_description: string
-          work_order_team_id: string
-          work_order_company_id: string
-          work_order_location_id: string
-          work_order_source: string
-          work_order_requested_by_id: string
-          work_order_type: string
-          work_plan_id: string
-          work_step_status: Json
-        }[]
-      }
-      create_work_plan: {
-        Args: {
-          _name: string
-          _description: string
-          _team_id: string
-        }
-        Returns: {
-          work_plan_id: string
-          name: string
-          description: string
-          team_id: string
-          created_at: string
-          updated_at: string
-        }[]
-      }
-      create_work_step: {
-        Args: {
-          work_plan_template_id_param: string
-          work_plan_id: string
-        }
-        Returns: undefined
+        Returns: Json
       }
       manage_work_plan: {
         Args: {
@@ -1050,14 +963,9 @@ export type Database = {
     }
     Enums: {
       LocationType: "BUILDING" | "FLOOR" | "ROOM" | "AREA" | "OTHER"
-      Permission:
-        | "FULL_ACCESS"
-        | "CAN_EDIT"
-        | "CAN_COMMENT"
-        | "CAN_VIEW"
-        | "NO_ACCESS"
+      Permission: "CREATE" | "READ" | "UPDATE" | "DELETE"
       Priority: "LOW" | "MEDIUM" | "HIGH"
-      Role:
+      role:
         | "ADMIN"
         | "MANAGER"
         | "SUPERVISOR"

@@ -12,9 +12,21 @@ model workspace {
   company            company[]
   location           location[]
   team               team[]
-  user_workspace     user_workspace[]
   work_plan_template work_plan_template[]
   user               user                 @relation(fields: [created_by], references: [id])
+  workspace_user     workspace_user[]
 
   @@index([url_key])
+}
+
+model workspace_user {
+  user_id      String    @db.Uuid
+  workspace_id String
+  role         role
+  user         user      @relation(fields: [user_id], references: [id])
+  workspace    workspace @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
+
+  @@id([user_id, workspace_id])
+  @@index([user_id])
+  @@index([workspace_id])
 }

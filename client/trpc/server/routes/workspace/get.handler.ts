@@ -28,6 +28,6 @@ export const getWorkspaceByUserHandler = async ({
 }) => {
   return await db
     .from("workspace")
-    .select("*, user_workspace!inner(*)")
-    .eq("user_workspace.user_id", input.user_id);
+    .select("*, workspace_user!inner(*)")
+    .eq("workspace_user.user_id", input.user_id);
 };

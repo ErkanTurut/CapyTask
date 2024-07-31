@@ -9,11 +9,23 @@ model team {
   identity     String
   public_id    String       @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   workspace    workspace    @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
-  users        user_team[]
+  team_user    team_user[]
   work_order   work_order[]
   work_plan    work_plan[]
 
   @@unique([identity, workspace_id])
   @@unique([name, workspace_id])
   @@index([workspace_id])
+}
+
+model team_user {
+  user_id String @db.Uuid
+  team_id String
+  role    role
+  team    team   @relation(fields: [team_id], references: [id], onDelete: Cascade)
+  user    user   @relation(fields: [user_id], references: [id])
+
+  @@id([user_id, team_id])
+  @@index([team_id])
+  @@index([user_id])
 }
