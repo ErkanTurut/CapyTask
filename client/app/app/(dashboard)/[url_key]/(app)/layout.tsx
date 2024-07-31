@@ -1,11 +1,20 @@
 import { cookies } from "next/headers";
 
-import Sidebar from "./_components/sidebar_2/sidebar";
+import { Sidebar } from "@/components/dashboard/sidebar/sidebar";
 
 import { SidebarProvider } from "@/lib/store";
 import { AI } from "./_components/ai/actions";
 import { LivekitRoomProvider } from "./_components/ai/livekitRoomProvider";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
+
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+
 interface DashboardLayoutProps {
   children: React.ReactNode;
   params: {
@@ -31,27 +40,34 @@ export default async function DashboardLayout({
     <AI>
       <LivekitRoomProvider>
         <SidebarProvider isCollapsed={defaultCollapsed || false}>
-          <div className="relative flex min-h-screen w-full justify-center gap-2">
+          <div className="relative flex h-screen w-full justify-center">
             <Sidebar
-              className="sticky top-0 flex h-screen border"
+              className="sticky top-0 flex rounded-md border-r bg-muted/40 transition-shadow duration-300 hover:shadow-md"
               params={params}
             />
-            <main className="w-full flex-1 rounded-md border bg-muted/40">
+            <main className="flex h-screen w-full flex-1 flex-col rounded-md">
+              <div className="flex w-full border-b p-2">
+                <Breadcrumb className="flex h-9 items-center rounded-md border p-2">
+                  <BreadcrumbList>
+                    <BreadcrumbItem>
+                      <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                      <BreadcrumbLink href="/components">
+                        Components
+                      </BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                      <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
+                    </BreadcrumbItem>
+                  </BreadcrumbList>
+                </Breadcrumb>
+              </div>
               {children}
             </main>
           </div>
-          {/* <ResizableGroup> */}
-          {/* <DotPattern className="absolute top-0 z-[-2] h-screen w-screen bg-background  "> */}
-          {/* <Resizable defaultLayout={defaultLayout}>
-              <AssistantModal />
-              <ScrollArea className="h-screen"> */}
-          {/* <Toolbar className="sticky top-0 z-40 hidden p-2 pb-4 sm:block" /> */}
-
-          {/* <Toolbar className="sticky bottom-0 z-40 mt-4 block rounded-md border bg-muted p-2 pt-4 sm:hidden" /> */}
-          {/* </ScrollArea>
-            </Resizable> */}
-          {/* </DotPattern> */}
-          {/* </ResizableGroup> */}
         </SidebarProvider>
       </LivekitRoomProvider>
     </AI>

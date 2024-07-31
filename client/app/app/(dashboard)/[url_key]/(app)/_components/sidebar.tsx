@@ -14,9 +14,9 @@ import {
 import TeamListSkeleton from "@/components/team/team-list-skeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 
-import TeamNav from "./sidebar/team-nav";
-import UserNav from "./sidebar/user-account-nav";
-import WorkspaceSelector from "./sidebar/workspace-selector";
+import TeamNav from "../../../../../../components/dashboard/sidebar/selector/team-nav";
+import UserNav from "../../../../../../components/dashboard/sidebar/selector/user-account-nav";
+import WorkspaceSelector from "../../../../../../components/dashboard/sidebar/selector/workspace-selector";
 interface sidebarProps {
   params: {
     url_key: string;
