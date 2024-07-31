@@ -1,8 +1,0 @@
-model role {
-  id             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name           Role
-  description    String
-  permissions    Permission[]     @default([])
-  user_team      user_team[]
-  user_workspace user_workspace[]
-}
