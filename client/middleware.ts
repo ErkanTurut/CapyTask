@@ -52,8 +52,8 @@ async function handleAppHostname(
   } else if (session && path === "/login") {
     const { data: workspaces, error } = await supabase
       .from("workspace")
-      .select("*, user_workspace(user_id, workspace_id)")
-      .eq("user_workspace.user_id", session.user.id);
+      .select("*, workspace_user(user_id, workspace_id)")
+      .eq("workspace_user.user_id", session.user.id);
 
     if (!workspaces || workspaces.length < 1 || error) {
       return NextResponse.redirect(new URL("/create", req.url), {
