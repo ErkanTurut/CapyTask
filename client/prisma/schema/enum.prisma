@@ -14,23 +14,11 @@ enum Status {
   CANCELED
 }
 
-enum Role {
-  ADMIN
-  MANAGER
-  SUPERVISOR
-  TECHNICIAN
-  ENGINEER
-  QUALITY_INSPECTOR
-  OPERATOR
-  OTHER
-}
-
 enum Permission {
-  FULL_ACCESS
-  CAN_EDIT
-  CAN_COMMENT
-  CAN_VIEW
-  NO_ACCESS
+  CREATE
+  READ
+  UPDATE
+  DELETE
 }
 
 enum Priority {
