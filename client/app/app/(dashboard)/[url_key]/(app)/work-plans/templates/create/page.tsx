@@ -7,6 +7,9 @@ import {
   PageHeaderHeading,
 } from "@/components/page-header";
 import { Separator } from "@/components/ui/separator";
+import { trpc } from "@/trpc/server";
+import { redirect } from "next/navigation";
+import { Suspense } from "react";
 
 interface createPageProps {
   params: {
@@ -16,6 +19,12 @@ interface createPageProps {
 }
 
 export default async function createPage({ params }: createPageProps) {
+  const { data } = await trpc.db.workspace.getByUrlKey({
+    url_key: params.url_key,
+  });
+  if (!data) {
+    redirect("/create");
+  }
   return (
     <Shell>
       <PageHeader
@@ -30,17 +39,9 @@ export default async function createPage({ params }: createPageProps) {
       </PageHeader>
       <Separator />
 
-      <WorkPlanTemplateCreateForm url_key={params.url_key} />
+      <Suspense fallback={"loading..."}>
+        <WorkPlanTemplateCreateForm workspace_id={data.id} />
+      </Suspense>
     </Shell>
   );
 }
-
-const session = {
-  user: {
-    id: "1",
-    email: "",
-    metadata: {
-      teams: [{}],
-    },
-  },
-};
