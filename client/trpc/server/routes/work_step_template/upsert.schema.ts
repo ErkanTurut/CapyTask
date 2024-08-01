@@ -1,7 +1,7 @@
 import * as z from "zod";
 
 export const ZUpsertWorkStepTemplateSchema = z.object({
-  work_step_templates: z
+  work_step_template: z
     .object({
       id: z.string(),
       public_id: z.string(),
