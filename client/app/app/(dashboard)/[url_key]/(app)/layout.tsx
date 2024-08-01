@@ -14,6 +14,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -39,36 +40,31 @@ export default async function DashboardLayout({
   return (
     <AI>
       <LivekitRoomProvider>
-        <SidebarProvider isCollapsed={defaultCollapsed || false}>
-          <div className="relative flex h-screen w-full justify-center">
-            <Sidebar
-              className="sticky top-0 flex rounded-md border-r bg-muted/40 transition-shadow duration-300 hover:shadow-md"
-              params={params}
-            />
-            <main className="flex h-screen w-full flex-1 flex-col rounded-md">
-              <div className="flex w-full border-b p-2">
-                <Breadcrumb className="flex h-9 items-center rounded-md border p-2">
-                  <BreadcrumbList>
-                    <BreadcrumbItem>
-                      <BreadcrumbLink href="/">Home</BreadcrumbLink>
-                    </BreadcrumbItem>
-                    <BreadcrumbSeparator />
-                    <BreadcrumbItem>
-                      <BreadcrumbLink href="/components">
-                        Components
-                      </BreadcrumbLink>
-                    </BreadcrumbItem>
-                    <BreadcrumbSeparator />
-                    <BreadcrumbItem>
-                      <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
-                    </BreadcrumbItem>
-                  </BreadcrumbList>
-                </Breadcrumb>
-              </div>
-              {children}
-            </main>
-          </div>
-        </SidebarProvider>
+        <div className="relative flex h-screen w-full justify-center bg-muted/40">
+          <Sidebar className="sticky top-0 flex" params={params} />
+          <main className="m-1 flex w-full flex-1 flex-col rounded-md border bg-background">
+            <div className="flex w-full border-b p-2">
+              <Breadcrumb className="flex h-9 items-center rounded-md border p-2">
+                <BreadcrumbList>
+                  <BreadcrumbItem>
+                    <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem>
+                    <BreadcrumbLink href="/components">
+                      Components
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem>
+                    <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
+                  </BreadcrumbItem>
+                </BreadcrumbList>
+              </Breadcrumb>
+            </div>
+            <ScrollArea className="flex-1">{children}</ScrollArea>
+          </main>
+        </div>
       </LivekitRoomProvider>
     </AI>
   );
