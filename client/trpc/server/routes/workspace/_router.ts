@@ -1,3 +1,4 @@
+import { sleep } from "@/lib/utils";
 import { protectedProcedure, router } from "../../trpc";
 
 import { createWorkspaceHandler } from "./create.handler";
@@ -21,6 +22,7 @@ export const workspace = router({
   getByUrlKey: protectedProcedure
     .input(ZGetWorkspaceSchema.pick({ url_key: true }))
     .query(async ({ input, ctx }) => {
+      await sleep(3000);
       return await getWorkspaceByUrlKeyHandler({
         input,
         db: ctx.db,
