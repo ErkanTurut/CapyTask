@@ -32,6 +32,7 @@ import {
   TUpdateWorkPlanTemplateSchema,
   ZUpdateWorkPlanTemplateSchema,
 } from "@/trpc/server/routes/work_plan_template/update.schema";
+import { useRouter } from "next/navigation";
 
 interface WorkPlanTemplateGeneralFormProps
   extends React.HTMLAttributes<HTMLFormElement> {
@@ -44,6 +45,7 @@ export function WorkPlanTemplateGeneralForm({
   work_plan_template,
   className,
 }: WorkPlanTemplateGeneralFormProps) {
+  const router = useRouter();
   const { mutate, isPending } = api.db.work_plan_template.update.useMutation({
     onSuccess: async (data, variables) => {
       toast.success("Updated successfully");

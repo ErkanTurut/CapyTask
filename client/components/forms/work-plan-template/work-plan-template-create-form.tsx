@@ -37,30 +37,49 @@ import { Textarea } from "@/components/ui/textarea";
 
 interface WorkPlanTemplateCreateFormProps
   extends React.HTMLAttributes<HTMLFormElement> {
-  url_key: string;
+  workspace_id: string;
 }
 
 export function WorkPlanTemplateCreateForm({
-  url_key,
-
+  workspace_id,
   className,
 }: WorkPlanTemplateCreateFormProps) {
   const router = useRouter();
 
   const utils = api.useUtils();
 
+  const { mutate, isPending } = api.db.work_plan_template.create.useMutation({
+    onSuccess() {
+      toast.success("Updated successfully");
+
+      utils.db.work_plan_template.get.byWorkspace.invalidate(
+        {
+          url_key: workspace_id,
+        },
+        { type: "all" },
+      );
+      form.reset();
+    },
+    onSettled(data) {
+      router.push(`./${data?.id}`);
+    },
+    onError(err) {
+      catchError(new Error(err.message));
+    },
+  });
+
   // react-hook-form
   const form = useForm<TCreateWorkPlanTemplateSchema>({
     resolver: zodResolver(ZCreateWorkPlanTemplateSchema),
-    defaultValues: {
+    values: {
       name: "",
-      description: "",
-      workspace_id: "",
+      description: undefined,
+      workspace_id,
     },
   });
 
   async function onSubmit(data: TCreateWorkPlanTemplateSchema) {
-    // mutate(data);
+    mutate(data);
   }
 
   return (
@@ -114,7 +133,7 @@ export function WorkPlanTemplateCreateForm({
             />
           </CardContent>
           <CardFooter>
-            <Button isLoading={false} disabled={!form.formState.isDirty}>
+            <Button isLoading={isPending} disabled={!form.formState.isDirty}>
               Create now
               <span className="sr-only">Create now</span>
             </Button>

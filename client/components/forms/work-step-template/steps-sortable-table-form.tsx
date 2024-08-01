@@ -36,6 +36,7 @@ import {
 } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Icons } from "@/components/icons";
 
 interface StepsSortableTableFormProps
   extends React.HTMLAttributes<HTMLFormElement> {
@@ -61,42 +62,47 @@ export function StepsSortableTableForm({
     },
   });
 
-  const { data: work_step_templates, refetch } =
+  const { data: work_step_template, refetch } =
     api.db.work_step_template.get.byWorkPlanTemplate.useQuery(
       {
         work_plan_template_id: work_plan_template_id,
       },
       { initialData: initialData },
     );
-  if (!work_step_templates) return notFound();
+  if (!work_step_template) return notFound();
 
   const form = useForm<TUpsertWorkStepTemplateSchema>({
     resolver: zodResolver(ZUpsertWorkStepTemplateSchema),
     values: {
-      work_step_templates,
+      work_step_template,
     },
   });
 
   const { fields, append, move, remove } = useFieldArray({
     control: form.control,
-    name: "work_step_templates",
+    name: "work_step_template",
     keyName: "fieldId",
   });
 
   return (
-    <Form {...form}>
-      <form
-        className={cn("", className)}
-        onSubmit={(...args) =>
-          void form.handleSubmit((data) => {
-            mutate(data);
-          })(...args)
-        }
-      >
-        <Card className="shadow-sm">
-          <CardHeader>
-            <CardTitle>General</CardTitle>
-          </CardHeader>
+    <Card className="shadow-sm">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle>Steps</CardTitle>
+          <Button variant={"outline"}>
+            <Icons.plusCircled className="mr-2 h-4 w-4" /> New
+          </Button>
+        </div>
+      </CardHeader>
+      <Form {...form}>
+        <form
+          className={cn("", className)}
+          onSubmit={(...args) =>
+            void form.handleSubmit((data) => {
+              mutate(data);
+            })(...args)
+          }
+        >
           <CardContent>
             <Sortable
               value={fields}
@@ -116,7 +122,7 @@ export function StepsSortableTableForm({
                 {fields.map(
                   (field, index) => (
                     form.setValue(
-                      `work_step_templates.${index}.step_order`,
+                      `work_step_template.${index}.step_order`,
                       index + 1,
                     ),
                     (
@@ -141,7 +147,7 @@ export function StepsSortableTableForm({
                           >
                             <FormField
                               control={form.control}
-                              name={`work_step_templates.${index}.name`}
+                              name={`work_step_template.${index}.name`}
                               render={({ field }) => (
                                 <FormItem>
                                   <FormControl>
@@ -226,8 +232,8 @@ export function StepsSortableTableForm({
               <span className="sr-only">Save update</span>
             </Button>
           </CardFooter>
-        </Card>
-      </form>
-    </Form>
+        </form>
+      </Form>
+    </Card>
   );
 }
