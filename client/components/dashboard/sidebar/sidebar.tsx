@@ -80,12 +80,12 @@ export async function Sidebar({ className, params }: SidebarProps) {
   return (
     <aside className={cn("z-50 hidden w-[240px] md:block", className)}>
       <div className="flex h-full w-full flex-col justify-between">
-        <div className="w-full p-2">
+        <div className="w-full p-2 pt-3">
           <Suspense fallback={<WorkspaceSkeleton />}>
             <WorkspaceSelector params={params} />
           </Suspense>
         </div>
-        <Separator />
+
         <nav className="flex w-full flex-1 flex-col gap-2 pt-2">
           <NavMenu items={headerNav} params={params} className="px-2" />
           <Separator />

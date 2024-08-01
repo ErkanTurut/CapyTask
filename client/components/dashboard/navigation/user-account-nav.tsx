@@ -34,8 +34,7 @@ const UserAccountNav: FC<UserAccountNavProps> = ({ className, user }) => {
     last_name: user.last_name,
     email: user.email,
   });
-  const isCollapsed = useSidebar()((state) => state.isCollapsed);
-
+  const isCollapsed = false;
   const { url_key } = useParams();
 
   return (

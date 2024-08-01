@@ -35,7 +35,7 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({
   const [open, setOpen] = useState(false);
   const [selectedWorkspace, setSelectedWorkspace] = useState(workspace);
   const router = useRouter();
-  const isCollapsed = useSidebar()((state) => state.isCollapsed);
+  const isCollapsed = false;
   const groups = [
     {
       label: "Workspaces",
@@ -57,7 +57,7 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({
           aria-expanded={open}
           aria-label="Select a team"
           className={cn(
-            "w-full",
+            "w-full shadow-none",
             isCollapsed && "[&>span]:w-auto [&>svg]:hidden",
             className,
           )}
