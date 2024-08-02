@@ -26,9 +26,14 @@ interface layoutProps {
     team_identity: string;
     work_plan_template_id: string;
   };
+  modal: React.ReactNode;
 }
 
-export default async function layoutPage({ children, params }: layoutProps) {
+export default async function layoutPage({
+  children,
+  params,
+  modal,
+}: layoutProps) {
   const work_plan_template = await trpc.db.work_plan_template.get.byId({
     id: params.work_plan_template_id,
   });
@@ -70,6 +75,7 @@ export default async function layoutPage({ children, params }: layoutProps) {
           ]}
         />
       </PageHeader>
+      {modal}
 
       <Suspense fallback={<CardSkeleton />}>{children}</Suspense>
     </Shell>
