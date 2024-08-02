@@ -87,21 +87,27 @@ export async function Sidebar({ className, params }: SidebarProps) {
         </div>
 
         <nav className="flex w-full flex-1 flex-col gap-2 pt-2">
-          <NavMenu items={headerNav} params={params} className="px-2" />
+          <Suspense fallback={<Skeleton className="h-7 w-full" />}>
+            <NavMenu items={headerNav} params={params} className="px-2" />
+          </Suspense>
           <Separator />
-          <NavMenu items={mainNav} params={params} className="px-2" />
+          <Suspense fallback={<Skeleton className="h-7 w-full" />}>
+            <NavMenu items={mainNav} params={params} className="px-2" />
+          </Suspense>
           <Separator />
-          <NavMenu
-            items={
-              teams?.map((team) => ({
-                label: team.name,
-                href: `/team/${team.identity}`,
-                subItems: teamNav,
-              })) || []
-            }
-            params={params}
-            className="px-2"
-          />
+          <Suspense fallback={<Skeleton className="h-7 w-full" />}>
+            <NavMenu
+              items={
+                teams?.map((team) => ({
+                  label: team.name,
+                  href: `/team/${team.identity}`,
+                  subItems: teamNav,
+                })) || []
+              }
+              params={params}
+              className="px-2"
+            />
+          </Suspense>
         </nav>
         <Separator />
         <div className="p-2">

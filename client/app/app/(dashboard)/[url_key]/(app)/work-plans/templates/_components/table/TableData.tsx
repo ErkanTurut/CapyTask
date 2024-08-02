@@ -31,6 +31,7 @@ export function TableData({
     },
     { initialData, staleTime: 1000 * 60, refetchOnMount: true },
   );
+
   return (
     <DataTable
       filter={{ columnVisibility: { description: false } }}

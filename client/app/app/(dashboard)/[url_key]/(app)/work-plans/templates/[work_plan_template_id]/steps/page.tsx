@@ -35,10 +35,12 @@ export default async function Page({ searchParams, params }: PageProps) {
       )}
     >
       <div>
-        <StepsSortableTableForm
-          work_plan_template_id={params.work_plan_template_id}
-          initialData={work_step_templates}
-        />
+        <Suspense fallback={<CardSkeleton />}>
+          <StepsSortableTableForm
+            work_plan_template_id={params.work_plan_template_id}
+            initialData={work_step_templates}
+          />
+        </Suspense>
       </div>
 
       {searchParams.step_id && (

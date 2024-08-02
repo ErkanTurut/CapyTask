@@ -37,7 +37,7 @@ import {
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Icons } from "@/components/icons";
-
+import { CreatWorkStepTemplateModal } from "@/components/modals/CreateWorkStepTemplateModal";
 interface StepsSortableTableFormProps
   extends React.HTMLAttributes<HTMLFormElement> {
   initialData: NonNullable<
@@ -89,9 +89,13 @@ export function StepsSortableTableForm({
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Steps</CardTitle>
-          <Button variant={"outline"}>
-            <Icons.plusCircled className="mr-2 h-4 w-4" /> New
-          </Button>
+          <Link
+            className={buttonVariants({ variant: "outline", size: "sm" })}
+            href={"./create"}
+          >
+            <Icons.plusCircled className="mr-2 h-4 w-4" />
+            New
+          </Link>
         </div>
       </CardHeader>
       <Form {...form}>
