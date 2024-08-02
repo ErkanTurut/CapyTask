@@ -26,9 +26,14 @@ interface layoutProps {
     team_identity: string;
     work_plan_template_id: string;
   };
+  modal: React.ReactNode;
 }
 
-export default async function layoutPage({ children, params }: layoutProps) {
+export default async function layoutPage({
+  children,
+  params,
+  modal,
+}: layoutProps) {
   const work_plan_template = await trpc.db.work_plan_template.get.byId({
     id: params.work_plan_template_id,
   });
@@ -38,22 +43,7 @@ export default async function layoutPage({ children, params }: layoutProps) {
   }
 
   return (
-    <Shell className="gap-4">
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/">Home</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/components">Components</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+    <Shell>
       <PageHeader
         id="work-plan-template-header"
         aria-labelledby="work-plan-template-header-heading"
@@ -64,27 +54,28 @@ export default async function layoutPage({ children, params }: layoutProps) {
         <PageHeaderDescription size="sm">
           {work_plan_template.description}
         </PageHeaderDescription>
+        <Separator />
+        <NavTabs
+          items={[
+            {
+              id: "general",
+              title: "General",
+              href: `/${params.url_key}/work-plans/templates/${params.work_plan_template_id}`,
+            },
+            {
+              id: "step",
+              title: "Steps",
+              href: `/${params.url_key}/work-plans/templates/${params.work_plan_template_id}/steps`,
+            },
+            {
+              id: "ressource",
+              title: "Ressources",
+              href: `/${params.url_key}/work-plans/templates/${params.work_plan_template_id}/ressources`,
+            },
+          ]}
+        />
       </PageHeader>
-      <Separator />
-      <NavTabs
-        items={[
-          {
-            id: "general",
-            title: "General",
-            href: `/${params.url_key}/team/${params.team_identity}/work-plans/templates/${params.work_plan_template_id}`,
-          },
-          {
-            id: "step",
-            title: "Steps",
-            href: `/${params.url_key}/team/${params.team_identity}/work-plans/templates/${params.work_plan_template_id}/steps`,
-          },
-          {
-            id: "ressource",
-            title: "Ressources",
-            href: `/${params.url_key}/team/${params.team_identity}/work-plans/templates/${params.work_plan_template_id}/ressources`,
-          },
-        ]}
-      />
+      {modal}
 
       <Suspense fallback={<CardSkeleton />}>{children}</Suspense>
     </Shell>

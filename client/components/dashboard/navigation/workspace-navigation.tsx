@@ -14,8 +14,8 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-} from "../ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+} from "../../ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
 
 import { useSidebar } from "@/lib/store";
 import { Database } from "@/types/supabase.types";
@@ -35,7 +35,7 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({
   const [open, setOpen] = useState(false);
   const [selectedWorkspace, setSelectedWorkspace] = useState(workspace);
   const router = useRouter();
-  const isCollapsed = useSidebar()((state) => state.isCollapsed);
+  const isCollapsed = false;
   const groups = [
     {
       label: "Workspaces",
@@ -57,8 +57,8 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({
           aria-expanded={open}
           aria-label="Select a team"
           className={cn(
-            isCollapsed &&
-              "flex h-8 w-8 items-center justify-center gap-2 overflow-ellipsis [&>span]:w-auto [&>svg]:hidden",
+            "w-full shadow-none",
+            isCollapsed && "[&>span]:w-auto [&>svg]:hidden",
             className,
           )}
           size={isCollapsed ? "icon" : "default"}
@@ -74,7 +74,7 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({
           </Avatar>
           <span
             className={cn(
-              "w-full cursor-pointer overflow-x-auto overflow-ellipsis whitespace-nowrap	", // Adjust the max-width as needed
+              "w-full cursor-pointer overflow-x-auto overflow-ellipsis whitespace-nowrap", // Adjust the max-width as needed
               isCollapsed && "hidden",
             )}
           >
@@ -84,7 +84,7 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({
           <Icons.caretSort className="ml-auto h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[250px] p-1">
+      <PopoverContent align="center" className="w-[220px] p-1">
         <Command>
           <CommandList>
             <CommandInput placeholder="Search team..." />

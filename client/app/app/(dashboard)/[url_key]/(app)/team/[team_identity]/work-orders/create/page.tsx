@@ -14,7 +14,6 @@ import {
 import CreateWorkOrderForm from "@/components/work-order/work-order-create-form";
 import { Suspense } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CreateWorkOrderWithTemplate } from "@/components/work-order/CreateWorkOrderWithTemplate";
 import { trpc } from "@/trpc/server";
 
 interface createWorkOrderProps {
@@ -27,11 +26,6 @@ interface createWorkOrderProps {
 export default async function createWorkOrder({
   params,
 }: createWorkOrderProps) {
-  const { data: work_plan_template } =
-    await trpc.db.work_plan_template.getWorkPlanTemplatesByIdentity({
-      team_identity: params.team_identity,
-      range: { start: 0, end: 10 },
-    });
   return (
     <Shell variant="markdown" className="gap-2">
       <PageHeader
@@ -58,13 +52,7 @@ export default async function createWorkOrder({
                 Create a work order automatically by selecting a template.
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <Suspense fallback="loading...">
-                <CreateWorkOrderWithTemplate
-                  initialData={work_plan_template || []}
-                />
-              </Suspense>
-            </CardContent>
+            <CardContent></CardContent>
           </Card>
         </TabsContent>
         <TabsContent value="manual">

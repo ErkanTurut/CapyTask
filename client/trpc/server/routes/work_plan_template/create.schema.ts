@@ -11,10 +11,7 @@ export const ZCreateWorkPlanTemplateSchema = z.object({
     .regex(/^[a-zA-Z0-9 ]+$/, {
       message: "Name must contain only letters, numbers and spaces",
     }),
-  team_id: z.string({
-    invalid_type_error: "Team ID must be a string",
-    required_error: "Team ID is required",
-  }),
+  workspace_id: z.string(),
   description: z
     .string({
       invalid_type_error: "Description must be a string",

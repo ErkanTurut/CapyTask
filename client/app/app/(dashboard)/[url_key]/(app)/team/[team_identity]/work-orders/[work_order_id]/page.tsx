@@ -96,6 +96,7 @@ export default async function Page({ params }: PageProps) {
       <div className="grid auto-rows-max items-start gap-4 xl:col-span-2">
         {/* <BuddyComment /> */}
         <WorkOrderDetail params={params} work_order={work_order} />
+        <WorkOrderDetail params={params} work_order={work_order} />
       </div>
     </main>
   );

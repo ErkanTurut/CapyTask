@@ -1,42 +1,11 @@
 import * as z from "zod";
 
 export const ZCreateWorkStepTemplateSchema = z.object({
-  name: z
-    .string({
-      invalid_type_error: "Name must be a string",
-      required_error: "Name is required",
-    })
-    .min(3, { message: "Name must be at least 3 characters long" })
-    .max(100, { message: "Name must be less than 100 characters long" })
-    .regex(/^[a-zA-Z0-9 ]+$/, {
-      message: "Name must contain only letters, numbers and spaces",
-    }),
-  work_plan_template_id: z.string({
-    invalid_type_error: "Work Plan template ID must be a string",
-    required_error: "Work Plan template  is required",
-  }),
-  description: z
-    .string({
-      invalid_type_error: "Description must be a string",
-      required_error: "Description is required",
-    })
-    .min(3, { message: "Description must be at least 3 characters long" })
-    .max(1000, {
-      message: "Description must be less than 1000 characters long",
-    })
-    .optional(),
-  parent_id: z
-    .string({
-      invalid_type_error: "Parent ID must be a string",
-      required_error: "Parent ID is required",
-    })
-    .optional(),
-  order: z
-    .number({
-      invalid_type_error: "Order must be a number",
-      required_error: "Order is required",
-    })
-    .optional(),
+  name: z.string().min(3).max(100),
+  work_plan_template_id: z.string(),
+  description: z.string().optional(),
+  parent_id: z.string().nullish(),
+  order: z.number().nullish(),
 });
 
 export type TCreateWorkStepTemplateSchema = z.infer<

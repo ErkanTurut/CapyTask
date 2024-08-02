@@ -1,24 +1,32 @@
 model workspace {
-    id          String   @id @default(dbgenerated("nanoid(10)"))
-    name        String
-    description String?
-    created_at  DateTime @default(now()) @db.Timestamptz(6)
-    updated_at  DateTime @default(now()) @updatedAt @db.Timestamptz(6)
-    url_key     String   @unique
+  id                 String               @id @default(dbgenerated("nanoid(10)"))
+  name               String
+  description        String?
+  created_at         DateTime             @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime             @default(now()) @updatedAt @db.Timestamptz(6)
+  url_key            String               @unique
+  created_by         String               @db.Uuid
+  image_uri          String?
+  public_id          String               @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  asset              asset[]
+  company            company[]
+  location           location[]
+  team               team[]
+  work_plan_template work_plan_template[]
+  user               user                 @relation(fields: [created_by], references: [id])
+  workspace_user     workspace_user[]
 
-    image_uri String?
-    public_id String  @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  @@index([url_key])
+}
 
-    created_by String @db.Uuid
-    user       user   @relation(fields: [created_by], references: [id])
+model workspace_user {
+  user_id      String    @db.Uuid
+  workspace_id String
+  role         role
+  user         user      @relation(fields: [user_id], references: [id])
+  workspace    workspace @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
 
-    asset          asset[]
-    team           team[]
-    user_workspace user_workspace[]
-
-    location           location[]
-    company            company[]
-    work_plan_template work_plan_template[]
-
-    @@index([url_key])
+  @@id([user_id, workspace_id])
+  @@index([user_id])
+  @@index([workspace_id])
 }

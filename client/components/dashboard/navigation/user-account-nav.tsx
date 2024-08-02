@@ -34,8 +34,7 @@ const UserAccountNav: FC<UserAccountNavProps> = ({ className, user }) => {
     last_name: user.last_name,
     email: user.email,
   });
-  const isCollapsed = useSidebar()((state) => state.isCollapsed);
-
+  const isCollapsed = false;
   const { url_key } = useParams();
 
   return (
@@ -60,7 +59,7 @@ const UserAccountNav: FC<UserAccountNavProps> = ({ className, user }) => {
           </Avatar>
           <span
             className={cn(
-              "cursor-pointer overflow-x-auto overflow-ellipsis whitespace-nowrap	",
+              "cursor-pointer overflow-x-auto overflow-ellipsis whitespace-nowrap",
               isCollapsed && "hidden",
             )}
           >
@@ -74,7 +73,7 @@ const UserAccountNav: FC<UserAccountNavProps> = ({ className, user }) => {
           />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-60" sideOffset={8} forceMount>
+      <DropdownMenuContent className="w-[220px]" sideOffset={8} forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">

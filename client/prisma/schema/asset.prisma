@@ -1,16 +1,16 @@
 model asset {
-    id               String             @id @default(dbgenerated("nanoid(17)"))
-    public_id        String             @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-    name             String
-    description      String?
-    created_at       DateTime           @default(now()) @db.Timestamptz(6)
-    updated_at       DateTime           @default(now()) @updatedAt @db.Timestamptz(6)
-    workspace_id     String
-    location_id      String?
-    location         location?          @relation(fields: [location_id], references: [id])
-    workspace        workspace          @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
-    work_order_asset work_order_asset[]
+  id               String             @id @default(dbgenerated("nanoid(17)"))
+  public_id        String             @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name             String
+  description      String?
+  created_at       DateTime           @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime           @default(now()) @updatedAt @db.Timestamptz(6)
+  workspace_id     String
+  location_id      String?
+  location         location?          @relation(fields: [location_id], references: [id])
+  workspace        workspace          @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
+  work_order_asset work_order_asset[]
 
-    @@index([workspace_id])
-    @@index([location_id])
+  @@index([workspace_id])
+  @@index([location_id])
 }

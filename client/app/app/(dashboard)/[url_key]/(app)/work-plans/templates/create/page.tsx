@@ -7,6 +7,9 @@ import {
   PageHeaderHeading,
 } from "@/components/page-header";
 import { Separator } from "@/components/ui/separator";
+import { trpc } from "@/trpc/server";
+import { redirect } from "next/navigation";
+import { Suspense } from "react";
 
 interface createPageProps {
   params: {
@@ -16,15 +19,19 @@ interface createPageProps {
 }
 
 export default async function createPage({ params }: createPageProps) {
+  const { data } = await trpc.db.workspace.getByUrlKey({
+    url_key: params.url_key,
+  });
+  if (!data) {
+    redirect("/create");
+  }
   return (
     <Shell>
       <PageHeader
         id="work-plan-template-header"
         aria-labelledby="work-plan-template-header-heading"
       >
-        <PageHeaderHeading size="sm">
-          Create work plan template
-        </PageHeaderHeading>
+        <PageHeaderHeading size="sm">Work plan template</PageHeaderHeading>
         <PageHeaderDescription size="sm">
           Work plan template are reusable templates that can be used to create
           work plans for your work orders.
@@ -32,7 +39,9 @@ export default async function createPage({ params }: createPageProps) {
       </PageHeader>
       <Separator />
 
-      <WorkPlanTemplateCreateForm url_key={params.url_key} />
+      <Suspense fallback={"loading..."}>
+        <WorkPlanTemplateCreateForm workspace_id={data.id} />
+      </Suspense>
     </Shell>
   );
 }

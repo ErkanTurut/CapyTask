@@ -44,7 +44,7 @@ export const columns: ColumnDef<
     cell: ({ row }) => {
       return (
         <Link
-          href={{ pathname: `assets/${row.original.id}` }}
+          href={{ pathname: `locations/${row.original.id}` }}
           className={cn(
             buttonVariants({ variant: "link", size: "sm" }),
             "underline",

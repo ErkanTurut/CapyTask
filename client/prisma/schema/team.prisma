@@ -1,19 +1,31 @@
 model team {
-    id           String       @id @default(dbgenerated("nanoid(10)"))
-    name         String
-    description  String?
-    image_uri    String?
-    created_at   DateTime     @default(now()) @db.Timestamptz(6)
-    updated_at   DateTime     @default(now()) @updatedAt @db.Timestamptz(6)
-    workspace_id String
-    identity     String
-    public_id    String       @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-    workspace    workspace    @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
-    users        user_team[]
-    work_order   work_order[]
-    work_plan    work_plan[]
+  id           String       @id @default(dbgenerated("nanoid(10)"))
+  name         String
+  description  String?
+  image_uri    String?
+  created_at   DateTime     @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime     @default(now()) @updatedAt @db.Timestamptz(6)
+  workspace_id String
+  identity     String
+  public_id    String       @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspace    workspace    @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
+  team_user    team_user[]
+  work_order   work_order[]
+  work_plan    work_plan[]
 
-    @@unique([identity, workspace_id])
-    @@unique([name, workspace_id])
-    @@index([workspace_id])
+  @@unique([identity, workspace_id])
+  @@unique([name, workspace_id])
+  @@index([workspace_id])
+}
+
+model team_user {
+  user_id String @db.Uuid
+  team_id String
+  role    role
+  team    team   @relation(fields: [team_id], references: [id], onDelete: Cascade)
+  user    user   @relation(fields: [user_id], references: [id])
+
+  @@id([user_id, team_id])
+  @@index([team_id])
+  @@index([user_id])
 }

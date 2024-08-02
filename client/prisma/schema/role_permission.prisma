@@ -1,0 +1,7 @@
+model role_permission {
+  id         String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  role       role
+  permission Permission
+
+  @@unique([role, permission])
+}

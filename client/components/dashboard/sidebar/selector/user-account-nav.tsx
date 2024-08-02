@@ -1,4 +1,4 @@
-import UserAccountNav from "@/components/user/user-account-nav";
+import UserAccountNav from "@/components/dashboard/navigation/user-account-nav";
 import { trpc } from "@/trpc/server";
 import { redirect } from "next/navigation";
 

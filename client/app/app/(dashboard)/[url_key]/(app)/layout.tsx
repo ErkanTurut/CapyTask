@@ -1,16 +1,21 @@
 import { cookies } from "next/headers";
 
-import Resizable from "./_components/rezisable";
-
-import Toolbar from "@/components/layouts/toolbar/top-toolbar";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { AssistantModal } from "./_components/ai/assistant-modal";
-import ResizableGroup from "./_components/resizableGroup";
-import Sidebar from "./_components/sidebar";
+import { Sidebar } from "@/components/dashboard/sidebar/sidebar";
 
 import { SidebarProvider } from "@/lib/store";
 import { AI } from "./_components/ai/actions";
 import { LivekitRoomProvider } from "./_components/ai/livekitRoomProvider";
+
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
 interface DashboardLayoutProps {
   children: React.ReactNode;
   params: {
@@ -35,23 +40,31 @@ export default async function DashboardLayout({
   return (
     <AI>
       <LivekitRoomProvider>
-        <SidebarProvider isCollapsed={defaultCollapsed || false}>
-          <ResizableGroup>
-            <Sidebar params={params} />
-            {/* <DotPattern className="absolute top-0 z-[-2] h-screen w-screen bg-background  "> */}
-            <Resizable defaultLayout={defaultLayout}>
-              <AssistantModal />
-              <ScrollArea className="h-screen">
-                {/* <Toolbar className="sticky top-0 z-40 hidden p-2 pb-4 sm:block" /> */}
-
-                {children}
-
-                {/* <Toolbar className="sticky bottom-0 z-40 mt-4 block rounded-md border bg-muted p-2 pt-4 sm:hidden" /> */}
-              </ScrollArea>
-            </Resizable>
-            {/* </DotPattern> */}
-          </ResizableGroup>
-        </SidebarProvider>
+        <div className="relative flex h-screen w-full justify-center bg-muted/40">
+          <Sidebar className="sticky top-0 flex" params={params} />
+          <main className="m-1 flex w-full flex-1 flex-col rounded-md border bg-background">
+            <div className="flex w-full border-b p-2">
+              <Breadcrumb className="flex h-9 items-center rounded-md border p-2">
+                <BreadcrumbList>
+                  <BreadcrumbItem>
+                    <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem>
+                    <BreadcrumbLink href="/components">
+                      Components
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem>
+                    <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
+                  </BreadcrumbItem>
+                </BreadcrumbList>
+              </Breadcrumb>
+            </div>
+            <ScrollArea className="flex-1">{children}</ScrollArea>
+          </main>
+        </div>
       </LivekitRoomProvider>
     </AI>
   );

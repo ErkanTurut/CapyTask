@@ -19,18 +19,20 @@ import { cache } from "react";
 //   };
 // }
 
-export const createContext = cache(
-  async (opts?: FetchCreateContextFnOptions) => {
-    const {
-      data: { user },
-    } = await createClient(cookies()).auth.getUser();
+const getUser = cache(async () => {
+  return await createClient(cookies()).auth.getUser();
+});
 
-    return {
-      user,
-      headers: opts && Object.fromEntries(opts.req.headers),
-      db: createClient(cookies()),
-    };
-  },
-);
+export const createContext = async (opts?: FetchCreateContextFnOptions) => {
+  const {
+    data: { user },
+  } = await getUser();
+
+  return {
+    user,
+    headers: opts && Object.fromEntries(opts.req.headers),
+    db: createClient(cookies()),
+  };
+};
 
 export type Context = Awaited<ReturnType<typeof createContext>>;

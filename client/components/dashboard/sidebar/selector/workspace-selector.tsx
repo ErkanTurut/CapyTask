@@ -1,4 +1,4 @@
-import WorkspaceNav from "@/components/workspace/workspace-navigation";
+import WorkspaceNav from "@/components/dashboard/navigation/workspace-navigation";
 import { trpc } from "@/trpc/server";
 import { redirect } from "next/navigation";
 
@@ -22,11 +22,5 @@ export default async function WorkspaceSelector({
   if (!workspace) {
     redirect("/create");
   }
-  return (
-    <WorkspaceNav
-      className="shadow-none"
-      workspaces={workspaces}
-      workspace={workspace}
-    />
-  );
+  return <WorkspaceNav workspaces={workspaces} workspace={workspace} />;
 }

@@ -39,6 +39,7 @@ import {
 } from "@/trpc/server/routes/work_plan_template/delete.schema";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
+import { revalidatePath } from "next/cache";
 
 interface WorkPlanTemplateDeleteFormProps
   extends React.HTMLAttributes<HTMLFormElement> {

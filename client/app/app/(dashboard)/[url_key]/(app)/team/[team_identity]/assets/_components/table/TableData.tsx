@@ -22,9 +22,7 @@ export function TableData({
   searchParams,
   initialData,
 }: AssetTableProps) {
-  const {
-    data: { data, count },
-  } = api.db.asset.get.byTeam.useQuery(
+  const queryResult = api.db.asset.get.byTeam.useQuery(
     {
       team_identity: params.team_identity,
       range: {
@@ -38,8 +36,11 @@ export function TableData({
     <DataTable
       filter={{ columnVisibility: { description: false } }}
       columns={columns}
-      data={data}
-      count={count || 0}
+      data={{
+        data: queryResult.data.data || [],
+        count: queryResult.data.count || 0,
+      }}
+      queryResult={queryResult}
       searchParams={searchParams}
     />
   );
