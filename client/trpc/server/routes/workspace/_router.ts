@@ -1,5 +1,6 @@
 import { sleep } from "@/lib/utils";
 import { protectedProcedure, router } from "../../trpc";
+import { unstable_cache } from "next/cache";
 
 import { createWorkspaceHandler } from "./create.handler";
 import { ZCreateWorkspaceSchema } from "./create.schema";
@@ -22,7 +23,6 @@ export const workspace = router({
   getByUrlKey: protectedProcedure
     .input(ZGetWorkspaceSchema.pick({ url_key: true }))
     .query(async ({ input, ctx }) => {
-      await sleep(3000);
       return await getWorkspaceByUrlKeyHandler({
         input,
         db: ctx.db,
@@ -41,5 +41,16 @@ export const workspace = router({
       db: ctx.db,
       input: { user_id: ctx.user.id },
     });
+    // const query = unstable_cache(
+    //   async () =>
+    //     await getWorkspaceByUserHandler({
+    //       db: ctx.db,
+    //       input: { user_id: ctx.user.id },
+    //     }),
+    //   ["workspace", ctx.user.id],
+    //   { tags: [ctx.user.id], revalidate: 60 },
+    // );
+
+    // return await query();
   }),
 });

@@ -11,6 +11,6 @@ type opts = {
 export const upsertWorkStepTemplateHandler = async ({ input, db }: opts) => {
   return await db
     .from("work_step_template")
-    .upsert(input.work_step_templates)
+    .upsert(input.work_step_template)
     .select();
 };
