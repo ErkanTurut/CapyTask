@@ -12,15 +12,15 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/ui/dropdown-menu";
-import { api } from "@/trpc/client";
+import { api, RouterOutput } from "@/trpc/client";
 import { toast } from "sonner";
 import { catchError } from "@/lib/utils";
 import { Database } from "@/types/supabase.types";
 import { useParams } from "next/navigation";
 
 interface DataTableRowActionsProps<TData> {
-  row: Row<Database["public"]["Tables"]["asset"]["Row"]>;
-  table: Table<Database["public"]["Tables"]["asset"]["Row"]>;
+  row: Row<RouterOutput["db"]["asset"]["get"]["byTeam"]["data"][number]>;
+  table: Table<RouterOutput["db"]["asset"]["get"]["byTeam"]["data"][number]>;
 }
 
 export function DataTableRowActions<TData>({
