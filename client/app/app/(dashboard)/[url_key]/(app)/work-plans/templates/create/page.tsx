@@ -26,7 +26,7 @@ export default async function createPage({ params }: createPageProps) {
     redirect("/create");
   }
   return (
-    <Shell>
+    <Shell variant={"markdown"}>
       <PageHeader
         id="work-plan-template-header"
         aria-labelledby="work-plan-template-header-heading"
@@ -36,8 +36,8 @@ export default async function createPage({ params }: createPageProps) {
           Work plan template are reusable templates that can be used to create
           work plans for your work orders.
         </PageHeaderDescription>
+        <Separator />
       </PageHeader>
-      <Separator />
 
       <Suspense fallback={"loading..."}>
         <WorkPlanTemplateCreateForm workspace_id={data.id} />

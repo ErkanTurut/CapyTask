@@ -41,3 +41,18 @@ model work_step {
   @@index([created_by_id])
   @@index([work_plan_id])
 }
+
+model work_step_status {
+  id            String     @id @default(dbgenerated("nanoid(17)"))
+  public_id     String     @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  status        Status     @default(OPEN)
+  created_at    DateTime   @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime   @default(now()) @updatedAt @db.Timestamptz(6)
+  work_order_id String
+  work_step_id  String
+  step_order    Int?
+  work_order    work_order @relation(fields: [work_order_id], references: [id], onDelete: Cascade)
+  work_step     work_step  @relation(fields: [work_step_id], references: [id])
+
+  @@index([work_order_id])
+}

@@ -80,7 +80,7 @@ export async function Sidebar({ className, params }: SidebarProps) {
   return (
     <aside className={cn("z-50 hidden w-[240px] md:block", className)}>
       <div className="flex h-full w-full flex-col justify-between">
-        <div className="w-full p-2 pt-3">
+        <div className="w-full p-2">
           <Suspense fallback={<WorkspaceSkeleton />}>
             <WorkspaceSelector params={params} />
           </Suspense>
