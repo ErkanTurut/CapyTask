@@ -62,7 +62,7 @@ export function Providers({
             defaultTheme="system"
             enableSystem
           >
-            {/* <TailwindIndicator /> */}
+            <TailwindIndicator />
 
             {children}
             <Toaster

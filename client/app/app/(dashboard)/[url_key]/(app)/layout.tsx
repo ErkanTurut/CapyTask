@@ -6,15 +6,9 @@ import { SidebarProvider } from "@/lib/store";
 import { AI } from "./_components/ai/actions";
 import { LivekitRoomProvider } from "./_components/ai/livekitRoomProvider";
 
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import Header from "@/components/layouts/dashboard/header";
+import ScrollZone from "./scrollZone";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -41,27 +35,9 @@ export default async function DashboardLayout({
     <AI>
       <LivekitRoomProvider>
         <div className="relative flex h-screen w-full justify-center bg-muted/40">
-          {/* <Sidebar className="sticky top-0 flex" params={params} /> */}
+          <Sidebar className="sticky top-0 flex" params={params} />
           <main className="m-1 flex w-full flex-1 flex-col rounded-md border bg-background">
-            <div className="flex w-full border-b border-transparent p-2 shadow-none transition-all duration-200 hover:border-border">
-              <Breadcrumb className="flex h-7 items-center rounded-md border p-2 hover:bg-muted/40">
-                <BreadcrumbList>
-                  <BreadcrumbItem>
-                    <BreadcrumbLink href="/">Home</BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator />
-                  <BreadcrumbItem>
-                    <BreadcrumbLink href="/components">
-                      Components
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator />
-                  <BreadcrumbItem>
-                    <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
-                  </BreadcrumbItem>
-                </BreadcrumbList>
-              </Breadcrumb>
-            </div>
+            <Header />
             <ScrollArea className="flex-1">{children}</ScrollArea>
           </main>
         </div>
