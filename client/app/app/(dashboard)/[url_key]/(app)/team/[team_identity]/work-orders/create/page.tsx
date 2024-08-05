@@ -27,7 +27,7 @@ export default async function createWorkOrder({
   params,
 }: createWorkOrderProps) {
   return (
-    <Shell variant="markdown">
+    <Shell>
       <PageHeader
         id="work-plan-template-header"
         aria-labelledby="work-plan-template-header-heading"
