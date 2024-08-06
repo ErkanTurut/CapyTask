@@ -10,13 +10,13 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { Textarea } from "@/components/ui/textarea";
-import { TCreateWorkOrderWithStepsSchema } from "@/trpc/server/routes/work_order/create.schema";
+import { TCreateWorkOrderSchema } from "@/trpc/server/routes/work_order/create.schema";
 import type { UseFormReturn } from "react-hook-form";
 
 export function General({
   form,
 }: {
-  form: UseFormReturn<TCreateWorkOrderWithStepsSchema>;
+  form: UseFormReturn<TCreateWorkOrderSchema>;
 }) {
   return (
     <div>
@@ -40,12 +40,7 @@ export function General({
           <FormItem>
             <FormLabel>Description</FormLabel>
             <FormControl>
-              <Textarea
-                className="max-h-60"
-                placeholder="example"
-                {...field}
-                value={field.value || ""}
-              />
+              <Textarea className="max-h-60" placeholder="example" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>

@@ -22,7 +22,8 @@ model work_order {
   team             team               @relation(fields: [team_id], references: [id], onDelete: Cascade)
   work_plan        work_plan?         @relation(fields: [work_plan_id], references: [id])
   work_order_asset work_order_asset[]
-  work_step_status work_step_status[]
+  work_step_item   work_step_item[]
+  work_step        work_step[]
 
   @@index([team_id])
 }

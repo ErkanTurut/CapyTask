@@ -4,7 +4,7 @@ import { getStepWithWorkOrderHandler } from "./get.handler";
 import { ZUpdateWorkStepStatusSchema } from "./update.schema";
 import { updateWorkStepStatusHandler } from "./update.handler";
 
-export const work_step_status = router({
+export const work_step_item = router({
   test: protectedProcedure.query(async ({ ctx }) => {
     return { message: "Hello World" };
   }),

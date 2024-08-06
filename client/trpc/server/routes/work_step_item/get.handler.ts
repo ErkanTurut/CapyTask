@@ -14,7 +14,7 @@ export async function getStepWithWorkOrderHandler({
   db: SupabaseClient;
 }) {
   return await db
-    .from("work_step_status")
+    .from("work_step_item")
     .select("*, work_order!inner(*), work_step!inner(*)")
     .eq("work_order.id", input.work_order_id)
     .order("step_order")
@@ -31,7 +31,7 @@ export async function getStepsStatusWithId({
   db: SupabaseClient;
 }) {
   return await db
-    .from("work_step_status")
+    .from("work_step_item")
     .select("*, work_order!inner(*), work_step!inner(*)")
     .eq("work_order.id", input.work_order_id)
     .order("step_order")

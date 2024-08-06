@@ -6,14 +6,14 @@ import { TRPCError } from "@trpc/server";
 
 export async function upsertWorkStepStatusHandler({
   db,
-  work_step_status,
+  work_step_item,
 }: {
   db: SupabaseClient;
-  work_step_status: TUpsertWorkStepStatusSchema;
+  work_step_item: TUpsertWorkStepStatusSchema;
 }) {
   const { data, error } = await db
-    .from("work_step_status")
-    .upsert(work_step_status)
+    .from("work_step_item")
+    .upsert(work_step_item)
     .select("*");
 
   if (error) {

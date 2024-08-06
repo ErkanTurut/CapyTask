@@ -18,7 +18,6 @@ import {
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Database } from "@/lib/supabase/server";
@@ -26,11 +25,11 @@ import { formatDate, formatTimeToNow } from "@/lib/utils";
 import { trpc } from "@/trpc/server";
 
 interface StepTableProps {
-  work_step_status: NonNullable<
+  work_step_item: NonNullable<
     Awaited<
       ReturnType<(typeof trpc)["db"]["work_order"]["get"]["withSteps"]>
     >["data"]
-  >["work_step_status"];
+  >["work_step_item"];
 }
 
 const status_config: Record<
@@ -72,80 +71,78 @@ const options = Object.entries(status_config).map(
   }),
 );
 
-export default async function StepTable({ work_step_status }: StepTableProps) {
+export default async function StepTable({ work_step_item }: StepTableProps) {
   return (
-    <TooltipProvider>
-      <Card x-chunk="dashboard-05-chunk-3">
-        <CardHeader className="px-7">
-          <CardTitle>Work steps</CardTitle>
-          <CardDescription>
-            Current status of the work steps in this order
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {work_step_status && work_step_status.length > 0 ? (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Order</TableHead>
-                  <TableHead className="table-cell">Title</TableHead>
-                  <TableHead className="table-cell">Status</TableHead>
-                  <TableHead className="hidden md:table-cell">
-                    Last update
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {work_step_status.map((step, index) => {
-                  const Icon = Icons[status_config[step.status].icon];
-                  if (!step.work_step) {
-                    return null;
-                  }
-                  return (
-                    <TableRow key={step.id}>
-                      <TableCell className="">{index + 1}</TableCell>
-                      <TableCell className="table-cell max-w-40 overflow-hidden overflow-ellipsis whitespace-nowrap">
-                        <div className="font-normal sm:font-medium">
-                          {step.work_step?.name}
-                        </div>
-                        <div className="hidden text-sm text-muted-foreground md:inline">
-                          {step.work_step.description} {step.work_step.id}
-                        </div>
-                      </TableCell>
-                      <TableCell className="table-cell">
-                        <Badge
-                          className="text-xs"
-                          variant={status_config[step.status].variant}
-                        >
-                          {status_config[step.status].label}
-                        </Badge>
-                      </TableCell>
+    <Card x-chunk="dashboard-05-chunk-3">
+      <CardHeader className="px-7">
+        <CardTitle>Work steps</CardTitle>
+        <CardDescription>
+          Current status of the work steps in this order
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        {work_step_item && work_step_item.length > 0 ? (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Order</TableHead>
+                <TableHead className="table-cell">Title</TableHead>
+                <TableHead className="table-cell">Status</TableHead>
+                <TableHead className="hidden md:table-cell">
+                  Last update
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {work_step_item.map((step, index) => {
+                const Icon = Icons[status_config[step.status].icon];
+                if (!step.work_step) {
+                  return null;
+                }
+                return (
+                  <TableRow key={step.id}>
+                    <TableCell className="">{index + 1}</TableCell>
+                    <TableCell className="table-cell max-w-40 overflow-hidden overflow-ellipsis whitespace-nowrap">
+                      <div className="font-normal sm:font-medium">
+                        {step.work_step?.name}
+                      </div>
+                      <div className="hidden text-sm text-muted-foreground md:inline">
+                        {step.work_step.description} {step.work_step.id}
+                      </div>
+                    </TableCell>
+                    <TableCell className="table-cell">
+                      <Badge
+                        className="text-xs"
+                        variant={status_config[step.status].variant}
+                      >
+                        {status_config[step.status].label}
+                      </Badge>
+                    </TableCell>
 
-                      <TableCell className="hidden sm:table-cell">
-                        <Tooltip>
-                          <TooltipTrigger>
-                            {formatTimeToNow(new Date(step.updated_at))}
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            {formatDate({
-                              date: step.updated_at,
-                              format: "LLL",
-                            })}
-                          </TooltipContent>
-                        </Tooltip>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          ) : (
-            <p className="p-6 text-center text-muted-foreground">
-              No orders found.
-            </p>
-          )}
-        </CardContent>
-      </Card>
-    </TooltipProvider>
+                    <TableCell className="hidden sm:table-cell">
+                      <Tooltip>
+                        <TooltipTrigger>
+                          {formatTimeToNow(new Date(step.updated_at))}
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          {formatDate({
+                            date: step.updated_at,
+                            format: "LLL",
+                          })}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        ) : (
+          <p className="p-6 text-center text-muted-foreground">
+            No orders found.
+          </p>
+        )}
+      </CardContent>
+    </Card>
   );
 }

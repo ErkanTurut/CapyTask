@@ -28,14 +28,18 @@ import {
   SortableItem,
 } from "@/components/ui/sortable";
 import { Textarea } from "@/components/ui/textarea";
-import { TCreateWorkOrderWithStepsSchema } from "@/trpc/server/routes/work_order/create.schema";
 import {
-  TCreateWorkStepSchema,
-  ZCreateWorkStepSchema,
-} from "@/trpc/server/routes/work_step/create.handler";
+  TCreateWorkOrderSchema,
+  TCreateWorkOrderWithStepsSchema,
+} from "@/trpc/server/routes/work_order/create.schema";
+
 import { DragHandleDots2Icon, TrashIcon } from "@radix-ui/react-icons";
 import type { UseFormReturn } from "react-hook-form";
 import { useState } from "react";
+import {
+  TCreateWorkStepSchema,
+  ZCreateWorkStepSchema,
+} from "@/trpc/server/routes/work_step/create.schema";
 
 function StepModal({
   onSubmit,
@@ -47,11 +51,12 @@ function StepModal({
   const [open, setOpen] = useState(false);
   const form = useForm<TCreateWorkStepSchema>({
     resolver: zodResolver(ZCreateWorkStepSchema),
-    values: {
+    defaultValues: {
       name: "",
       description: "",
       parent_step_id: undefined,
       step_order: undefined,
+      work_plan_id: "",
     },
   });
 
@@ -127,7 +132,7 @@ function StepModal({
 export function WorkSteps({
   form,
 }: {
-  form: UseFormReturn<TCreateWorkOrderWithStepsSchema>;
+  form: UseFormReturn<TCreateWorkOrderSchema>;
 }) {
   const { fields, append, move, remove } = useFieldArray({
     control: form.control,

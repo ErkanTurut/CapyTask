@@ -15,19 +15,19 @@ interface StepStatusSelectorProps {
     icon: keyof typeof Icons;
   }[];
   initialStatus: Database["public"]["Enums"]["Status"];
-  work_step_status_id: string;
+  work_step_item_id: string;
 }
 
 export default function StepStatusSelector({
   initialStatus,
   status,
-  work_step_status_id,
+  work_step_item_id,
 }: StepStatusSelectorProps) {
   const utils = api.useUtils();
   const router = useRouter();
 
-  const { mutate, isPending } =
-    api.db.work_step_status.update.status.useMutation({
+  const { mutate, isPending } = api.db.work_step_item.update.status.useMutation(
+    {
       onSuccess: async () => {
         await utils.db.work_order.get.byTeamIdentity.invalidate(undefined, {
           refetchType: "all",
@@ -40,7 +40,8 @@ export default function StepStatusSelector({
       onSettled: () => {
         router.refresh();
       },
-    });
+    },
+  );
 
   return (
     <ComboBox<Database["public"]["Enums"]["Status"]>
@@ -48,7 +49,7 @@ export default function StepStatusSelector({
       options={status}
       disabled={isPending}
       onSelect={(value) => {
-        mutate({ id: work_step_status_id, status: value });
+        mutate({ id: work_step_item_id, status: value });
       }}
     />
   );
