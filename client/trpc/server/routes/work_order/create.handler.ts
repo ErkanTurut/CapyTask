@@ -4,7 +4,10 @@ import { Database, SupabaseClient } from "@/lib/supabase/server";
 import { assetModel, work_orderModel, work_stepModel } from "@/prisma/zod";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { TCreateWorkOrderWithStepsSchema } from "./create.schema";
+import {
+  TCreateWorkOrderSchema,
+  TCreateWorkOrderWithStepsSchema,
+} from "./create.schema";
 
 //   const { data: work_plan_id, error } = await db.rpc("create_work_plan", {
 //     work_plan_template_id_param: input.work_plan_template_id,
@@ -73,29 +76,29 @@ const inputZod = work_orderModel.pick({
   type: true,
 });
 
-export async function createWorkOrderHandler({
-  input,
-  db,
-}: {
-  input: z.infer<typeof inputZod>;
-  db: SupabaseClient;
-}) {
-  return await db
-    .from("work_order")
-    .insert({
-      name: input.name,
-      team_id: input.team_id,
-      description: input.description,
-      company_id: input.company_id,
-      location_id: input.location_id,
-      work_plan_id: input.work_plan_id,
-      source: input.source,
-      requested_by_id: input.requested_by_id,
-      type: input.type,
-    })
-    .select("*")
-    .single();
-}
+// export async function createWorkOrderHandler({
+//   input,
+//   db,
+// }: {
+//   input: z.infer<typeof inputZod>;
+//   db: SupabaseClient;
+// }) {
+//   return await db
+//     .from("work_order")
+//     .insert({
+//       name: input.name,
+//       team_id: input.team_id,
+//       description: input.description,
+//       company_id: input.company_id,
+//       location_id: input.location_id,
+//       work_plan_id: input.work_plan_id,
+//       source: input.source,
+//       requested_by_id: input.requested_by_id,
+//       type: input.type,
+//     })
+//     .select("*")
+//     .single();
+// }
 
 const workPlanZod = work_orderModel.pick({
   name: true,
@@ -121,11 +124,11 @@ export async function createWorkPlanHandler({
     .single();
 }
 
-export async function createWorkOrderWithStepsHandler({
+export async function createWorkOrderHandler({
   input,
   db,
 }: {
-  input: TCreateWorkOrderWithStepsSchema;
+  input: TCreateWorkOrderSchema;
   db: SupabaseClient;
 }) {
   const { data: work_plan, error: work_plan_error } =
@@ -141,14 +144,21 @@ export async function createWorkOrderWithStepsHandler({
     });
   }
 
-  const { data: work_order, error: work_order_error } =
-    await createWorkOrderHandler({
-      input: {
-        ...input,
-        work_plan_id: work_plan.id,
-      },
-      db: db,
-    });
+  const { data: work_order, error: work_order_error } = await db
+    .from("work_order")
+    .insert({
+      name: input.name,
+      team_id: input.team_id,
+      description: input.description,
+      company_id: input.company_id,
+      location_id: input.location_id,
+      work_plan_id: work_plan.id,
+      source: input.source,
+      requested_by_id: input.requested_by_id,
+      type: input.type,
+    })
+    .select("*")
+    .single();
 
   if (work_order_error) {
     throw new TRPCError({
@@ -164,8 +174,9 @@ export async function createWorkOrderWithStepsHandler({
         name: step.name,
         description: step.description,
         parent_step_id: step.parent_step_id,
+        work_order_id: work_order.id,
       };
-    }) as Database["public"]["Tables"]["work_step"]["Insert"][];
+    });
 
     const { data: work_step, error } = await db
       .from("work_step")
@@ -183,12 +194,14 @@ export async function createWorkOrderWithStepsHandler({
     if (input.asset && input.asset.length > 0) {
       const assets = input.asset.map((asset) => {
         return {
-          asset_id: asset.id,
+          asset_id: asset.asset_id,
           work_order_id: work_order.id,
         };
       });
       await db.from("work_order_asset").upsert(assets).select("*");
     }
+
+    console.log("here");
 
     // upsert work step status for each work step
     const stepStatus = work_step.map((step) => {
@@ -197,8 +210,8 @@ export async function createWorkOrderWithStepsHandler({
         work_order_id: work_order.id,
       };
     });
-    const { data: work_step_status } = await db
-      .from("work_step_status")
+    const { data: work_step_item } = await db
+      .from("work_step_item")
       .upsert(stepStatus)
       .select("*");
 
@@ -206,7 +219,7 @@ export async function createWorkOrderWithStepsHandler({
       work_order,
       work_plan,
       work_step,
-      work_step_status,
+      work_step_item,
     };
   }
 }
@@ -283,13 +296,13 @@ export async function createWorkOrderStepsHandler({
       work_order_id: input.work_order.id,
     };
   });
-  const { data: work_step_status } = await db
-    .from("work_step_status")
+  const { data: work_step_item } = await db
+    .from("work_step_item")
     .upsert(stepStatus)
     .select("*");
 
   return {
     work_step,
-    work_step_status,
+    work_step_item,
   };
 }
