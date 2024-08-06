@@ -619,6 +619,7 @@ export type Database = {
           public_id: string
           step_order: number | null
           updated_at: string
+          work_order_id: string
           work_plan_id: string
           work_step_template_id: string | null
         }
@@ -632,6 +633,7 @@ export type Database = {
           public_id?: string
           step_order?: number | null
           updated_at?: string
+          work_order_id: string
           work_plan_id: string
           work_step_template_id?: string | null
         }
@@ -645,6 +647,7 @@ export type Database = {
           public_id?: string
           step_order?: number | null
           updated_at?: string
+          work_order_id?: string
           work_plan_id?: string
           work_step_template_id?: string | null
         }
@@ -654,6 +657,13 @@ export type Database = {
             columns: ["parent_step_id"]
             isOneToOne: false
             referencedRelation: "work_step"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "work_step_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "work_order"
             referencedColumns: ["id"]
           },
           {
@@ -672,8 +682,9 @@ export type Database = {
           },
         ]
       }
-      work_step_status: {
+      work_step_item: {
         Row: {
+          asset_id: string | null
           created_at: string
           id: string
           public_id: string
@@ -684,6 +695,7 @@ export type Database = {
           work_step_id: string
         }
         Insert: {
+          asset_id?: string | null
           created_at?: string
           id?: string
           public_id?: string
@@ -694,6 +706,7 @@ export type Database = {
           work_step_id: string
         }
         Update: {
+          asset_id?: string | null
           created_at?: string
           id?: string
           public_id?: string
@@ -705,14 +718,21 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "work_step_status_work_order_id_fkey"
+            foreignKeyName: "work_step_item_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "asset"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "work_step_item_work_order_id_fkey"
             columns: ["work_order_id"]
             isOneToOne: false
             referencedRelation: "work_order"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "work_step_status_work_step_id_fkey"
+            foreignKeyName: "work_step_item_work_step_id_fkey"
             columns: ["work_step_id"]
             isOneToOne: false
             referencedRelation: "work_step"
@@ -856,12 +876,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      custom_access_token_hook: {
-        Args: {
-          event: Json
-        }
-        Returns: Json
-      }
       manage_work_plan: {
         Args: {
           _work_plan_template_id: string
@@ -892,7 +906,7 @@ export type Database = {
           work_plan_id: string
         }[]
       }
-      manage_work_step_status: {
+      manage_work_step_item: {
         Args: {
           _work_plan_id: string
           _work_order_id: string
@@ -925,20 +939,6 @@ export type Database = {
           work_order_asset_id: string
           asset_id: string
           work_order_id: string
-          created_at: string
-          updated_at: string
-        }[]
-      }
-      upsert_work_step_statuses: {
-        Args: {
-          _work_order_id: string
-          _step_statuses: Json
-        }
-        Returns: {
-          work_step_status_id: string
-          work_step_id: string
-          work_order_id: string
-          step_order: number
           created_at: string
           updated_at: string
         }[]
