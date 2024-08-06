@@ -22,7 +22,9 @@ import { Button } from "@/components/ui/button";
 
 import { api } from "@/trpc/client";
 import {
+  TCreateWorkOrderSchema,
   TCreateWorkOrderWithStepsSchema,
+  ZCreateWorkOrderSchema,
   ZCreateWorkOrderWithStepsSchema,
 } from "@/trpc/server/routes/work_order/create.schema";
 import { useRouter } from "next/navigation";
@@ -38,7 +40,7 @@ interface WorkOrderCreateFormProps
 export function WorkOrderCreateForm({ className }: WorkOrderCreateFormProps) {
   const router = useRouter();
 
-  const { mutate, isPending } = api.db.work_order.create.withSteps.useMutation({
+  const { mutate, isPending } = api.db.work_order.create.useMutation({
     onSuccess(data) {
       form.reset();
       router.push(`./${data?.work_order.id}`);
@@ -49,11 +51,10 @@ export function WorkOrderCreateForm({ className }: WorkOrderCreateFormProps) {
   });
 
   // react-hook-form
-  const form = useForm<TCreateWorkOrderWithStepsSchema>({
-    resolver: zodResolver(ZCreateWorkOrderWithStepsSchema),
+  const form = useForm<TCreateWorkOrderSchema>({
+    resolver: zodResolver(ZCreateWorkOrderSchema),
     defaultValues: {
       company_id: "4doRuGC8pE",
-      asset: [],
       name: undefined,
       description: undefined,
       location_id: "xc9zBwVtbm",
@@ -61,18 +62,21 @@ export function WorkOrderCreateForm({ className }: WorkOrderCreateFormProps) {
       team_id: "4pGki9KGYX",
       type: "MAINTENANCE",
       work_step: [],
+      asset: [],
+      priority: "LOW",
+      status: "OPEN",
     },
   });
-
-  async function onSubmit(data: TCreateWorkOrderWithStepsSchema) {
-    mutate(data);
-  }
 
   return (
     <Form {...form}>
       <form
         className={cn("grid gap-4", className)}
-        onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
+        onSubmit={(...args) =>
+          void form.handleSubmit((data) => {
+            mutate(data);
+          })(...args)
+        }
       >
         <Card>
           <CardHeader>
