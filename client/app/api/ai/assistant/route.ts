@@ -147,12 +147,12 @@ export async function POST(req: Request) {
           }
           const { data: work_order } = await db
             .from("work_order")
-            .select("*, work_step_status(*, work_step(*)), asset(*)")
+            .select("*, work_step_item(*, work_step(*)), asset(*)")
             .textSearch("name", workOrderName, {
               type: "websearch",
             })
             .order("step_order", {
-              referencedTable: "work_step_status",
+              referencedTable: "work_step_item",
             });
 
           return work_order;
