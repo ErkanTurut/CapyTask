@@ -415,6 +415,7 @@ export type Database = {
           type: Database["public"]["Enums"]["WorkOrderType"]
           updated_at: string
           work_plan_id: string | null
+          workspace_id: string
         }
         Insert: {
           company_id: string
@@ -434,6 +435,7 @@ export type Database = {
           type?: Database["public"]["Enums"]["WorkOrderType"]
           updated_at?: string
           work_plan_id?: string | null
+          workspace_id: string
         }
         Update: {
           company_id?: string
@@ -453,6 +455,7 @@ export type Database = {
           type?: Database["public"]["Enums"]["WorkOrderType"]
           updated_at?: string
           work_plan_id?: string | null
+          workspace_id?: string
         }
         Relationships: [
           {
@@ -488,6 +491,13 @@ export type Database = {
             columns: ["work_plan_id"]
             isOneToOne: false
             referencedRelation: "work_plan"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "work_order_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspace"
             referencedColumns: ["id"]
           },
         ]
