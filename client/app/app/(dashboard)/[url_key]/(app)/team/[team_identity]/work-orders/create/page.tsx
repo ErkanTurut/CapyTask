@@ -5,6 +5,7 @@ import {
   PageHeaderHeading,
 } from "@/components/page-header";
 import { Shell } from "@/components/shells";
+import CardSkeleton from "@/components/skeletons/card-skeleton";
 import {
   Card,
   CardContent,
@@ -40,7 +41,9 @@ export default async function createWorkOrder({
         <Separator />
       </PageHeader>
 
-      <WorkOrderCreateForm workspace_id={params.url_key} />
+      <Suspense fallback={<CardSkeleton />}>
+        <WorkOrderCreateForm />
+      </Suspense>
     </Shell>
   );
 }

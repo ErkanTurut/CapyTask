@@ -44,7 +44,7 @@ interface WorkOrderDetailProps {
   >;
 }
 
-export default async function WorkOrderDetail({
+export default function WorkOrderDetail({
   params,
   work_order,
 }: WorkOrderDetailProps) {
@@ -64,7 +64,7 @@ export default async function WorkOrderDetail({
             </Button>
           </CardTitle>
           <CardDescription>
-            Created at{" "}
+            Created at
             {formatDate({ date: work_order.created_at, format: "LLLL" })}
           </CardDescription>
         </div>
