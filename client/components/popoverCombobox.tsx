@@ -25,7 +25,7 @@ import { cn } from "@/lib/utils";
 interface Option<T> {
   value: T;
   label: string;
-  icon: keyof typeof Icons;
+  icon?: keyof typeof Icons;
 }
 
 interface ComboBoxProps<T> {
@@ -71,8 +71,9 @@ export function ComboBox<T extends string>({
             <Button
               disabled={disabled}
               aria-label="Set priority"
-              variant="ghost"
-              size="sm"
+              variant="outline"
+              size="default"
+              className="group"
             >
               {selectedOption.icon && (
                 <>
@@ -85,6 +86,7 @@ export function ComboBox<T extends string>({
                 </>
               )}
               {selectedOption.label}
+              <Icons.caretSort className="ml-1 size-4 text-muted-foreground group-hover:text-accent-foreground" />
             </Button>
           </PopoverTrigger>
         </TooltipTrigger>
