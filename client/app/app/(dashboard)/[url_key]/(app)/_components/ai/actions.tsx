@@ -74,10 +74,10 @@ export async function continueConversation({
           const db = createClient(cookies());
           const { data: work_order } = await db
             .from("work_order")
-            .select("*, work_step_status(*, work_step(*)), asset(*)")
+            .select("*, work_step_item(*, work_step(*)), asset(*)")
             .eq("id", workOrderId)
             .order("step_order", {
-              referencedTable: "work_step_status",
+              referencedTable: "work_step_item",
             })
             .single();
 
@@ -85,7 +85,7 @@ export async function continueConversation({
             return <div>Work order not found</div>;
           }
 
-          return <StepTable work_step_status={work_order.work_step_status} />;
+          return <StepTable work_step_item={work_order.work_step_item} />;
         },
       },
 

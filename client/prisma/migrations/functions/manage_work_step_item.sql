@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION manage_work_step_status(_work_plan_id TEXT, _work_order_id TEXT)
+CREATE OR REPLACE FUNCTION manage_work_step_item(_work_plan_id TEXT, _work_order_id TEXT)
 RETURNS VOID AS $$
 DECLARE
     work_step RECORD;
@@ -10,8 +10,8 @@ BEGIN
         FROM work_step ws
         WHERE ws.work_plan_id = _work_plan_id
     LOOP
-        -- Insert the work step status without checking for conflict
-        INSERT INTO work_step_status (
+        -- Insert the work step item without checking for conflict
+        INSERT INTO work_step_item (
             work_step_id, work_order_id, step_order
         ) VALUES (
             work_step.id, _work_order_id, work_step.step_order

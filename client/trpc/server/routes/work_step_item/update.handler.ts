@@ -10,7 +10,7 @@ type opts = {
 
 export const updateWorkStepStatusHandler = async ({ input, db }: opts) => {
   return await db
-    .from("work_step_status")
+    .from("work_step_item")
     .update({
       status: input.status,
     })

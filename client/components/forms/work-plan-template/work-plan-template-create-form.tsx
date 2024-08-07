@@ -119,18 +119,6 @@ export function WorkPlanTemplateCreateForm({
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="workspace_id"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input type="hidden" placeholder="example" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
           </CardContent>
           <CardFooter>
             <Button isLoading={isPending} disabled={!form.formState.isDirty}>

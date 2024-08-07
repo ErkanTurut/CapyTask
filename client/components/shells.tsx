@@ -7,7 +7,7 @@ const shellVariants = cva("grid gap-6", {
     variant: {
       default: "container pb-8 pt-6",
       centered: "container flex h-[100dvh] max-w-2xl flex-col justify-center",
-      markdown: "container max-w-3xl gap-0 py-8 md:py-10 lg:py-10",
+      markdown: "container max-w-3xl py-8 md:py-10 lg:py-10",
       markdown_centered:
         "container max-w-3xl gap-0 py-8 md:py-10 lg:py-10 flex h-[100dvh] flex-col justify-center",
       markdown_full:

@@ -20,24 +20,46 @@ model work_step_template {
 }
 
 model work_step {
-  id                    String              @id @default(dbgenerated("nanoid(17)"))
-  public_id             String              @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id                    String   @id @default(dbgenerated("nanoid(17)"))
+  public_id             String   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name                  String
   description           String?
-  created_at            DateTime            @default(now()) @db.Timestamptz(6)
-  updated_at            DateTime            @default(now()) @updatedAt @db.Timestamptz(6)
+  created_at            DateTime @default(now()) @db.Timestamptz(6)
+  updated_at            DateTime @default(now()) @updatedAt @db.Timestamptz(6)
   parent_step_id        String?
-  created_by_id         String?             @db.Uuid
+  created_by_id         String?  @db.Uuid
   step_order            Int?
   work_plan_id          String
   work_step_template_id String?
-  parent_step           work_step?          @relation("step_sub_steps", fields: [parent_step_id], references: [id], onDelete: Cascade)
-  sub_steps             work_step[]         @relation("step_sub_steps")
-  work_plan             work_plan           @relation(fields: [work_plan_id], references: [id], onDelete: Cascade)
-  work_step_template    work_step_template? @relation(fields: [work_step_template_id], references: [id])
-  work_step_status      work_step_status[]
+
+  work_order_id String
+  work_order    work_order? @relation(fields: [work_order_id], references: [id])
+
+  parent_step        work_step?          @relation("step_sub_steps", fields: [parent_step_id], references: [id], onDelete: Cascade)
+  sub_steps          work_step[]         @relation("step_sub_steps")
+  work_plan          work_plan           @relation(fields: [work_plan_id], references: [id], onDelete: Cascade)
+  work_step_template work_step_template? @relation(fields: [work_step_template_id], references: [id])
+  work_step_item     work_step_item[]
 
   @@index([parent_step_id])
   @@index([created_by_id])
   @@index([work_plan_id])
+}
+
+model work_step_item {
+  id            String   @id @default(dbgenerated("nanoid(17)"))
+  public_id     String   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  status        Status   @default(OPEN)
+  step_order    Int?
+  created_at    DateTime @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  work_order_id String
+  work_step_id  String
+  asset_id      String?
+
+  asset      asset?     @relation(fields: [asset_id], references: [id])
+  work_order work_order @relation(fields: [work_order_id], references: [id], onDelete: Cascade)
+  work_step  work_step  @relation(fields: [work_step_id], references: [id])
+
+  @@index([work_order_id])
 }
