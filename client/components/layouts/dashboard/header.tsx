@@ -14,7 +14,7 @@ interface headerProps {}
 
 export default function Header({}: headerProps) {
   const isScrolled = useScroll(20);
-  console.log(isScrolled);
+
   return (
     <div
       className={cn(

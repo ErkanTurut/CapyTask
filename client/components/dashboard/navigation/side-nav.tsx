@@ -21,7 +21,7 @@ import {
 import { Label } from "@/components/ui/label";
 
 export const navItemVariants = cva(
-  "text-muted-foreground group flex w-full  items-center rounded-md border px-3 py-1  h-7 text-xs font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ",
+  "text-muted-foreground group flex w-full  items-center rounded-sm border px-3 py-1  h-7 text-xs font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ",
   {
     variants: {
       variant: {
@@ -148,7 +148,7 @@ export const NavLink = ({
       <TooltipTrigger asChild>
         <Link
           href={href}
-          className={cn(navItemVariants({ variant, className }))}
+          className={cn(navItemVariants({ variant }), className)}
         >
           {Icon ? (
             <Icon strokeWidth={1.5} className={cn("mr-2 h-4 w-4 shrink-0")} />
