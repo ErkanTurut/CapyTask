@@ -1,6 +1,9 @@
 import { protectedProcedure, router } from "../../trpc";
 import { createWorkOrderHandler } from "./create.handler";
-import { ZCreateWorkOrderSchema } from "./create.schema";
+import {
+  ZCreateWorkOrderSchema,
+  ZCreateWorkOrderWithItemsSchema,
+} from "./create.schema";
 import { deleteWorkOrderHandler } from "./delete.handler";
 import { ZDeleteWorkOrderSchema } from "./delete.schema";
 import {
@@ -86,7 +89,7 @@ export const work_order = router({
   },
 
   create: protectedProcedure
-    .input(ZCreateWorkOrderSchema)
+    .input(ZCreateWorkOrderWithItemsSchema)
     .mutation(async ({ ctx, input }) => {
       return await createWorkOrderHandler({
         input,

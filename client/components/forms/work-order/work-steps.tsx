@@ -28,18 +28,15 @@ import {
   SortableItem,
 } from "@/components/ui/sortable";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  TCreateWorkOrderSchema,
-  TCreateWorkOrderWithStepsSchema,
-} from "@/trpc/server/routes/work_order/create.schema";
+import { TCreateWorkOrderWithItemsSchema } from "@/trpc/server/routes/work_order/create.schema";
 
-import { DragHandleDots2Icon, TrashIcon } from "@radix-ui/react-icons";
-import type { UseFormReturn } from "react-hook-form";
-import { useState } from "react";
 import {
   TCreateWorkStepSchema,
   ZCreateWorkStepSchema,
 } from "@/trpc/server/routes/work_step/create.schema";
+import { DragHandleDots2Icon, TrashIcon } from "@radix-ui/react-icons";
+import { useState } from "react";
+import type { UseFormReturn } from "react-hook-form";
 
 function StepModal({
   onSubmit,
@@ -73,7 +70,7 @@ function StepModal({
 
   return (
     <Dialog onOpenChange={handleOpen} open={open}>
-      <DialogTrigger>{children}</DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="flex h-[28rem] flex-col justify-start p-0 pt-4 sm:max-w-[625px]">
         <Form {...form}>
           <fieldset
@@ -132,7 +129,7 @@ function StepModal({
 export function WorkSteps({
   form,
 }: {
-  form: UseFormReturn<TCreateWorkOrderSchema>;
+  form: UseFormReturn<TCreateWorkOrderWithItemsSchema>;
 }) {
   const { fields, append, move, remove } = useFieldArray({
     control: form.control,
