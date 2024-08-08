@@ -1,7 +1,7 @@
 import "server-only";
 
 import { SupabaseClient } from "@/lib/supabase/server";
-import { TGetAssetSchema } from "./get.schema";
+import { TGetAssetSchema, TSearchAssetSchema } from "./get.schema";
 import { TRPCError } from "@trpc/server";
 
 type opts = {
@@ -87,3 +87,18 @@ export async function getAssetByWorkspaceHandler({
 
   return { data, count };
 }
+
+export const searchAssetHandler = async ({
+  input,
+  db,
+}: {
+  input: TSearchAssetSchema;
+  db: SupabaseClient;
+}) => {
+  return await db
+    .from("asset")
+    .select("*, location(*)")
+    .textSearch("name", input.query, {
+      type: "websearch",
+    });
+};

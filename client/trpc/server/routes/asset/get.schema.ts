@@ -24,3 +24,10 @@ export const ZGetAssetSchema = z
   .strict();
 
 export type TGetAssetSchema = z.infer<typeof ZGetAssetSchema>;
+
+export const ZSearchAssetSchema = z.object({
+  query: z.string(),
+});
+
+export interface TSearchAssetSchema
+  extends z.infer<typeof ZSearchAssetSchema> {}

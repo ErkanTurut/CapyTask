@@ -3,12 +3,14 @@ import {
   getAssetByTeamHandler,
   getAssetByWorkOrderHandler,
   getAssetByWorkspaceHandler,
+  searchAssetHandler,
 } from "./get.handler";
-import { ZGetAssetSchema } from "./get.schema";
+import { ZGetAssetSchema, ZSearchAssetSchema } from "./get.schema";
 import { createAssetHandler } from "./create.handler";
 import { ZAssetCreateSchema } from "./create.schema";
 import { ZAssetDeleteSchema } from "./delete.schema";
 import { deleteAssetHandler } from "./delete.handler";
+import { TRPCError } from "@trpc/server";
 
 export const asset = router({
   get: {
@@ -35,6 +37,22 @@ export const asset = router({
           input,
           db: ctx.db,
         });
+      }),
+
+    textSearch: protectedProcedure
+      .input(ZSearchAssetSchema)
+      .query(async ({ ctx, input }) => {
+        const { data, error } = await searchAssetHandler({
+          input,
+          db: ctx.db,
+        });
+        if (error) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            cause: error,
+          });
+        }
+        return data;
       }),
   },
   create: protectedProcedure
