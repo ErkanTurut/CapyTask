@@ -19,6 +19,7 @@ import {
   Dialog,
   DialogContent,
   DialogFooter,
+  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
@@ -37,6 +38,7 @@ import {
 import { DragHandleDots2Icon, TrashIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import type { UseFormReturn } from "react-hook-form";
+import { VisuallyHidden } from "@/components/ui/vizually-hidden";
 
 function StepModal({
   onSubmit,
@@ -72,6 +74,9 @@ function StepModal({
     <Dialog onOpenChange={handleOpen} open={open}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="flex h-[28rem] flex-col justify-start p-0 pt-4 sm:max-w-[625px]">
+        <VisuallyHidden>
+          <DialogTitle>Add step</DialogTitle>
+        </VisuallyHidden>
         <Form {...form}>
           <fieldset
             onSubmit={(...args) => void handleSubmit(...args)}
@@ -153,8 +158,6 @@ export function WorkSteps({
           <div className="grid grid-cols-[2rem,1fr] items-center gap-2">
             <div className="h-8 w-full rounded-full bg-primary/10 outline-dashed outline-ring" />
             <div className="h-8 w-full rounded-sm bg-primary/10 outline-dashed outline-ring" />
-            {/* <div className="size-8 shrink-0 rounded-sm bg-primary/10" />
-          <div className="size-8 shrink-0 rounded-sm bg-primary/10" /> */}
           </div>
         }
       >

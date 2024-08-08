@@ -10,6 +10,16 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from "@/components/ui/command";
 import { DateTimePickerPopover } from "@/components/date-time-picker-popover";
 import { Icons } from "@/components/icons";
 import { ComboBox } from "@/components/popoverCombobox";
@@ -20,12 +30,15 @@ import * as React from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { AutoComplete } from "@/components/autoComplete";
+import CompanySearchForm from "./company-search-form";
 
 export function General({
   form,
 }: {
   form: UseFormReturn<TCreateWorkOrderWithItemsSchema>;
 }) {
+  const [open, setOpen] = React.useState(false);
+
   const hourRef = React.useRef<HTMLInputElement>(null);
 
   const workOrderType: Record<
@@ -209,31 +222,7 @@ export function General({
         )}
       />
 
-      <FormField
-        control={form.control}
-        name="company_id"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>
-              Select Company
-              <br />
-            </FormLabel>
-
-            <FormControl>
-              <AutoComplete
-                emptyMessage="not found"
-                options={[
-                  { label: "hello", value: "dd" },
-                  { label: "sdsqd", value: "sdsd" },
-                ]}
-              />
-            </FormControl>
-            <FormDescription>
-              Select the company that this work order is associated with.
-            </FormDescription>
-          </FormItem>
-        )}
-      />
+      <CompanySearchForm form={form} />
     </div>
   );
 }

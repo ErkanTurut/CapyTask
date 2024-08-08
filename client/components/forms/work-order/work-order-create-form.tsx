@@ -22,6 +22,7 @@ import {
 import { notFound, useParams, useRouter } from "next/navigation";
 import { General } from "./general";
 import { WorkSteps } from "./work-steps";
+import { WorkOrderAsset } from "./asset";
 
 interface WorkOrderCreateFormProps
   extends React.HTMLAttributes<HTMLFormElement> {}
@@ -63,7 +64,7 @@ export function WorkOrderCreateForm({ className }: WorkOrderCreateFormProps) {
   const form = useForm<TCreateWorkOrderWithItemsSchema>({
     resolver: zodResolver(ZCreateWorkOrderWithItemsSchema),
     defaultValues: {
-      company_id: "4doRuGC8pE",
+      company_id: undefined,
       name: undefined,
       description: undefined,
       location_id: "xc9zBwVtbm",
@@ -80,6 +81,7 @@ export function WorkOrderCreateForm({ className }: WorkOrderCreateFormProps) {
     },
   });
 
+  console.log(form.formState.errors);
   return (
     <Form {...form}>
       <form
@@ -108,16 +110,15 @@ export function WorkOrderCreateForm({ className }: WorkOrderCreateFormProps) {
                 >
                   <WorkSteps form={form} />
                 </TabsContent>
-                <TabsContent value="assets"></TabsContent>
+                <TabsContent value="assets">
+                  <WorkOrderAsset form={form} />
+                </TabsContent>
                 <TabsContent value="ressources"></TabsContent>
               </Tabs>
             </div>
           </CardContent>
           <CardFooter>
-            <Button
-              isLoading={isPending}
-              disabled={!form.formState.isDirty || !form.formState.isValid}
-            >
+            <Button isLoading={isPending} disabled={!form.formState.isDirty}>
               Create now
               <span className="sr-only">Create now</span>
             </Button>
