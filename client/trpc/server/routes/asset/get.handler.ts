@@ -72,7 +72,7 @@ export async function getAssetByWorkspaceHandler({
 }) {
   const { data, count, error } = await db
     .from("asset")
-    .select("*, workspace!inner(*)", { count: "estimated" })
+    .select("*, workspace!inner(url_key),location(*)", { count: "estimated" })
     .eq("workspace.url_key", input.url_key)
     .range(input.range.start, input.range.end)
     .order("updated_at", { ascending: false })

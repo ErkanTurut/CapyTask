@@ -31,6 +31,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { TCreateWorkOrderWithItemsSchema } from "@/trpc/server/routes/work_order/create.schema";
 
+import { VisuallyHidden } from "@/components/ui/vizually-hidden";
 import {
   TCreateWorkStepSchema,
   ZCreateWorkStepSchema,
@@ -38,23 +39,30 @@ import {
 import { DragHandleDots2Icon, TrashIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import type { UseFormReturn } from "react-hook-form";
-import { VisuallyHidden } from "@/components/ui/vizually-hidden";
 
-function StepModal({
+export function StepModal({
   onSubmit,
   children,
+  selectedAsset,
 }: {
   onSubmit: (data: TCreateWorkStepSchema) => void;
   children: React.ReactNode;
+  selectedAsset?: TCreateWorkStepSchema["asset_id"];
 }) {
   const [open, setOpen] = useState(false);
   const form = useForm<TCreateWorkStepSchema>({
     resolver: zodResolver(ZCreateWorkStepSchema),
     defaultValues: {
       name: "",
-      description: "",
+      description: undefined,
       parent_step_id: undefined,
       step_order: undefined,
+      work_plan_id: "",
+      asset_id: selectedAsset,
+    },
+    values: {
+      asset_id: selectedAsset,
+      name: "",
       work_plan_id: "",
     },
   });
@@ -67,7 +75,6 @@ function StepModal({
 
   const handleOpen = () => {
     setOpen(!open);
-    form.reset();
   };
 
   return (
@@ -131,26 +138,40 @@ function StepModal({
   );
 }
 
+import { Table as TableType } from "@tanstack/react-table";
 export function WorkSteps({
   form,
+  assetTable,
 }: {
   form: UseFormReturn<TCreateWorkOrderWithItemsSchema>;
+  assetTable: TableType<TCreateWorkOrderWithItemsSchema["asset"][number]>;
 }) {
-  const { fields, append, move, remove } = useFieldArray({
+  const { append, fields, remove, move } = useFieldArray({
     control: form.control,
     name: "work_step",
     keyName: "fieldId",
   });
 
+  const selectedAsset = assetTable.getSelectedRowModel().rows.map((row) => {
+    return row.original;
+  });
+
+  const assetValues = form.getValues("asset");
+
+  console.log(fields);
   return (
-    <div className="flex flex-col items-end gap-4 p-2">
-      <StepModal onSubmit={(data) => append(data)}>
-        <Button type="button" variant="outline" size="sm" className="">
+    <div className="flex flex-col items-start gap-4">
+      <StepModal
+        onSubmit={(data) => append(data)}
+        selectedAsset={selectedAsset.map((asset) => {
+          return asset.id;
+        })}
+      >
+        <Button type="button" variant="outline" className="">
           Add step
           <Icons.plusCircled className="ml-2 h-4 w-4" />
         </Button>
       </StepModal>
-
       <Sortable
         value={fields}
         onMove={({ activeIndex, overIndex }) => move(activeIndex, overIndex)}
@@ -162,12 +183,39 @@ export function WorkSteps({
         }
       >
         <div className="flex w-full flex-col gap-2">
-          {fields.length === 0 && (
-            <div className="h-8 w-full rounded-md border border-dashed p-2 text-center text-sm text-muted-foreground">
-              No work steps added yet
+          <div>
+            <div className="border">
+              <h3>No Asset</h3>
+              {fields
+                .filter(
+                  (field) => !field.asset_id || field.asset_id.length === 0,
+                )
+                .map((field) => (
+                  <div key={field.fieldId}>{`- ${field.name}`}</div>
+                ))}
             </div>
-          )}
-          {fields.map(
+
+            {assetValues.map((asset) => {
+              const tasksWithAsset = fields.filter(
+                (field) => field.asset_id && field.asset_id.includes(asset.id),
+              );
+
+              if (tasksWithAsset.length > 0) {
+                return (
+                  <div className="border" key={asset.id}>
+                    <h3>{`Asset ID: ${asset.id}`}</h3>
+                    {tasksWithAsset.map((field, index) => (
+                      <div key={field.fieldId}>{`- ${field.name}`}</div>
+                    ))}
+                  </div>
+                );
+              }
+
+              return null;
+            })}
+          </div>
+
+          {/* {fields.map(
             (field, index) => (
               form.setValue(`work_step.${index}.step_order`, index + 1),
               (
@@ -221,7 +269,7 @@ export function WorkSteps({
                 </SortableItem>
               )
             ),
-          )}
+          )} */}
         </div>
       </Sortable>
     </div>

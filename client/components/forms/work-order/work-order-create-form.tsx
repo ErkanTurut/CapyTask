@@ -1,33 +1,35 @@
 "use client";
 
-import React from "react";
+import React, { use } from "react";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
 
-import { catchError, cn, formatDate } from "@/lib/utils";
+import { catchError, cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 
-import { Separator } from "@/components/ui/separator";
-import { api } from "@/trpc/client";
+import { api, RouterInput } from "@/trpc/client";
 import {
   TCreateWorkOrderWithItemsSchema,
   ZCreateWorkOrderWithItemsSchema,
 } from "@/trpc/server/routes/work_order/create.schema";
 import { notFound, useParams, useRouter } from "next/navigation";
-import { General } from "./general";
-import { WorkSteps } from "./work-steps";
-import { WorkOrderAsset } from "./asset";
+import { WorkOrderGeneralForm } from "./work-order-general-form";
+import { WorkOrderItemsForm } from "./work-order-items-form";
 
 interface WorkOrderCreateFormProps
-  extends React.HTMLAttributes<HTMLFormElement> {}
+  extends React.HTMLAttributes<HTMLFormElement> {
+  initialData?: RouterInput["db"]["work_order"]["create"];
+}
 
-export function WorkOrderCreateForm({ className }: WorkOrderCreateFormProps) {
+export function WorkOrderCreateForm({
+  className,
+  initialData,
+}: WorkOrderCreateFormProps) {
   const router = useRouter();
   const { team_identity, url_key } = useParams() as {
     team_identity: string;
@@ -41,11 +43,9 @@ export function WorkOrderCreateForm({ className }: WorkOrderCreateFormProps) {
     api.db.workspace.getByUrlKey.useSuspenseQuery({
       url_key,
     });
-
   if (!team || !workspace) {
     throw notFound();
   }
-
   if (!team_identity || !url_key) {
     throw new Error("Missing team_identity or url_key");
   }
@@ -93,30 +93,11 @@ export function WorkOrderCreateForm({ className }: WorkOrderCreateFormProps) {
         }
       >
         <Card>
-          <CardContent className="pt-6">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-[1fr,0.1rem,1fr]">
-              <General form={form} />
-              <Separator orientation="vertical" className="hidden md:block" />
-              <Separator orientation="horizontal" className="block md:hidden" />
-              <Tabs defaultValue="work-steps" className="w-full grid-cols-2">
-                <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger value="work-steps">Work steps</TabsTrigger>
-                  <TabsTrigger value="assets">Assets</TabsTrigger>
-                  <TabsTrigger value="ressources">Ressources</TabsTrigger>
-                </TabsList>
-                <TabsContent
-                  value="work-steps"
-                  className="rounded-md border bg-muted/40"
-                >
-                  <WorkSteps form={form} />
-                </TabsContent>
-                <TabsContent value="assets">
-                  <WorkOrderAsset form={form} />
-                </TabsContent>
-                <TabsContent value="ressources"></TabsContent>
-              </Tabs>
-            </div>
+          <CardContent className="flex flex-col gap-8 pt-6">
+            <WorkOrderGeneralForm form={form} />
+            <WorkOrderItemsForm form={form} />
           </CardContent>
+
           <CardFooter>
             <Button isLoading={isPending} disabled={!form.formState.isDirty}>
               Create now
