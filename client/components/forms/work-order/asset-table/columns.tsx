@@ -1,9 +1,10 @@
 "use client";
 
-import { DataTableColumnHeader } from "@/components/table/data-table-column-header";
+import { DataTableColumnHeader } from "@/components/tables/general/data-table-column-header";
 import { Checkbox } from "@/components/ui/checkbox";
 import { TCreateWorkOrderWithItemsSchema } from "@/trpc/server/routes/work_order/create.schema";
 import { ColumnDef } from "@tanstack/react-table";
+import Link from "next/link";
 import { UseFormReturn } from "react-hook-form";
 
 // This type is used to define the shape of our data.
@@ -46,7 +47,21 @@ export const columns: ColumnDef<
       return <DataTableColumnHeader column={column} title="Title" />;
     },
     cell: ({ row }) => {
-      return <div className="w-40">{row.original.name}</div>;
+      return (
+        <div className="w-40">
+          <Link
+            href={{
+              query: {
+                asset_id: row.original.id,
+              },
+            }}
+            scroll={false}
+            className="font-medium text-primary underline"
+          >
+            {row.original.name}
+          </Link>
+        </div>
+      );
     },
     enableHiding: false,
   },
@@ -58,9 +73,7 @@ export const columns: ColumnDef<
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
-          <span className="max-w-52 truncate font-medium">
-            {row.original.description}
-          </span>
+          <span className="max-w-52 truncate">{row.original.description}</span>
         </div>
       );
     },

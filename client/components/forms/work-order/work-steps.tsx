@@ -155,10 +155,8 @@ export function WorkSteps({
   const selectedAsset = assetTable.getSelectedRowModel().rows.map((row) => {
     return row.original;
   });
-
   const assetValues = form.getValues("asset");
 
-  console.log(fields);
   return (
     <div className="flex flex-col items-start gap-4">
       <StepModal

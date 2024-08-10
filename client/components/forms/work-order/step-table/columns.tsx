@@ -1,6 +1,6 @@
 "use client";
 
-import { DataTableColumnHeader } from "@/components/table/data-table-column-header";
+import { DataTableColumnHeader } from "@/components/tables/general/data-table-column-header";
 import { Checkbox } from "@/components/ui/checkbox";
 import { TCreateWorkOrderWithItemsSchema } from "@/trpc/server/routes/work_order/create.schema";
 import { ColumnDef } from "@tanstack/react-table";
