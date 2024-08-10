@@ -11,7 +11,7 @@ import {
   PageHeaderHeading,
 } from "@/components/page-header";
 import { useFieldArray, type UseFormReturn } from "react-hook-form";
-import { WorkOrderAsset } from "./asset";
+import { WorkOrderAsset } from "./work-order-asset-form";
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { columns } from "./asset-table/columns";
 

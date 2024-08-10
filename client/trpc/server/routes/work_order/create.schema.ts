@@ -25,7 +25,6 @@ const AssetQuerySchema = z.object({
       description: z.string().nullish(),
       location_type: z.nativeEnum(LocationType),
       location_level: z.number().int(),
-
       parent_location_id: z.string().nullish(),
       workspace_id: z.string(),
       address_id: z.string(),
@@ -51,12 +50,12 @@ export const ZCreateWorkOrderSchema = z.object({
 });
 
 export const ZCreateWorkOrderWithItemsSchema = ZCreateWorkOrderSchema.extend({
-  work_step: z.array(
-    ZCreateWorkStepSchema.extend({
-      asset_id: z.string().array().optional(),
+  work_step: z.array(ZCreateWorkStepSchema),
+  asset: z.array(
+    AssetQuerySchema.extend({
+      work_step: z.array(ZCreateWorkStepSchema).optional(),
     }),
   ),
-  asset: z.array(AssetQuerySchema),
 });
 
 export type TCreateWorkOrderWithItemsSchema = z.infer<

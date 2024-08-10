@@ -2,29 +2,19 @@
 
 import { useFieldArray } from "react-hook-form";
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { TCreateWorkOrderWithItemsSchema } from "@/trpc/server/routes/work_order/create.schema";
 
-import type { UseFormReturn } from "react-hook-form";
-import { useState } from "react";
-import { ModalSearchCommand } from "@/components/modal-search-command";
-import { CommandItem } from "@/components/ui/command";
 import { Icons } from "@/components/icons";
-import { api, RouterOutput } from "@/trpc/client";
+import { ModalSearchCommand } from "@/components/modal-search-command";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { DataTable } from "./asset-table/data-table";
-import { columns } from "./asset-table/columns";
-import { Shell } from "@/components/shells";
+import { CommandItem } from "@/components/ui/command";
+import { api } from "@/trpc/client";
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { StepModal, WorkSteps } from "./work-steps";
+import { useState } from "react";
+import type { UseFormReturn } from "react-hook-form";
+import { columns } from "./asset-table/columns";
+import { DataTable } from "./asset-table/data-table";
+import { WorkSteps } from "./work-steps";
 
 export function WorkOrderAsset({
   form,
@@ -39,7 +29,7 @@ export function WorkOrderAsset({
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
-  const { data, isPending } = api.db.asset.get.textSearch.useQuery(
+  const { data: assetResult, isPending } = api.db.asset.get.textSearch.useQuery(
     {
       query: inputValue,
     },
@@ -71,7 +61,7 @@ export function WorkOrderAsset({
             isLoading={isPending}
             setOpen={setOpen}
           >
-            {data?.map((asset, index) => (
+            {assetResult?.map((asset, index) => (
               <CommandItem
                 disabled={fields.some((a) => a.id === asset.id)}
                 value={asset.name + asset.description}
