@@ -69,80 +69,32 @@ export async function createWorkOrderHandler({
         work_order_id: work_order.id,
       };
     });
-    await db.from("work_order_asset").upsert(assets).select("*");
-  }
+    await db.from("work_order_asset").upsert(assets);
 
-  if (input.work_step) {
-    const steps = input.work_step.map((step) => {
-      return {
-        id: nanoid(),
-        work_plan_id: work_plan.id,
-        name: step.name,
-        description: step.description,
-        parent_step_id: step.parent_step_id,
-        work_order_id: work_order.id,
-        asset_id: step.asset_id,
-        step_order: step.step_order,
-      };
-    });
-
-    const { data: work_step, error } = await db
-      .from("work_step")
-      .upsert(
-        steps.map((step) => {
+    const assetSteps = input.asset.flatMap((asset) => {
+      if (asset.work_step) {
+        return asset.work_step.map((step) => {
           return {
             name: step.name,
-            work_order_id: work_order.id,
-            work_plan_id: work_plan.id,
             description: step.description,
-            id: step.id,
             step_order: step.step_order,
             parent_step_id: step.parent_step_id,
-            work_step_template_id: null,
-          };
-        }),
-      )
-      .select("*");
-
-    if (error) {
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: error.message,
-      });
-    }
-
-    let workStepItems: {
-      asset_id: string | undefined | null;
-      work_step_id: string;
-      work_order_id: string;
-      step_order: number | undefined | null;
-    }[] = [];
-
-    steps.forEach((step) => {
-      if (step.asset_id && step.asset_id.length > 0) {
-        const assetIds = step.asset_id;
-        assetIds.forEach((asset_id) => {
-          workStepItems.push({
-            asset_id: asset_id,
-            work_step_id: step.id,
             work_order_id: work_order.id,
-            step_order: step.step_order,
-          });
-        });
-      } else {
-        workStepItems.push({
-          asset_id: null,
-          work_step_id: step.id,
-          work_order_id: work_order.id,
-          step_order: step.step_order,
+            work_plan_id: work_plan.id,
+            work_step_template_id: step.work_step_template_id,
+            asset_id: asset.id,
+          };
         });
       }
+      return [];
     });
+    console.log(assetSteps);
 
-    const { data: work_step_item } = await db
-      .from("work_step_item")
-      .upsert(workStepItems)
+    const { data: work_step, error: work_step_error } = await db
+      .from("work_step")
+      .upsert(assetSteps)
       .select("*");
+    console.log(work_step, work_step_error);
   }
 
   return {

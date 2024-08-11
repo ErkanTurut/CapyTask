@@ -50,7 +50,6 @@ export const ZCreateWorkOrderSchema = z.object({
 });
 
 export const ZCreateWorkOrderWithItemsSchema = ZCreateWorkOrderSchema.extend({
-  work_step: z.array(ZCreateWorkStepSchema),
   asset: z.array(
     AssetQuerySchema.extend({
       work_step: z

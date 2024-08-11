@@ -79,10 +79,10 @@ export async function getWorkOrderStepsHandler({
 }) {
   return await db
     .from("work_order")
-    .select("*, work_step_item(*, work_step(*))")
+    .select("*, work_step(*)")
     .eq("id", input.id)
     .order("step_order", {
-      referencedTable: "work_step_item",
+      referencedTable: "work_step",
     })
     .single()
     .throwOnError();
@@ -117,11 +117,11 @@ export async function getWorkOrderDetailHandler({
   return await db
     .from("work_order")
     .select(
-      "*, work_step_item(*, work_step(*)), location(*, address(*)), company(*),  asset(*), user(*)",
+      "*, work_step(*), location(*, address(*)), company(*),  asset(*), user(*)",
     )
     .eq("id", input.id)
     .order("step_order", {
-      referencedTable: "work_step_item",
+      referencedTable: "work_step",
     })
     .single()
     .throwOnError();
