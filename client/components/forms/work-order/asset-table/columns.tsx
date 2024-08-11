@@ -4,8 +4,10 @@ import { DataTableColumnHeader } from "@/components/tables/general/data-table-co
 import { Checkbox } from "@/components/ui/checkbox";
 import { TCreateWorkOrderWithItemsSchema } from "@/trpc/server/routes/work_order/create.schema";
 import { ColumnDef } from "@tanstack/react-table";
+
 import Link from "next/link";
-import { UseFormReturn } from "react-hook-form";
+import { Icons } from "@/components/icons";
+import { AssetModal } from "./asset-modal";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -46,21 +48,14 @@ export const columns: ColumnDef<
     header: ({ column }) => {
       return <DataTableColumnHeader column={column} title="Title" />;
     },
-    cell: ({ row }) => {
+    cell: ({ row, table }) => {
       return (
-        <div className="w-40">
-          <Link
-            href={{
-              query: {
-                asset_id: row.original.id,
-              },
-            }}
-            scroll={false}
-            className="font-medium text-primary underline"
-          >
-            {row.original.name}
-          </Link>
-        </div>
+        <AssetModal
+          assetIndex={row.index}
+          className="font-medium text-primary underline underline-offset-2"
+        >
+          {row.original.name}
+        </AssetModal>
       );
     },
     enableHiding: false,

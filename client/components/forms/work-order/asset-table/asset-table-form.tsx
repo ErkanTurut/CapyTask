@@ -2,12 +2,8 @@
 
 import { DataTable } from "@/components/tables/custom/data-table";
 import { TCreateWorkOrderWithItemsSchema } from "@/trpc/server/routes/work_order/create.schema";
-import {
-  getCoreRowModel,
-  SortingState,
-  useReactTable,
-} from "@tanstack/react-table";
-import { useFieldArray } from "react-hook-form";
+import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import { useFieldArray, useFormContext } from "react-hook-form";
 import { columns } from "./columns";
 
 import { Icons } from "@/components/icons";
@@ -17,24 +13,21 @@ import { CommandItem } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/client";
 import { useState } from "react";
-import type { UseFormReturn } from "react-hook-form";
-
-interface DataTableProps extends React.HTMLAttributes<HTMLDivElement> {
-  form: UseFormReturn<TCreateWorkOrderWithItemsSchema>;
-}
 
 export function AssetTableForm({
   className,
   children,
-  form,
   ...props
-}: DataTableProps) {
+}: React.HTMLAttributes<HTMLDivElement>) {
+  const form = useFormContext<TCreateWorkOrderWithItemsSchema>();
+
   const [rowSelection, setRowSelection] = useState({});
 
   const {
     append,
     remove,
     fields: assets,
+    update,
   } = useFieldArray({
     control: form.control,
     name: "asset",
@@ -111,7 +104,7 @@ export function AssetTableForm({
             {table.getSelectedRowModel().rows.length > 0 && (
               <Button
                 type="button"
-                variant={"destructive"}
+                variant={"ghost"}
                 size={"icon"}
                 onClick={() => {
                   remove(
