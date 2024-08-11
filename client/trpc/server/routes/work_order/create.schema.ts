@@ -53,7 +53,17 @@ export const ZCreateWorkOrderWithItemsSchema = ZCreateWorkOrderSchema.extend({
   work_step: z.array(ZCreateWorkStepSchema),
   asset: z.array(
     AssetQuerySchema.extend({
-      work_step: z.array(ZCreateWorkStepSchema).optional(),
+      work_step: z
+        .array(
+          z.object({
+            name: z.string(),
+            description: z.string().optional(),
+            parent_step_id: z.string().optional(),
+            step_order: z.number().optional(),
+            work_step_template_id: z.string().optional(),
+          }),
+        )
+        .optional(),
     }),
   ),
 });

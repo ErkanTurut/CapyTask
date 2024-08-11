@@ -3,7 +3,7 @@
 import React, { use } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
@@ -81,7 +81,6 @@ export function WorkOrderCreateForm({
     },
   });
 
-  console.log(form.formState.errors);
   return (
     <Form {...form}>
       <form

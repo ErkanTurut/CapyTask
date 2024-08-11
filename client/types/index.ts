@@ -136,3 +136,10 @@ export type Provider =
   | "twitter"
   | "workos"
   | "zoom";
+
+export interface DataTableFilterField<TData> {
+  label: string;
+  value: keyof TData;
+  placeholder?: string;
+  options?: Option[];
+}
