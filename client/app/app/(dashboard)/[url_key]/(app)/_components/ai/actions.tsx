@@ -85,7 +85,7 @@ export async function continueConversation({
             return <div>Work order not found</div>;
           }
 
-          return <StepTable work_step_item={work_order.work_step_item} />;
+          // return <StepTable work_step_item={work_order.work_step_item} />;
         },
       },
 

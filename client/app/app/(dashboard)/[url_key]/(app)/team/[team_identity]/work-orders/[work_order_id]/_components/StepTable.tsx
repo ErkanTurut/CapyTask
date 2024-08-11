@@ -25,14 +25,14 @@ import { formatDate, formatTimeToNow } from "@/lib/utils";
 import { trpc } from "@/trpc/server";
 
 interface StepTableProps {
-  work_step_item: NonNullable<
+  work_step: NonNullable<
     Awaited<
       ReturnType<(typeof trpc)["db"]["work_order"]["get"]["withSteps"]>
     >["data"]
-  >["work_step_item"];
+  >["work_step"];
 }
 
-const status_config: Record<
+export const status_config: Record<
   Database["public"]["Enums"]["Status"],
   { icon: keyof typeof Icons; label: string; variant: BadgeProps["variant"] }
 > = {
@@ -71,7 +71,7 @@ const options = Object.entries(status_config).map(
   }),
 );
 
-export default async function StepTable({ work_step_item }: StepTableProps) {
+export default async function StepTable({ work_step }: StepTableProps) {
   return (
     <Card x-chunk="dashboard-05-chunk-3">
       <CardHeader className="px-7">
@@ -81,7 +81,7 @@ export default async function StepTable({ work_step_item }: StepTableProps) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {work_step_item && work_step_item.length > 0 ? (
+        {work_step && work_step.length > 0 ? (
           <Table>
             <TableHeader>
               <TableRow>
@@ -94,28 +94,25 @@ export default async function StepTable({ work_step_item }: StepTableProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {work_step_item.map((step, index) => {
-                const Icon = Icons[status_config[step.status].icon];
-                if (!step.work_step) {
-                  return null;
-                }
+              {work_step.map((step, index) => {
+                // const Icon = Icons[status_config[step.status].icon];
                 return (
                   <TableRow key={step.id}>
                     <TableCell className="">{index + 1}</TableCell>
                     <TableCell className="table-cell max-w-40 overflow-hidden overflow-ellipsis whitespace-nowrap">
                       <div className="font-normal sm:font-medium">
-                        {step.work_step?.name}
+                        {step.name}
                       </div>
                       <div className="hidden text-sm text-muted-foreground md:inline">
-                        {step.work_step.description} {step.work_step.id}
+                        {step.description} {step.id}
                       </div>
                     </TableCell>
                     <TableCell className="table-cell">
                       <Badge
                         className="text-xs"
-                        variant={status_config[step.status].variant}
+                        // variant={status_config[step.status].variant}
                       >
-                        {status_config[step.status].label}
+                        {/* {status_config[step.status].label} */}
                       </Badge>
                     </TableCell>
 

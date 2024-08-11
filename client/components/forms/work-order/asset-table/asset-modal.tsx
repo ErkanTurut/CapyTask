@@ -50,7 +50,6 @@ export function AssetModal({
   return (
     <Dialog>
       <DialogTrigger className={cn("", className)}>{children}</DialogTrigger>
-
       <DialogContent className="flex h-[525px] flex-col sm:max-w-[925px]">
         <div>
           <DialogTitle>{asset.name} </DialogTitle>
@@ -64,9 +63,7 @@ export function AssetModal({
             appendWorkStep({
               name: "",
               description: "",
-              parent_step_id: "",
               step_order: 0,
-              work_step_template_id: "",
             })
           }
         >

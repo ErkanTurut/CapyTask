@@ -58,7 +58,7 @@ export default function AssetCreateForm({
     resolver: zodResolver(ZAssetCreateSchema),
     defaultValues: {
       name: "",
-      team_id,
+
       description: "",
       workspace_id,
     },
