@@ -32,15 +32,13 @@ export default async function DashboardLayout({
 
   return (
     <AI>
-      <LivekitRoomProvider>
-        <div className="relative flex h-screen w-full justify-center bg-muted/40">
-          {/* <Sidebar className="sticky top-0 flex" params={params} /> */}
-          <main className="m-1 flex w-full flex-1 flex-col rounded-md border bg-background">
-            <Header />
-            <ScrollArea className="flex-1">{children}</ScrollArea>
-          </main>
-        </div>
-      </LivekitRoomProvider>
+      <div className="relative flex h-screen w-full justify-center bg-muted/40">
+        {/* <Sidebar className="sticky top-0 flex" params={params} /> */}
+        <main className="m-1 flex w-full flex-1 flex-col rounded-md border bg-background">
+          <Header />
+          <ScrollArea className="flex-1">{children}</ScrollArea>
+        </main>
+      </div>
     </AI>
   );
 }

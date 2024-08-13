@@ -7,7 +7,7 @@ import {
 } from "@/components/page-header";
 import TableSkeleton from "@/components/skeletons/table-skeleton";
 import { Suspense } from "react";
-import TableContainer from "./_components/table/TableContainer";
+import TableContainer from "@/components/dashboard/work-order/tables/table/TableContainer";
 interface PageProps {
   searchParams: { [key: string]: string | string[] | undefined };
   params: {

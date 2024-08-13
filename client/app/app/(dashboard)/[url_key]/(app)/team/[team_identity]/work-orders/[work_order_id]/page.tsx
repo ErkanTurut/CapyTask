@@ -1,26 +1,18 @@
-import { File } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-import CardSkeleton from "@/components/skeletons/card-skeleton";
-import { trpc } from "@/trpc/server";
-import { notFound } from "next/navigation";
-import { Suspense } from "react";
-import StepTable from "./_components/StepTable";
-import WorkOrderDetail from "./_components/WorkOrderDetail";
-import WorkOrderHeader from "./_components/WorkOrderHeader";
-import BuddyComment from "./_components/BuddyComment";
-import AssetTable from "./_components/AssetTable";
-import { Shell } from "@/components/shells";
-import { Separator } from "@/components/ui/separator";
+"server-only";
 import {
   PageHeader,
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/components/page-header";
-import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
+import { Shell } from "@/components/shells";
+import { trpc } from "@/trpc/server";
+import { notFound } from "next/navigation";
+
+import {
+  TabsContainer,
+  TabsLink,
+} from "@/components/dashboard/navigation/tabs-link";
+import WorkOrderMain from "@/components/dashboard/work-order/work-order-main";
 
 interface PageProps {
   params: {
@@ -67,21 +59,33 @@ export default async function Page({ params }: PageProps) {
             {work_order.priority}
           </div>
         </section>
-
-        <nav className="flex items-center gap-4">
-          <Link href="#" className="border-b-2 border-foreground font-medium">
-            Step
-          </Link>
-          <Link href="#">Step</Link>
-          <Link href="#">Step</Link>
-        </nav>
+        <TabsContainer>
+          <TabsLink
+            href={`/${params.url_key}/team/${params.team_identity}/work-orders/${params.work_order_id}`}
+            active
+          >
+            Details
+          </TabsLink>
+          <TabsLink
+            href={`/${params.url_key}/team/${params.team_identity}/work-orders/${params.work_order_id}`}
+          >
+            Details
+          </TabsLink>
+          <TabsLink
+            href={`/${params.url_key}/team/${params.team_identity}/work-orders/${params.work_order_id}`}
+          >
+            Details
+          </TabsLink>
+        </TabsContainer>
       </div>
-      <div className="grid grid-cols-[1fr,0.4fr] gap-4">
-        <div className="flex h-80 flex-col gap-2 rounded-md">
+      <div className="grid h-full grid-cols-[1fr,0.4fr] gap-4">
+        <div className="flex h-full flex-col gap-2 rounded-md">
           <div className="h-16 rounded-md border"></div>
           <div className="flex-1 rounded-md border"></div>
         </div>
-        <div className="h-80 rounded-md border"></div>
+        <div>
+          <WorkOrderMain work_order={work_order} params={params} />
+        </div>
       </div>
       {/* <div className="grid auto-rows-max items-start gap-6 lg:col-span-2 xl:col-span-3">
         <div className="grid gap-4 sm:grid-cols-2">

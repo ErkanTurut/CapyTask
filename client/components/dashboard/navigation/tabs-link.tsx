@@ -62,14 +62,13 @@ export function TabsLink({
         "pointer-events-none opacity-70": disabled,
         "border-b-2": position === "end" && direction === "horizontal",
         "border-l-2": position === "start" && direction === "vertical",
-        // ... missing t, r
       })}
     >
       <Link
         className={cn(
-          "rounded-md text-sm font-medium text-muted-foreground hover:text-primary",
+          "rounded-md text-sm font-medium text-muted-foreground hover:text-foreground",
           {
-            "text-primary": active,
+            "text-primary hover:text-primary": active,
             "px-4 pb-3 pt-2": direction === "horizontal",
             "px-4 py-2.5": direction === "vertical",
           },
