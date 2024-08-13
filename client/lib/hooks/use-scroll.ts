@@ -1,21 +1,41 @@
-import { useCallback, useEffect, useState } from "react";
+// Props: https://github.com/uidotdev/usehooks/blob/90fbbb4cc085e74e50c36a62a5759a40c62bb98e/index.js#L1310
 
-export default function useScroll(threshold: number) {
-  const [scrolled, setScrolled] = useState(false);
+import * as React from "react";
 
-  const onScroll = useCallback(() => {
-    setScrolled(window.scrollY > threshold);
-  }, [threshold]);
+export function useWindowScroll() {
+  const [state, setState] = React.useState<{
+    x: number | null;
+    y: number | null;
+  }>({
+    x: null,
+    y: null,
+  });
 
-  useEffect(() => {
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [onScroll]);
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  const scrollTo = React.useCallback((...args: any[]) => {
+    if (typeof args[0] === "object") {
+      window.scrollTo(args[0]);
+    } else if (typeof args[0] === "number" && typeof args[1] === "number") {
+      window.scrollTo(args[0], args[1]);
+    } else {
+      throw new Error(
+        "Invalid arguments passed to scrollTo. See here for more info. https://developer.mozilla.org/en-US/docs/Web/API/Window/scrollTo",
+      );
+    }
+  }, []);
 
-  // also check on first load
-  useEffect(() => {
-    onScroll();
-  }, [onScroll]);
+  React.useLayoutEffect(() => {
+    const handleScroll = () => {
+      setState({ x: window.scrollX, y: window.scrollY });
+    };
 
-  return scrolled;
+    handleScroll();
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  return [state, scrollTo] as const;
 }
