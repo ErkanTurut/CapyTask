@@ -31,6 +31,7 @@ model work_step {
   step_order            Int?
   work_plan_id          String
   work_step_template_id String?
+  status                Status   @default(OPEN)
 
   asset_id String?
   asset    asset?  @relation(fields: [asset_id], references: [id])

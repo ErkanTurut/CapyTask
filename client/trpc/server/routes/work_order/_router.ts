@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { protectedProcedure, router } from "../../trpc";
 import { createWorkOrderHandler } from "./create.handler";
 import {
@@ -55,10 +56,18 @@ export const work_order = router({
     detail: protectedProcedure
       .input(ZGetWorkOrderSchema.pick({ id: true }))
       .query(async ({ ctx, input }) => {
-        return await getWorkOrderDetailHandler({
+        const { data, error } = await getWorkOrderDetailHandler({
           input,
           db: ctx.db,
         });
+        if (error) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            cause: error,
+          });
+        }
+
+        return data;
       }),
   },
   search: protectedProcedure

@@ -628,6 +628,7 @@ export type Database = {
           name: string
           parent_step_id: string | null
           public_id: string
+          status: Database["public"]["Enums"]["Status"]
           step_order: number | null
           updated_at: string
           work_order_id: string
@@ -643,6 +644,7 @@ export type Database = {
           name: string
           parent_step_id?: string | null
           public_id?: string
+          status?: Database["public"]["Enums"]["Status"]
           step_order?: number | null
           updated_at?: string
           work_order_id: string
@@ -658,6 +660,7 @@ export type Database = {
           name?: string
           parent_step_id?: string | null
           public_id?: string
+          status?: Database["public"]["Enums"]["Status"]
           step_order?: number | null
           updated_at?: string
           work_order_id?: string
