@@ -13,6 +13,14 @@ import WorkOrderHeader from "./_components/WorkOrderHeader";
 import BuddyComment from "./_components/BuddyComment";
 import AssetTable from "./_components/AssetTable";
 import { Shell } from "@/components/shells";
+import { Separator } from "@/components/ui/separator";
+import {
+  PageHeader,
+  PageHeaderDescription,
+  PageHeaderHeading,
+} from "@/components/page-header";
+import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 interface PageProps {
   params: {
@@ -23,22 +31,59 @@ interface PageProps {
 }
 
 export default async function Page({ params }: PageProps) {
-  // const { data: work_order } = await trpc.db.work_order.get.withSteps({
-  //   id: params.work_order_id,
-  // });
-
-  const { data: work_order } = await trpc.db.work_order.get.detail({
+  const work_order = await trpc.db.work_order.get.detail({
     id: params.work_order_id,
   });
-
-  console.log(work_order);
 
   if (!work_order) {
     return notFound();
   }
   return (
-    <Shell className="grid flex-1 items-start sm:px-6 lg:grid-cols-3 xl:grid-cols-5">
-      <div className="grid auto-rows-max items-start gap-6 lg:col-span-2 xl:col-span-3">
+    <Shell>
+      <div className="grid gap-4 border-b sm:grid-cols-2">
+        <PageHeader
+          id="work-order-header"
+          aria-labelledby="work-order-header-heading"
+          as="header"
+        >
+          <PageHeaderHeading size="xs">{work_order.name}</PageHeaderHeading>
+          <PageHeaderDescription size="xs">
+            {work_order.description}
+          </PageHeaderDescription>
+        </PageHeader>
+        <section className="flex items-center gap-2 rounded-sm">
+          <div className="inline-flex items-center gap-2 rounded-full border bg-opacity-65 px-2.5 py-1 text-xs font-semibold transition-colors">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
+            </span>
+            {work_order.status}
+          </div>
+          <div className="inline-flex items-center gap-2 rounded-full border bg-opacity-65 px-2.5 py-1 text-xs font-semibold transition-colors">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
+            </span>
+            {work_order.priority}
+          </div>
+        </section>
+
+        <nav className="flex items-center gap-4">
+          <Link href="#" className="border-b-2 border-foreground font-medium">
+            Step
+          </Link>
+          <Link href="#">Step</Link>
+          <Link href="#">Step</Link>
+        </nav>
+      </div>
+      <div className="grid grid-cols-[1fr,0.4fr] gap-4">
+        <div className="flex h-80 flex-col gap-2 rounded-md">
+          <div className="h-16 rounded-md border"></div>
+          <div className="flex-1 rounded-md border"></div>
+        </div>
+        <div className="h-80 rounded-md border"></div>
+      </div>
+      {/* <div className="grid auto-rows-max items-start gap-6 lg:col-span-2 xl:col-span-3">
         <div className="grid gap-4 sm:grid-cols-2">
           <WorkOrderHeader params={params} work_order={work_order} />
         </div>
@@ -60,7 +105,7 @@ export default async function Page({ params }: PageProps) {
           </div>
           <TabsContent value="step">
             <Suspense fallback={<CardSkeleton />}>
-              <StepTable work_step={work_order.work_step} />
+              <StepTable asset={work_order.asset} />
             </Suspense>
           </TabsContent>
           <TabsContent value="asset">
@@ -74,9 +119,9 @@ export default async function Page({ params }: PageProps) {
         </Tabs>
       </div>
       <div className="grid auto-rows-max items-start gap-4 xl:col-span-2">
-        {/* <BuddyComment /> */}
+        
         <WorkOrderDetail params={params} work_order={work_order} />
-      </div>
+      </div> */}
     </Shell>
   );
 }

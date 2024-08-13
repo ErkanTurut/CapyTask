@@ -1,5 +1,3 @@
-import { Icons } from "@/components/icons";
-import { Badge, BadgeProps } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -20,19 +18,14 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Database } from "@/lib/supabase/server";
 import { formatDate, formatTimeToNow } from "@/lib/utils";
-import { trpc } from "@/trpc/server";
+import { RouterOutput } from "@/trpc/client";
 
 interface AssetTableProps {
   params: {
     work_order_id: string;
   };
-  assets: NonNullable<
-    Awaited<
-      ReturnType<(typeof trpc)["db"]["work_order"]["get"]["detail"]>
-    >["data"]
-  >["asset"];
+  assets: RouterOutput["db"]["work_order"]["get"]["detail"]["asset"];
 }
 
 export default async function AssetTable({ params, assets }: AssetTableProps) {

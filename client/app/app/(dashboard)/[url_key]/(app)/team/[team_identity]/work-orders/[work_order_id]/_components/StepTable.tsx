@@ -22,14 +22,11 @@ import {
 } from "@/components/ui/tooltip";
 import { Database } from "@/lib/supabase/server";
 import { formatDate, formatTimeToNow } from "@/lib/utils";
+import { RouterOutput } from "@/trpc/client";
 import { trpc } from "@/trpc/server";
 
 interface StepTableProps {
-  work_step: NonNullable<
-    Awaited<
-      ReturnType<(typeof trpc)["db"]["work_order"]["get"]["withSteps"]>
-    >["data"]
-  >["work_step"];
+  asset: RouterOutput["db"]["work_order"]["get"]["detail"]["asset"];
 }
 
 export const status_config: Record<
@@ -71,7 +68,7 @@ const options = Object.entries(status_config).map(
   }),
 );
 
-export default async function StepTable({ work_step }: StepTableProps) {
+export default async function StepTable({ asset }: StepTableProps) {
   return (
     <Card x-chunk="dashboard-05-chunk-3">
       <CardHeader className="px-7">
@@ -81,24 +78,25 @@ export default async function StepTable({ work_step }: StepTableProps) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {work_step && work_step.length > 0 ? (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Order</TableHead>
-                <TableHead className="table-cell">Title</TableHead>
-                <TableHead className="table-cell">Status</TableHead>
-                <TableHead className="hidden md:table-cell">
-                  Last update
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {work_step.map((step, index) => {
-                // const Icon = Icons[status_config[step.status].icon];
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Order</TableHead>
+              <TableHead className="table-cell">Title</TableHead>
+              <TableHead className="table-cell">Status</TableHead>
+              <TableHead className="hidden md:table-cell">
+                Last update
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {asset.flatMap((asset, assetIndex) => {
+              return asset.work_step.sort().map((step, stepIndex) => {
                 return (
                   <TableRow key={step.id}>
-                    <TableCell className="">{index + 1}</TableCell>
+                    <TableCell className="">
+                      {(step.step_order || stepIndex) + 1}
+                    </TableCell>
                     <TableCell className="table-cell max-w-40 overflow-hidden overflow-ellipsis whitespace-nowrap">
                       <div className="font-normal sm:font-medium">
                         {step.name}
@@ -110,12 +108,11 @@ export default async function StepTable({ work_step }: StepTableProps) {
                     <TableCell className="table-cell">
                       <Badge
                         className="text-xs"
-                        // variant={status_config[step.status].variant}
+                        variant={status_config[step.status].variant}
                       >
-                        {/* {status_config[step.status].label} */}
+                        {status_config[step.status].label}
                       </Badge>
                     </TableCell>
-
                     <TableCell className="hidden sm:table-cell">
                       <Tooltip>
                         <TooltipTrigger>
@@ -131,15 +128,47 @@ export default async function StepTable({ work_step }: StepTableProps) {
                     </TableCell>
                   </TableRow>
                 );
-              })}
-            </TableBody>
-          </Table>
-        ) : (
-          <p className="p-6 text-center text-muted-foreground">
-            No orders found.
-          </p>
-        )}
+              });
+            })}
+          </TableBody>
+        </Table>
       </CardContent>
     </Card>
   );
 }
+
+// const Icon = Icons[status_config[step.status].icon];
+// return (
+//   <TableRow key={step.id}>
+//     <TableCell className="">{index + 1}</TableCell>
+//     <TableCell className="table-cell max-w-40 overflow-hidden overflow-ellipsis whitespace-nowrap">
+//       <div className="font-normal sm:font-medium">
+//         {step.name}
+//       </div>
+//       <div className="hidden text-sm text-muted-foreground md:inline">
+//         {step.description} {step.id}
+//       </div>
+//     </TableCell>
+//     <TableCell className="table-cell">
+//       <Badge
+//         className="text-xs"
+//         variant={status_config[step.status].variant}
+//       >
+//         {status_config[step.status].label}
+//       </Badge>
+//     </TableCell>
+//     <TableCell className="hidden sm:table-cell">
+//       <Tooltip>
+//         <TooltipTrigger>
+//           {formatTimeToNow(new Date(step.updated_at))}
+//         </TooltipTrigger>
+//         <TooltipContent>
+//           {formatDate({
+//             date: step.updated_at,
+//             format: "LLL",
+//           })}
+//         </TooltipContent>
+//       </Tooltip>
+//     </TableCell>
+//   </TableRow>
+// );

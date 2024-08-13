@@ -32,16 +32,13 @@ import { Separator } from "@/components/ui/separator";
 import { trpc } from "@/trpc/server";
 import { formatDate } from "@/lib/utils";
 import Link from "next/link";
+import { RouterOutput } from "@/trpc/client";
 
 interface WorkOrderDetailProps {
   params: {
     work_order_id: string;
   };
-  work_order: NonNullable<
-    Awaited<
-      ReturnType<(typeof trpc)["db"]["work_order"]["get"]["detail"]>
-    >["data"]
-  >;
+  work_order: RouterOutput["db"]["work_order"]["get"]["detail"];
 }
 
 export default function WorkOrderDetail({

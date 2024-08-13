@@ -8,20 +8,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import StatusSelector from "@/components/work-order/statusSelector";
-import { trpc } from "@/trpc/server";
+import { RouterOutput } from "@/trpc/client";
 import { Database } from "@/types/supabase.types";
 
 interface WorkOrderHeaderProps {
   params: {
     work_order_id: string;
   };
-  work_order: NonNullable<
-    Awaited<
-      ReturnType<(typeof trpc)["db"]["work_order"]["get"]["detail"]>
-    >["data"]
-  >;
+  work_order: RouterOutput["db"]["work_order"]["get"]["detail"];
 }
 
 const status_config: Record<
