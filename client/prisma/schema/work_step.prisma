@@ -48,6 +48,9 @@ model work_step {
   @@index([parent_step_id])
   @@index([created_by_id])
   @@index([work_plan_id])
+  @@index([work_step_template_id])
+  @@index([asset_id])
+  @@index([work_order_id])
 }
 
 // model work_step_item {

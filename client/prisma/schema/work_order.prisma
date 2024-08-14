@@ -28,6 +28,10 @@ model work_order {
   work_step        work_step[]
 
   @@index([team_id])
+  @@index([workspace_id])
+  @@index([work_plan_id])
+  @@index([location_id])
+  @@index([company_id])
 }
 
 model work_order_asset {
