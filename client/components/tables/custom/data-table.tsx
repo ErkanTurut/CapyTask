@@ -1,5 +1,7 @@
-"use client";
+import * as React from "react";
+import { flexRender, type Table as TanstackTable } from "@tanstack/react-table";
 
+import { cn } from "@/lib/utils";
 import {
   Table,
   TableBody,
@@ -8,24 +10,31 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { cn } from "@/lib/utils";
-import {
-  ColumnDef,
-  flexRender,
-  type Table as TanstackTable,
-} from "@tanstack/react-table";
+import { DataTablePagination } from "@/components/tables/custom/data-table-pagination";
 
-interface DataTableProps<TData, TValue>
-  extends React.HTMLAttributes<HTMLDivElement> {
+interface DataTableProps<TData> extends React.HTMLAttributes<HTMLDivElement> {
+  /**
+   * The table instance returned from useDataTable hook with pagination, sorting, filtering, etc.
+   * @type TanstackTable<TData>
+   */
   table: TanstackTable<TData>;
+
+  /**
+   * The floating bar to render at the bottom of the table on row selection.
+   * @default null
+   * @type React.ReactNode | null
+   * @example floatingBar={<TasksTableFloatingBar table={table} />}
+   */
+  floatingBar?: React.ReactNode | null;
 }
 
-export function DataTable<TData, TValue>({
-  className,
-  children,
+export function DataTable<TData>({
   table,
+  floatingBar = null,
+  children,
+  className,
   ...props
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<TData>) {
   return (
     <div
       className={cn("w-full space-y-2.5 overflow-auto", className)}
@@ -39,7 +48,13 @@ export function DataTable<TData, TValue>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead
+                      key={header.id}
+                      colSpan={header.colSpan}
+                      // style={{
+                      //   ...getCommonPinningStyles({ column: header.column }),
+                      // }}
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -60,7 +75,12 @@ export function DataTable<TData, TValue>({
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell
+                      key={cell.id}
+                      // style={{
+                      //   ...getCommonPinningStyles({ column: cell.column }),
+                      // }}
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
@@ -81,6 +101,10 @@ export function DataTable<TData, TValue>({
             )}
           </TableBody>
         </Table>
+      </div>
+      <div className="flex flex-col gap-2.5">
+        <DataTablePagination table={table} />
+        {table.getFilteredSelectedRowModel().rows.length > 0 && floatingBar}
       </div>
     </div>
   );

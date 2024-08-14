@@ -24,14 +24,9 @@ import { useDebounce } from "@/lib/hooks/use-debounce";
 
 interface UseDataTableProps<TData>
   extends Omit<
-      TableOptions<TData>,
-      | "pageCount"
-      | "getCoreRowModel"
-      | "manualFiltering"
-      | "manualPagination"
-      | "manualSorting"
-    >,
-    Required<Pick<TableOptions<TData>, "pageCount">> {
+    TableOptions<TData>,
+    "getCoreRowModel" | "manualFiltering" | "manualPagination" | "manualSorting"
+  > {
   /**
    * Defines filter fields for the table. Supports both dynamic faceted filters and search filters.
    * - Faceted filters are rendered when `options` are provided for a filter field.
@@ -86,7 +81,8 @@ const searchParamsSchema = z.object({
 });
 
 export function useDataTable<TData>({
-  pageCount = -1,
+  pageCount,
+  rowCount,
   filterFields = [],
   enableAdvancedFilter = false,
   ...props
@@ -163,7 +159,7 @@ export function useDataTable<TData>({
   // Table states
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
+    React.useState<VisibilityState>(props.initialState?.columnVisibility ?? {});
   const [columnFilters, setColumnFilters] =
     React.useState<ColumnFiltersState>(initialColumnFilters);
 
@@ -287,6 +283,7 @@ export function useDataTable<TData>({
   const table = useReactTable({
     ...props,
     pageCount,
+    rowCount,
     state: {
       pagination,
       sorting,

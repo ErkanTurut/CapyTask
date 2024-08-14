@@ -13,6 +13,7 @@ import {
   TabsLink,
 } from "@/components/dashboard/navigation/tabs-link";
 import WorkOrderMain from "@/components/dashboard/work-order/work-order-main";
+import { AssetTable } from "@/components/dashboard/asset/table/asset-table";
 
 interface PageProps {
   params: {
@@ -30,6 +31,7 @@ export default async function Page({ params }: PageProps) {
   if (!work_order) {
     return notFound();
   }
+
   return (
     <Shell>
       <div className="grid gap-4 border-b sm:grid-cols-2">
@@ -78,10 +80,12 @@ export default async function Page({ params }: PageProps) {
           </TabsLink>
         </TabsContainer>
       </div>
-      <div className="grid h-full grid-cols-[1fr,0.4fr] gap-4">
+      <div className="grid h-full gap-4 sm:grid-cols-[1fr,0.4fr]">
         <div className="flex h-full flex-col gap-2 rounded-md">
           <div className="h-16 rounded-md border"></div>
-          <div className="flex-1 rounded-md border"></div>
+          <div className="grid h-full">
+            <AssetTable work_order={work_order} />
+          </div>
         </div>
         <div>
           <WorkOrderMain work_order={work_order} params={params} />

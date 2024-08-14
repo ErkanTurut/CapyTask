@@ -1,5 +1,5 @@
 "use client";
-import { ChevronLeft, ChevronRight, Copy, MoreVertical } from "lucide-react";
+import { Copy } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -10,18 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-} from "@/components/ui/pagination";
 import { Separator } from "@/components/ui/separator";
 import { formatDate } from "@/lib/utils";
 import { RouterOutput } from "@/trpc/client";
