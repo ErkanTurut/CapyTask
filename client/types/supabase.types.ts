@@ -505,14 +505,17 @@ export type Database = {
       work_order_asset: {
         Row: {
           asset_id: string
+          status: Database["public"]["Enums"]["Status"]
           work_order_id: string
         }
         Insert: {
           asset_id: string
+          status?: Database["public"]["Enums"]["Status"]
           work_order_id: string
         }
         Update: {
           asset_id?: string
+          status?: Database["public"]["Enums"]["Status"]
           work_order_id?: string
         }
         Relationships: [

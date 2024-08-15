@@ -57,7 +57,7 @@ export function TabsLink({
   const { direction, position } = useTabs();
   return (
     <li
-      className={cn("flex shrink-0 list-none border-transparent", {
+      className={cn("flex shrink-0 list-none border-transparent p-1", {
         "border-primary": active,
         "pointer-events-none opacity-70": disabled,
         "border-b-2": position === "end" && direction === "horizontal",
@@ -69,7 +69,7 @@ export function TabsLink({
           "rounded-md text-sm font-medium text-muted-foreground hover:text-foreground",
           {
             "text-primary hover:text-primary": active,
-            "px-4 pb-3 pt-2": direction === "horizontal",
+            "px-4 py-1": direction === "horizontal",
             "px-4 py-2.5": direction === "vertical",
           },
           className,

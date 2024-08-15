@@ -86,6 +86,22 @@ export function getColumns(): ColumnDef<
       },
     },
 
+    {
+      accessorKey: "status",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Status" />
+      ),
+      cell: ({ row }) => {
+        return (
+          <div className="flex space-x-2">
+            <span className="max-w-[16.25rem] truncate font-medium">
+              {row.original.status}
+            </span>
+          </div>
+        );
+      },
+    },
+
     // {
     //   accessorKey: "status",
     //   header: ({ column }) => (

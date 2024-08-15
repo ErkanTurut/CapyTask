@@ -60,6 +60,7 @@ export const work_order = router({
           input,
           db: ctx.db,
         });
+        console.log(data);
         if (error) {
           throw new TRPCError({
             code: "NOT_FOUND",

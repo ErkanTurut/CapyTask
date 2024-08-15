@@ -37,6 +37,7 @@ model work_order {
 model work_order_asset {
   work_order_id String
   asset_id      String
+  status        Status     @default(OPEN)
   asset         asset      @relation(fields: [asset_id], references: [id])
   work_order    work_order @relation(fields: [work_order_id], references: [id], onDelete: Cascade)
 

@@ -80,6 +80,30 @@ const sizes = {
   },
 };
 
+const pulseColors: {
+  [key in "green" | "red" | "blue" | "yellow"]: {
+    color: string;
+    pulseColor: string;
+  };
+} = {
+  green: {
+    color: "#5BB98B",
+    pulseColor: "#5BB98B",
+  },
+  red: {
+    color: "#E5484D",
+    pulseColor: "#E5484D",
+  },
+  blue: {
+    color: "#0090FF",
+    pulseColor: "#0090FF",
+  },
+  yellow: {
+    color: "#F59E0B",
+    pulseColor: "#F59E0B",
+  },
+};
+
 export const Icons = {
   user: PersonIcon,
   spinner: UpdateIcon,
@@ -130,6 +154,49 @@ export const Icons = {
   micOff: MicOffIcon,
   play: PlayIcon,
   stop: StopIcon,
+
+  pulse: ({
+    size = 16,
+    colorValue,
+  }: {
+    size?: number;
+    colorValue: keyof typeof pulseColors;
+  }) => {
+    const { color, pulseColor } = pulseColors[colorValue];
+
+    return (
+      <svg
+        width={size}
+        height={size}
+        viewBox="0 0 16 16"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        {/* Outer circle for the pulsing effect */}
+        <circle cx="8" cy="8" r="8" fill={pulseColor} opacity="0.75">
+          <animate
+            attributeName="r"
+            from="3"
+            to="8"
+            dur="1s"
+            begin="0s"
+            repeatCount="indefinite"
+          />
+          <animate
+            attributeName="opacity"
+            from="0.75"
+            to="0"
+            dur="1s"
+            begin="0s"
+            repeatCount="indefinite"
+          />
+        </circle>
+
+        {/* Inner static circle */}
+        <circle cx="8" cy="8" r="3" fill={color} />
+      </svg>
+    );
+  },
 
   loading: (props: LucideProps) => {
     return (
@@ -305,41 +372,5 @@ export const Icons = {
     </svg>
   ),
 };
-{
-  /* <svg
-  width="16"
-  height="32"
-  viewBox="0 0 16 32"
-  fill="none"
-  xmlns="http://www.w3.org/2000/svg"
-  {...props}
->
-  <mask id="path-1-inside-1_324_14" fill="white">
-    <path d="M15.632 8.45966C15.632 7.48415 15.2203 6.54859 14.4874 5.8588C13.7545 5.16901 12.7604 4.78149 11.724 4.78149C10.6875 4.78149 9.69346 5.16901 8.96056 5.8588C8.22766 6.54859 7.81592 7.48415 7.81592 8.45965L11.724 8.45966H15.632Z" />
-  </mask>
-  <path
-    d="M15.632 8.45966C15.632 7.48415 15.2203 6.54859 14.4874 5.8588C13.7545 5.16901 12.7604 4.78149 11.724 4.78149C10.6875 4.78149 9.69346 5.16901 8.96056 5.8588C8.22766 6.54859 7.81592 7.48415 7.81592 8.45965L11.724 8.45966H15.632Z"
-    fill="#2F7C57"
-    stroke="white"
-    stroke-width="1.6"
-    mask="url(#path-1-inside-1_324_14)"
-  />
-  <mask id="path-2-inside-2_324_14" fill="white">
-    <path d="M12.0588 1.83919C11.6404 1.59768 11.1757 1.44607 10.691 1.39303C10.2064 1.33999 9.71127 1.38655 9.23403 1.53005C8.7568 1.67355 8.30675 1.91119 7.9096 2.22939C7.51245 2.54759 7.17596 2.94012 6.91936 3.38458C6.66275 3.82903 6.49105 4.3167 6.41406 4.81975C6.33706 5.32279 6.35629 5.83136 6.47063 6.31641C6.58497 6.80146 6.79219 7.2535 7.08046 7.64671C7.36873 8.03992 7.7324 8.36661 8.15071 8.60812L10.1047 5.22366L12.0588 1.83919Z" />
-  </mask>
-  <path
-    d="M12.0588 1.83919C11.6404 1.59768 11.1757 1.44607 10.691 1.39303C10.2064 1.33999 9.71127 1.38655 9.23403 1.53005C8.7568 1.67355 8.30675 1.91119 7.9096 2.22939C7.51245 2.54759 7.17596 2.94012 6.91936 3.38458C6.66275 3.82903 6.49105 4.3167 6.41406 4.81975C6.33706 5.32279 6.35629 5.83136 6.47063 6.31641C6.58497 6.80146 6.79219 7.2535 7.08046 7.64671C7.36873 8.03992 7.7324 8.36661 8.15071 8.60812L10.1047 5.22366L12.0588 1.83919Z"
-    fill="#30A46C"
-    stroke="white"
-    stroke-width="1.6"
-    mask="url(#path-2-inside-2_324_14)"
-  />
-  <path
-    d="M7.68061 8.86792H7.95158C11.917 8.86792 15.1322 12.0828 15.1322 16.0485V16.3195C15.1322 20.2853 11.917 23.5001 7.95158 23.5001H7.68061C3.7152 23.5001 0.5 20.2853 0.5 16.3195V16.0485C0.5 12.0828 3.7152 8.86792 7.68061 8.86792Z"
-    fill="#FF801F"
-    stroke="white"
-  />
-</svg>; */
-}
 
 export type IconType = keyof typeof Icons;
