@@ -11,6 +11,7 @@ import WorkOrderMain from "@/components/dashboard/work-order/work-order-main";
 import { WorkOrderTabs } from "@/components/dashboard/work-order/work-order-tabs";
 import { Database } from "@/types/supabase.types";
 import { Icons, IconType } from "@/components/icons";
+import { statusConfig } from "@/config/dashboard.config";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -26,44 +27,11 @@ const StatusSelect = ({
 }: {
   status: Database["public"]["Enums"]["Status"];
 }) => {
-  interface StatusConfig {
-    value: Database["public"]["Enums"]["Status"];
-    label: string;
-    icon?: IconType;
-  }
-
-  const statusConfig: StatusConfig[] = [
-    {
-      value: "OPEN",
-      label: "Open",
-      icon: "check",
-    },
-    {
-      value: "IN_PROGRESS",
-      label: "In Progress",
-      icon: "check",
-    },
-    {
-      value: "COMPLETED",
-      label: "Completed",
-      icon: "check",
-    },
-    {
-      value: "CANCELED",
-      label: "Cancelled",
-      icon: "check",
-    },
-    {
-      value: "ON_HOLD",
-      label: "On Hold",
-      icon: "check",
-    },
-  ];
-
   return (
     <div className="inline-flex items-center gap-2 rounded-full border bg-opacity-65 px-2.5 py-1 text-xs font-semibold transition-colors">
       <Icons.pulse colorValue={"red"} />
       {statusConfig.find((_status) => _status.value === status)?.label}
+      <Icons.caretSort className="size-4 text-muted-foreground group-hover:text-accent-foreground" />
     </div>
   );
 };

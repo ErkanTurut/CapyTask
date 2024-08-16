@@ -19,7 +19,6 @@ export function WorkOrderTabs() {
   };
   const selectedSegment = useSelectedLayoutSegment();
   const segments = useSelectedLayoutSegments();
-  console.log(segments);
 
   if (!params) {
     return null;
@@ -29,7 +28,6 @@ export function WorkOrderTabs() {
     <TabsContainer>
       {workOrderPagesConfig.map(({ title, segment, href }) => {
         const active = segment === selectedSegment;
-        console.log(selectedSegment);
         return (
           <TabsLink
             key={title}

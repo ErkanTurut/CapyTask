@@ -19,7 +19,7 @@ interface WorkOrderMainProps {
   params: {
     work_order_id: string;
   };
-  work_order: RouterOutput["db"]["work_order"]["get"]["detail"];
+  work_order: NonNullable<RouterOutput["db"]["work_order"]["get"]["detail"]>;
 }
 
 export default function WorkOrderMain({
@@ -99,7 +99,7 @@ export default function WorkOrderMain({
                   className="text-sm font-medium text-primary underline"
                   href={"#"}
                 >
-                  {work_order.user?.first_name} {work_order.user?.last_name}
+                  {/* {work_order.user?.first_name} {work_order.user?.last_name} */}
                 </Link>
               </dd>
             </div>

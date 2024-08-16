@@ -8,8 +8,8 @@ import { createClient } from "@/lib/supabase/server";
 import { cache } from "react";
 import { createCallerFactory } from "./server/trpc";
 
-const getUser = cache(async () => {
-  return await createClient(cookies()).auth.getUser();
+const getSession = cache(async () => {
+  return await createClient(cookies()).auth.getSession();
 });
 
 export const trpc = createCallerFactory(appRouter)(async () => {
@@ -20,7 +20,7 @@ export const trpc = createCallerFactory(appRouter)(async () => {
   });
 
   return {
-    user: (await getUser()).data.user,
+    session: (await getSession()).data.session,
     headers: {
       cookie: cookies().toString(),
       "x-trpc-source": "rsc-invoke",

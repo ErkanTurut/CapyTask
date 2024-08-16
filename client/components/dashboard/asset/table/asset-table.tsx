@@ -5,24 +5,27 @@ import * as React from "react";
 
 import { type DataTableFilterField } from "@/types";
 
-import { DataTableAdvancedToolbar } from "@/components/tables/custom/data-table-advanced-toolbar";
 import { DataTable } from "@/components/tables/custom/data-table";
+import { DataTableAdvancedToolbar } from "@/components/tables/custom/data-table-advanced-toolbar";
 import { useDataTable } from "@/lib/hooks/use-data-table";
 
 import { RouterOutput } from "@/trpc/client";
+import { TWorkOrderAssetQuerySchema } from "@/trpc/server/routes/work_order/get.schema";
 import { getColumns } from "./asset-columns";
+import { Status } from "@prisma/client";
+import { statusConfig } from "@/config/dashboard.config";
+import { Icons } from "@/components/icons";
 // import { TasksTableToolbarActions } from "./tasks-table-toolbar-actions";
 
-interface TasksTableProps {
-  work_order: RouterOutput["db"]["work_order"]["get"]["detail"];
+interface AssetTableProps {
+  data: NonNullable<
+    RouterOutput["db"]["work_order"]["get"]["detail"]
+  >["work_order_asset"];
+  count: number;
 }
 
-export function AssetTable({ work_order }: TasksTableProps) {
-  const { asset: data, _asset: pageCount } = work_order;
-
-  // Memoize the columns so they don't re-render on every render
+export function AssetTable({ data, count }: AssetTableProps) {
   const columns = React.useMemo(() => getColumns(), []);
-
   /**
    * This component can render either a faceted filter or a search filter based on the `options` prop.
    *
@@ -35,40 +38,39 @@ export function AssetTable({ work_order }: TasksTableProps) {
    * @prop {boolean} [withCount] - An optional boolean to display the count of the filter option.
    */
   const filterFields: DataTableFilterField<
-    RouterOutput["db"]["work_order"]["get"]["detail"]["asset"][number]
+    NonNullable<
+      RouterOutput["db"]["work_order"]["get"]["detail"]
+    >["work_order_asset"][number]
   >[] = [
+    // {
+    //   label: "Title",
+    //   value: "asset.title",
+    //   placeholder: "Filter titles...",
+    // },
+
     {
-      label: "Title",
-      value: "name",
-      placeholder: "Filter titles...",
+      label: "Status",
+      value: "status",
+      options: statusConfig.map((status) => ({
+        label: status.label,
+        value: status.value,
+        icon: () => {
+          if (!status.icon) return null;
+          const Icon = Icons[status.icon];
+          return (
+            <Icon className="size-4 text-muted-foreground group-hover:text-accent-foreground" />
+          );
+        },
+        withCount: true,
+      })),
     },
-    //   {
-    //     label: "Status",
-    //     value: "work_step",
-    //     options: tasks.status.enumValues.map((status) => ({
-    //       label: status[0]?.toUpperCase() + status.slice(1),
-    //       value: status,
-    //       icon: getStatusIcon(status),
-    //       withCount: true,
-    //     })),
-    //   },
-    //   {
-    //     label: "Priority",
-    //     value: "priority",
-    //     options: tasks.priority.enumValues.map((priority) => ({
-    //       label: priority[0]?.toUpperCase() + priority.slice(1),
-    //       value: priority,
-    //       icon: getPriorityIcon(priority),
-    //       withCount: true,
-    //     })),
-    //   },
   ];
 
   const { table } = useDataTable({
     data,
     columns,
     pageCount: undefined,
-    rowCount: pageCount[0].count,
+    rowCount: count,
     /* optional props */
     filterFields,
     enableAdvancedFilter: true,
@@ -79,13 +81,13 @@ export function AssetTable({ work_order }: TasksTableProps) {
     },
 
     // For remembering the previous row selection on page change
-    getRowId: (originalRow, index) => `${originalRow.id}-${index}`,
+    getRowId: (originalRow, index) => `${originalRow.asset_id}-${index}`,
     /* */
   });
 
   return (
     <DataTable table={table}>
-      <DataTableAdvancedToolbar table={table}>
+      <DataTableAdvancedToolbar filterFields={filterFields} table={table}>
         {/* <TasksTableToolbarActions table={table} /> */}
       </DataTableAdvancedToolbar>
     </DataTable>

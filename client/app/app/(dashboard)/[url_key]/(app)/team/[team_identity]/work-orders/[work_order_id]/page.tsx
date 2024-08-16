@@ -15,7 +15,6 @@ export default async function Page({ params }: PageProps) {
   const work_order = await trpc.db.work_order.get.detail({
     id: params.work_order_id,
   });
-
   if (!work_order) {
     return notFound();
   }
@@ -23,7 +22,10 @@ export default async function Page({ params }: PageProps) {
     <div className="flex h-full flex-col gap-2 rounded-md">
       <div className="h-16 rounded-md border"></div>
       <div className="grid h-full">
-        <AssetTable work_order={work_order} />
+        <AssetTable
+          data={work_order.work_order_asset}
+          count={work_order._asset[0].count}
+        />
       </div>
     </div>
   );

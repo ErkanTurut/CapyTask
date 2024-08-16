@@ -19,17 +19,17 @@ import { cache } from "react";
 //   };
 // }
 
-const getUser = cache(async () => {
-  return await createClient(cookies()).auth.getUser();
+const getSession = cache(async () => {
+  return await createClient(cookies()).auth.getSession();
 });
 
 export const createContext = async (opts?: FetchCreateContextFnOptions) => {
   const {
-    data: { user },
-  } = await getUser();
+    data: { session },
+  } = await getSession();
 
   return {
-    user,
+    session,
     headers: opts && Object.fromEntries(opts.req.headers),
     db: createClient(cookies()),
   };

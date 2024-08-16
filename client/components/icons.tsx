@@ -160,7 +160,7 @@ export const Icons = {
     colorValue,
   }: {
     size?: number;
-    colorValue: keyof typeof pulseColors;
+    colorValue?: keyof typeof pulseColors;
   }) => {
     const { color, pulseColor } = pulseColors[colorValue];
 

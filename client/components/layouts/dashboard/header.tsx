@@ -19,7 +19,7 @@ export default function Header({}: headerProps) {
   return (
     <div
       className={cn(
-        "sticky top-0 z-50 flex w-full border-b border-transparent p-2 shadow-none transition-all duration-200 hover:border-border",
+        "sticky top-0 flex w-full border-b border-transparent p-2 shadow-none transition-all duration-200 hover:border-border",
         _isScroll && "border-border bg-background shadow",
       )}
     >

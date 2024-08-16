@@ -8,7 +8,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { RouterOutput } from "@/trpc/client";
 
 export function getColumns(): ColumnDef<
-  RouterOutput["db"]["work_order"]["get"]["detail"]["asset"][number]
+  NonNullable<
+    RouterOutput["db"]["work_order"]["get"]["detail"]
+  >["work_order_asset"][number]
 >[] {
   return [
     {
@@ -49,7 +51,7 @@ export function getColumns(): ColumnDef<
           <div className="flex space-x-2">
             {/* {label && <Badge variant="outline">{label}</Badge>} */}
             <span className="max-w-[31.25rem] truncate font-medium">
-              {row.original.name}
+              {row.original.asset?.name}
             </span>
           </div>
         );
@@ -64,7 +66,7 @@ export function getColumns(): ColumnDef<
         return (
           <div className="flex">
             <span className="max-w-[21.25rem] truncate">
-              {row.original.description}
+              {row.original.asset?.description}
             </span>
           </div>
         );
@@ -79,7 +81,7 @@ export function getColumns(): ColumnDef<
         return (
           <div className="flex space-x-2">
             <span className="max-w-[16.25rem] truncate font-medium">
-              {row.original.location?.name}
+              {row.original.asset?.name}
             </span>
           </div>
         );
@@ -88,6 +90,7 @@ export function getColumns(): ColumnDef<
 
     {
       accessorKey: "status",
+      id: "status",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Status" />
       ),

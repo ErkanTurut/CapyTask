@@ -88,13 +88,11 @@ export async function createWorkOrderHandler({
       }
       return [];
     });
-    console.log(assetSteps);
 
     const { data: work_step, error: work_step_error } = await db
       .from("work_step")
       .upsert(assetSteps)
       .select("*");
-    console.log(work_step, work_step_error);
   }
 
   return {
