@@ -57,22 +57,6 @@ export function DataTable<TData, TDataRow, TValue, TError>({
 }: DataTableProps<TData, TDataRow, TValue, TError>) {
   const page = searchParams?.page || 1;
   const limit = searchParams?.limit || 10;
-  const createQueryString = React.useCallback(
-    (params: Record<string, string | number | null>) => {
-      const newSearchParams = new URLSearchParams(searchParams?.toString());
-
-      for (const [key, value] of Object.entries(params)) {
-        if (value === null) {
-          newSearchParams.delete(key);
-        } else {
-          newSearchParams.set(key, String(value));
-        }
-      }
-
-      return newSearchParams.toString();
-    },
-    [searchParams],
-  );
 
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =

@@ -1,5 +1,5 @@
-import { AssetTable } from "@/components/dashboard/asset/table/asset-table";
 import { WorkOrderTabs } from "@/components/dashboard/work-order/work-order-tabs";
+import { AssetTable } from "@/components/tables/asset/asset-table";
 import { trpc } from "@/trpc/server";
 import { notFound } from "next/navigation";
 
@@ -23,8 +23,8 @@ export default async function Page({ params }: PageProps) {
       <div className="h-16 rounded-md border"></div>
       <div className="grid h-full">
         <AssetTable
-          data={work_order.work_order_asset}
-          count={work_order._asset[0].count}
+          data={work_order.asset}
+          rowCount={work_order._asset[0].count}
         />
       </div>
     </div>

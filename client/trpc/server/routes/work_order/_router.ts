@@ -60,6 +60,13 @@ export const work_order = router({
           input,
           db: ctx.db,
         });
+
+        if (error) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            cause: error,
+          });
+        }
         return data;
       }),
   },

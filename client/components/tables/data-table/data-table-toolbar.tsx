@@ -1,32 +1,34 @@
 "use client";
 
-import * as React from "react";
-import { useSearchParams } from "next/navigation";
-import type { DataTableFilterField, DataTableFilterOption } from "@/types";
-import { CaretSortIcon, PlusIcon } from "@radix-ui/react-icons";
-import type { Table } from "@tanstack/react-table";
+import { CaretSortIcon, Cross2Icon, PlusIcon } from "@radix-ui/react-icons";
+import { Table } from "@tanstack/react-table";
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { DataTableFilterCombobox } from "./data-table-filter-combobox";
+import { Button } from "@/ui/button";
+import { Input } from "@/ui/input";
 import { DataTableViewOptions } from "./data-table-view-options";
 
+import { DataTableFacetedFilter } from "./data-table-faceted-filter";
+import { statuses } from "../asset/asset-table";
+import React from "react";
+import { DataTableFilterCombobox } from "./data-table-filter-combobox";
 import { DataTableFilterItem } from "./data-table-filter-item";
-import { DataTableMultiFilter } from "./data-table-multi-filter";
+import { cn } from "@/lib/utils";
+import { useSearchParams } from "next/navigation";
+import type { DataTableFilterField, DataTableFilterOption } from "@/types";
 
-interface DataTableAdvancedToolbarProps<TData>
+interface DataTableToolbarProps<TData>
   extends React.HTMLAttributes<HTMLDivElement> {
   table: Table<TData>;
   filterFields?: DataTableFilterField<TData>[];
 }
 
-export function DataTableAdvancedToolbar<TData>({
+export function DataTableToolbar<TData>({
   table,
   filterFields = [],
-  children,
   className,
   ...props
-}: DataTableAdvancedToolbarProps<TData>) {
+}: DataTableToolbarProps<TData>) {
+  const isFiltered = table.getState().columnFilters.length > 0;
   const searchParams = useSearchParams();
 
   const options = React.useMemo<DataTableFilterOption<TData>[]>(() => {
@@ -56,7 +58,6 @@ export function DataTableAdvancedToolbar<TData>({
       });
   }, [options, searchParams]);
 
-  console.log(initialSelectedOptions);
   const [selectedOptions, setSelectedOptions] = React.useState<
     DataTableFilterOption<TData>[]
   >(initialSelectedOptions);
@@ -79,7 +80,28 @@ export function DataTableAdvancedToolbar<TData>({
       {...props}
     >
       <div className="ml-auto flex items-center gap-2">
-        {children}
+        <div className="flex flex-1 items-center space-x-2">
+          <Input
+            placeholder="Filter name..."
+            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table.getColumn("name")?.setFilterValue(event.target.value)
+            }
+            className="h-8 w-[150px] lg:w-[250px]"
+          />
+          {/* 
+          {isFiltered && (
+            <Button
+              variant="ghost"
+              onClick={() => table.resetColumnFilters()}
+              className="h-8 px-2 lg:px-3"
+            >
+              Reset
+              <Cross2Icon className="ml-2 h-4 w-4" />
+            </Button>
+          )} */}
+        </div>
+
         {(options.length > 0 && selectedOptions.length > 0) ||
         openFilterBuilder ? (
           <Button
@@ -106,6 +128,7 @@ export function DataTableAdvancedToolbar<TData>({
             onSelect={onFilterComboboxItemSelect}
           />
         )}
+
         <DataTableViewOptions table={table} />
       </div>
       <div
@@ -126,7 +149,7 @@ export function DataTableAdvancedToolbar<TData>({
               defaultOpen={openCombobox}
             />
           ))}
-        {selectedOptions.some((option) => option.isMulti) ? (
+        {/* {selectedOptions.some((option) => option.isMulti) ? (
           <DataTableMultiFilter
             table={table}
             allOptions={options}
@@ -134,7 +157,7 @@ export function DataTableAdvancedToolbar<TData>({
             setSelectedOptions={setSelectedOptions}
             defaultOpen={openCombobox}
           />
-        ) : null}
+        ) : null} */}
         {options.length > 0 && options.length > selectedOptions.length ? (
           <DataTableFilterCombobox
             options={options}

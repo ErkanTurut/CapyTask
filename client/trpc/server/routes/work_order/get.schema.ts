@@ -1,5 +1,9 @@
 import * as z from "zod";
-import { ZAssetQuerySchema } from "../asset/get.schema";
+import {
+  assetSchema,
+  assetWithRelationsSchema,
+  ZAssetQuerySchema,
+} from "../asset/get.schema";
 import { Status } from "@prisma/client";
 
 export const ZGetWorkOrderSchema = z
@@ -29,7 +33,7 @@ export const ZWorkOrderAssetQuerySchema = z.object({
   status: z.nativeEnum(Status),
   work_order_id: z.string(),
   work_asset_id: z.string().optional(),
-  asset: ZAssetQuerySchema.optional(),
+  asset: assetWithRelationsSchema.optional(),
 });
 
 export type TWorkOrderAssetQuerySchema = z.infer<

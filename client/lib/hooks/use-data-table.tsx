@@ -280,7 +280,6 @@ export function useDataTable<TData>({
     JSON.stringify(filterableColumnFilters),
   ]);
 
-  console.log(columnFilters);
   const table = useReactTable({
     ...props,
     pageCount,

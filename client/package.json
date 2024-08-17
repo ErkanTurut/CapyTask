@@ -106,6 +106,7 @@
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.6.1",
     "prisma": "^5.15.0",
+    "supabase-to-zod": "^1.0.7",
     "tailwindcss": "^3.4.3",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.4.5"
