@@ -3,6 +3,7 @@ import "server-only";
 import { SupabaseClient } from "@/lib/supabase/server";
 import { TGetWorkOrderSchema } from "./get.schema";
 import { TRPCError } from "@trpc/server";
+import { unstable_cache } from "next/cache";
 
 type opts = {
   input: TGetWorkOrderSchema;
@@ -79,10 +80,10 @@ export async function getWorkOrderStepsHandler({
 }) {
   return await db
     .from("work_order")
-    .select("*, work_step_item(*, work_step(*))")
+    .select("*, work_step(*)")
     .eq("id", input.id)
     .order("step_order", {
-      referencedTable: "work_step_item",
+      referencedTable: "work_step",
     })
     .single()
     .throwOnError();
@@ -114,15 +115,27 @@ export async function getWorkOrderDetailHandler({
   };
   db: SupabaseClient;
 }) {
-  return await db
-    .from("work_order")
-    .select(
-      "*, work_step_item(*, work_step(*)), location(*, address(*)), company(*),  asset(*), user(*)",
-    )
-    .eq("id", input.id)
-    .order("step_order", {
-      referencedTable: "work_step_item",
-    })
-    .single()
-    .throwOnError();
+  const get = unstable_cache(
+    async (id) =>
+      await db
+        .from("work_order")
+        .select(
+          "*, asset:work_order_asset(*, ...asset(*,work_step(*), location(*)) ), _asset:asset(count), location(*, address(*)), company(*)",
+        )
+        .eq("id", input.id)
+        .single()
+        .throwOnError(),
+    [input.id],
+    { revalidate: 60 },
+  );
+
+  return await get(input.id);
+  // return await db
+  //   .from("work_order")
+  //   .select(
+  //     "*, asset:work_order_asset(*, ...asset(*,work_step(*), location(*)) ), _asset:asset(count), location(*, address(*)), company(*)",
+  //   )
+  //   .eq("id", input.id)
+  //   .single()
+  //   .throwOnError();
 }

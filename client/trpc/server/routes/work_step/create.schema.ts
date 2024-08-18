@@ -7,6 +7,7 @@ export const ZCreateWorkStepSchema = z.object({
   step_order: z.number().optional(),
   work_plan_id: z.string(),
   work_step_template_id: z.string().optional(),
+  asset_id: z.string().array().optional(),
 });
 
 export type TCreateWorkStepSchema = z.infer<typeof ZCreateWorkStepSchema>;

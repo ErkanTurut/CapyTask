@@ -1,7 +1,7 @@
 import "server-only";
 
 import { SupabaseClient } from "@/lib/supabase/server";
-import { TGetAssetSchema } from "./get.schema";
+import { TGetAssetSchema, TSearchAssetSchema } from "./get.schema";
 import { TRPCError } from "@trpc/server";
 
 type opts = {
@@ -72,7 +72,7 @@ export async function getAssetByWorkspaceHandler({
 }) {
   const { data, count, error } = await db
     .from("asset")
-    .select("*, workspace!inner(*)", { count: "estimated" })
+    .select("*, workspace!inner(url_key),location(*)", { count: "estimated" })
     .eq("workspace.url_key", input.url_key)
     .range(input.range.start, input.range.end)
     .order("updated_at", { ascending: false })
@@ -87,3 +87,18 @@ export async function getAssetByWorkspaceHandler({
 
   return { data, count };
 }
+
+export const searchAssetHandler = async ({
+  input,
+  db,
+}: {
+  input: TSearchAssetSchema;
+  db: SupabaseClient;
+}) => {
+  return await db
+    .from("asset")
+    .select("*, location(*)")
+    .textSearch("name", input.query, {
+      type: "websearch",
+    });
+};

@@ -4,7 +4,6 @@ import { openai } from "@ai-sdk/openai";
 
 export async function POST(req: Request) {
   const request = await req.json();
-  console.log(request);
 
   const result = await streamText({
     model: openai("gpt-4o"),

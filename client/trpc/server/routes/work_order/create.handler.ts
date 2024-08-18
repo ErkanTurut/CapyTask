@@ -9,6 +9,7 @@ import {
   TCreateWorkOrderWithItemsSchema,
   ZCreateWorkOrderSchema,
 } from "./create.schema";
+import { nanoid } from "nanoid";
 
 export async function createWorkOrderHandler({
   input,
@@ -61,59 +62,41 @@ export async function createWorkOrderHandler({
     });
   }
 
-  if (input.work_step) {
-    const steps = input.work_step.map((step) => {
+  if (input.asset && input.asset.length > 0) {
+    const assets = input.asset.map((asset) => {
       return {
-        work_plan_id: work_plan.id,
-        name: step.name,
-        description: step.description,
-        parent_step_id: step.parent_step_id,
+        asset_id: asset.id,
         work_order_id: work_order.id,
       };
     });
+    await db.from("work_order_asset").upsert(assets);
 
-    const { data: work_step, error } = await db
+    const assetSteps = input.asset.flatMap((asset) => {
+      if (asset.work_step) {
+        return asset.work_step.map((step) => {
+          return {
+            name: step.name,
+            description: step.description,
+            step_order: step.step_order,
+            parent_step_id: step.parent_step_id,
+            work_order_id: work_order.id,
+            work_plan_id: work_plan.id,
+            work_step_template_id: step.work_step_template_id,
+            asset_id: asset.id,
+          };
+        });
+      }
+      return [];
+    });
+
+    const { data: work_step, error: work_step_error } = await db
       .from("work_step")
-      .upsert(steps)
+      .upsert(assetSteps)
       .select("*");
-
-    if (error) {
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: error.message,
-      });
-    }
-
-    //upsert work order assets for each asset
-    if (input.asset && input.asset.length > 0) {
-      const assets = input.asset.map((asset) => {
-        return {
-          asset_id: asset.asset_id,
-          work_order_id: work_order.id,
-        };
-      });
-      await db.from("work_order_asset").upsert(assets).select("*");
-    }
-
-    console.log("here");
-
-    // upsert work step status for each work step
-    const stepStatus = work_step.map((step) => {
-      return {
-        work_step_id: step.id,
-        work_order_id: work_order.id,
-      };
-    });
-    const { data: work_step_item } = await db
-      .from("work_step_item")
-      .upsert(stepStatus)
-      .select("*");
-
-    return {
-      work_order,
-      work_plan,
-      work_step,
-      work_step_item,
-    };
   }
+
+  return {
+    work_order,
+    work_plan,
+  };
 }

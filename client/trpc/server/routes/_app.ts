@@ -10,7 +10,7 @@ import {
 } from "@/trpc/server/trpc";
 
 import { work_order } from "./work_order/_router";
-import { work_step_item } from "./work_step_item/_router";
+// import { work_step_item } from "./work_step_item/_router";
 import { work_plan } from "./work_plan/_router";
 import { work_step } from "./work_step/_router";
 import { work_plan_template } from "./work_plan_template/_router";
@@ -31,7 +31,7 @@ export const appRouter = router({
     work_plan_template,
 
     work_step,
-    work_step_item,
+    // work_step_item,
     work_step_template,
 
     asset,

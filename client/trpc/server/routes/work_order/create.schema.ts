@@ -3,6 +3,7 @@ import {
   Priority,
   WorkOrderType,
   WorkOrderSource,
+  LocationType,
 } from "@prisma/client";
 
 import * as z from "zod";
@@ -10,6 +11,26 @@ import { ZCreateWorkStepSchema } from "../work_step/create.schema";
 
 export const ZCreateWorkOrderAssetSchema = z.object({
   asset_id: z.string(),
+});
+
+const AssetQuerySchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string().nullish(),
+  workspace_id: z.string(),
+  location_id: z.string().nullish(),
+  location: z
+    .object({
+      name: z.string(),
+      description: z.string().nullish(),
+      location_type: z.nativeEnum(LocationType),
+      location_level: z.number().int(),
+      parent_location_id: z.string().nullish(),
+      workspace_id: z.string(),
+      address_id: z.string(),
+      company_id: z.string().nullish(),
+    })
+    .nullish(),
 });
 
 export const ZCreateWorkOrderSchema = z.object({
@@ -29,8 +50,21 @@ export const ZCreateWorkOrderSchema = z.object({
 });
 
 export const ZCreateWorkOrderWithItemsSchema = ZCreateWorkOrderSchema.extend({
-  work_step: z.array(ZCreateWorkStepSchema),
-  asset: z.array(ZCreateWorkOrderAssetSchema),
+  asset: z.array(
+    AssetQuerySchema.extend({
+      work_step: z
+        .array(
+          z.object({
+            name: z.string(),
+            description: z.string().optional(),
+            parent_step_id: z.string().optional(),
+            step_order: z.number().optional(),
+            work_step_template_id: z.string().optional(),
+          }),
+        )
+        .optional(),
+    }),
+  ),
 });
 
 export type TCreateWorkOrderWithItemsSchema = z.infer<

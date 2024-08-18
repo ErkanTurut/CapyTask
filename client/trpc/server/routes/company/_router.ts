@@ -1,8 +1,10 @@
 import { protectedProcedure, router } from "../../trpc";
 
-import { companyModel, workspaceModel } from "@/prisma/zod";
+import { workspaceModel } from "@/prisma/zod";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import { ZSearchCompanySchema } from "./get.schema";
+import { searchCompanyHandler } from "./get.handler";
 
 export const company = router({
   get: {
@@ -34,6 +36,21 @@ export const company = router({
         }
 
         return { data, count };
+      }),
+    textSearch: protectedProcedure
+      .input(ZSearchCompanySchema)
+      .query(async ({ ctx, input }) => {
+        const { data, error, status } = await searchCompanyHandler({
+          input,
+          db: ctx.db,
+        });
+        if (error) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            cause: error,
+          });
+        }
+        return data;
       }),
   },
 });

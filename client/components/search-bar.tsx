@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 // import { type Product } from "@/db/schema"
 
 import { cn } from "@/lib/utils";
-import useDebounce from "@/lib/hooks/use-debounce";
 import { Button } from "@/components/ui/button";
 import {
   CommandDialog,
@@ -23,7 +22,6 @@ export function SearchBar() {
   const router = useRouter();
   const [isOpen, setIsOpen] = React.useState(false);
   const [query, setQuery] = React.useState("");
-  const debouncedQuery = useDebounce(query, 300);
 
   const [isPending, startTransition] = React.useTransition();
 

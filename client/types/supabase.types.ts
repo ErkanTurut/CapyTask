@@ -505,14 +505,17 @@ export type Database = {
       work_order_asset: {
         Row: {
           asset_id: string
+          status: Database["public"]["Enums"]["Status"]
           work_order_id: string
         }
         Insert: {
           asset_id: string
+          status?: Database["public"]["Enums"]["Status"]
           work_order_id: string
         }
         Update: {
           asset_id?: string
+          status?: Database["public"]["Enums"]["Status"]
           work_order_id?: string
         }
         Relationships: [
@@ -620,6 +623,7 @@ export type Database = {
       }
       work_step: {
         Row: {
+          asset_id: string | null
           created_at: string
           created_by_id: string | null
           description: string | null
@@ -627,6 +631,7 @@ export type Database = {
           name: string
           parent_step_id: string | null
           public_id: string
+          status: Database["public"]["Enums"]["Status"]
           step_order: number | null
           updated_at: string
           work_order_id: string
@@ -634,6 +639,7 @@ export type Database = {
           work_step_template_id: string | null
         }
         Insert: {
+          asset_id?: string | null
           created_at?: string
           created_by_id?: string | null
           description?: string | null
@@ -641,6 +647,7 @@ export type Database = {
           name: string
           parent_step_id?: string | null
           public_id?: string
+          status?: Database["public"]["Enums"]["Status"]
           step_order?: number | null
           updated_at?: string
           work_order_id: string
@@ -648,6 +655,7 @@ export type Database = {
           work_step_template_id?: string | null
         }
         Update: {
+          asset_id?: string | null
           created_at?: string
           created_by_id?: string | null
           description?: string | null
@@ -655,6 +663,7 @@ export type Database = {
           name?: string
           parent_step_id?: string | null
           public_id?: string
+          status?: Database["public"]["Enums"]["Status"]
           step_order?: number | null
           updated_at?: string
           work_order_id?: string
@@ -662,6 +671,13 @@ export type Database = {
           work_step_template_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "work_step_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "asset"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "work_step_parent_step_id_fkey"
             columns: ["parent_step_id"]
@@ -688,64 +704,6 @@ export type Database = {
             columns: ["work_step_template_id"]
             isOneToOne: false
             referencedRelation: "work_step_template"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      work_step_item: {
-        Row: {
-          asset_id: string | null
-          created_at: string
-          id: string
-          public_id: string
-          status: Database["public"]["Enums"]["Status"]
-          step_order: number | null
-          updated_at: string
-          work_order_id: string
-          work_step_id: string
-        }
-        Insert: {
-          asset_id?: string | null
-          created_at?: string
-          id?: string
-          public_id?: string
-          status?: Database["public"]["Enums"]["Status"]
-          step_order?: number | null
-          updated_at?: string
-          work_order_id: string
-          work_step_id: string
-        }
-        Update: {
-          asset_id?: string | null
-          created_at?: string
-          id?: string
-          public_id?: string
-          status?: Database["public"]["Enums"]["Status"]
-          step_order?: number | null
-          updated_at?: string
-          work_order_id?: string
-          work_step_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "work_step_item_asset_id_fkey"
-            columns: ["asset_id"]
-            isOneToOne: false
-            referencedRelation: "asset"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "work_step_item_work_order_id_fkey"
-            columns: ["work_order_id"]
-            isOneToOne: false
-            referencedRelation: "work_order"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "work_step_item_work_step_id_fkey"
-            columns: ["work_step_id"]
-            isOneToOne: false
-            referencedRelation: "work_step"
             referencedColumns: ["id"]
           },
         ]
