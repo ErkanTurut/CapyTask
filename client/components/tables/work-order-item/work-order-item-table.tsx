@@ -25,12 +25,14 @@ import {
   StopwatchIcon,
 } from "@radix-ui/react-icons";
 import { DataTableToolbar } from "../data-table/data-table-toolbar";
-import { getColumns } from "./asset-columns";
+import { getColumns } from "./work-order-item-columns";
 import { usePathname, useSearchParams } from "next/navigation";
 import { DataTableFilterField } from "@/types";
 
 interface AssetTableProps {
-  data: NonNullable<RouterOutput["db"]["work_order"]["get"]["detail"]>["asset"];
+  data: NonNullable<
+    RouterOutput["db"]["work_order"]["get"]["detail"]
+  >["work_order_item"];
   rowCount: number;
 }
 
@@ -72,7 +74,7 @@ export const statuses: {
   },
 ];
 
-export function AssetTable({ data, rowCount }: AssetTableProps) {
+export function WorkOrderItemTable({ data, rowCount }: AssetTableProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -80,7 +82,7 @@ export function AssetTable({ data, rowCount }: AssetTableProps) {
   const filterFields: DataTableFilterField<
     NonNullable<
       RouterOutput["db"]["work_order"]["get"]["detail"]
-    >["asset"][number]
+    >["work_order_item"][number]
   >[] = [
     {
       label: "Status",
