@@ -157,7 +157,7 @@ export const Icons = {
 
   pulse: ({
     size = 16,
-    colorValue,
+    colorValue = "green",
   }: {
     size?: number;
     colorValue?: keyof typeof pulseColors;

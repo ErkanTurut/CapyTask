@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { SignUpForm } from "@/components/auth/sign-up";
+// import { SignUpForm } from "@/components/auth/sign-up";
 import { Shell } from "@/components/shells";
 import { OAuthSignIn } from "@/components/auth/oauth";
 
@@ -44,7 +44,7 @@ export default async function SignUpPage() {
               </span>
             </div>
           </div>
-          <SignUpForm />
+          {/* <SignUpForm /> */}
           {/* <MagicLinkSignUpForm /> */}
         </CardContent>
         <CardFooter>

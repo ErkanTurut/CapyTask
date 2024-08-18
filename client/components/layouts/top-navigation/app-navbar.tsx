@@ -34,8 +34,8 @@ const NavBar: FC<NavbarProps> = () => {
         /> */}
         <div className="flex gap-1">
           <Link
-            href={`${process.env.AUTH_URL}/login`}
-            className={cn(buttonVariants(), "group grow  overflow-hidden")}
+            href={`/login`}
+            className={cn(buttonVariants(), "group grow overflow-hidden")}
           >
             Get Started
             <span className="sr-only">Get Started</span>

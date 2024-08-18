@@ -9,7 +9,7 @@ import { cache } from "react";
 import { createCallerFactory } from "./server/trpc";
 
 const getSession = cache(async () => {
-  return await createClient(cookies()).auth.getSession();
+  return await createClient().auth.getSession();
 });
 
 export const trpc = createCallerFactory(appRouter)(async () => {
@@ -25,6 +25,6 @@ export const trpc = createCallerFactory(appRouter)(async () => {
       cookie: cookies().toString(),
       "x-trpc-source": "rsc-invoke",
     },
-    db: createClient(cookies()),
+    db: createClient(),
   };
 });

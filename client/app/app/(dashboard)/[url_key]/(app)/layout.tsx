@@ -26,8 +26,8 @@ export default async function DashboardLayout({
     : undefined;
   // grid-cols-[13rem,1fr]
   return (
-    <div className="grid h-dvh grid-cols-1 bg-muted/40 p-1 transition-all duration-1000">
-      {/* <Sidebar className="" params={params} /> */}
+    <div className="grid h-dvh grid-cols-[13rem,1fr] bg-muted/40 p-1 transition-all duration-1000">
+      <Sidebar className="" params={params} />
       <main className="flex flex-col overflow-x-hidden rounded-md border bg-background">
         <Header />
         <ScrollArea className="flex-1">{children}</ScrollArea>

@@ -26,9 +26,9 @@ import {
 } from "@radix-ui/react-icons";
 import { DataTableToolbar } from "../data-table/data-table-toolbar";
 import { getColumns } from "./asset-columns";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { DataTableFilterField } from "@/types";
-import { useDataTable } from "@/lib/hooks/use-data-table";
+
 interface AssetTableProps {
   data: NonNullable<RouterOutput["db"]["work_order"]["get"]["detail"]>["asset"];
   rowCount: number;
@@ -73,6 +73,9 @@ export const statuses: {
 ];
 
 export function AssetTable({ data, rowCount }: AssetTableProps) {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   const columns = React.useMemo(() => getColumns(), []);
   const filterFields: DataTableFilterField<
     NonNullable<
@@ -86,13 +89,31 @@ export function AssetTable({ data, rowCount }: AssetTableProps) {
     },
   ];
 
-  const searchParams = useSearchParams();
+  // Memoize computation of searchableColumns and filterableColumns
   const { searchableColumns, filterableColumns } = React.useMemo(() => {
     return {
       searchableColumns: filterFields.filter((field) => !field.options),
       filterableColumns: filterFields.filter((field) => field.options),
     };
   }, [filterFields]);
+
+  // Create query string
+  const createQueryString = React.useCallback(
+    (params: Record<string, string | number | null>) => {
+      const newSearchParams = new URLSearchParams(searchParams?.toString());
+
+      for (const [key, value] of Object.entries(params)) {
+        if (value === null) {
+          newSearchParams.delete(key);
+        } else {
+          newSearchParams.set(key, String(value));
+        }
+      }
+
+      return newSearchParams.toString();
+    },
+    [searchParams],
+  );
 
   const initialColumnFilters: ColumnFiltersState = React.useMemo(() => {
     return Array.from(searchParams.entries()).reduce<ColumnFiltersState>(
@@ -151,14 +172,6 @@ export function AssetTable({ data, rowCount }: AssetTableProps) {
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
-
-  // const table = useDataTable({
-  //   data,
-  //   columns,
-  //   rowCount,
-  //   filterFields,
-
-  // })
 
   return (
     <DataTable table={table}>

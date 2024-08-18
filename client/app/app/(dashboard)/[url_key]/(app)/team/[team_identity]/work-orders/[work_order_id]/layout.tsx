@@ -12,6 +12,7 @@ import { WorkOrderTabs } from "@/components/dashboard/work-order/work-order-tabs
 import { Database } from "@/types/supabase.types";
 import { Icons, IconType } from "@/components/icons";
 import { statusConfig } from "@/config/dashboard.config";
+import { AssetTable } from "@/components/tables/asset/asset-table";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -72,7 +73,13 @@ export default async function Layout({ children, params }: LayoutProps) {
         <WorkOrderTabs />
       </div>
       <div className="grid h-full gap-4 sm:grid-cols-[1fr,0.4fr]">
-        <div className="flex h-full flex-col gap-2 rounded-md">{children}</div>
+        <div className="flex h-full flex-col gap-2 rounded-md">
+          {/* <AssetTable
+            data={work_order.asset}
+            rowCount={work_order._asset[0].count}
+          /> */}
+          {children}
+        </div>
         <div>
           <WorkOrderMain work_order={work_order} params={params} />
         </div>

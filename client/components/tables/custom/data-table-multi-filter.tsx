@@ -81,6 +81,7 @@ export function DataTableMultiFilter<TData>({
               options={options}
               setSelectedOptions={setSelectedOptions}
               operator={operator}
+              // @ts-expect-error
               setOperator={setOperator}
             />
           ))}

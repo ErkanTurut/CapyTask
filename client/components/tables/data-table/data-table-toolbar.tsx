@@ -28,7 +28,6 @@ export function DataTableToolbar<TData>({
   className,
   ...props
 }: DataTableToolbarProps<TData>) {
-  const isFiltered = table.getState().columnFilters.length > 0;
   const searchParams = useSearchParams();
 
   const options = React.useMemo<DataTableFilterOption<TData>[]>(() => {
@@ -79,7 +78,7 @@ export function DataTableToolbar<TData>({
       )}
       {...props}
     >
-      <div className="ml-auto flex items-center gap-2">
+      <div className="flex items-center justify-between gap-2">
         <div className="flex flex-1 items-center space-x-2">
           <Input
             placeholder="Filter name..."
@@ -87,19 +86,8 @@ export function DataTableToolbar<TData>({
             onChange={(event) =>
               table.getColumn("name")?.setFilterValue(event.target.value)
             }
-            className="h-8 w-[150px] lg:w-[250px]"
+            className="h-8 w-[250px] lg:w-[350px]"
           />
-          {/* 
-          {isFiltered && (
-            <Button
-              variant="ghost"
-              onClick={() => table.resetColumnFilters()}
-              className="h-8 px-2 lg:px-3"
-            >
-              Reset
-              <Cross2Icon className="ml-2 h-4 w-4" />
-            </Button>
-          )} */}
         </div>
 
         {(options.length > 0 && selectedOptions.length > 0) ||
@@ -128,7 +116,6 @@ export function DataTableToolbar<TData>({
             onSelect={onFilterComboboxItemSelect}
           />
         )}
-
         <DataTableViewOptions table={table} />
       </div>
       <div

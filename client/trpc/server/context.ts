@@ -20,7 +20,7 @@ import { cache } from "react";
 // }
 
 const getSession = cache(async () => {
-  return await createClient(cookies()).auth.getSession();
+  return await createClient().auth.getSession();
 });
 
 export const createContext = async (opts?: FetchCreateContextFnOptions) => {
@@ -31,7 +31,7 @@ export const createContext = async (opts?: FetchCreateContextFnOptions) => {
   return {
     session,
     headers: opts && Object.fromEntries(opts.req.headers),
-    db: createClient(cookies()),
+    db: createClient(),
   };
 };
 

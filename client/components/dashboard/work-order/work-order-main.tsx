@@ -28,7 +28,7 @@ export default function WorkOrderMain({
 }: WorkOrderMainProps) {
   return (
     <Card className="overflow-hidden shadow-sm" x-chunk="dashboard-05-chunk-4">
-      <CardHeader className="flex flex-row items-start border-b border-dashed">
+      <CardHeader className="flex flex-row items-start border-b border-dashed bg-muted/40">
         <div className="grid gap-0.5">
           <CardTitle className="group flex items-center gap-2 text-lg">
             ID : {work_order.id}
