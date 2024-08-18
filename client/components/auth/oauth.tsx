@@ -28,7 +28,7 @@ export function OAuthSignIn() {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: provider,
         options: {
-          redirectTo: `${location.origin}/api/auth/callback`,
+          redirectTo: `https://app.gembuddy.co/api/auth/callback`,
           queryParams: {
             access_type: "offline",
             prompt: "consent",
