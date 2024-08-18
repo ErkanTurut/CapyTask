@@ -45,6 +45,7 @@ export default async function Layout({ children, params }: LayoutProps) {
   if (!work_order) {
     return notFound();
   }
+  console.log(work_order);
 
   return (
     <Shell>
@@ -73,13 +74,7 @@ export default async function Layout({ children, params }: LayoutProps) {
         <WorkOrderTabs />
       </div>
       <div className="grid h-full gap-4 sm:grid-cols-[1fr,0.4fr]">
-        <div className="flex h-full flex-col gap-2 rounded-md">
-          {/* <AssetTable
-            data={work_order.asset}
-            rowCount={work_order._asset[0].count}
-          /> */}
-          {children}
-        </div>
+        <div className="flex h-full flex-col gap-2 rounded-md">{children}</div>
         <div>
           <WorkOrderMain work_order={work_order} params={params} />
         </div>

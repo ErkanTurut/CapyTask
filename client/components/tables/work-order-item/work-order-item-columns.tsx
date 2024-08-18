@@ -5,10 +5,10 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../data-table/data-table-column-header";
 
 import { RouterOutput } from "@/trpc/client";
-import { statuses } from "./asset-table";
+import { statuses } from "./work-order-item-table";
 
 export function getColumns(): ColumnDef<
-  RouterOutput["db"]["work_order"]["get"]["detail"]["asset"][number]
+  RouterOutput["db"]["work_order"]["get"]["detail"]["work_order_item"][number]
 >[] {
   return [
     {
@@ -34,7 +34,7 @@ export function getColumns(): ColumnDef<
       enableHiding: false,
     },
     {
-      accessorKey: "name",
+      accessorKey: "asset_name",
       header: ({ column }) => {
         return <DataTableColumnHeader column={column} title="Title" />;
       },
@@ -42,7 +42,7 @@ export function getColumns(): ColumnDef<
         return (
           <div className="flex space-x-2">
             <span className="max-w-[11.25rem] truncate font-medium">
-              {row.original.name}
+              {row.original.asset?.name}
             </span>
           </div>
         );
@@ -77,7 +77,7 @@ export function getColumns(): ColumnDef<
       },
     },
     {
-      accessorKey: "description",
+      accessorKey: "asset_description",
       header: ({ column }) => {
         return <DataTableColumnHeader column={column} title="Description" />;
       },
@@ -85,7 +85,7 @@ export function getColumns(): ColumnDef<
         return (
           <div className="flex space-x-2">
             <span className="max-w-[21.25rem] truncate font-medium">
-              {row.original.description}
+              {row.original.asset?.description}
             </span>
           </div>
         );

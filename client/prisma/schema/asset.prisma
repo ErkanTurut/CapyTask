@@ -10,8 +10,8 @@ model asset {
   location         location?          @relation(fields: [location_id], references: [id])
   workspace        workspace          @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
   work_order_asset work_order_asset[]
-  // work_step_item   work_step_item[]
   work_step        work_step[]
+  work_order_item  work_order_item[]
 
   @@index([workspace_id])
   @@index([location_id])

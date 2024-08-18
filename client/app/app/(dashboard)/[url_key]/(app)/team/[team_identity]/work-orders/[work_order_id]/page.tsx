@@ -1,4 +1,5 @@
 import { AssetTable } from "@/components/tables/asset/asset-table";
+import { WorkOrderItemTable } from "@/components/tables/work-order-item/work-order-item-table";
 import { trpc } from "@/trpc/server";
 import { notFound } from "next/navigation";
 
@@ -21,8 +22,8 @@ export default async function Page({ params }: PageProps) {
   return (
     <div className="flex h-full flex-col gap-2 rounded-md">
       <div className="grid h-full">
-        <AssetTable
-          data={work_order.asset}
+        <WorkOrderItemTable
+          data={work_order.work_order_item}
           rowCount={work_order._asset[0].count}
         />
       </div>
