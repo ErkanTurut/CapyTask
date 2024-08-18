@@ -36,7 +36,6 @@ export function CreatWorkStepTemplateModal() {
   };
 
   const utils = api.useUtils();
-  console.log(work_plan_template_id);
 
   const form = useForm<TCreateWorkStepTemplateSchema>({
     resolver: zodResolver(ZCreateWorkStepTemplateSchema),

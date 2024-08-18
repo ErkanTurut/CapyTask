@@ -1,5 +1,5 @@
 "use client";
-import { DataTable } from "@/components/table/data-table";
+import { DataTable } from "@/components/tables/general/data-table";
 import { api, RouterOutput } from "@/trpc/client";
 import type { trpc } from "@/trpc/server";
 import { columns } from "./columns";

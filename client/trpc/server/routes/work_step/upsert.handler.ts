@@ -2,7 +2,6 @@ import "server-only";
 
 import { Database, SupabaseClient } from "@/lib/supabase/server";
 import { TRPCError } from "@trpc/server";
-import { upsertWorkStepStatusHandler } from "../work_step_item/upsert.handler";
 
 type opts = {
   db: SupabaseClient;

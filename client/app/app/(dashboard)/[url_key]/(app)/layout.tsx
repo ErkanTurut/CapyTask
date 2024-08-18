@@ -1,13 +1,8 @@
 import { cookies } from "next/headers";
 
-import { Sidebar } from "@/components/dashboard/sidebar/sidebar";
-
-import { SidebarProvider } from "@/lib/store";
-import { AI } from "./_components/ai/actions";
-import { LivekitRoomProvider } from "./_components/ai/livekitRoomProvider";
-
-import { ScrollArea } from "@/components/ui/scroll-area";
 import Header from "@/components/layouts/dashboard/header";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Sidebar } from "@/components/dashboard/sidebar/sidebar";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -29,18 +24,14 @@ export default async function DashboardLayout({
   const defaultLayout = layout
     ? (JSON.parse(layout.value) as number[])
     : undefined;
-
+  // grid-cols-[13rem,1fr]
   return (
-    <AI>
-      <LivekitRoomProvider>
-        <div className="relative flex h-screen w-full justify-center bg-muted/40">
-          {/* <Sidebar className="sticky top-0 flex" params={params} /> */}
-          <main className="m-1 flex w-full flex-1 flex-col rounded-md border bg-background">
-            <Header />
-            <ScrollArea className="flex-1">{children}</ScrollArea>
-          </main>
-        </div>
-      </LivekitRoomProvider>
-    </AI>
+    <div className="grid h-dvh grid-cols-[13rem,1fr] bg-muted/40 p-1 transition-all duration-1000">
+      <Sidebar className="" params={params} />
+      <main className="flex flex-col overflow-x-hidden rounded-md border bg-background">
+        <Header />
+        <ScrollArea className="flex-1">{children}</ScrollArea>
+      </main>
+    </div>
   );
 }

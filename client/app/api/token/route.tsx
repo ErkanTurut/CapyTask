@@ -3,7 +3,7 @@ import { AccessToken } from "livekit-server-sdk";
 import { cookies } from "next/headers";
 
 export async function GET(request: Request) {
-  const db = createClient(cookies());
+  const db = createClient();
 
   const {
     data: { session },

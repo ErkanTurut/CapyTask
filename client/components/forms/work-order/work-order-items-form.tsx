@@ -3,17 +3,14 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { TCreateWorkOrderWithItemsSchema } from "@/trpc/server/routes/work_order/create.schema";
-import { WorkSteps } from "./work-steps";
 
 import {
   PageHeader,
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/components/page-header";
-import { useFieldArray, type UseFormReturn } from "react-hook-form";
-import { WorkOrderAsset } from "./work-order-asset-form";
-import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { columns } from "./asset-table/columns";
+import { type UseFormReturn } from "react-hook-form";
+import { AssetTableForm } from "./asset-table/asset-table-form";
 
 export function WorkOrderItemsForm({
   form,
@@ -38,11 +35,13 @@ export function WorkOrderItemsForm({
       <Tabs defaultValue="assets" className="pt-4">
         <TabsList className="">
           <TabsTrigger value="assets">Assets</TabsTrigger>
-          <TabsTrigger value="work-steps">Work steps</TabsTrigger>
+          <TabsTrigger disabled value="work-steps">
+            Work steps
+          </TabsTrigger>
           <TabsTrigger value="ressources">Ressources</TabsTrigger>
         </TabsList>
         <TabsContent value="assets">
-          <WorkOrderAsset form={form} />
+          <AssetTableForm />
         </TabsContent>
         <TabsContent value="work-steps" className="mt-0 grid md:grid-cols-2">
           {/* <WorkSteps form={form} /> */}

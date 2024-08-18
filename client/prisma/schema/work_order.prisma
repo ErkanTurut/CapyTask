@@ -24,15 +24,20 @@ model work_order {
   work_plan        work_plan?         @relation(fields: [work_plan_id], references: [id])
   workspace        workspace          @relation(fields: [workspace_id], references: [id])
   work_order_asset work_order_asset[]
-  work_step_item   work_step_item[]
+  // work_step_item   work_step_item[]
   work_step        work_step[]
 
   @@index([team_id])
+  @@index([workspace_id])
+  @@index([work_plan_id])
+  @@index([location_id])
+  @@index([company_id])
 }
 
 model work_order_asset {
   work_order_id String
   asset_id      String
+  status        Status     @default(OPEN)
   asset         asset      @relation(fields: [asset_id], references: [id])
   work_order    work_order @relation(fields: [work_order_id], references: [id], onDelete: Cascade)
 

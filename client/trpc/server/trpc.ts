@@ -34,11 +34,11 @@ export type RouterOutput = inferRouterOutputs<AppRouter>;
 export type RouterInput = inferRouterInputs<AppRouter>;
 
 export const protectedProcedure = publicProcedure.use((opts) => {
-  const { user } = opts.ctx;
-  if (!user) {
+  const { session } = opts.ctx;
+  if (!session || !session.user) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
     });
   }
-  return opts.next({ ctx: { user } });
+  return opts.next({ ctx: { session } });
 });

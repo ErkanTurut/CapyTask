@@ -8,6 +8,10 @@ import { createClient } from "@/lib/supabase/server";
 import { cache } from "react";
 import { createCallerFactory } from "./server/trpc";
 
+const getSession = cache(async () => {
+  return await createClient().auth.getSession();
+});
+
 export const trpc = createCallerFactory(appRouter)(async () => {
   loggerLink({
     enabled: (opts) =>
@@ -15,15 +19,12 @@ export const trpc = createCallerFactory(appRouter)(async () => {
       (opts.direction === "down" && opts.result instanceof Error),
   });
 
-  const supabase = createClient();
-  const getUser = cache(() => supabase.auth.getUser());
-
   return {
-    user: (await getUser()).data.user,
+    session: (await getSession()).data.session,
     headers: {
       cookie: cookies().toString(),
       "x-trpc-source": "rsc-invoke",
     },
-    db: supabase,
+    db: createClient(),
   };
 });

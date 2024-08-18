@@ -266,6 +266,7 @@ const SortableDragHandle = React.forwardRef<
 
   return (
     <Button
+      type="button"
       ref={composeRefs(ref)}
       className={cn("cursor-grab", className)}
       {...attributes}

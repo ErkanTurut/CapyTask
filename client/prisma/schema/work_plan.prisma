@@ -9,6 +9,8 @@ model work_plan_template {
   work_plan          work_plan[]
   workspace          workspace            @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
   work_step_template work_step_template[]
+
+  @@index([workspace_id])
 }
 
 model work_plan {
@@ -27,4 +29,5 @@ model work_plan {
 
   @@unique([work_plan_template_id, created_at])
   @@index([work_plan_template_id])
+  @@index([team_id])
 }

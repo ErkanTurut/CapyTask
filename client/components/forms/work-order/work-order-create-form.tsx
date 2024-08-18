@@ -3,7 +3,7 @@
 import React, { use } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
@@ -22,14 +22,9 @@ import { WorkOrderGeneralForm } from "./work-order-general-form";
 import { WorkOrderItemsForm } from "./work-order-items-form";
 
 interface WorkOrderCreateFormProps
-  extends React.HTMLAttributes<HTMLFormElement> {
-  initialData?: RouterInput["db"]["work_order"]["create"];
-}
+  extends React.HTMLAttributes<HTMLFormElement> {}
 
-export function WorkOrderCreateForm({
-  className,
-  initialData,
-}: WorkOrderCreateFormProps) {
+export function WorkOrderCreateForm({ className }: WorkOrderCreateFormProps) {
   const router = useRouter();
   const { team_identity, url_key } = useParams() as {
     team_identity: string;
@@ -71,7 +66,6 @@ export function WorkOrderCreateForm({
       source: "MANUAL_ENTRY",
       team_id: team.id,
       type: "MAINTENANCE",
-      work_step: [],
       asset: [],
       priority: "LOW",
       status: "OPEN",
@@ -81,7 +75,6 @@ export function WorkOrderCreateForm({
     },
   });
 
-  console.log(form.formState.errors);
   return (
     <Form {...form}>
       <form
@@ -89,6 +82,7 @@ export function WorkOrderCreateForm({
         onSubmit={(...args) =>
           void form.handleSubmit((data) => {
             mutate(data);
+            // console.log(data);
           })(...args)
         }
       >
