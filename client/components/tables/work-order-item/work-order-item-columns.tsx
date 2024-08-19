@@ -1,18 +1,30 @@
 "use client";
 
 import { Checkbox } from "@/components/ui/checkbox";
-import { ColumnDef } from "@tanstack/react-table";
+import {
+  ColumnDef,
+  AccessorColumnDef,
+  RowData,
+  ColumnDefBase,
+} from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../data-table/data-table-column-header";
 
 import { RouterOutput } from "@/trpc/client";
 import { statuses } from "./work-order-item-table";
+import { Leaves } from "@/types";
 
-export function getColumns(): ColumnDef<
+interface ColumnType<TData extends RowData, TValue = unknown>
+  extends Omit<ColumnDef<TData, TValue>, "accessoryKey"> {
+  accessorKey: (string & {}) | Leaves<TData>;
+}
+
+export function getColumns(): ColumnType<
   RouterOutput["db"]["work_order"]["get"]["detail"]["work_order_item"][number]
 >[] {
   return [
     {
       id: "select",
+      accessorKey: "select",
       header: ({ table }) => (
         <Checkbox
           checked={
@@ -34,7 +46,7 @@ export function getColumns(): ColumnDef<
       enableHiding: false,
     },
     {
-      accessorKey: "asset_name",
+      accessorKey: "asset.name",
       header: ({ column }) => {
         return <DataTableColumnHeader column={column} title="Title" />;
       },
@@ -48,6 +60,9 @@ export function getColumns(): ColumnDef<
         );
       },
       enableHiding: false,
+      filterFn: (row, id, value) => {
+        return value.includes(row.original.asset?.name);
+      },
     },
     {
       accessorKey: "status",
@@ -77,7 +92,7 @@ export function getColumns(): ColumnDef<
       },
     },
     {
-      accessorKey: "asset_description",
+      accessorKey: "asset.id",
       header: ({ column }) => {
         return <DataTableColumnHeader column={column} title="Description" />;
       },
@@ -107,8 +122,25 @@ export function getColumns(): ColumnDef<
         );
       },
       filterFn: (row, id, value) => {
-        console.log(id);
         return value.includes(row.getValue(id));
+      },
+    },
+    {
+      accessorKey: "location_type",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Location type" />
+      ),
+      cell: ({ row }) => {
+        return (
+          <div className="flex space-x-2">
+            <span className="max-w-[8.25rem] truncate">
+              {row.original.location?.location_type}
+            </span>
+          </div>
+        );
+      },
+      filterFn: (row, id, value) => {
+        return value.includes(row.original.location?.location_type);
       },
     },
   ];

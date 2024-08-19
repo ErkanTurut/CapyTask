@@ -24,7 +24,7 @@ import {
   QuestionMarkCircledIcon,
   StopwatchIcon,
 } from "@radix-ui/react-icons";
-import { DataTableToolbar } from "../data-table/data-table-toolbar";
+import { DataTableToolbar } from "./data-table-toolbar";
 import { getColumns } from "./work-order-item-columns";
 import { usePathname, useSearchParams } from "next/navigation";
 import { DataTableFilterField } from "@/types";
@@ -79,41 +79,36 @@ export function WorkOrderItemTable({ data, rowCount }: AssetTableProps) {
   const searchParams = useSearchParams();
 
   const columns = React.useMemo(() => getColumns(), []);
-  const filterFields: DataTableFilterField<
-    NonNullable<
-      RouterOutput["db"]["work_order"]["get"]["detail"]
-    >["work_order_item"][number]
-  >[] = [
-    {
-      label: "Status",
-      value: "status",
-      options: statuses,
-    },
-    // options: data
-    // .flatMap((asset) => asset.location)
-    // .reduce((uniqueLocations, location) => {
-    //   const existingLocation = uniqueLocations.find(
-    //     (l) => l.value === location?.id
-    //   );
-    //   if (!existingLocation) {
-    //     uniqueLocations.push({
-    //       label: location?.name || "",
-    //       value: location?.id || "",
-    //     });
-    //   }
-    //   return uniqueLocations;
-    // }, []),
-    {
-      label: "Location",
-      value: "location_id",
-      options: data
-        .flatMap((asset) => asset.location)
-        .map((location) => ({
-          label: location?.name || "",
-          value: location?.name || "",
-        })),
-    },
-  ];
+
+  const filterFields: DataTableFilterField<AssetTableProps["data"][number]>[] =
+    [
+      {
+        label: "Status",
+        value: "status",
+        options: statuses,
+      },
+      {
+        label: "Location",
+        value: "location_id",
+        options: data
+          .flatMap((work_order_item) => work_order_item.location)
+          .map((location) => ({
+            label: location?.name || "",
+            value: location?.id || "",
+          })),
+      },
+
+      {
+        label: "Location type",
+        value: "location.location_type",
+        options: data
+          .flatMap((work_order_item) => work_order_item.location)
+          .map((location) => ({
+            label: location?.location_type || "",
+            value: location?.location_type || "",
+          })),
+      },
+    ];
 
   // Memoize computation of searchableColumns and filterableColumns
   const { searchableColumns, filterableColumns } = React.useMemo(() => {
@@ -171,7 +166,9 @@ export function WorkOrderItemTable({ data, rowCount }: AssetTableProps) {
 
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
+    React.useState<VisibilityState>({
+      location_type: false,
+    });
   const [columnFilters, setColumnFilters] =
     React.useState<ColumnFiltersState>(initialColumnFilters);
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -197,6 +194,7 @@ export function WorkOrderItemTable({ data, rowCount }: AssetTableProps) {
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
+    filterFromLeafRows: true,
   });
 
   return (

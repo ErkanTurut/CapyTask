@@ -13,7 +13,7 @@ export type Page = {
 
 export const workOrderPagesConfig: Page[] = [
   {
-    title: "Assets",
+    title: "Overview",
     description: "All assets.",
     href: "/",
     icon: "lightning",
