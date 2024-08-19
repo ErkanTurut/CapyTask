@@ -18,6 +18,7 @@ import { work_step_template } from "./work_step_template/_router";
 import { asset } from "./asset/_router";
 import { location } from "./location/_router";
 import { company } from "./company/_router";
+import { work_order_item } from "./work_order_item/_router";
 
 export const appRouter = router({
   auth: authMutationRouter,
@@ -27,11 +28,12 @@ export const appRouter = router({
     workspace,
 
     work_order,
+    work_order_item,
+
     work_plan,
     work_plan_template,
 
     work_step,
-    // work_step_item,
     work_step_template,
 
     asset,

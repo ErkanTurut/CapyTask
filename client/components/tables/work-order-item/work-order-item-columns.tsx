@@ -19,7 +19,9 @@ interface ColumnType<TData extends RowData, TValue = unknown>
 }
 
 export function getColumns(): ColumnType<
-  RouterOutput["db"]["work_order"]["get"]["detail"]["work_order_item"][number]
+  NonNullable<
+    RouterOutput["db"]["work_order_item"]["get"]["byWorkOrder"]["data"]
+  >[number]
 >[] {
   return [
     {
@@ -48,7 +50,7 @@ export function getColumns(): ColumnType<
     {
       accessorKey: "asset.name",
       header: ({ column }) => {
-        return <DataTableColumnHeader column={column} title="Title" />;
+        return <DataTableColumnHeader column={column} title="Asset" />;
       },
       cell: ({ row }) => {
         return (

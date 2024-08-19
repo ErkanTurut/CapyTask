@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import WorkOrderHeader from "@/components/dashboard/work-order/work-order-header";
 import WorkOrderMain from "@/components/dashboard/work-order/work-order-main";
+import ReponsiveSheet from "@/components/dashboard/work-order/reponsive-sheet";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -22,18 +23,18 @@ export default async function Layout({ children, params }: LayoutProps) {
   if (!work_order) {
     return notFound();
   }
-  console.log(work_order);
 
   return (
     <Shell>
-      <div className="grid h-full gap-6 sm:grid-cols-[1fr,0.4fr]">
+      <div className="grid h-full gap-6 lg:grid-cols-[1fr,0.4fr]">
         <div className="flex h-full flex-col gap-8 rounded-md">
+          <ReponsiveSheet>
+            <WorkOrderMain work_order={work_order} params={params} />
+          </ReponsiveSheet>
           <WorkOrderHeader work_order={work_order} />
           {children}
         </div>
-        <div>
-          <WorkOrderMain work_order={work_order} params={params} />
-        </div>
+        <WorkOrderMain work_order={work_order} params={params} />
       </div>
     </Shell>
   );

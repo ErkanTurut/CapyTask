@@ -31,8 +31,8 @@ import { DataTableFilterField } from "@/types";
 
 interface AssetTableProps {
   data: NonNullable<
-    RouterOutput["db"]["work_order"]["get"]["detail"]
-  >["work_order_item"];
+    RouterOutput["db"]["work_order_item"]["get"]["byWorkOrder"]["data"]
+  >;
   rowCount: number;
 }
 

@@ -45,9 +45,8 @@ export function ComboBox<T extends string>({
   const [open, setOpen] = React.useState(false);
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
-
       <PopoverContent
         className={cn("w-[206px] rounded-sm p-0", className)}
         align="center"
@@ -65,7 +64,7 @@ export function ComboBox<T extends string>({
                 <CommandItem
                   key={status.value}
                   value={status.value}
-                  onSelect={() => {
+                  onSelect={async () => {
                     onSelect(status);
                     setOpen(false);
                   }}

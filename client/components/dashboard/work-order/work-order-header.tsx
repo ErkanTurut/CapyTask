@@ -3,18 +3,11 @@ import {
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/components/page-header";
-import { Shell } from "@/components/shells";
-import { trpc } from "@/trpc/server";
-import { notFound } from "next/navigation";
 
-import WorkOrderMain from "@/components/dashboard/work-order/work-order-main";
 import { WorkOrderTabs } from "@/components/dashboard/work-order/work-order-tabs";
-import { Database } from "@/types/supabase.types";
-import { Icons, IconType } from "@/components/icons";
-import { statusConfig } from "@/config/dashboard.config";
 import { RouterOutput } from "@/trpc/server/trpc";
-import { StatusSelector } from "@/components/status-selector";
-import { PrioritySelector } from "@/components/priority-selector";
+import { PrioritySelector } from "./priority-selector";
+import { StatusSelector } from "./status-selector";
 
 interface WorkOrderHeaderProps {
   work_order: NonNullable<RouterOutput["db"]["work_order"]["get"]["detail"]>;

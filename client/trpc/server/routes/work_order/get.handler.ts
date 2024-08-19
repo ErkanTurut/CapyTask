@@ -115,27 +115,10 @@ export async function getWorkOrderDetailHandler({
   };
   db: SupabaseClient;
 }) {
-  const get = unstable_cache(
-    async (id) =>
-      await db
-        .from("work_order")
-        .select(
-          "*, work_order_item(*,asset(*),location(*)), _work_order_item:work_order_item(count), company(*)",
-        )
-        .eq("id", input.id)
-        .single()
-        .throwOnError(),
-    [input.id],
-    { revalidate: 60 },
-  );
-
-  return await get(input.id);
-  // return await db
-  //   .from("work_order")
-  //   .select(
-  //     "*, asset:work_order_asset(*, ...asset(*,work_step(*), location(*)) ), _asset:asset(count), location(*, address(*)), company(*)",
-  //   )
-  //   .eq("id", input.id)
-  //   .single()
-  //   .throwOnError();
+  return await db
+    .from("work_order")
+    .select("*, company(*)")
+    .eq("id", input.id)
+    .single()
+    .throwOnError();
 }

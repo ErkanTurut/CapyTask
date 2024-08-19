@@ -1,47 +1,37 @@
 "use client";
 import { Icons, IconType } from "@/components/icons";
 import { Database } from "@/types/supabase.types";
-import { ComboBox } from "./popoverCombobox";
+import { ComboBox } from "@/components/popoverCombobox";
 import { useState } from "react";
 
 export interface StatusConfig {
-  value: Database["public"]["Enums"]["Status"];
+  value: Database["public"]["Enums"]["Priority"];
   label: string;
   icon?: IconType;
 }
 
 export const statusConfig: StatusConfig[] = [
   {
-    value: "OPEN",
-    label: "Open",
-    icon: "greenPulse",
+    value: "HIGH",
+    label: "High Priority",
+    icon: "arrowUp",
   },
   {
-    value: "IN_PROGRESS",
-    label: "In Progress",
-    icon: "bluePulse",
+    value: "MEDIUM",
+    label: "Medium Priority",
+    icon: "arrowLeft",
   },
   {
-    value: "ON_HOLD",
-    label: "On Hold",
-    icon: "yellowPulse",
-  },
-  {
-    value: "COMPLETED",
-    label: "Completed",
-    icon: "checkCircled",
-  },
-  {
-    value: "CANCELED",
-    label: "Cancelled",
-    icon: "CrossCircled",
+    value: "LOW",
+    label: "Low Priority",
+    icon: "arrowBottomLeft",
   },
 ];
 
-export const StatusSelector = ({
+export const PrioritySelector = ({
   status,
 }: {
-  status: Database["public"]["Enums"]["Status"];
+  status: Database["public"]["Enums"]["Priority"];
 }) => {
   const initialStatus = statusConfig.find(
     (_status) => _status.value === status,
@@ -54,7 +44,6 @@ export const StatusSelector = ({
     useState<StatusConfig>(initialStatus);
 
   const Icon = selectedStatus.icon ? Icons[selectedStatus.icon] : null;
-
   return (
     <ComboBox
       className="w-[10rem]"
