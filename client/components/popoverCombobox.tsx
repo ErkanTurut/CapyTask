@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandGroup,
@@ -30,133 +29,57 @@ interface Option<T> {
 
 interface ComboBoxProps<T> {
   options: Option<T>[];
-  initialValue: string;
-  onSelect?: (value: Option<T>["value"]) => void;
-  disabled?: boolean;
+  onSelect: (value: Option<T>) => void;
+  children: React.ReactNode;
+  placeholder?: string;
+  className?: string;
 }
 
 export function ComboBox<T extends string>({
   options,
-  initialValue,
   onSelect,
-  disabled,
+  children,
+  placeholder = "Type to search...",
+  className,
 }: ComboBoxProps<T>) {
-  const [openPopover, setOpenPopover] = React.useState(false);
-  const [openTooltip, setOpenTooltip] = React.useState(false);
-
-  const [selectedOption, setSelectedOption] = React.useState<Option<T>>(
-    options.find((option) => option.value === initialValue) || options[0],
-  );
-  const [searchValue, setSearchValue] = React.useState("");
-
-  const isSearching = searchValue.length > 0;
-
-  const handleSelectOption = (option: Option<T>) => {
-    onSelect?.(option.value);
-    setSelectedOption(option);
-    setOpenPopover(false);
-    setOpenTooltip(false);
-    setSearchValue("");
-  };
+  const [open, setOpen] = React.useState(false);
 
   return (
-    <Popover open={openPopover} onOpenChange={setOpenPopover}>
-      <Tooltip
-        delayDuration={500}
-        open={openTooltip}
-        onOpenChange={setOpenTooltip}
-      >
-        <TooltipTrigger asChild>
-          <PopoverTrigger asChild>
-            <Button
-              disabled={disabled}
-              aria-label="Set priority"
-              variant="outline"
-              size="default"
-              className="group"
-            >
-              {selectedOption.icon && (
-                <>
-                  {(() => {
-                    const Icon = Icons[selectedOption.icon];
-                    return (
-                      <Icon className="mr-2 size-4 fill-muted-foreground group-hover:fill-primary" />
-                    );
-                  })()}
-                </>
-              )}
-              {selectedOption.label}
-              <Icons.caretSort className="ml-1 size-4 text-muted-foreground group-hover:text-accent-foreground" />
-            </Button>
-          </PopoverTrigger>
-        </TooltipTrigger>
-        <TooltipContent
-          hideWhenDetached
-          side="bottom"
-          align="start"
-          sideOffset={6}
-          className="flex h-8 items-center gap-2 border bg-background px-2 text-xs"
-        >
-          <span className="text-primary">Change priority</span>
-          <span className="flex size-[18px] items-center justify-center rounded-sm border text-xs text-primary">
-            <kbd>P</kbd>
-          </span>
-        </TooltipContent>
-      </Tooltip>
+    <Popover>
+      <PopoverTrigger asChild>{children}</PopoverTrigger>
+
       <PopoverContent
-        className="w-[206px] rounded-lg p-0"
-        align="start"
+        className={cn("w-[206px] rounded-sm p-0", className)}
+        align="center"
         onCloseAutoFocus={(e) => e.preventDefault()}
         sideOffset={6}
       >
-        <Command className="rounded-lg">
+        <Command className="rounded-sm">
           <CommandInput
-            value={searchValue}
-            onValueChange={(searchValue) => {
-              if ([0, 1, 2, 3, 4].includes(Number.parseInt(searchValue))) {
-                handleSelectOption(options[Number.parseInt(searchValue)]);
-              }
-              setSearchValue(searchValue);
-            }}
             className="text-xs leading-normal"
-            placeholder="Set status..."
-          >
-            {!isSearching && (
-              <span className="flex size-[18px] items-center justify-center rounded-sm border text-xs text-primary">
-                <kbd>P</kbd>
-              </span>
-            )}
-          </CommandInput>
+            placeholder={placeholder}
+          />
           <CommandList>
             <CommandGroup>
               {options.map((status, index) => (
                 <CommandItem
                   key={status.value}
                   value={status.value}
-                  onSelect={(value) => {
-                    handleSelectOption(
-                      options.find((status) => status.value === value)!,
-                    );
+                  onSelect={() => {
+                    onSelect(status);
+                    setOpen(false);
                   }}
-                  className={cn(
-                    "group flex w-full items-center justify-between rounded-md text-xs leading-normal text-muted-foreground",
-                    selectedOption.value === status.value &&
-                      "text-primary aria-selected:text-primary aria-selected:underline",
-                  )}
                 >
-                  <div className="flex items-center">
+                  <div className="flex items-center gap-2">
                     {status.icon && (
                       <>
                         {(() => {
                           const Icon = Icons[status.icon];
-                          return <Icon className="mr-2 size-4" />;
+                          return <Icon className="size-4" />;
                         })()}
                       </>
                     )}
                     <span>{status.label}</span>
-                  </div>
-                  <div className="flex items-center">
-                    {!isSearching && <span className="text-xs">{index}</span>}
                   </div>
                 </CommandItem>
               ))}
