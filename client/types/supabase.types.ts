@@ -502,39 +502,6 @@ export type Database = {
           },
         ]
       }
-      work_order_asset: {
-        Row: {
-          asset_id: string
-          status: Database["public"]["Enums"]["Status"]
-          work_order_id: string
-        }
-        Insert: {
-          asset_id: string
-          status?: Database["public"]["Enums"]["Status"]
-          work_order_id: string
-        }
-        Update: {
-          asset_id?: string
-          status?: Database["public"]["Enums"]["Status"]
-          work_order_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "work_order_asset_asset_id_fkey"
-            columns: ["asset_id"]
-            isOneToOne: false
-            referencedRelation: "asset"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "work_order_asset_work_order_id_fkey"
-            columns: ["work_order_id"]
-            isOneToOne: false
-            referencedRelation: "work_order"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       work_order_item: {
         Row: {
           asset_id: string | null

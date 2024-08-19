@@ -20,6 +20,14 @@ export const ZGetLocationSchema = z
 
 export type TGetLocationSchema = z.infer<typeof ZGetLocationSchema>;
 
+export const ZGetLocationByWorkOrderSchema = z.object({
+  work_order_id: z.string(),
+});
+
+export type TGetLocationByWorkOrderSchema = z.infer<
+  typeof ZGetLocationByWorkOrderSchema
+>;
+
 export const ZLocationQuerySchema = z.object({
   name: z.string(),
   description: z.string().nullish(),

@@ -1,7 +1,10 @@
 import "server-only";
 
 import { SupabaseClient } from "@/lib/supabase/server";
-import { TGetLocationSchema } from "./get.schema";
+import {
+  TGetLocationByWorkOrderSchema,
+  TGetLocationSchema,
+} from "./get.schema";
 import { TRPCError } from "@trpc/server";
 
 type opts = {
@@ -36,4 +39,20 @@ export async function getLocationByWorkspaceHandler({
   }
 
   return { data, count };
+}
+
+export async function getLocationByWorkOrder({
+  db,
+  input,
+}: {
+  db: SupabaseClient;
+  input: TGetLocationByWorkOrderSchema;
+}) {
+  return await db
+    .from("location")
+    .select("*, work_order_item(*), parent_location:location(*)", {
+      count: "exact",
+    })
+    .eq("work_order_item.work_order_id", input.work_order_id)
+    .throwOnError();
 }

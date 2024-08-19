@@ -120,7 +120,7 @@ export async function getWorkOrderDetailHandler({
       await db
         .from("work_order")
         .select(
-          "*, asset:work_order_asset(*, ...asset(*,work_step(*), location(*))),work_order_item(*,asset(*),location(*)) , _asset:asset(count), location(*, address(*)), company(*)",
+          "*, work_order_item(*,asset(*),location(*)), _work_order_item:work_order_item(count), company(*)",
         )
         .eq("id", input.id)
         .single()

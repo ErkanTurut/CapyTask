@@ -67,9 +67,10 @@ export async function createWorkOrderHandler({
       return {
         asset_id: asset.id,
         work_order_id: work_order.id,
+        location_id: asset.location_id,
       };
     });
-    await db.from("work_order_asset").upsert(assets);
+    await db.from("work_order_item").upsert(assets);
 
     const assetSteps = input.asset.flatMap((asset) => {
       if (asset.work_step) {

@@ -138,9 +138,14 @@ export type Provider =
   | "workos"
   | "zoom";
 
+export type Leaves<T> = T extends object
+  ? {
+      [K in keyof T]: `${Exclude<K, symbol>}${Leaves<T[K]> extends never ? "" : `.${Leaves<T[K]>}`}`;
+    }[keyof T]
+  : never;
 export interface DataTableFilterField<TData> {
   label: string;
-  value: keyof TData;
+  value: Leaves<TData>;
   placeholder?: string;
   options?: Option[];
 }
@@ -148,7 +153,7 @@ export interface DataTableFilterField<TData> {
 export interface DataTableFilterOption<TData> {
   id: string;
   label: string;
-  value: keyof TData;
+  value: Leaves<TData>;
   options: Option[];
   filterValues?: string[];
   filterOperator?: string;
