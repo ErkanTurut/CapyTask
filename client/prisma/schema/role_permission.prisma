@@ -1,3 +1,14 @@
+enum role {
+  ADMIN
+  MANAGER
+  SUPERVISOR
+  TECHNICIAN
+  ENGINEER
+  QUALITY_INSPECTOR
+  OPERATOR
+  OTHER
+}
+
 model role_permission {
   id         String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   role       role

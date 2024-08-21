@@ -1,6 +1,12 @@
 import { protectedProcedure, router } from "../../trpc";
-import { getLocationByWorkspaceHandler } from "./get.handler";
-import { ZGetLocationSchema } from "./get.schema";
+import {
+  getLocationByWorkOrder,
+  getLocationByWorkspaceHandler,
+} from "./get.handler";
+import {
+  ZGetLocationByWorkOrderSchema,
+  ZGetLocationSchema,
+} from "./get.schema";
 
 export const location = router({
   get: {
@@ -8,6 +14,14 @@ export const location = router({
       .input(ZGetLocationSchema.pick({ url_key: true, range: true }))
       .query(async ({ ctx, input }) => {
         return await getLocationByWorkspaceHandler({
+          input,
+          db: ctx.db,
+        });
+      }),
+    byWorkOrder: protectedProcedure
+      .input(ZGetLocationByWorkOrderSchema)
+      .query(async ({ ctx, input }) => {
+        return await getLocationByWorkOrder({
           input,
           db: ctx.db,
         });

@@ -1,4 +1,3 @@
-"use client";
 import { Copy } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -22,17 +21,20 @@ interface WorkOrderMainProps {
   work_order: NonNullable<RouterOutput["db"]["work_order"]["get"]["detail"]>;
 }
 
-export default function WorkOrderMain({
+export default async function WorkOrderMain({
   params,
   work_order,
 }: WorkOrderMainProps) {
   return (
-    <Card className="overflow-hidden shadow-sm" x-chunk="dashboard-05-chunk-4">
+    <Card
+      className="min-w-72 overflow-hidden shadow-sm"
+      x-chunk="dashboard-05-chunk-4"
+    >
       <CardHeader className="flex flex-row items-start border-b border-dashed bg-muted/40">
         <div className="grid gap-0.5">
           <CardTitle className="group flex items-center gap-2 text-lg">
             ID : {work_order.id}
-            <Button
+            {/* <Button
               size="icon"
               variant="outline"
               className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
@@ -42,7 +44,7 @@ export default function WorkOrderMain({
             >
               <Copy className="h-3 w-3" />
               <span className="sr-only">Copy Order ID</span>
-            </Button>
+            </Button> */}
           </CardTitle>
           <CardDescription>
             Created at

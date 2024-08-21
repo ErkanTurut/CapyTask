@@ -1,20 +1,18 @@
 "use client";
 
-import { CaretSortIcon, Cross2Icon, PlusIcon } from "@radix-ui/react-icons";
+import { CaretSortIcon, PlusIcon } from "@radix-ui/react-icons";
 import { Table } from "@tanstack/react-table";
 
+import { DataTableViewOptions } from "@/components/tables/data-table/data-table-view-options";
 import { Button } from "@/ui/button";
 import { Input } from "@/ui/input";
-import { DataTableViewOptions } from "./data-table-view-options";
 
-import { DataTableFacetedFilter } from "./data-table-faceted-filter";
-import { statuses } from "../asset/asset-table";
-import React from "react";
-import { DataTableFilterCombobox } from "./data-table-filter-combobox";
-import { DataTableFilterItem } from "./data-table-filter-item";
+import { DataTableFilterCombobox } from "@/components/tables/data-table/data-table-filter-combobox";
+import { DataTableFilterItem } from "@/components/tables/data-table/data-table-filter-item";
 import { cn } from "@/lib/utils";
-import { useSearchParams } from "next/navigation";
 import type { DataTableFilterField, DataTableFilterOption } from "@/types";
+import { useSearchParams } from "next/navigation";
+import React from "react";
 
 interface DataTableToolbarProps<TData>
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -73,7 +71,7 @@ export function DataTableToolbar<TData>({
   return (
     <div
       className={cn(
-        "flex w-full flex-col space-y-2.5 overflow-auto p-1",
+        "flex w-full flex-col space-y-2.5 overflow-auto",
         className,
       )}
       {...props}
@@ -82,11 +80,13 @@ export function DataTableToolbar<TData>({
         <div className="flex flex-1 items-center space-x-2">
           <Input
             placeholder="Filter name..."
-            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("name")?.setFilterValue(event.target.value)
+            value={
+              (table.getColumn("asset_name")?.getFilterValue() as string) ?? ""
             }
-            className="h-8 w-[250px] lg:w-[350px]"
+            onChange={(event) =>
+              table.getColumn("asset_name")?.setFilterValue(event.target.value)
+            }
+            className="h-8 w-[250px] focus-visible:ring-0 lg:w-[350px]"
           />
         </div>
 

@@ -42,6 +42,11 @@ import {
   PaperPlaneIcon,
   PlayIcon,
   StopIcon,
+  ChatBubbleIcon,
+  ChevronDownIcon,
+  ArrowUpIcon,
+  ArrowBottomLeftIcon,
+  ArrowLeftIcon,
 } from "@radix-ui/react-icons";
 import {
   LucideProps,
@@ -80,28 +85,72 @@ const sizes = {
   },
 };
 
-const pulseColors: {
-  [key in "green" | "red" | "blue" | "yellow"]: {
-    color: string;
-    pulseColor: string;
+const pulse = ({
+  size = 16,
+  colorValue = "green",
+  ...props
+}: {
+  size?: number;
+  colorValue: "green" | "red" | "blue" | "yellow";
+  props: LucideProps;
+}) => {
+  const pulseColors: {
+    [key: string]: {
+      color: string;
+      pulseColor: string;
+    };
+  } = {
+    green: {
+      color: "#5BB98B",
+      pulseColor: "#5BB98B",
+    },
+    red: {
+      color: "#E5484D",
+      pulseColor: "#E5484D",
+    },
+    blue: {
+      color: "#0090FF",
+      pulseColor: "#0090FF",
+    },
+    yellow: {
+      color: "#F59E0B",
+      pulseColor: "#F59E0B",
+    },
   };
-} = {
-  green: {
-    color: "#5BB98B",
-    pulseColor: "#5BB98B",
-  },
-  red: {
-    color: "#E5484D",
-    pulseColor: "#E5484D",
-  },
-  blue: {
-    color: "#0090FF",
-    pulseColor: "#0090FF",
-  },
-  yellow: {
-    color: "#F59E0B",
-    pulseColor: "#F59E0B",
-  },
+  const { color, pulseColor } = pulseColors[colorValue];
+
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 16 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      {/* Outer circle for the pulsing effect */}
+      <circle cx="8" cy="8" r="8" fill={pulseColor} opacity="0.75">
+        <animate
+          attributeName="r"
+          from="3"
+          to="8"
+          dur="1s"
+          begin="0s"
+          repeatCount="indefinite"
+        />
+        <animate
+          attributeName="opacity"
+          from="0.75"
+          to="0"
+          dur="1s"
+          begin="0s"
+          repeatCount="indefinite"
+        />
+      </circle>
+
+      {/* Inner static circle */}
+      <circle cx="8" cy="8" r="3" fill={color} />
+    </svg>
+  );
 };
 
 export const Icons = {
@@ -154,49 +203,16 @@ export const Icons = {
   micOff: MicOffIcon,
   play: PlayIcon,
   stop: StopIcon,
+  chatBubble: ChatBubbleIcon,
+  chevronDown: ChevronDownIcon,
+  arrowUp: ArrowUpIcon,
+  arrowBottomLeft: ArrowBottomLeftIcon,
+  arrowLeft: ArrowLeftIcon,
 
-  pulse: ({
-    size = 16,
-    colorValue = "green",
-  }: {
-    size?: number;
-    colorValue?: keyof typeof pulseColors;
-  }) => {
-    const { color, pulseColor } = pulseColors[colorValue];
-
-    return (
-      <svg
-        width={size}
-        height={size}
-        viewBox="0 0 16 16"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        {/* Outer circle for the pulsing effect */}
-        <circle cx="8" cy="8" r="8" fill={pulseColor} opacity="0.75">
-          <animate
-            attributeName="r"
-            from="3"
-            to="8"
-            dur="1s"
-            begin="0s"
-            repeatCount="indefinite"
-          />
-          <animate
-            attributeName="opacity"
-            from="0.75"
-            to="0"
-            dur="1s"
-            begin="0s"
-            repeatCount="indefinite"
-          />
-        </circle>
-
-        {/* Inner static circle */}
-        <circle cx="8" cy="8" r="3" fill={color} />
-      </svg>
-    );
-  },
+  greenPulse: (props: LucideProps) => pulse({ colorValue: "green", props }),
+  redPulse: (props: LucideProps) => pulse({ colorValue: "red", props }),
+  bluePulse: (props: LucideProps) => pulse({ colorValue: "blue", props }),
+  yellowPulse: (props: LucideProps) => pulse({ colorValue: "yellow", props }),
 
   loading: (props: LucideProps) => {
     return (

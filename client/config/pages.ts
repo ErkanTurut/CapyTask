@@ -13,7 +13,7 @@ export type Page = {
 
 export const workOrderPagesConfig: Page[] = [
   {
-    title: "Assets",
+    title: "Overview",
     description: "All assets.",
     href: "/",
     icon: "lightning",
@@ -27,11 +27,11 @@ export const workOrderPagesConfig: Page[] = [
     segment: "locations",
   },
   {
-    title: "Ressources",
+    title: "Resources",
     description: "All assets.",
-    href: "/ressources",
+    href: "/resources",
     icon: "lightning",
-    segment: "ressources",
+    segment: "resources",
   },
 ];
 

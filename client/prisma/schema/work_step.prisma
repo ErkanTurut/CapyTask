@@ -36,8 +36,8 @@ model work_step {
   asset_id String?
   asset    asset?  @relation(fields: [asset_id], references: [id])
 
-  work_order_id String
-  work_order    work_order? @relation(fields: [work_order_id], references: [id])
+  work_order_id String?
+  work_order    work_order? @relation(fields: [work_order_id], references: [id], onDelete: SetNull)
 
   parent_step        work_step?          @relation("step_sub_steps", fields: [parent_step_id], references: [id], onDelete: Cascade)
   sub_steps          work_step[]         @relation("step_sub_steps")

@@ -16,99 +16,37 @@ import * as React from "react";
 
 import { DataTable } from "@/components/tables/data-table/data-table";
 import { RouterOutput } from "@/trpc/client";
-import { Database } from "@/types/supabase.types";
-import {
-  CheckCircledIcon,
-  CircleIcon,
-  CrossCircledIcon,
-  QuestionMarkCircledIcon,
-  StopwatchIcon,
-} from "@radix-ui/react-icons";
-import { DataTableToolbar } from "../data-table/data-table-toolbar";
-import { getColumns } from "./asset-columns";
-import { usePathname, useSearchParams } from "next/navigation";
 import { DataTableFilterField } from "@/types";
+import { useSearchParams } from "next/navigation";
+import { getColumns } from "./assigned-resource-columns";
+import { DataTableToolbar } from "./data-table-toolbar";
 
-interface AssetTableProps {
-  data: NonNullable<RouterOutput["db"]["work_order"]["get"]["detail"]>["asset"];
+interface AssignedResourceTableProps {
+  data: NonNullable<
+    RouterOutput["db"]["assigned_resource"]["get"]["byWorkOrder"]["data"]
+  >;
   rowCount: number;
 }
 
-export const statuses: {
-  value: Database["public"]["Enums"]["Status"];
-  label: string;
-  icon: React.ComponentType<{ className?: string }>;
-  withCount?: boolean;
-}[] = [
-  {
-    value: "OPEN",
-    label: "Open",
-    icon: QuestionMarkCircledIcon,
-    withCount: true,
-  },
-  {
-    value: "ON_HOLD",
-    label: "On Hold",
-    icon: CircleIcon,
-    withCount: true,
-  },
-  {
-    value: "IN_PROGRESS",
-    label: "In Progress",
-    icon: StopwatchIcon,
-    withCount: true,
-  },
-  {
-    value: "COMPLETED",
-    label: "Done",
-    icon: CheckCircledIcon,
-    withCount: true,
-  },
-  {
-    value: "CANCELED",
-    label: "Cancelled",
-    icon: CrossCircledIcon,
-    withCount: true,
-  },
-];
-
-export function AssetTable({ data, rowCount }: AssetTableProps) {
-  const pathname = usePathname();
+export function AssignedResourceTable({
+  data,
+  rowCount,
+}: AssignedResourceTableProps) {
   const searchParams = useSearchParams();
 
   const columns = React.useMemo(() => getColumns(), []);
+
   const filterFields: DataTableFilterField<
-    NonNullable<
-      RouterOutput["db"]["work_order"]["get"]["detail"]
-    >["asset"][number]
+    AssignedResourceTableProps["data"][number]
   >[] = [
     {
-      label: "Status",
-      value: "status",
-      options: statuses,
-    },
-    // options: data
-    // .flatMap((asset) => asset.location)
-    // .reduce((uniqueLocations, location) => {
-    //   const existingLocation = uniqueLocations.find(
-    //     (l) => l.value === location?.id
-    //   );
-    //   if (!existingLocation) {
-    //     uniqueLocations.push({
-    //       label: location?.name || "",
-    //       value: location?.id || "",
-    //     });
-    //   }
-    //   return uniqueLocations;
-    // }, []),
-    {
       label: "Location",
-      value: "location_id",
+      value: "user.email",
       options: data
-        .flatMap((asset) => asset.location)
-        .map((location) => ({
-          label: location?.name || "",
-          value: location?.name || "",
+        .flatMap((assigned_ressource) => assigned_ressource.user)
+        .map((user) => ({
+          label: user?.email || "",
+          value: user?.email || "",
         })),
     },
   ];
@@ -169,7 +107,9 @@ export function AssetTable({ data, rowCount }: AssetTableProps) {
 
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
+    React.useState<VisibilityState>({
+      location_type: false,
+    });
   const [columnFilters, setColumnFilters] =
     React.useState<ColumnFiltersState>(initialColumnFilters);
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -195,6 +135,7 @@ export function AssetTable({ data, rowCount }: AssetTableProps) {
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
+    filterFromLeafRows: true,
   });
 
   return (

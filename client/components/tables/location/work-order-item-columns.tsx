@@ -1,18 +1,31 @@
 "use client";
 
 import { Checkbox } from "@/components/ui/checkbox";
-import { ColumnDef } from "@tanstack/react-table";
+import {
+  ColumnDef,
+  AccessorColumnDef,
+  RowData,
+  ColumnDefBase,
+} from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../data-table/data-table-column-header";
 
 import { RouterOutput } from "@/trpc/client";
-import { statuses } from "./asset-table";
+import { Leaves } from "@/types";
 
-export function getColumns(): ColumnDef<
-  RouterOutput["db"]["work_order"]["get"]["detail"]["asset"][number]
+interface ColumnType<TData extends RowData, TValue = unknown>
+  extends Omit<ColumnDef<TData, TValue>, "accessoryKey"> {
+  accessorKey: (string & {}) | Leaves<TData>;
+}
+
+export function getColumns(): ColumnType<
+  NonNullable<
+    RouterOutput["db"]["location"]["get"]["byWorkOrder"]["data"]
+  >[number]
 >[] {
   return [
     {
       id: "select",
+      accessorKey: "select",
       header: ({ table }) => (
         <Checkbox
           checked={
@@ -36,7 +49,7 @@ export function getColumns(): ColumnDef<
     {
       accessorKey: "name",
       header: ({ column }) => {
-        return <DataTableColumnHeader column={column} title="Title" />;
+        return <DataTableColumnHeader column={column} title="Location" />;
       },
       cell: ({ row }) => {
         return (
@@ -48,44 +61,20 @@ export function getColumns(): ColumnDef<
         );
       },
       enableHiding: false,
-    },
-    {
-      accessorKey: "status",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Status" />
-      ),
-      cell: ({ row }) => {
-        const status = statuses.find(
-          (status) => status.value === row.getValue("status"),
-        );
-
-        if (!status) {
-          return null;
-        }
-
-        return (
-          <div className="flex max-w-[6.25rem] items-center">
-            {status.icon && (
-              <status.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-            )}
-            <span>{status.label}</span>
-          </div>
-        );
-      },
       filterFn: (row, id, value) => {
-        return value.includes(row.getValue(id));
+        return value.includes(row.original.name);
       },
     },
     {
-      accessorKey: "description",
+      accessorKey: "address.city",
       header: ({ column }) => {
-        return <DataTableColumnHeader column={column} title="Description" />;
+        return <DataTableColumnHeader column={column} title="City" />;
       },
       cell: ({ row }) => {
         return (
           <div className="flex space-x-2">
             <span className="max-w-[21.25rem] truncate font-medium">
-              {row.original.description}
+              {row.original.address?.city}
             </span>
           </div>
         );
@@ -93,22 +82,39 @@ export function getColumns(): ColumnDef<
       enableSorting: false,
     },
     {
-      accessorKey: "location_id",
+      accessorKey: "address.street",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Location" />
+        <DataTableColumnHeader column={column} title="Street" />
       ),
       cell: ({ row }) => {
         return (
           <div className="flex space-x-2">
             <span className="max-w-[8.25rem] truncate">
-              {row.original.location?.name}
+              {row.original.address?.street}
             </span>
           </div>
         );
       },
       filterFn: (row, id, value) => {
-        console.log(id);
         return value.includes(row.getValue(id));
+      },
+    },
+    {
+      accessorKey: "address.postal_code",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Zip code" />
+      ),
+      cell: ({ row }) => {
+        return (
+          <div className="flex space-x-2">
+            <span className="max-w-[8.25rem] truncate">
+              {row.original.address?.postal_code}
+            </span>
+          </div>
+        );
+      },
+      filterFn: (row, id, value) => {
+        return value.includes(row.original.location?.location_type);
       },
     },
   ];

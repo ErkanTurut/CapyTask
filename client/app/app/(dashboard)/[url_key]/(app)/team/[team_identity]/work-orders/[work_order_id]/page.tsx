@@ -1,4 +1,3 @@
-import { AssetTable } from "@/components/tables/asset/asset-table";
 import { WorkOrderItemTable } from "@/components/tables/work-order-item/work-order-item-table";
 import { trpc } from "@/trpc/server";
 import { notFound } from "next/navigation";
@@ -12,20 +11,18 @@ interface PageProps {
 }
 
 export default async function Page({ params }: PageProps) {
-  const work_order = await trpc.db.work_order.get.detail({
-    id: params.work_order_id,
-  });
+  const { data: work_order_item, count } =
+    await trpc.db.work_order_item.get.byWorkOrder({
+      work_order_id: params.work_order_id,
+    });
 
-  if (!work_order) {
-    return notFound();
+  if (!work_order_item) {
+    return null;
   }
   return (
     <div className="flex h-full flex-col gap-2 rounded-md">
       <div className="grid h-full">
-        <WorkOrderItemTable
-          data={work_order.work_order_item}
-          rowCount={work_order._asset[0].count}
-        />
+        <WorkOrderItemTable data={work_order_item} rowCount={count ?? 0} />
       </div>
     </div>
   );

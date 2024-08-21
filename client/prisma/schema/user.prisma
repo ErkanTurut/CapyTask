@@ -10,7 +10,8 @@ model user {
   company_user company_user[]
   work_order   work_order[]
 
-  workspace      workspace[]
-  workspace_user workspace_user[]
-  team_user      team_user[]
+  workspace         workspace[]
+  workspace_user    workspace_user[]
+  team_user         team_user[]
+  assigned_resource assigned_resource[]
 }
