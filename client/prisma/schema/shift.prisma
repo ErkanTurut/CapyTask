@@ -1,0 +1,8 @@
+model shift {
+    id           String   @id @default(dbgenerated("nanoid(10)"))
+    team_id      String
+    workspace_id String
+    days         Int[]
+    start_time   DateTime
+    end_time     DateTime
+}

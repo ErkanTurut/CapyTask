@@ -1,0 +1,26 @@
+model service_resource {
+    id         String   @id @default(dbgenerated("nanoid(10)"))
+    user_id    String   @db.Uuid
+    is_active  Boolean  @default(true)
+    created_at DateTime @default(now()) @db.Timestamptz(6)
+    updated_at DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+
+    // Relations to other entities
+    user user @relation(fields: [user_id], references: [id])
+
+    // Relation from other entities
+    service_resource_absence service_resource_absence[]
+    assigned_resource        assigned_resource[]
+}
+
+model service_resource_absence {
+    id                  String   @id @default(dbgenerated("nanoid(10)"))
+    service_resource_id String
+    start_date          DateTime
+    end_date            DateTime
+    created_at          DateTime @default(now()) @db.Timestamptz(6)
+    updated_at          DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+
+    // Relations to other entities
+    service_resource service_resource @relation(fields: [service_resource_id], references: [id])
+}
