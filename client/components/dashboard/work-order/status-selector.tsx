@@ -2,7 +2,7 @@
 import { Icons, IconType } from "@/components/icons";
 import { Database } from "@/types/supabase.types";
 import { ComboBox } from "@/components/popoverCombobox";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "@/trpc/client";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
@@ -56,6 +56,10 @@ export const StatusSelector = ({
 
   const [selectedStatus, setSelectedStatus] =
     useState<StatusConfig>(initialStatus);
+
+  useEffect(() => {
+    setSelectedStatus(initialStatus);
+  }, [status]);
 
   const Icon = selectedStatus.icon ? Icons[selectedStatus.icon] : null;
 

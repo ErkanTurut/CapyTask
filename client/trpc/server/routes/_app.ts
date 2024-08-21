@@ -19,6 +19,7 @@ import { asset } from "./asset/_router";
 import { location } from "./location/_router";
 import { company } from "./company/_router";
 import { work_order_item } from "./work_order_item/_router";
+import { assigned_resource } from "./assigned_resource/_router";
 
 export const appRouter = router({
   auth: authMutationRouter,
@@ -29,6 +30,8 @@ export const appRouter = router({
 
     work_order,
     work_order_item,
+
+    assigned_resource,
 
     work_plan,
     work_plan_template,

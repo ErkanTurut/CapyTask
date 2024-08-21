@@ -2,9 +2,10 @@ import { Shell } from "@/components/shells";
 import { trpc } from "@/trpc/server";
 import { notFound } from "next/navigation";
 
-import WorkOrderHeader from "@/components/dashboard/work-order/work-order-header";
+import { WorkOrderHeader } from "@/components/dashboard/work-order/work-order-header";
 import WorkOrderMain from "@/components/dashboard/work-order/work-order-main";
-import ReponsiveSheet from "@/components/dashboard/work-order/reponsive-sheet";
+import TableSkeleton from "@/components/skeletons/table-skeleton";
+import { Suspense } from "react";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -28,11 +29,12 @@ export default async function Layout({ children, params }: LayoutProps) {
     <Shell>
       <div className="grid h-full gap-6 lg:grid-cols-[1fr,0.4fr]">
         <div className="flex h-full flex-col gap-8 rounded-md">
-          <ReponsiveSheet>
+          {/* <ReponsiveSheet>
             <WorkOrderMain work_order={work_order} params={params} />
-          </ReponsiveSheet>
+          </ReponsiveSheet> */}
           <WorkOrderHeader work_order={work_order} />
-          {children}
+
+          <Suspense fallback={<TableSkeleton />}>{children}</Suspense>
         </div>
         <WorkOrderMain work_order={work_order} params={params} />
       </div>

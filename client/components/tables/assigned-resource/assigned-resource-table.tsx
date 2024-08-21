@@ -16,98 +16,40 @@ import * as React from "react";
 
 import { DataTable } from "@/components/tables/data-table/data-table";
 import { RouterOutput } from "@/trpc/client";
-import { Database } from "@/types/supabase.types";
-import {
-  CheckCircledIcon,
-  CircleIcon,
-  CrossCircledIcon,
-  QuestionMarkCircledIcon,
-  StopwatchIcon,
-} from "@radix-ui/react-icons";
-import { DataTableToolbar } from "./data-table-toolbar";
-import { getColumns } from "./work-order-item-columns";
-import { usePathname, useSearchParams } from "next/navigation";
 import { DataTableFilterField } from "@/types";
+import { useSearchParams } from "next/navigation";
+import { getColumns } from "./assigned-resource-columns";
+import { DataTableToolbar } from "./data-table-toolbar";
 
-interface AssetTableProps {
+interface AssignedResourceTableProps {
   data: NonNullable<
-    RouterOutput["db"]["work_order_item"]["get"]["byWorkOrder"]["data"]
+    RouterOutput["db"]["assigned_resource"]["get"]["byWorkOrder"]["data"]
   >;
   rowCount: number;
 }
 
-export const statuses: {
-  value: Database["public"]["Enums"]["Status"];
-  label: string;
-  icon: React.ComponentType<{ className?: string }>;
-  withCount?: boolean;
-}[] = [
-  {
-    value: "OPEN",
-    label: "Open",
-    icon: QuestionMarkCircledIcon,
-    withCount: true,
-  },
-  {
-    value: "ON_HOLD",
-    label: "On Hold",
-    icon: CircleIcon,
-    withCount: true,
-  },
-  {
-    value: "IN_PROGRESS",
-    label: "In Progress",
-    icon: StopwatchIcon,
-    withCount: true,
-  },
-  {
-    value: "COMPLETED",
-    label: "Done",
-    icon: CheckCircledIcon,
-    withCount: true,
-  },
-  {
-    value: "CANCELED",
-    label: "Cancelled",
-    icon: CrossCircledIcon,
-    withCount: true,
-  },
-];
-
-export function WorkOrderItemTable({ data, rowCount }: AssetTableProps) {
+export function AssignedResourceTable({
+  data,
+  rowCount,
+}: AssignedResourceTableProps) {
   const searchParams = useSearchParams();
 
   const columns = React.useMemo(() => getColumns(), []);
 
-  const filterFields: DataTableFilterField<AssetTableProps["data"][number]>[] =
-    [
-      {
-        label: "Status",
-        value: "status",
-        options: statuses,
-      },
-      {
-        label: "Location",
-        value: "location_id",
-        options: data
-          .flatMap((work_order_item) => work_order_item.location)
-          .map((location) => ({
-            label: location?.name || "",
-            value: location?.id || "",
-          })),
-      },
-
-      {
-        label: "Location type",
-        value: "location.location_type",
-        options: data
-          .flatMap((work_order_item) => work_order_item.location)
-          .map((location) => ({
-            label: location?.location_type || "",
-            value: location?.location_type || "",
-          })),
-      },
-    ];
+  const filterFields: DataTableFilterField<
+    AssignedResourceTableProps["data"][number]
+  >[] = [
+    {
+      label: "Location",
+      value: "user.email",
+      options: data
+        .flatMap((assigned_ressource) => assigned_ressource.user)
+        .map((user) => ({
+          label: user?.email || "",
+          value: user?.email || "",
+        })),
+    },
+  ];
 
   // Memoize computation of searchableColumns and filterableColumns
   const { searchableColumns, filterableColumns } = React.useMemo(() => {

@@ -31,50 +31,12 @@ import { DataTableFilterField } from "@/types";
 
 interface AssetTableProps {
   data: NonNullable<
-    RouterOutput["db"]["work_order_item"]["get"]["byWorkOrder"]["data"]
+    RouterOutput["db"]["location"]["get"]["byWorkOrder"]["data"]
   >;
   rowCount: number;
 }
 
-export const statuses: {
-  value: Database["public"]["Enums"]["Status"];
-  label: string;
-  icon: React.ComponentType<{ className?: string }>;
-  withCount?: boolean;
-}[] = [
-  {
-    value: "OPEN",
-    label: "Open",
-    icon: QuestionMarkCircledIcon,
-    withCount: true,
-  },
-  {
-    value: "ON_HOLD",
-    label: "On Hold",
-    icon: CircleIcon,
-    withCount: true,
-  },
-  {
-    value: "IN_PROGRESS",
-    label: "In Progress",
-    icon: StopwatchIcon,
-    withCount: true,
-  },
-  {
-    value: "COMPLETED",
-    label: "Done",
-    icon: CheckCircledIcon,
-    withCount: true,
-  },
-  {
-    value: "CANCELED",
-    label: "Cancelled",
-    icon: CrossCircledIcon,
-    withCount: true,
-  },
-];
-
-export function WorkOrderItemTable({ data, rowCount }: AssetTableProps) {
+export function LocationTable({ data, rowCount }: AssetTableProps) {
   const searchParams = useSearchParams();
 
   const columns = React.useMemo(() => getColumns(), []);
@@ -82,29 +44,13 @@ export function WorkOrderItemTable({ data, rowCount }: AssetTableProps) {
   const filterFields: DataTableFilterField<AssetTableProps["data"][number]>[] =
     [
       {
-        label: "Status",
-        value: "status",
-        options: statuses,
-      },
-      {
         label: "Location",
-        value: "location_id",
+        value: "location.name",
         options: data
           .flatMap((work_order_item) => work_order_item.location)
           .map((location) => ({
             label: location?.name || "",
             value: location?.id || "",
-          })),
-      },
-
-      {
-        label: "Location type",
-        value: "location.location_type",
-        options: data
-          .flatMap((work_order_item) => work_order_item.location)
-          .map((location) => ({
-            label: location?.location_type || "",
-            value: location?.location_type || "",
           })),
       },
     ];

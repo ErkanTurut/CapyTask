@@ -80,11 +80,9 @@ export function DataTableToolbar<TData>({
         <div className="flex flex-1 items-center space-x-2">
           <Input
             placeholder="Filter name..."
-            value={
-              (table.getColumn("asset_name")?.getFilterValue() as string) ?? ""
-            }
+            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
-              table.getColumn("asset_name")?.setFilterValue(event.target.value)
+              table.getColumn("name")?.setFilterValue(event.target.value)
             }
             className="h-8 w-[250px] focus-visible:ring-0 lg:w-[350px]"
           />

@@ -21,11 +21,10 @@ export const location = router({
     byWorkOrder: protectedProcedure
       .input(ZGetLocationByWorkOrderSchema)
       .query(async ({ ctx, input }) => {
-        const { data } = await getLocationByWorkOrder({
+        return await getLocationByWorkOrder({
           input,
           db: ctx.db,
         });
-        return data;
       }),
   },
 });

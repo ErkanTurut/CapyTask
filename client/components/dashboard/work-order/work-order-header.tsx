@@ -8,14 +8,13 @@ import { WorkOrderTabs } from "@/components/dashboard/work-order/work-order-tabs
 import { RouterOutput } from "@/trpc/server/trpc";
 import { PrioritySelector } from "./priority-selector";
 import { StatusSelector } from "./status-selector";
+import { api } from "@/trpc/client";
 
 interface WorkOrderHeaderProps {
   work_order: NonNullable<RouterOutput["db"]["work_order"]["get"]["detail"]>;
 }
 
-export default async function WorkOrderHeader({
-  work_order,
-}: WorkOrderHeaderProps) {
+export async function WorkOrderHeader({ work_order }: WorkOrderHeaderProps) {
   return (
     <div className="grid gap-4 border-b sm:grid-cols-2">
       <PageHeader

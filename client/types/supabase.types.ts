@@ -126,6 +126,45 @@ export type Database = {
           },
         ]
       }
+      assigned_resource: {
+        Row: {
+          created_at: string
+          id: string
+          updated_at: string
+          user_id: string
+          work_order_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id: string
+          work_order_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+          work_order_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assigned_resource_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assigned_resource_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "work_order"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       company: {
         Row: {
           created_at: string
@@ -401,6 +440,7 @@ export type Database = {
           company_id: string
           created_at: string
           description: string | null
+          ended_at: string | null
           id: string
           location_id: string | null
           name: string
@@ -410,6 +450,7 @@ export type Database = {
           sheduled_end: string | null
           sheduled_start: string | null
           source: Database["public"]["Enums"]["WorkOrderSource"]
+          started_at: string | null
           status: Database["public"]["Enums"]["Status"]
           team_id: string
           type: Database["public"]["Enums"]["WorkOrderType"]
@@ -421,6 +462,7 @@ export type Database = {
           company_id: string
           created_at?: string
           description?: string | null
+          ended_at?: string | null
           id?: string
           location_id?: string | null
           name: string
@@ -430,6 +472,7 @@ export type Database = {
           sheduled_end?: string | null
           sheduled_start?: string | null
           source: Database["public"]["Enums"]["WorkOrderSource"]
+          started_at?: string | null
           status?: Database["public"]["Enums"]["Status"]
           team_id: string
           type?: Database["public"]["Enums"]["WorkOrderType"]
@@ -441,6 +484,7 @@ export type Database = {
           company_id?: string
           created_at?: string
           description?: string | null
+          ended_at?: string | null
           id?: string
           location_id?: string | null
           name?: string
@@ -450,6 +494,7 @@ export type Database = {
           sheduled_end?: string | null
           sheduled_start?: string | null
           source?: Database["public"]["Enums"]["WorkOrderSource"]
+          started_at?: string | null
           status?: Database["public"]["Enums"]["Status"]
           team_id?: string
           type?: Database["public"]["Enums"]["WorkOrderType"]
@@ -653,7 +698,7 @@ export type Database = {
           status: Database["public"]["Enums"]["Status"]
           step_order: number | null
           updated_at: string
-          work_order_id: string
+          work_order_id: string | null
           work_plan_id: string
           work_step_template_id: string | null
         }
@@ -669,7 +714,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["Status"]
           step_order?: number | null
           updated_at?: string
-          work_order_id: string
+          work_order_id?: string | null
           work_plan_id: string
           work_step_template_id?: string | null
         }
@@ -685,7 +730,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["Status"]
           step_order?: number | null
           updated_at?: string
-          work_order_id?: string
+          work_order_id?: string | null
           work_plan_id?: string
           work_step_template_id?: string | null
         }

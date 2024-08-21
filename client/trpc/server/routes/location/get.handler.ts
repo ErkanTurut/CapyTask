@@ -50,9 +50,12 @@ export async function getLocationByWorkOrder({
 }) {
   return await db
     .from("location")
-    .select("*, work_order_item(*), parent_location:location(*)", {
-      count: "exact",
-    })
+    .select(
+      "*, work_order_item(work_order_id), location!inner(*), address(*)",
+      {
+        count: "exact",
+      },
+    )
     .eq("work_order_item.work_order_id", input.work_order_id)
     .throwOnError();
 }

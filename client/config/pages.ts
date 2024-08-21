@@ -27,11 +27,11 @@ export const workOrderPagesConfig: Page[] = [
     segment: "locations",
   },
   {
-    title: "Ressources",
+    title: "Resources",
     description: "All assets.",
-    href: "/ressources",
+    href: "/resources",
     icon: "lightning",
-    segment: "ressources",
+    segment: "resources",
   },
 ];
 
