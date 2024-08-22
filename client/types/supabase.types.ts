@@ -130,30 +130,30 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          service_resource_id: string
           updated_at: string
-          user_id: string
           work_order_id: string
         }
         Insert: {
           created_at?: string
           id?: string
+          service_resource_id: string
           updated_at?: string
-          user_id: string
           work_order_id: string
         }
         Update: {
           created_at?: string
           id?: string
+          service_resource_id?: string
           updated_at?: string
-          user_id?: string
           work_order_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "assigned_resource_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: "assigned_resource_service_resource_id_fkey"
+            columns: ["service_resource_id"]
             isOneToOne: false
-            referencedRelation: "user"
+            referencedRelation: "service_resource"
             referencedColumns: ["id"]
           },
           {
@@ -325,6 +325,157 @@ export type Database = {
         }
         Relationships: []
       }
+      service_appointment: {
+        Row: {
+          appointment_range: unknown
+          created_at: string
+          id: string
+          service_resource_id: string
+          updated_at: string
+          work_order_id: string
+        }
+        Insert: {
+          appointment_range: unknown
+          created_at?: string
+          id?: string
+          service_resource_id: string
+          updated_at?: string
+          work_order_id: string
+        }
+        Update: {
+          appointment_range?: unknown
+          created_at?: string
+          id?: string
+          service_resource_id?: string
+          updated_at?: string
+          work_order_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_appointment_service_resource_id_fkey"
+            columns: ["service_resource_id"]
+            isOneToOne: false
+            referencedRelation: "service_resource"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_appointment_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "work_order"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_resource: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          team_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          team_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          team_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_resource_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "team"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_resource_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_resource_absence: {
+        Row: {
+          created_at: string
+          end_date: string
+          id: string
+          service_resource_id: string
+          start_date: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          end_date: string
+          id?: string
+          service_resource_id: string
+          start_date: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          end_date?: string
+          id?: string
+          service_resource_id?: string
+          start_date?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_resource_absence_service_resource_id_fkey"
+            columns: ["service_resource_id"]
+            isOneToOne: false
+            referencedRelation: "service_resource"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shift: {
+        Row: {
+          days: number[] | null
+          end_time: string
+          id: string
+          start_time: string
+          team_id: string
+        }
+        Insert: {
+          days?: number[] | null
+          end_time: string
+          id?: string
+          start_time: string
+          team_id: string
+        }
+        Update: {
+          days?: number[] | null
+          end_time?: string
+          id?: string
+          start_time?: string
+          team_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shift_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "team"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       team: {
         Row: {
           created_at: string
@@ -448,6 +599,7 @@ export type Database = {
           public_id: string
           requested_by_id: string | null
           sheduled_end: string | null
+          sheduled_range: unknown
           sheduled_start: string | null
           source: Database["public"]["Enums"]["WorkOrderSource"]
           started_at: string | null
@@ -470,6 +622,7 @@ export type Database = {
           public_id?: string
           requested_by_id?: string | null
           sheduled_end?: string | null
+          sheduled_range: unknown
           sheduled_start?: string | null
           source: Database["public"]["Enums"]["WorkOrderSource"]
           started_at?: string | null
@@ -492,6 +645,7 @@ export type Database = {
           public_id?: string
           requested_by_id?: string | null
           sheduled_end?: string | null
+          sheduled_range?: unknown
           sheduled_start?: string | null
           source?: Database["public"]["Enums"]["WorkOrderSource"]
           started_at?: string | null

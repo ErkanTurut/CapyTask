@@ -47,22 +47,22 @@ export function getColumns(): ColumnType<
       enableHiding: false,
     },
     {
-      accessorKey: "user.email",
+      accessorKey: "service_resource.user_id",
       header: ({ column }) => {
-        return <DataTableColumnHeader column={column} title="eMail" />;
+        return <DataTableColumnHeader column={column} title="user id" />;
       },
       cell: ({ row }) => {
         return (
           <div className="flex space-x-2">
             <span className="max-w-[11.25rem] truncate font-medium">
-              {row.original.user?.email}
+              {row.original.service_resource?.user_id}
             </span>
           </div>
         );
       },
       enableHiding: false,
       filterFn: (row, id, value) => {
-        return value.includes(row.original.user?.email);
+        return value.includes(row.original.service_resource?.user_id);
       },
     },
   ];

@@ -18,6 +18,8 @@ model work_order {
   started_at     DateTime? @db.Timestamptz(6)
   ended_at       DateTime? @db.Timestamptz(6)
 
+  sheduled_range Unsupported("tstzrange")
+
   // relations
   team_id         String
   workspace_id    String
@@ -35,9 +37,10 @@ model work_order {
   workspace    workspace  @relation(fields: [workspace_id], references: [id])
 
   // Relations from other entities
-  work_step         work_step[]
-  work_order_item   work_order_item[]
-  assigned_resource assigned_resource[]
+  work_step           work_step[]
+  work_order_item     work_order_item[]
+  assigned_resource   assigned_resource[]
+  service_appointment service_appointment[]
 
   // Indexes
   @@index([team_id])
@@ -50,8 +53,6 @@ model work_order {
 model work_order_item {
   id            String   @id @default(dbgenerated("nanoid(10)"))
   work_order_id String
-  name          String
-  description   String?
   asset_id      String?
   location_id   String?
   created_at    DateTime @default(now()) @db.Timestamptz(6)
