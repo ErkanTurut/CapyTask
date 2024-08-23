@@ -13,11 +13,12 @@ model team {
   workspace workspace @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
 
   // Relation references
-  team_user        team_user[]
-  work_order       work_order[]
-  work_plan        work_plan[]
-  shift            shift[]
-  service_resource service_resource[]
+  team_user           team_user[]
+  work_order          work_order[]
+  work_plan           work_plan[]
+  shift               shift[]
+  service_resource    service_resource[]
+  service_appointment service_appointment[]
 
   @@unique([identity, workspace_id])
   @@unique([name, workspace_id])

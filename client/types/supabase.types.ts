@@ -327,28 +327,37 @@ export type Database = {
       }
       service_appointment: {
         Row: {
-          appointment_range: unknown
           created_at: string
+          end_date: string
           id: string
           service_resource_id: string
+          start_date: string
+          team_id: string
           updated_at: string
           work_order_id: string
+          workspace_id: string
         }
         Insert: {
-          appointment_range: unknown
           created_at?: string
+          end_date: string
           id?: string
           service_resource_id: string
+          start_date: string
+          team_id: string
           updated_at?: string
           work_order_id: string
+          workspace_id: string
         }
         Update: {
-          appointment_range?: unknown
           created_at?: string
+          end_date?: string
           id?: string
           service_resource_id?: string
+          start_date?: string
+          team_id?: string
           updated_at?: string
           work_order_id?: string
+          workspace_id?: string
         }
         Relationships: [
           {
@@ -359,10 +368,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "service_appointment_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "team"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "service_appointment_work_order_id_fkey"
             columns: ["work_order_id"]
             isOneToOne: false
             referencedRelation: "work_order"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_appointment_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspace"
             referencedColumns: ["id"]
           },
         ]
@@ -1116,6 +1139,25 @@ export type Database = {
         }
         Returns: string
       }
+      remove_overlaps:
+        | {
+            Args: {
+              main_range: unknown
+              other_ranges: unknown[]
+            }
+            Returns: {
+              result_range: unknown
+            }[]
+          }
+        | {
+            Args: {
+              main_range: unknown
+              other_ranges: unknown[]
+            }
+            Returns: {
+              result_range: unknown
+            }[]
+          }
       upsert_work_order_assets: {
         Args: {
           _work_order_id: string

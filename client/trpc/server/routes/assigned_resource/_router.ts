@@ -17,6 +17,7 @@ export const assigned_resource = router({
         .from("service_appointment")
         .select("*")
         .rangeLt("appointment_range", input.scheduled_range);
+
       return data;
     }),
 });
