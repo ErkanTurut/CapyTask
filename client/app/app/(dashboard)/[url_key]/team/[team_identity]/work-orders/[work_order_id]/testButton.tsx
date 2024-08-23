@@ -4,13 +4,14 @@ import { Button } from "@/components/ui/button";
 import { api } from "@/trpc/client";
 
 interface testButtonProps {
-  range: string;
+  range: { from: string; to: string };
 }
 
 export default function TestButton({ range }: testButtonProps) {
-  const { data, refetch, isFetching } = api.db.assigned_resource.test.useQuery({
-    scheduled_range: range,
-  });
+  const { data, refetch, isFetching } =
+    api.db.service_appointment.test.useQuery({
+      scheduled_range: [range.from, range.to],
+    });
 
   console.log(data);
 

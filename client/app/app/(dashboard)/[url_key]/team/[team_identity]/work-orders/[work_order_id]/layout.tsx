@@ -33,7 +33,12 @@ export default async function Layout({ children, params }: LayoutProps) {
           {/* <ReponsiveSheet>
             <WorkOrderMain work_order={work_order} params={params} />
           </ReponsiveSheet> */}
-          <TestButton range={work_order.sheduled_range as string} />
+          <TestButton
+            range={{
+              from: work_order.sheduled_start!,
+              to: work_order.sheduled_end!,
+            }}
+          />
           <WorkOrderHeader work_order={work_order} />
 
           <Suspense fallback={<TableSkeleton />}>{children}</Suspense>
