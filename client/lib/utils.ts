@@ -12,6 +12,8 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { toast } from "sonner";
+import { addHours, isBefore } from "date-fns";
+
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
 dayjs.extend(timezone);
@@ -438,4 +440,37 @@ export function display12HourValue(hours: number) {
   if (hours >= 22) return `${hours - 12}`;
   if (hours % 12 > 9) return `${hours}`;
   return `0${hours % 12}`;
+}
+
+interface DateRange {
+  from: Date;
+  to: Date;
+}
+
+function generateDateRanges(
+  startDate: Date,
+  endDate: Date,
+  intervalHours: number,
+): DateRange[] {
+  // Initialize the array to store the date ranges
+  const dateRanges: DateRange[] = [];
+
+  // Initialize currentDate with startDate
+  let currentDate = startDate;
+
+  // Loop until the next range start surpasses the end date
+  while (isBefore(currentDate, endDate)) {
+    const rangeEnd = addHours(currentDate, intervalHours);
+
+    // Push the range into the array, ensuring the 'to' date does not exceed endDate
+    dateRanges.push({
+      from: new Date(currentDate),
+      to: isBefore(rangeEnd, endDate) ? rangeEnd : new Date(endDate),
+    });
+
+    // Move to the next range's start
+    currentDate = rangeEnd;
+  }
+
+  return dateRanges;
 }

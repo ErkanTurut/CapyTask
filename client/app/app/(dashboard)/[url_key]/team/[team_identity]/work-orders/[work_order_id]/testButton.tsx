@@ -10,7 +10,10 @@ interface testButtonProps {
 export default function TestButton({ range }: testButtonProps) {
   const { data, refetch, isFetching } =
     api.db.service_appointment.test.useQuery({
-      scheduled_range: [range.from, range.to],
+      scheduled_range: {
+        from: range.from,
+        to: range.to,
+      },
     });
 
   console.log(data);

@@ -5,35 +5,92 @@ export const service_appointment = router({
   test: protectedProcedure
     .input(
       z.object({
-        scheduled_range: z
-          .array(z.string().datetime({ offset: true }))
-          .length(2),
+        scheduled_range: z.object({
+          from: z.string(),
+          to: z.string(),
+        }),
       }),
     )
     .query(async ({ ctx: { db }, input }) => {
-      const { data } = await db
+      const { data: service_resources } = await db
         .from("service_resource")
         .select("*, service_appointment(*)")
-        .gte("service_appointment.start_date", input.scheduled_range[0])
-        .lte("service_appointment.end_date", input.scheduled_range[1]);
+        .gte("service_appointment.start_date", input.scheduled_range.from)
+        .lte("service_appointment.end_date", input.scheduled_range.to);
 
-      console.log(`[${input.scheduled_range.toString()}]`);
-      const { data: free_schedule, error } = await db.rpc("remove_overlaps", {
-        main_range: input.scheduled_range,
-        other_ranges: [
-          `[${data[0].service_appointment[0].start_date},${data[0].service_appointment[0].end_date}]`,
-          `[${data[0].service_appointment[1].start_date},${data[0].service_appointment[1].end_date}]`,
-        ],
+      if (service_resources === null) {
+        return [];
+      }
+      return getAvailableTimeSlots({
+        scheduleRange: input.scheduled_range,
+        unavailableTimeSlots: service_resources.map((resource) => ({
+          id: resource.id,
+          time_slots: (resource.service_appointment || []).map(
+            (appointment) => ({
+              from: appointment.start_date,
+              to: appointment.end_date,
+            }),
+          ),
+        })),
       });
-
-      console.log(free_schedule, error);
-
-      return data;
-      // const { data } = await db
-      //   .from("service_appointment")
-      //   .select("*")
-      //   .rangeLt("", input.scheduled_range.toString());
-
-      // db.rpc("remove_overlaps", {main_range: input.scheduled_range.toString(), other_ranges: ["dsdsd", "dsdsd"]});
     }),
 });
+
+type TimeSlot = { from: string; to: string };
+type ServiceResource = { id: string; time_slots: TimeSlot[] };
+
+function getAvailableTimeSlots({
+  scheduleRange,
+  unavailableTimeSlots,
+}: {
+  scheduleRange: TimeSlot;
+  unavailableTimeSlots: ServiceResource[];
+}) {
+  return unavailableTimeSlots.map((resource) => {
+    const availableSlots = removeOverlaps({
+      scheduleRange: scheduleRange,
+      unavailableSlots: resource.time_slots,
+    });
+    return {
+      id: resource.id.toString(),
+      available_time_slots: availableSlots,
+    };
+  });
+}
+
+function removeOverlaps({
+  scheduleRange,
+  unavailableSlots,
+}: {
+  scheduleRange: TimeSlot;
+  unavailableSlots: TimeSlot[];
+}): TimeSlot[] {
+  const sortedSlots = unavailableSlots.sort(
+    (a, b) => new Date(a.from).getTime() - new Date(b.from).getTime(),
+  );
+  const availableSlots: TimeSlot[] = [];
+  let currentFrom = new Date(scheduleRange.from);
+  const scheduleEnd = new Date(scheduleRange.to);
+
+  sortedSlots.forEach((slot) => {
+    const slotFrom = new Date(slot.from);
+    const slotTo = new Date(slot.to);
+
+    if (currentFrom < slotFrom) {
+      availableSlots.push({
+        from: currentFrom.toISOString(),
+        to: slotFrom.toISOString(),
+      });
+    }
+    currentFrom = slotTo > currentFrom ? slotTo : currentFrom;
+  });
+
+  if (currentFrom < scheduleEnd) {
+    availableSlots.push({
+      from: currentFrom.toISOString(),
+      to: scheduleEnd.toISOString(),
+    });
+  }
+
+  return availableSlots;
+}

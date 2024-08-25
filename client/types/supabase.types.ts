@@ -1085,6 +1085,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_available_time_slots: {
+        Args: {
+          schedule_range: unknown
+          unavailable_time_slots: Json
+        }
+        Returns: {
+          id: number
+          available_time_slots: Json
+        }[]
+      }
       manage_work_plan: {
         Args: {
           _work_plan_template_id: string
@@ -1139,25 +1149,15 @@ export type Database = {
         }
         Returns: string
       }
-      remove_overlaps:
-        | {
-            Args: {
-              main_range: unknown
-              other_ranges: unknown[]
-            }
-            Returns: {
-              result_range: unknown
-            }[]
-          }
-        | {
-            Args: {
-              main_range: unknown
-              other_ranges: unknown[]
-            }
-            Returns: {
-              result_range: unknown
-            }[]
-          }
+      remove_overlaps: {
+        Args: {
+          main_range: unknown
+          other_ranges: unknown[]
+        }
+        Returns: {
+          result_range: unknown
+        }[]
+      }
       upsert_work_order_assets: {
         Args: {
           _work_order_id: string

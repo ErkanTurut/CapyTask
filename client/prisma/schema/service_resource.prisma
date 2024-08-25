@@ -13,6 +13,9 @@ model service_resource {
     service_resource_absence service_resource_absence[]
     assigned_resource        assigned_resource[]
     service_appointment      service_appointment[]
+
+    @@index([user_id])
+    @@index([team_id])
 }
 
 model service_resource_absence {
@@ -25,4 +28,8 @@ model service_resource_absence {
 
     // Relations to other entities
     service_resource service_resource @relation(fields: [service_resource_id], references: [id])
+
+    @@index([service_resource_id])
+    @@index([start_date])
+    @@index([end_date])
 }

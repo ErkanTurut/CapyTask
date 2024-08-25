@@ -19,4 +19,6 @@ model service_appointment {
     @@index([service_resource_id])
     @@index([team_id])
     @@index([workspace_id])
+    @@index([start_date])
+    @@index([end_date])
 }
