@@ -6,7 +6,6 @@ import { WorkOrderHeader } from "@/components/dashboard/work-order/work-order-he
 import WorkOrderMain from "@/components/dashboard/work-order/work-order-main";
 import TableSkeleton from "@/components/skeletons/table-skeleton";
 import { Suspense } from "react";
-import TestButton from "./testButton";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -33,12 +32,7 @@ export default async function Layout({ children, params }: LayoutProps) {
           {/* <ReponsiveSheet>
             <WorkOrderMain work_order={work_order} params={params} />
           </ReponsiveSheet> */}
-          <TestButton
-            range={{
-              from: work_order.sheduled_start!,
-              to: work_order.sheduled_end!,
-            }}
-          />
+
           <WorkOrderHeader work_order={work_order} />
 
           <Suspense fallback={<TableSkeleton />}>{children}</Suspense>

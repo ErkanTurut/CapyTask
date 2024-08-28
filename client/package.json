@@ -55,7 +55,7 @@
     "@trpc/react-query": "11.0.0-next-beta.316",
     "@trpc/server": "11.0.0-next-beta.316",
     "@vercel/blob": "^0.23.3",
-    "ai": "^3.2.15",
+    "ai": "^3.3.20",
     "babel-plugin-react-compiler": "0.0.0-experimental-592953e-20240517",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",

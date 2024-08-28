@@ -21,6 +21,7 @@ import { company } from "./company/_router";
 import { work_order_item } from "./work_order_item/_router";
 import { assigned_resource } from "./assigned_resource/_router";
 import { service_appointment } from "./service_appointment/_router";
+import { service_resource } from "./service_resource/_router";
 
 export const appRouter = router({
   auth: authMutationRouter,
@@ -34,6 +35,7 @@ export const appRouter = router({
 
     assigned_resource,
     service_appointment,
+    service_resource,
 
     work_plan,
     work_plan_template,
