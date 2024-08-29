@@ -2,95 +2,41 @@ import { z } from "zod";
 import { protectedProcedure, router } from "../../trpc";
 
 export const service_appointment = router({
-  test: protectedProcedure
+  create: protectedProcedure
     .input(
       z.object({
-        scheduled_range: z.object({
-          from: z.string(),
-          to: z.string(),
-        }),
+        start_date: z.string(),
+        end_date: z.string(),
+        team_id: z.string(),
+        work_order_id: z.string(),
+        workspace_id: z.string(),
+        assigned_resource: z.array(z.string()).optional(),
       }),
     )
-    .query(async ({ ctx: { db }, input }) => {
-      const { data: service_resources } = await db
-        .from("service_resource")
-        .select("*, service_appointment(*)")
-        .gte("service_appointment.start_date", input.scheduled_range.from)
-        .lte("service_appointment.end_date", input.scheduled_range.to);
+    .mutation(async ({ ctx, input }) => {
+      const { data, error } = await ctx.db
+        .from("service_appointment")
+        .insert(input)
+        .select()
+        .single();
 
-      if (service_resources === null) {
-        return [];
+      if (error) {
+        throw error;
       }
-      return getAvailableTimeSlots({
-        scheduleRange: input.scheduled_range,
-        unavailableTimeSlots: service_resources.map((resource) => ({
-          id: resource.id,
-          time_slots: (resource.service_appointment || []).map(
-            (appointment) => ({
-              from: appointment.start_date,
-              to: appointment.end_date,
-            }),
-          ),
-        })),
-      });
+
+      if (input.assigned_resource) {
+        await ctx.db
+          .from("assigned_resource")
+          .upsert(
+            input.assigned_resource.map((resource_id) => ({
+              service_appointment_id: data.id,
+              service_resource_id: resource_id,
+            })),
+            {
+              onConflict: "service_appointment_id,service_resource_id",
+            },
+          )
+          .select();
+      }
     }),
 });
-
-type TimeSlot = { from: string; to: string };
-type ServiceResource = { id: string; time_slots: TimeSlot[] };
-
-function getAvailableTimeSlots({
-  scheduleRange,
-  unavailableTimeSlots,
-}: {
-  scheduleRange: TimeSlot;
-  unavailableTimeSlots: ServiceResource[];
-}) {
-  return unavailableTimeSlots.map((resource) => {
-    const availableSlots = removeOverlaps({
-      scheduleRange: scheduleRange,
-      unavailableSlots: resource.time_slots,
-    });
-    return {
-      id: resource.id.toString(),
-      available_time_slots: availableSlots,
-    };
-  });
-}
-
-function removeOverlaps({
-  scheduleRange,
-  unavailableSlots,
-}: {
-  scheduleRange: TimeSlot;
-  unavailableSlots: TimeSlot[];
-}): TimeSlot[] {
-  const sortedSlots = unavailableSlots.sort(
-    (a, b) => new Date(a.from).getTime() - new Date(b.from).getTime(),
-  );
-  const availableSlots: TimeSlot[] = [];
-  let currentFrom = new Date(scheduleRange.from);
-  const scheduleEnd = new Date(scheduleRange.to);
-
-  sortedSlots.forEach((slot) => {
-    const slotFrom = new Date(slot.from);
-    const slotTo = new Date(slot.to);
-
-    if (currentFrom < slotFrom) {
-      availableSlots.push({
-        from: currentFrom.toISOString(),
-        to: slotFrom.toISOString(),
-      });
-    }
-    currentFrom = slotTo > currentFrom ? slotTo : currentFrom;
-  });
-
-  if (currentFrom < scheduleEnd) {
-    availableSlots.push({
-      from: currentFrom.toISOString(),
-      to: scheduleEnd.toISOString(),
-    });
-  }
-
-  return availableSlots;
-}

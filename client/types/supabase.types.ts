@@ -130,37 +130,37 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          service_appointment_id: string
           service_resource_id: string
           updated_at: string
-          work_order_id: string
         }
         Insert: {
           created_at?: string
           id?: string
+          service_appointment_id: string
           service_resource_id: string
           updated_at?: string
-          work_order_id: string
         }
         Update: {
           created_at?: string
           id?: string
+          service_appointment_id?: string
           service_resource_id?: string
           updated_at?: string
-          work_order_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "assigned_resource_service_appointment_id_fkey"
+            columns: ["service_appointment_id"]
+            isOneToOne: false
+            referencedRelation: "service_appointment"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "assigned_resource_service_resource_id_fkey"
             columns: ["service_resource_id"]
             isOneToOne: false
             referencedRelation: "service_resource"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "assigned_resource_work_order_id_fkey"
-            columns: ["work_order_id"]
-            isOneToOne: false
-            referencedRelation: "work_order"
             referencedColumns: ["id"]
           },
         ]
@@ -330,7 +330,6 @@ export type Database = {
           created_at: string
           end_date: string
           id: string
-          service_resource_id: string
           start_date: string
           team_id: string
           updated_at: string
@@ -341,7 +340,6 @@ export type Database = {
           created_at?: string
           end_date: string
           id?: string
-          service_resource_id: string
           start_date: string
           team_id: string
           updated_at?: string
@@ -352,7 +350,6 @@ export type Database = {
           created_at?: string
           end_date?: string
           id?: string
-          service_resource_id?: string
           start_date?: string
           team_id?: string
           updated_at?: string
@@ -360,13 +357,6 @@ export type Database = {
           workspace_id?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "service_appointment_service_resource_id_fkey"
-            columns: ["service_resource_id"]
-            isOneToOne: false
-            referencedRelation: "service_resource"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "service_appointment_team_id_fkey"
             columns: ["team_id"]

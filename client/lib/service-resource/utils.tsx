@@ -1,6 +1,13 @@
 import { Database } from "@/types/supabase.types";
+import { Shift, TimeSlot } from "@/lib/types";
 
-type TimeSlot = { from: string; to: string };
+import {
+  getISODay,
+  parse,
+  setHours,
+  setMinutes,
+  isWithinInterval,
+} from "date-fns";
 
 export function removeOverlaps({
   scheduleRange,
@@ -89,4 +96,42 @@ export function groupTimeSlotsByDay(
     },
     {} as Record<string, TimeSlot[]>,
   );
+}
+
+export function removeShiftFromDateRange(
+  startDate: Date,
+  endDate: Date,
+  shift: Shift,
+): Date[] {
+  const availableDates: Date[] = [];
+  const currentDate = new Date(startDate);
+
+  const shiftStart = parse(shift.start_time, "HH:mm", new Date());
+  const shiftEnd = parse(shift.end_time, "HH:mm", new Date());
+
+  while (currentDate <= endDate) {
+    const dayOfWeek = getISODay(currentDate);
+    if (shift.days.includes(dayOfWeek)) {
+      const currentShiftStart = setMinutes(
+        setHours(currentDate, shiftStart.getHours()),
+        shiftStart.getMinutes(),
+      );
+      const currentShiftEnd = setMinutes(
+        setHours(currentDate, shiftEnd.getHours()),
+        shiftEnd.getMinutes(),
+      );
+
+      if (
+        isWithinInterval(currentDate, {
+          start: currentShiftStart,
+          end: currentShiftEnd,
+        })
+      ) {
+        availableDates.push(new Date(currentDate));
+      }
+    }
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  return availableDates;
 }

@@ -1,7 +1,6 @@
-import { AssignedResourceTable } from "@/components/tables/assigned-resource/assigned-resource-table";
 import { trpc } from "@/trpc/server";
+import { CreateServiceAppointment } from "./create-service-appointment";
 import { notFound } from "next/navigation";
-import TestButton from "./testButton";
 
 interface PageProps {
   params: {
@@ -19,12 +18,5 @@ export default async function Page({ params }: PageProps) {
   if (!work_order) {
     return notFound();
   }
-  return (
-    <TestButton
-      range={{
-        from: work_order.sheduled_start!,
-        to: work_order.sheduled_end!,
-      }}
-    />
-  );
+  return <CreateServiceAppointment work_order={work_order} />;
 }
