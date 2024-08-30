@@ -334,6 +334,7 @@ export type Database = {
           team_id: string
           updated_at: string
           work_order_id: string
+          work_order_item_id: string
           workspace_id: string
         }
         Insert: {
@@ -344,6 +345,7 @@ export type Database = {
           team_id: string
           updated_at?: string
           work_order_id: string
+          work_order_item_id: string
           workspace_id: string
         }
         Update: {
@@ -354,6 +356,7 @@ export type Database = {
           team_id?: string
           updated_at?: string
           work_order_id?: string
+          work_order_item_id?: string
           workspace_id?: string
         }
         Relationships: [
@@ -369,6 +372,13 @@ export type Database = {
             columns: ["work_order_id"]
             isOneToOne: false
             referencedRelation: "work_order"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_appointment_work_order_item_id_fkey"
+            columns: ["work_order_item_id"]
+            isOneToOne: false
+            referencedRelation: "work_order_item"
             referencedColumns: ["id"]
           },
           {

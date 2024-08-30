@@ -60,9 +60,10 @@ model work_order_item {
   status        Status   @default(OPEN)
 
   // Relations 
-  asset      asset?     @relation(fields: [asset_id], references: [id])
-  location   location?  @relation(fields: [location_id], references: [id])
-  work_order work_order @relation(fields: [work_order_id], references: [id], onDelete: Cascade)
+  asset               asset?                @relation(fields: [asset_id], references: [id])
+  location            location?             @relation(fields: [location_id], references: [id])
+  work_order          work_order            @relation(fields: [work_order_id], references: [id], onDelete: Cascade)
+  service_appointment service_appointment[]
 
   @@index([asset_id])
   @@index([location_id])

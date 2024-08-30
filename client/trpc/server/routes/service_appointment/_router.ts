@@ -2,6 +2,22 @@ import { z } from "zod";
 import { protectedProcedure, router } from "../../trpc";
 
 export const service_appointment = router({
+  get: {
+    byWorkOrder: protectedProcedure
+      .input(z.object({ work_order_id: z.string() }))
+      .query(async ({ ctx, input }) => {
+        const { data, error, count } = await ctx.db
+          .from("service_appointment")
+          .select("*", { count: "exact" })
+          .eq("work_order_id", input.work_order_id);
+
+        if (error) {
+          throw error;
+        }
+
+        return { data, count };
+      }),
+  },
   create: protectedProcedure
     .input(
       z.object({
@@ -11,6 +27,7 @@ export const service_appointment = router({
         work_order_id: z.string(),
         workspace_id: z.string(),
         assigned_resource: z.array(z.string()).optional(),
+        work_order_item_id: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
