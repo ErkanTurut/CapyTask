@@ -32,7 +32,7 @@ export async function WorkOrderHeader({ work_order }: WorkOrderHeaderProps) {
         <PrioritySelector status={work_order.priority} />
       </section>
 
-      <WorkOrderTabs />
+      <WorkOrderTabs className="col-span-full" />
     </div>
   );
 }

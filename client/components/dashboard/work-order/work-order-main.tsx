@@ -26,10 +26,7 @@ export default async function WorkOrderMain({
   work_order,
 }: WorkOrderMainProps) {
   return (
-    <Card
-      className="min-w-72 overflow-hidden shadow-sm"
-      x-chunk="dashboard-05-chunk-4"
-    >
+    <Card className="shadow-sm" x-chunk="dashboard-05-chunk-4">
       <CardHeader className="flex flex-row items-start border-b border-dashed bg-muted/40">
         <div className="grid gap-0.5">
           <CardTitle className="group flex items-center gap-2 text-lg">

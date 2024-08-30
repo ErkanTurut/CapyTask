@@ -11,7 +11,7 @@ import {
 } from "@/components/dashboard/navigation/tabs-link";
 import { type Page, workOrderPagesConfig } from "@/config/pages";
 
-export function WorkOrderTabs() {
+export function WorkOrderTabs({ className }: { className?: string }) {
   const params = useParams() as {
     url_key: string;
     team_identity: string;
@@ -25,8 +25,8 @@ export function WorkOrderTabs() {
   }
 
   return (
-    <TabsContainer>
-      {workOrderPagesConfig.map(({ title, segment, href }) => {
+    <TabsContainer className={className}>
+      {workOrderPagesConfig.map(({ title, segment, href, disabled }) => {
         const active = segment === selectedSegment;
         return (
           <TabsLink
@@ -34,6 +34,7 @@ export function WorkOrderTabs() {
             active={active}
             href={`/${params.url_key}/team/${params.team_identity}/work-orders/${params.work_order_id}${href}`}
             prefetch={false}
+            disabled={disabled}
           >
             {title}
           </TabsLink>
