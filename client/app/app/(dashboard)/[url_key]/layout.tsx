@@ -38,7 +38,7 @@ export default async function Layout({
   return (
     <div className="grid h-dvh bg-muted/40 p-1 transition-all duration-1000 md:grid-cols-[13rem,1fr]">
       <Sidebar params={params} />
-      <main className="flex flex-col overflow-x-hidden rounded-md border bg-background">
+      <main className="flex w-full flex-col overflow-x-hidden rounded-md border bg-background">
         <Header />
         <ScrollArea className="flex-1">{children}</ScrollArea>
       </main>

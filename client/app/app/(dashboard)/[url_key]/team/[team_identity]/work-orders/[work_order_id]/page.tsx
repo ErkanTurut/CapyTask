@@ -20,7 +20,7 @@ export default async function Page({ params }: PageProps) {
     return null;
   }
   return (
-    <div className="flex h-full flex-col gap-2 rounded-md">
+    <div className="flex h-full flex-col gap-2">
       <div className="grid h-full">
         <WorkOrderItemTable data={work_order_item} rowCount={count ?? 0} />
       </div>

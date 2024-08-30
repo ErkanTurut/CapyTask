@@ -27,14 +27,9 @@ export default async function Layout({ children, params }: LayoutProps) {
 
   return (
     <Shell>
-      <div className="grid h-full gap-6 lg:grid-cols-[1fr,0.4fr]">
-        <div className="flex h-full flex-col gap-8 rounded-md">
-          {/* <ReponsiveSheet>
-            <WorkOrderMain work_order={work_order} params={params} />
-          </ReponsiveSheet> */}
-
+      <div className="grid h-full w-full gap-6 lg:grid-cols-[1fr,0.4fr]">
+        <div className="flex h-full w-full flex-col gap-8">
           <WorkOrderHeader work_order={work_order} />
-
           <Suspense fallback={<TableSkeleton />}>{children}</Suspense>
         </div>
         <WorkOrderMain work_order={work_order} params={params} />
