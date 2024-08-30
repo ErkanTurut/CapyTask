@@ -23,6 +23,10 @@ import { cn } from "@/lib/utils";
 import { RouterOutput } from "@/trpc/client";
 import { formatDateRange } from "little-date";
 import { DateRange } from "react-day-picker";
+import { TimePickerInput } from "@/components/time-picker-input";
+import { Label } from "@/components/ui/label";
+import { PopoverComboBox } from "@/components/popoverCombobox";
+import { Icons } from "@/components/icons";
 
 interface CreateServiceAppointmentProps {
   work_order: RouterOutput["db"]["work_order"]["get"]["detail"];
@@ -32,7 +36,10 @@ export function CreateServiceAppointment({
   work_order,
 }: CreateServiceAppointmentProps) {
   if (!work_order) return null;
-
+  const fromMinuteRef = React.useRef<HTMLInputElement>(null);
+  const fromHourRef = React.useRef<HTMLInputElement>(null);
+  const toMinuteRef = React.useRef<HTMLInputElement>(null);
+  const toHourRef = React.useRef<HTMLInputElement>(null);
   const [selectedDate, setSelectedDate] = useState<Date>(
     new Date(work_order.sheduled_start || new Date()),
   );
@@ -45,16 +52,18 @@ export function CreateServiceAppointment({
   const handleDateSelect = (date: Date | undefined) => {
     if (date) {
       setSelectedDate(date);
+      setSelectedTimeSlot({
+        from: undefined,
+        to: undefined,
+      });
     }
   };
 
   const handleTimeSlotSelect = (timeSlot: DateRange) => {
     console.log(timeSlot);
     setSelectedTimeSlot(timeSlot);
-    // Don't scroll here, as we're staying within the same day
   };
 
-  // Define disabledSlots here
   const disabledSlots = React.useMemo(() => {
     const slots: Date[] = [];
     let current = startOfDay(selectedDate);
@@ -64,7 +73,7 @@ export function CreateServiceAppointment({
       if (current.getHours() < 7 || current.getHours() >= 20) {
         slots.push(new Date(current));
       }
-      current = addMinutes(current, 60); // Assuming 60-minute intervals
+      current = addMinutes(current, 60);
     }
 
     return slots;
@@ -83,11 +92,9 @@ export function CreateServiceAppointment({
               )}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
-              {selectedDate ? (
-                format(selectedDate, "PPP")
-              ) : (
-                <span>Pick a date</span>
-              )}
+              {selectedTimeSlot.from && selectedTimeSlot.to
+                ? formatDateRange(selectedTimeSlot.from, selectedTimeSlot.to)
+                : format(selectedDate, "PPP")}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="start">
@@ -95,7 +102,7 @@ export function CreateServiceAppointment({
               mode="single"
               selected={selectedDate}
               onSelect={handleDateSelect}
-              className="rounded-md border"
+              className="border-b border-dashed"
               disabled={(date) => {
                 const scheduledStart = work_order.sheduled_start
                   ? new Date(work_order.sheduled_start)
@@ -111,6 +118,82 @@ export function CreateServiceAppointment({
                 return date < scheduledStart || date > scheduledEnd;
               }}
             />
+            <div className="flex w-full items-center justify-between p-2">
+              <div className="flex w-full items-start gap-2">
+                <div className="grid gap-1 text-center">
+                  <Label htmlFor="hours" className="text-xs">
+                    Hours
+                  </Label>
+                  <TimePickerInput
+                    picker="hours"
+                    date={selectedTimeSlot.from}
+                    setDate={(e) =>
+                      handleTimeSlotSelect({
+                        ...selectedTimeSlot,
+                        from: e,
+                      })
+                    }
+                    ref={fromHourRef}
+                    onRightFocus={() => fromMinuteRef.current?.focus()}
+                  />
+                </div>
+                <div className="grid gap-1 text-center">
+                  <Label htmlFor="minutes" className="text-xs">
+                    Minutes
+                  </Label>
+                  <TimePickerInput
+                    picker="minutes"
+                    date={selectedTimeSlot.from}
+                    setDate={(e) =>
+                      handleTimeSlotSelect({
+                        ...selectedTimeSlot,
+                        from: e,
+                      })
+                    }
+                    ref={fromMinuteRef}
+                    onLeftFocus={() => fromHourRef.current?.focus()}
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-start gap-2">
+                <div className="grid gap-1 text-center">
+                  <Label htmlFor="hours" className="text-xs">
+                    Hours
+                  </Label>
+                  <TimePickerInput
+                    picker="hours"
+                    date={selectedTimeSlot.to}
+                    setDate={(e) =>
+                      handleTimeSlotSelect({
+                        ...selectedTimeSlot,
+                        to: e,
+                      })
+                    }
+                    ref={toHourRef}
+                    onRightFocus={() => toMinuteRef.current?.focus()}
+                  />
+                </div>
+
+                <div className="grid gap-1 text-center">
+                  <Label htmlFor="minutes" className="text-xs">
+                    Minutes
+                  </Label>
+                  <TimePickerInput
+                    picker="minutes"
+                    date={selectedTimeSlot.to}
+                    setDate={(e) =>
+                      handleTimeSlotSelect({
+                        ...selectedTimeSlot,
+                        to: e,
+                      })
+                    }
+                    ref={toMinuteRef}
+                    onLeftFocus={() => toHourRef.current?.focus()}
+                  />
+                </div>
+              </div>
+            </div>
           </PopoverContent>
         </Popover>
         <DayScheduler
@@ -134,6 +217,12 @@ export function CreateServiceAppointment({
           className="h-[24rem] rounded-md border"
         />
       </div>
+      <PopoverComboBox className="w-[20rem]" options={[]} onSelect={() => {}}>
+        <Button className="text-xs font-normal" variant={"outline"}>
+          <Icons.search className="mr-2 h-4 w-4" />
+          Add Service Resource
+        </Button>
+      </PopoverComboBox>
     </div>
   );
 }

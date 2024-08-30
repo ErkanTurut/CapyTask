@@ -11,11 +11,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+
 import * as React from "react";
 
 import { Icons } from "./icons";
@@ -35,7 +31,7 @@ interface ComboBoxProps<T> {
   className?: string;
 }
 
-export function ComboBox<T extends string>({
+export function PopoverComboBox<T extends string>({
   options,
   onSelect,
   children,

@@ -22,21 +22,23 @@ import { useIsMounted } from "@/lib/hooks/use-is-mounted";
 import { DateRange } from "react-day-picker";
 import { Resizable } from "re-resizable";
 
-// Configuration object moved outside of the component
+// Configuration object
 const config = {
   timeSlotInterval: 60,
   dayStartHour: 0,
   dayEndHour: 24,
   pixelsPerMinute: 1,
 };
+
+// Types
+type ServiceAppointment =
+  Database["public"]["Tables"]["service_appointment"]["Row"];
+
 interface AppointmentItemProps {
   appointment: ServiceAppointment;
   dayStart: Date;
   pixelsPerMinute: number;
 }
-
-type ServiceAppointment =
-  Database["public"]["Tables"]["service_appointment"]["Row"];
 
 interface TimeSlotItemProps {
   time: Date;
@@ -50,46 +52,37 @@ interface SelectedTimeSlotOverlayProps {
   range: DateRange;
   dayStart: Date;
   pixelsPerMinute: number;
-  onResize: (height: number) => void;
+  onResize: (height: string) => void;
 }
 
-const SelectedTimeSlotOverlay = React.memo(
-  ({
-    range,
-    dayStart,
-    pixelsPerMinute,
-    onResize,
-  }: SelectedTimeSlotOverlayProps) => {
-    if (!range.from || !range.to) return null;
-
-    const startMinutes = differenceInMinutes(range.from, dayStart);
-    const durationMinutes = differenceInMinutes(range.to, range.from);
-    const top = startMinutes * pixelsPerMinute;
-    const height = durationMinutes * pixelsPerMinute;
-
-    return (
-      <Resizable defaultSize={{ height }}>
-        <div
-          className="absolute left-16 right-0 overflow-hidden rounded-md bg-primary/80 p-1 text-primary-foreground"
-          style={{ top: `${top}px`, height: `${height}px`, minHeight: "24px" }}
-        >
-          <div className="text-xs">
-            Selected ({formatDate({ date: range.from, format: "LT" })} -{" "}
-            {formatDate({ date: range.to, format: "LT" })})
-          </div>
-        </div>
-      </Resizable>
-    );
-  },
-);
 interface DaySchedulerProps extends React.HTMLAttributes<HTMLDivElement> {
-  date: Date; // Change this from 'date: Date | undefined'
+  date: Date;
   appointments: ServiceAppointment[];
-  selectedTimeSlot?: DateRange; // Change this to DateRange
-  onSelectTimeSlot?: (range: DateRange) => void; // Update this to accept DateRange
+  selectedTimeSlot?: DateRange;
+  onSelectTimeSlot?: (range: DateRange) => void;
   disabledSlots?: Date[];
 }
 
+export interface DaySchedulerRef {
+  scrollToFirstAvailableSlot: () => void;
+}
+
+// Helper functions
+const generateTimeSlots = (
+  start: Date,
+  end: Date,
+  intervalMinutes: number,
+): Date[] => {
+  const slots: Date[] = [];
+  let current = start;
+  while (current < end) {
+    slots.push(current);
+    current = addMinutes(current, intervalMinutes);
+  }
+  return slots;
+};
+
+// Components
 const TimeSlotItem = React.memo(
   forwardRef<HTMLDivElement, TimeSlotItemProps>(
     ({ time, height, isSelected, isDisabled, onClick }, ref) => (
@@ -143,28 +136,60 @@ const AppointmentItem = React.memo(
   ),
 );
 
-export interface DaySchedulerRef {
-  scrollToFirstAvailableSlot: () => void;
-}
+const SelectedTimeSlotOverlay = React.memo(
+  ({
+    range,
+    dayStart,
+    pixelsPerMinute,
+    onResize,
+  }: SelectedTimeSlotOverlayProps) => {
+    if (!range.from || !range.to) return null;
 
-function generateTimeSlots(
-  start: Date,
-  end: Date,
-  intervalMinutes: number,
-): Date[] {
-  const slots: Date[] = [];
-  let current = start;
-  while (current < end) {
-    slots.push(current);
-    current = addMinutes(current, intervalMinutes);
-  }
-  return slots;
-}
+    const endTime = addMinutes(dayStart, config.dayEndHour * 60);
+    const totalMinutes = differenceInMinutes(endTime, range.from);
 
+    const startMinutes = differenceInMinutes(range.from, dayStart);
+    const durationMinutes = differenceInMinutes(range.to, range.from);
+    const top = startMinutes * pixelsPerMinute;
+    const height = durationMinutes * pixelsPerMinute;
+
+    return (
+      <Resizable
+        className="absolute left-16 right-0 overflow-hidden rounded-md bg-primary/80 p-1 text-primary-foreground"
+        style={{
+          top: `${top}px`,
+          height: `${height}px`,
+          minHeight: "24px",
+          position: "absolute",
+        }}
+        size={{
+          width: "auto",
+          height: `${height}px`,
+        }}
+        snap={{
+          y: Array.from(
+            { length: Math.ceil((totalMinutes * pixelsPerMinute) / 15) },
+            (_, i) => i * 15,
+          ),
+        }}
+        onResize={(_, direction, ref) => {
+          onResize(ref.style.height);
+        }}
+      >
+        <div className="text-xs">
+          Selected ({formatDate({ date: range.from, format: "LT" })} -{" "}
+          {formatDate({ date: range.to, format: "LT" })})
+        </div>
+      </Resizable>
+    );
+  },
+);
+
+// Main component
 export const DayScheduler = forwardRef<DaySchedulerRef, DaySchedulerProps>(
   (
     {
-      date, // Change this from 'date'
+      date,
       appointments,
       selectedTimeSlot,
       onSelectTimeSlot,
@@ -176,10 +201,10 @@ export const DayScheduler = forwardRef<DaySchedulerRef, DaySchedulerProps>(
     if (!date) {
       return "Pick a date range";
     }
+
     const scrollViewportRef = useRef<HTMLDivElement>(null);
     const timeSlotRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
     const lastDateRef = useRef(date);
-    const isMounted = useIsMounted();
 
     const startTime = useMemo(
       () => addMinutes(startOfDay(date), config.dayStartHour * 60),
@@ -189,7 +214,6 @@ export const DayScheduler = forwardRef<DaySchedulerRef, DaySchedulerProps>(
       () => addMinutes(startOfDay(date), config.dayEndHour * 60),
       [date],
     );
-
     const timeSlots = useMemo(
       () => generateTimeSlots(startTime, endTime, config.timeSlotInterval),
       [startTime, endTime],
@@ -204,14 +228,13 @@ export const DayScheduler = forwardRef<DaySchedulerRef, DaySchedulerProps>(
     );
 
     const isSlotDisabled = useCallback(
-      (slot: Date) => {
-        return disabledSlots.some(
+      (slot: Date) =>
+        disabledSlots.some(
           (disabledSlot) =>
             isSameDay(slot, disabledSlot) &&
             slot.getHours() === disabledSlot.getHours() &&
             slot.getMinutes() === disabledSlot.getMinutes(),
-        );
-      },
+        ),
       [disabledSlots],
     );
 
@@ -223,17 +246,12 @@ export const DayScheduler = forwardRef<DaySchedulerRef, DaySchedulerProps>(
         const slotKey = firstAvailableSlot.toISOString();
         const slotElement = timeSlotRefs.current[slotKey];
         if (slotElement && scrollViewportRef.current) {
-          slotElement.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-          });
+          slotElement.scrollIntoView({ behavior: "smooth", block: "start" });
         }
       }
     }, [timeSlots, isSlotDisabled]);
 
-    useImperativeHandle(ref, () => ({
-      scrollToFirstAvailableSlot,
-    }));
+    useImperativeHandle(ref, () => ({ scrollToFirstAvailableSlot }));
 
     useEffect(() => {
       if (!isSameDay(date, lastDateRef.current)) {
@@ -259,27 +277,25 @@ export const DayScheduler = forwardRef<DaySchedulerRef, DaySchedulerProps>(
     return (
       <ScrollArea className={cn("h-[16rem]", className)}>
         <div ref={scrollViewportRef} className="relative">
-          {timeSlots.map((slot) => {
-            const isSelected = selectedTimeSlot?.from
-              ? isSameDay(selectedTimeSlot.from, slot) &&
-                selectedTimeSlot.from.getHours() === slot.getHours() &&
-                selectedTimeSlot.from.getMinutes() === slot.getMinutes()
-              : false;
-
-            return (
-              <TimeSlotItem
-                key={slot.toISOString()}
-                ref={(el) => {
-                  timeSlotRefs.current[slot.toISOString()] = el;
-                }}
-                time={slot}
-                height={config.timeSlotInterval * config.pixelsPerMinute}
-                isSelected={isSelected}
-                isDisabled={isSlotDisabled(slot)}
-                onClick={() => handleSlotClick(slot)}
-              />
-            );
-          })}
+          {timeSlots.map((slot) => (
+            <TimeSlotItem
+              key={slot.toISOString()}
+              ref={(el) => {
+                timeSlotRefs.current[slot.toISOString()] = el;
+              }}
+              time={slot}
+              height={config.timeSlotInterval * config.pixelsPerMinute}
+              isSelected={
+                selectedTimeSlot?.from
+                  ? isSameDay(selectedTimeSlot.from, slot) &&
+                    selectedTimeSlot.from.getHours() === slot.getHours() &&
+                    selectedTimeSlot.from.getMinutes() === slot.getMinutes()
+                  : false
+              }
+              isDisabled={isSlotDisabled(slot)}
+              onClick={() => handleSlotClick(slot)}
+            />
+          ))}
           {filteredAppointments.map((appointment) => (
             <AppointmentItem
               key={appointment.id}
@@ -293,6 +309,20 @@ export const DayScheduler = forwardRef<DaySchedulerRef, DaySchedulerProps>(
               range={selectedTimeSlot}
               dayStart={startTime}
               pixelsPerMinute={config.pixelsPerMinute}
+              onResize={(height) => {
+                if (selectedTimeSlot?.from) {
+                  const newEndTime = addMinutes(
+                    selectedTimeSlot.from,
+                    Math.round(parseInt(height) / config.pixelsPerMinute),
+                  );
+                  if (onSelectTimeSlot && newEndTime > selectedTimeSlot.from) {
+                    onSelectTimeSlot({
+                      from: selectedTimeSlot.from,
+                      to: newEndTime,
+                    });
+                  }
+                }
+              }}
             />
           )}
         </div>
