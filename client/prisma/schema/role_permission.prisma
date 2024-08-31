@@ -1,3 +1,11 @@
+model role_permission {
+  id         String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  role       role
+  permission Permission
+
+  @@unique([role, permission])
+}
+
 enum role {
   ADMIN
   MANAGER
@@ -7,12 +15,4 @@ enum role {
   QUALITY_INSPECTOR
   OPERATOR
   OTHER
-}
-
-model role_permission {
-  id         String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  role       role
-  permission Permission
-
-  @@unique([role, permission])
 }

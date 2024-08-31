@@ -202,6 +202,8 @@ export const DayScheduler = forwardRef<DaySchedulerRef, DaySchedulerProps>(
       return "Pick a date range";
     }
 
+    console.log(appointments);
+
     const scrollViewportRef = useRef<HTMLDivElement>(null);
     const timeSlotRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
     const lastDateRef = useRef(date);

@@ -582,6 +582,7 @@ export type Database = {
           email: string
           external_id: string | null
           first_name: string | null
+          full_name: unknown | null
           id: string
           image_uri: string | null
           last_name: string | null
@@ -592,6 +593,7 @@ export type Database = {
           email: string
           external_id?: string | null
           first_name?: string | null
+          full_name?: unknown | null
           id?: string
           image_uri?: string | null
           last_name?: string | null
@@ -602,6 +604,7 @@ export type Database = {
           email?: string
           external_id?: string | null
           first_name?: string | null
+          full_name?: unknown | null
           id?: string
           image_uri?: string | null
           last_name?: string | null

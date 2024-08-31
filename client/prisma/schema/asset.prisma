@@ -9,8 +9,8 @@ model asset {
   location_id     String?
   location        location?         @relation(fields: [location_id], references: [id])
   workspace       workspace         @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
-  work_step       work_step[]
   work_order_item work_order_item[]
+  work_step       work_step[]
 
   @@index([workspace_id])
   @@index([location_id])

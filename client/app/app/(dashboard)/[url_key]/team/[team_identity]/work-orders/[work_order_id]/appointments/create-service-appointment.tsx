@@ -20,13 +20,14 @@ import {
 import { CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { RouterOutput } from "@/trpc/client";
+import { api, RouterOutput } from "@/trpc/client";
 import { formatDateRange } from "little-date";
 import { DateRange } from "react-day-picker";
 import { TimePickerInput } from "@/components/time-picker-input";
 import { Label } from "@/components/ui/label";
-import { PopoverComboBox } from "@/components/popoverCombobox";
+import { PopoverComboBox } from "./serviceResourceCombobox";
 import { Icons } from "@/components/icons";
+import { AutoComplete } from "@/components/autoComplete";
 
 interface CreateServiceAppointmentProps {
   work_order: RouterOutput["db"]["work_order"]["get"]["detail"];
@@ -200,29 +201,31 @@ export function CreateServiceAppointment({
           date={selectedDate}
           selectedTimeSlot={selectedTimeSlot}
           onSelectTimeSlot={(time) => handleTimeSlotSelect(time)}
-          appointments={[
-            {
-              id: "1",
-              start_date: new Date().toISOString(),
-              end_date: addHours(new Date(), 1).toISOString(),
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString(),
-              team_id: "1",
-              work_order_id: "1",
-              work_order_item_id: "1",
-              workspace_id: "1",
-            },
-          ]}
+          appointments={[]}
           disabledSlots={disabledSlots}
           className="h-[24rem] rounded-md border"
         />
       </div>
-      <PopoverComboBox className="w-[20rem]" options={[]} onSelect={() => {}}>
-        <Button className="text-xs font-normal" variant={"outline"}>
+      <PopoverComboBox />
+      {/* <PopoverComboBox
+        className="w-80"
+        options={
+          data?.map((item) => ({
+            label: item.user?.first_name + " " + item.user?.last_name,
+            value: item.id,
+          })) || []
+        }
+        setValue={setValue}
+        isLoading={isFetching}
+        onSelect={(value) => {
+          console.log(value);
+        }}
+      >
+        <Button className="w-80 font-normal" variant={"outline"}>
           <Icons.search className="mr-2 h-4 w-4" />
-          Add Service Resource
+          <span>Select Employee</span>
         </Button>
-      </PopoverComboBox>
+      </PopoverComboBox> */}
     </div>
   );
 }

@@ -39,7 +39,7 @@ export function AppointmentModal({ children }: PropsWithChildren) {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog modal={false} open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant={"outline"}>Create Service Appointment</Button>
       </DialogTrigger>

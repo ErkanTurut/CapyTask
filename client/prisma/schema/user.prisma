@@ -1,17 +1,19 @@
 model user {
-  id           String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  image_uri    String?
-  email        String         @unique
-  first_name   String?
-  last_name    String?
-  createdAt    DateTime       @default(now()) @db.Timestamptz(6)
-  updatedAt    DateTime       @default(now()) @updatedAt @db.Timestamptz(6)
-  external_id  String?        @unique @db.Uuid
-  company_user company_user[]
-  work_order   work_order[]
-
+  id               String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  image_uri        String?
+  email            String                   @unique
+  first_name       String?
+  last_name        String?
+  createdAt        DateTime                 @default(now()) @db.Timestamptz(6)
+  updatedAt        DateTime                 @default(now()) @updatedAt @db.Timestamptz(6)
+  external_id      String?                  @unique @db.Uuid
+  full_name        Unsupported("tsvector")? @default(dbgenerated("to_tsvector('simple'::regconfig, ((COALESCE(first_name, ''::text) || ' '::text) || COALESCE(last_name, ''::text)))"))
+  company_user     company_user[]
+  service_resource service_resource[]
+  team_user        team_user[]
+  work_order       work_order[]
   workspace        workspace[]
   workspace_user   workspace_user[]
-  team_user        team_user[]
-  service_resource service_resource[]
+
+  @@index([full_name], type: Gin)
 }
