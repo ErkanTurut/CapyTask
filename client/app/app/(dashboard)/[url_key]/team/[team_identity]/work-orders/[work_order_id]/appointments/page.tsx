@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ServiceAppointmentTable } from "@/components/tables/service-appointment/service-appointment-table";
 import { Button } from "@/components/ui/button";
 import { AppointmentModal } from "./appointment-modal";
+import { ServiceAppointmentCreateForm } from "@/components/forms/service-appointment/service-appointment-create-form";
 
 interface PageProps {
   params: {
@@ -28,7 +29,8 @@ export default async function Page({ params }: PageProps) {
   return (
     <div className="flex h-full flex-col gap-2">
       <AppointmentModal>
-        <CreateServiceAppointment work_order={work_order} />
+        {/* <CreateServiceAppointment work_order={work_order} /> */}
+        <ServiceAppointmentCreateForm work_order={work_order} />
       </AppointmentModal>
       <div className="grid h-full">
         <ServiceAppointmentTable

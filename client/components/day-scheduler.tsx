@@ -31,8 +31,12 @@ const config = {
 };
 
 // Types
-type ServiceAppointment =
-  Database["public"]["Tables"]["service_appointment"]["Row"];
+type ServiceAppointment = {
+  id: string;
+  start_date: Date;
+  end_date: Date;
+  title: string;
+};
 
 interface AppointmentItemProps {
   appointment: ServiceAppointment;
@@ -201,8 +205,6 @@ export const DayScheduler = forwardRef<DaySchedulerRef, DaySchedulerProps>(
     if (!date) {
       return "Pick a date range";
     }
-
-    console.log(appointments);
 
     const scrollViewportRef = useRef<HTMLDivElement>(null);
     const timeSlotRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});

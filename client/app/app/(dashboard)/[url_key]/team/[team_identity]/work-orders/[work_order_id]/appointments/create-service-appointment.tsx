@@ -25,9 +25,10 @@ import { formatDateRange } from "little-date";
 import { DateRange } from "react-day-picker";
 import { TimePickerInput } from "@/components/time-picker-input";
 import { Label } from "@/components/ui/label";
-import { PopoverComboBox } from "./serviceResourceCombobox";
+import { ServiceResourceComboBox } from "./serviceResourceCombobox";
 import { Icons } from "@/components/icons";
-import { AutoComplete } from "@/components/autoComplete";
+import { Badge } from "@/components/ui/badge";
+import { PopoverComboBox } from "@/components/popoverCombobox";
 
 interface CreateServiceAppointmentProps {
   work_order: RouterOutput["db"]["work_order"]["get"]["detail"];
@@ -61,7 +62,6 @@ export function CreateServiceAppointment({
   };
 
   const handleTimeSlotSelect = (timeSlot: DateRange) => {
-    console.log(timeSlot);
     setSelectedTimeSlot(timeSlot);
   };
 
@@ -79,6 +79,28 @@ export function CreateServiceAppointment({
 
     return slots;
   }, [selectedDate]);
+
+  const [selectedServiceResource, setSelectedServiceResource] = useState<
+    string[]
+  >([]);
+  const handleSelectServiceResource = (value: string) => {
+    if (selectedServiceResource.includes(value)) {
+      setSelectedServiceResource(
+        selectedServiceResource.filter((id) => id !== value),
+      );
+    } else {
+      setSelectedServiceResource([...selectedServiceResource, value]);
+    }
+  };
+
+  const { data: service_appointment } =
+    api.db.service_appointment.get.byServiceResource.useQuery({
+      service_resource_id: selectedServiceResource,
+      dateRange: {
+        from: startOfDay(selectedDate).toISOString(),
+        to: endOfDay(selectedDate).toISOString(),
+      },
+    });
 
   return (
     <div className="grid h-full gap-4 sm:grid-cols-2">
@@ -201,31 +223,57 @@ export function CreateServiceAppointment({
           date={selectedDate}
           selectedTimeSlot={selectedTimeSlot}
           onSelectTimeSlot={(time) => handleTimeSlotSelect(time)}
-          appointments={[]}
+          appointments={
+            service_appointment?.data?.map((appointment) => ({
+              id: appointment.id,
+              start_date: new Date(appointment.start_date),
+              end_date: new Date(appointment.end_date),
+              title: "test",
+            })) ?? []
+          }
           disabledSlots={disabledSlots}
           className="h-[24rem] rounded-md border"
         />
       </div>
-      <PopoverComboBox />
-      {/* <PopoverComboBox
-        className="w-80"
-        options={
-          data?.map((item) => ({
-            label: item.user?.first_name + " " + item.user?.last_name,
-            value: item.id,
-          })) || []
-        }
-        setValue={setValue}
-        isLoading={isFetching}
-        onSelect={(value) => {
-          console.log(value);
-        }}
-      >
-        <Button className="w-80 font-normal" variant={"outline"}>
-          <Icons.search className="mr-2 h-4 w-4" />
-          <span>Select Employee</span>
-        </Button>
-      </PopoverComboBox> */}
+      <div className="flex flex-col gap-2">
+        {/* <PopoverComboBox>
+          <Button variant={"outline"}>
+            <span>Select Work item</span>
+          </Button>
+        </PopoverComboBox> */}
+        <ServiceResourceComboBox
+          selectedValues={selectedServiceResource}
+          onSelect={handleSelectServiceResource}
+        />
+        <div className="flex flex-col gap-2">
+          {selectedServiceResource.map((service_resource_id) => (
+            <div
+              className="flex flex-col rounded-md border p-2"
+              key={service_resource_id}
+            >
+              <div className="flex items-center justify-between">
+                <p className="text-xs">{service_resource_id}</p>
+                <Button
+                  variant={"ghost"}
+                  size={"icon"}
+                  onClick={() => {
+                    setSelectedServiceResource(
+                      selectedServiceResource.filter(
+                        (id) => id !== service_resource_id,
+                      ),
+                    );
+                  }}
+                >
+                  <Icons.trash className="h-4 w-4" />
+                </Button>
+              </div>
+              <div>
+                <Badge variant={"success"}>available</Badge>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

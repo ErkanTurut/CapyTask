@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { protectedProcedure, router } from "../../trpc";
+import { createServiceAppointmentSchema } from "./create.schema";
+import { createServiceAppointmentHandler } from "./create.handler";
 
 export const service_appointment = router({
   get: {
@@ -17,43 +19,31 @@ export const service_appointment = router({
 
         return { data, count };
       }),
+    byServiceResource: protectedProcedure
+      .input(
+        z.object({
+          service_resource_id: z.string().array(),
+          dateRange: z.object({
+            from: z.string(),
+            to: z.string(),
+          }),
+        }),
+      )
+      .query(async ({ ctx, input }) => {
+        return await ctx.db
+          .from("service_appointment")
+          .select("*, assigned_resource!inner(*)", { count: "exact" })
+          .in(
+            "assigned_resource.service_resource_id",
+            input.service_resource_id,
+          )
+          .gte("start_date", input.dateRange.from)
+          .lte("end_date", input.dateRange.to);
+      }),
   },
   create: protectedProcedure
-    .input(
-      z.object({
-        start_date: z.string(),
-        end_date: z.string(),
-        team_id: z.string(),
-        work_order_id: z.string(),
-        workspace_id: z.string(),
-        assigned_resource: z.array(z.string()).optional(),
-        work_order_item_id: z.string(),
-      }),
-    )
+    .input(createServiceAppointmentSchema)
     .mutation(async ({ ctx, input }) => {
-      const { data, error } = await ctx.db
-        .from("service_appointment")
-        .insert(input)
-        .select()
-        .single();
-
-      if (error) {
-        throw error;
-      }
-
-      if (input.assigned_resource) {
-        await ctx.db
-          .from("assigned_resource")
-          .upsert(
-            input.assigned_resource.map((resource_id) => ({
-              service_appointment_id: data.id,
-              service_resource_id: resource_id,
-            })),
-            {
-              onConflict: "service_appointment_id,service_resource_id",
-            },
-          )
-          .select();
-      }
+      return await createServiceAppointmentHandler({ db: ctx.db, input });
     }),
 });

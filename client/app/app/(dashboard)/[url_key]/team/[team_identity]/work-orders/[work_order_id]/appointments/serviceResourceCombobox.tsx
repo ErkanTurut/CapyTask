@@ -22,21 +22,24 @@ import { cn } from "@/lib/utils";
 import { api, RouterOutput } from "@/trpc/client";
 import { useRef, useState } from "react";
 
-interface ComboBoxProps<T> {
+interface ServiceResourceComboBoxProps<T> {
   placeholder?: string;
   className?: string;
+  selectedValues: string[];
+  onSelect: (value: string) => void;
 }
 
-export function PopoverComboBox<T extends string>({
+export function ServiceResourceComboBox<T extends string>({
   placeholder = "Type to search...",
   className,
-}: ComboBoxProps<T>) {
+  selectedValues,
+  onSelect,
+}: ServiceResourceComboBoxProps<T>) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [value, setValue] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [isTyping, setIsTyping] = useState(false);
-  const [selectedValues, setSelectedValues] = useState<string[]>([]);
   const { data: service_resource, isFetching } =
     api.db.service_resource.get.textSearch.useQuery({
       search: value,
@@ -46,7 +49,7 @@ export function PopoverComboBox<T extends string>({
     if (e === "") {
       return;
     }
-    await setValue(e);
+    setValue(e);
   }, 400);
 
   const handleTyping = async (e: string) => {
@@ -91,12 +94,19 @@ export function PopoverComboBox<T extends string>({
                 <CommandItem
                   key={service_resource.id}
                   value={service_resource.id}
-                  onSelect={async () => {
-                    // setSelectedValues([...selectedValues, service_resource]);
-                    setOpen(false);
+                  onSelect={async (value) => {
+                    onSelect(value);
                   }}
                 >
                   <div className="flex items-center gap-2">
+                    <Icons.checkCircled
+                      className={cn(
+                        "mr-2 h-4 w-4",
+                        selectedValues.includes(service_resource.id)
+                          ? "opacity-100"
+                          : "opacity-0",
+                      )}
+                    />
                     <span>
                       {service_resource.user?.first_name}{" "}
                       {service_resource.user?.last_name}

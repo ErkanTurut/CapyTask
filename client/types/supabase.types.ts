@@ -334,7 +334,7 @@ export type Database = {
           team_id: string
           updated_at: string
           work_order_id: string
-          work_order_item_id: string
+          work_order_item_id: string | null
           workspace_id: string
         }
         Insert: {
@@ -345,7 +345,7 @@ export type Database = {
           team_id: string
           updated_at?: string
           work_order_id: string
-          work_order_item_id: string
+          work_order_item_id?: string | null
           workspace_id: string
         }
         Update: {
@@ -356,7 +356,7 @@ export type Database = {
           team_id?: string
           updated_at?: string
           work_order_id?: string
-          work_order_item_id?: string
+          work_order_item_id?: string | null
           workspace_id?: string
         }
         Relationships: [
