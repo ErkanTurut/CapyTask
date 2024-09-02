@@ -37,6 +37,7 @@ model assigned_resource {
   service_appointment    service_appointment @relation(fields: [service_appointment_id], references: [id], onDelete: Cascade)
   service_resource       service_resource    @relation(fields: [service_resource_id], references: [id])
 
+  @@unique([service_appointment_id, service_resource_id])
   @@index([service_appointment_id])
   @@index([service_resource_id])
 }

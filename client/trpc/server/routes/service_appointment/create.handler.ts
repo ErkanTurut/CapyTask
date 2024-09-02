@@ -18,8 +18,8 @@ export const createServiceAppointmentHandler = async ({
       work_order_id: input.work_order_id,
       team_id: input.team_id,
       workspace_id: input.workspace_id,
-      start_date: input.start_date,
-      end_date: input.end_date,
+      start_date: input.date_range.from,
+      end_date: input.date_range.to,
       work_order_item_id: input.work_order_item_id,
     })
     .select()
@@ -29,14 +29,19 @@ export const createServiceAppointmentHandler = async ({
     throw error;
   }
 
-  if (input.assigned_resource) {
-    const assigned_resources = input.assigned_resource.map((resource) => ({
+  if (input.service_resource) {
+    const service_resources = input.service_resource.map((resource) => ({
       service_appointment_id: data.id,
-      service_resource_id: resource,
+      service_resource_id: resource.id,
     }));
-    await db.from("assigned_resource").upsert(assigned_resources, {
-      onConflict: "service_appointment_id,service_resource_id",
-    });
+    const { data: assigned_resources, error: assigned_resources_error } =
+      await db.from("assigned_resource").upsert(service_resources, {
+        onConflict: "service_appointment_id,service_resource_id",
+      });
+
+    if (assigned_resources_error) {
+      throw assigned_resources_error;
+    }
   }
 
   return data;

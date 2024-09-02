@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { service_resource } from "../service_resource/_router";
 export const assignedResourceSchema = z.object({
   id: z.string(),
   created_at: z.string(),
@@ -14,10 +15,16 @@ export const createServiceAppointmentSchema = z.object({
     from: z.string().datetime(),
     to: z.string().datetime(),
   }),
-  // start_date: z.string(),
-  // end_date: z.string(),
+
   work_order_item_id: z.string().nullish(),
-  assigned_resource: z.array(assignedResourceSchema).optional(),
+  service_resource: z
+    .object({
+      id: z.string(),
+      first_name: z.string(),
+      last_name: z.string(),
+    })
+    .array()
+    .optional(),
 });
 
 export type TCreateServiceAppointmentSchema = z.infer<
