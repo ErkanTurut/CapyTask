@@ -1,10 +1,8 @@
-import { trpc } from "@/trpc/server";
-import { CreateServiceAppointment } from "./create-service-appointment";
-import { notFound } from "next/navigation";
-import { ServiceAppointmentTable } from "@/components/tables/service-appointment/service-appointment-table";
-import { Button } from "@/components/ui/button";
-import { AppointmentModal } from "./appointment-modal";
 import { ServiceAppointmentCreateForm } from "@/components/forms/service-appointment/service-appointment-create-form";
+import { ServiceAppointmentTable } from "@/components/tables/service-appointment/service-appointment-table";
+import { trpc } from "@/trpc/server";
+import { notFound } from "next/navigation";
+import { AppointmentModal } from "./appointment-modal";
 
 interface PageProps {
   params: {
