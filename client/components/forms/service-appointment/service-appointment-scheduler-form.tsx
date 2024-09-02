@@ -128,20 +128,6 @@ export default function ServiceAppointmentSchedulerForm({
                 }}
                 initialFocus
                 className="border-b border-dashed"
-                // disabled={(date) => {
-                //   const scheduledStart = work_order.sheduled_start
-                //     ? new Date(work_order.sheduled_start)
-                //     : null;
-                //   const scheduledEnd = work_order.sheduled_end
-                //     ? new Date(work_order.sheduled_end)
-                //     : null;
-
-                //   if (!scheduledStart || !scheduledEnd) {
-                //     return false; // If either date is null, don't disable any dates
-                //   }
-
-                //   return date < scheduledStart || date > scheduledEnd;
-                // }}
               />
               <div className="flex w-full items-center justify-between p-2">
                 <div className="flex w-full items-start gap-2">
@@ -152,7 +138,12 @@ export default function ServiceAppointmentSchedulerForm({
                     <TimePickerInput
                       picker="hours"
                       date={new Date(field.value.from)}
-                      setDate={field.onChange}
+                      setDate={(date) =>
+                        field.onChange({
+                          ...field.value,
+                          from: date?.toISOString(),
+                        })
+                      }
                       ref={fromHourRef}
                       onRightFocus={() => fromMinuteRef.current?.focus()}
                     />
@@ -164,7 +155,12 @@ export default function ServiceAppointmentSchedulerForm({
                     <TimePickerInput
                       picker="minutes"
                       date={new Date(field.value.from)}
-                      setDate={field.onChange}
+                      setDate={(date) =>
+                        field.onChange({
+                          ...field.value,
+                          from: date?.toISOString(),
+                        })
+                      }
                       ref={fromMinuteRef}
                       onLeftFocus={() => fromHourRef.current?.focus()}
                     />
@@ -179,7 +175,12 @@ export default function ServiceAppointmentSchedulerForm({
                     <TimePickerInput
                       picker="hours"
                       date={new Date(field.value.to)}
-                      setDate={field.onChange}
+                      setDate={(date) =>
+                        field.onChange({
+                          ...field.value,
+                          to: date?.toISOString(),
+                        })
+                      }
                       ref={toHourRef}
                       onRightFocus={() => toMinuteRef.current?.focus()}
                     />
@@ -191,7 +192,12 @@ export default function ServiceAppointmentSchedulerForm({
                     <TimePickerInput
                       picker="minutes"
                       date={new Date(field.value.to)}
-                      setDate={field.onChange}
+                      setDate={(date) =>
+                        field.onChange({
+                          ...field.value,
+                          to: date?.toISOString(),
+                        })
+                      }
                       ref={toMinuteRef}
                       onLeftFocus={() => toHourRef.current?.focus()}
                     />
@@ -206,18 +212,13 @@ export default function ServiceAppointmentSchedulerForm({
               from: new Date(field.value.from),
               to: new Date(field.value.to),
             }}
-            onSelectTimeSlot={(time) => field.onChange(time)}
-            appointments={
-              []
-              // service_appointment?.data?.map((appointment) => ({
-              //   id: appointment.id,
-              //   start_date: new Date(appointment.start_date),
-              //   end_date: new Date(appointment.end_date),
-              //   title: "test",
-              // })) ?? []
+            onSelectTimeSlot={(time) =>
+              field.onChange({
+                from: time.from?.toISOString(),
+                to: time.to?.toISOString(),
+              })
             }
-            // disabledSlots={disabledSlots}
-
+            appointments={[]}
             className="h-[24rem] rounded-md border"
           />
         </FormItem>

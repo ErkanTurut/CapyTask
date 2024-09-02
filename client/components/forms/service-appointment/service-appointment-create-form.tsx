@@ -16,6 +16,9 @@ import {
   TCreateServiceAppointmentSchema,
 } from "@/trpc/server/routes/service_appointment/create.schema";
 import ServiceAppointmentSchedulerForm from "./service-appointment-scheduler-form";
+import { ServiceAppointmentServiceResourceForm } from "./service-appointment-service-resource-form";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface ServiceAppointmentCreateFormProps
   extends React.HTMLAttributes<HTMLFormElement> {
@@ -26,9 +29,14 @@ export function ServiceAppointmentCreateForm({
   work_order,
   className,
 }: ServiceAppointmentCreateFormProps) {
-  const { mutate, isPending } = api.db.service_appointment.create.useMutation(
-    {},
-  );
+  const { mutate, isPending } = api.db.service_appointment.create.useMutation({
+    onSuccess: () => {
+      toast.success("Service Appointment created successfully");
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
 
   const firstAvailableSlotOfTheDay = useMemo(() => {
     const start = work_order.sheduled_start
@@ -51,18 +59,21 @@ export function ServiceAppointmentCreateForm({
   // react-hook-form
   const form = useForm<TCreateServiceAppointmentSchema>({
     resolver: zodResolver(createServiceAppointmentSchema),
-    defaultValues: {
+
+    values: {
       work_order_id: work_order.id,
       team_id: work_order.team_id,
-      workspace_id: work_order.company_id,
+      workspace_id: work_order.workspace_id,
       date_range: {
         from: firstAvailableSlotOfTheDay.from,
         to: firstAvailableSlotOfTheDay.to,
       },
       work_order_item_id: undefined,
-      assigned_resource: [],
+      service_resource: [],
     },
   });
+
+  console.log(form.formState.errors);
 
   return (
     <Form {...form}>
@@ -84,7 +95,14 @@ export function ServiceAppointmentCreateForm({
             }}
           />
         </div>
-        <div className="flex flex-col gap-2"></div>
+        <div className="flex flex-col gap-2">
+          <ServiceAppointmentServiceResourceForm form={form} />
+        </div>
+        <div className="col-span-full flex justify-end">
+          <Button isLoading={isPending} type="submit">
+            Create Service Appointment
+          </Button>
+        </div>
       </form>
     </Form>
   );
