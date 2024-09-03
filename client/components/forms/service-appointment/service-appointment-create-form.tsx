@@ -78,7 +78,10 @@ export function ServiceAppointmentCreateForm({
   return (
     <Form {...form}>
       <form
-        className={cn("grid h-full gap-4 sm:grid-cols-2", className)}
+        className={cn(
+          "grid h-full gap-4 overflow-hidden sm:grid-cols-2",
+          className,
+        )}
         onSubmit={(...args) =>
           void form.handleSubmit((data) => {
             mutate(data);
@@ -95,9 +98,9 @@ export function ServiceAppointmentCreateForm({
             }}
           />
         </div>
-        <div className="flex flex-col gap-2">
-          <ServiceAppointmentServiceResourceForm form={form} />
-        </div>
+
+        <ServiceAppointmentServiceResourceForm form={form} />
+
         <div className="col-span-full flex justify-end">
           <Button isLoading={isPending} type="submit">
             Create Service Appointment

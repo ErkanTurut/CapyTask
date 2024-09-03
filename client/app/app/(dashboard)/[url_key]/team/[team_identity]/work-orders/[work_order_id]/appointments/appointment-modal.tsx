@@ -43,7 +43,7 @@ export function AppointmentModal({ children }: PropsWithChildren) {
       <DialogTrigger asChild>
         <Button variant={"outline"}>Create Service Appointment</Button>
       </DialogTrigger>
-      <DialogContent className="max-w-3xl">
+      <DialogContent className="h-[80vh] max-w-3xl">
         <DialogHeader>
           <DialogTitle>Create Service Appointment</DialogTitle>
         </DialogHeader>

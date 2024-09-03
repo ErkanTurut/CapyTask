@@ -43,26 +43,6 @@ export default function ServiceAppointmentSchedulerForm({
   const [selectedDate, setSelectedDate] = useState<Date>(
     new Date(dateRange.from || new Date()),
   );
-
-  // const [selectedTimeSlot, setSelectedTimeSlot] = useState<DateRange>({
-  //   from: undefined,
-  //   to: undefined,
-  // });
-
-  // const handleDateSelect = (date: Date | undefined) => {
-  //   if (date) {
-  //     setSelectedDate(date);
-  //     setSelectedTimeSlot({
-  //       from: undefined,
-  //       to: undefined,
-  //     });
-  //   }
-  // };
-
-  // const handleTimeSlotSelect = (timeSlot: DateRange) => {
-  //   setSelectedTimeSlot(timeSlot);
-  // };
-
   // const disabledSlots = useMemo(() => {
   //   const slots: Date[] = [];
   //   let current = startOfDay(selectedDate);
@@ -77,29 +57,6 @@ export default function ServiceAppointmentSchedulerForm({
 
   //   return slots;
   // }, [selectedDate]);
-
-  // const [selectedServiceResource, setSelectedServiceResource] = useState<
-  //   string[]
-  // >([]);
-  // const handleSelectServiceResource = (value: string) => {
-  //   if (selectedServiceResource.includes(value)) {
-  //     setSelectedServiceResource(
-  //       selectedServiceResource.filter((id) => id !== value),
-  //     );
-  //   } else {
-  //     setSelectedServiceResource([...selectedServiceResource, value]);
-  //   }
-  // };
-
-  // const { data: service_appointment } =
-  //   api.db.service_appointment.get.byServiceResource.useQuery({
-  //     service_resource_id: selectedServiceResource,
-  //     dateRange: {
-  //       from: startOfDay(selectedDate).toISOString(),
-  //       to: endOfDay(selectedDate).toISOString(),
-  //     },
-  //   });
-
   return (
     <FormField
       control={form.control}

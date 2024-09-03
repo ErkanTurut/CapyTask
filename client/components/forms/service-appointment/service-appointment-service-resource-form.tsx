@@ -26,7 +26,6 @@ import { useDebouncedCallback } from "use-debounce";
 import * as React from "react";
 
 import { Icons } from "@/components/icons";
-import { Badge } from "@/components/ui/badge";
 
 interface ServiceAppointmentServiceResourceFormProps {
   form: UseFormReturn<TCreateServiceAppointmentSchema>;
@@ -36,7 +35,6 @@ export function ServiceAppointmentServiceResourceForm({
   form,
 }: ServiceAppointmentServiceResourceFormProps) {
   const [value, setValue] = React.useState("");
-
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "service_resource",
@@ -70,7 +68,7 @@ export function ServiceAppointmentServiceResourceForm({
   };
 
   return (
-    <>
+    <div className="flex h-full flex-col gap-2 overflow-hidden">
       <ServiceResourceComboBox
         selectedValues={fields.map((field) => field.id)}
         onSelect={handleSelectServiceResource}
@@ -79,28 +77,15 @@ export function ServiceAppointmentServiceResourceForm({
         isLoading={isFetching}
         service_resource={service_resource ?? []}
       />
-      <div className="flex flex-col gap-2">
-        {fields.map((field, index) => (
-          <div className="flex flex-col rounded-md border p-2" key={field.id}>
-            <div className="flex items-center justify-between">
-              <p className="text-xs">{field.first_name}</p>
-              <Button
-                variant={"ghost"}
-                size={"icon"}
-                onClick={() => {
-                  remove(index);
-                }}
-              >
-                <Icons.trash className="h-4 w-4" />
-              </Button>
-            </div>
-            <div>
-              <Badge variant={"success"}>available</Badge>
-            </div>
-          </div>
+      <div className="flex flex-1 flex-col gap-4 overflow-hidden">
+        {fields.map((service_resource) => (
+          <ProfileCard
+            key={service_resource.id}
+            name={`${service_resource.first_name} ${service_resource.last_name}`}
+          />
         ))}
       </div>
-    </>
+    </div>
   );
 }
 
@@ -215,5 +200,42 @@ export function ServiceResourceComboBox<T extends string>({
         </Command>
       </PopoverContent>
     </Popover>
+  );
+}
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+interface ProfileCardProps {
+  name: string;
+  avatarUrl?: string;
+}
+
+export function ProfileCard({ name, avatarUrl }: ProfileCardProps) {
+  const initials = name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase();
+
+  return (
+    <div className="flex w-full items-center justify-between rounded-md border border-transparent px-2 py-1 transition-all duration-300 hover:border-border hover:shadow-sm">
+      <div className="flex items-center gap-2">
+        <Avatar className="h-6 w-6 border">
+          <AvatarImage
+            src={
+              avatarUrl ||
+              `https://avatar.vercel.sh/${name}.svg?text=${initials}`
+            }
+            alt={name}
+          />
+          <AvatarFallback className="text-[0.6rem]">{initials}</AvatarFallback>
+        </Avatar>
+        <h3 className="text-sm font-medium">{name}</h3>
+        <Icons.questionMarkCircled className="h-4 w-4 text-muted-foreground" />
+      </div>
+      <Button type="button" variant="secondary" size="sm">
+        Assign
+      </Button>
+    </div>
   );
 }

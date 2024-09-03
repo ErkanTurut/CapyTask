@@ -11,10 +11,13 @@ export const service_resource = router({
         }),
       )
       .query(async ({ ctx: { db }, input }) => {
+        // transform space to %
+        const search = input.search.replace(/ /g, "%");
+
         const { data, error } = await db
           .from("service_resource")
           .select("*, user!inner(*)")
-          .textSearch("user.full_name", input.search);
+          .textSearch("user.full_name", search);
 
         if (error) {
           throw error;

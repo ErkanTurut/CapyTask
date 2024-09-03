@@ -47,6 +47,8 @@ import {
   ArrowUpIcon,
   ArrowBottomLeftIcon,
   ArrowLeftIcon,
+  ArrowDownIcon,
+  QuestionMarkCircledIcon,
 } from "@radix-ui/react-icons";
 import {
   LucideProps,
@@ -208,6 +210,8 @@ export const Icons = {
   arrowUp: ArrowUpIcon,
   arrowBottomLeft: ArrowBottomLeftIcon,
   arrowLeft: ArrowLeftIcon,
+  arrowDown: ArrowDownIcon,
+  questionMarkCircled: QuestionMarkCircledIcon,
 
   greenPulse: (props: LucideProps) => pulse({ colorValue: "green", props }),
   redPulse: (props: LucideProps) => pulse({ colorValue: "red", props }),
