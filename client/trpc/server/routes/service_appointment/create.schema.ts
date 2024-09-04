@@ -7,6 +7,7 @@ export const assignedResourceSchema = z.object({
   service_resource_id: z.string(),
   service_appointment_id: z.string(),
 });
+
 export const createServiceAppointmentSchema = z.object({
   work_order_id: z.string(),
   team_id: z.string(),
@@ -20,8 +21,6 @@ export const createServiceAppointmentSchema = z.object({
   service_resource: z
     .object({
       id: z.string(),
-      first_name: z.string(),
-      last_name: z.string(),
     })
     .array()
     .optional(),
