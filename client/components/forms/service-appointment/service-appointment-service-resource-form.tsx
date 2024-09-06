@@ -72,20 +72,22 @@ export function ServiceAppointmentServiceResourceForm({
       <Button
         type="button"
         onClick={async () => {
-          const { object } = await generate("test");
+          const { object } = await generate("Messages during finals week.");
 
           for await (const partialObject of readStreamableValue(object)) {
             if (partialObject) {
-              setGeneration(JSON.stringify(partialObject, null, 2));
+              setGeneration(
+                JSON.stringify(partialObject.recommendations, null, 2),
+              );
             }
           }
         }}
       >
         Generate
       </Button>
-      <pre>{generation}</pre>
 
       <div className="flex flex-1 flex-col gap-2 overflow-hidden">
+        <pre>{generation}</pre>
         {assignedResources.map((assignedResource) => (
           <ProfileCard
             key={assignedResource.id}

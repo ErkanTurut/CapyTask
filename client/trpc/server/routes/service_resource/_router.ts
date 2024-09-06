@@ -37,6 +37,11 @@ export const service_resource = router({
           .select("*, user!inner(*)")
           .textSearch("user.full_name", search);
 
+        const { data: embedding, error: embeddingError } =
+          await db.functions.invoke("embed", {
+            body: JSON.stringify({ input: input.search }),
+          });
+
         if (error) {
           throw error;
         }

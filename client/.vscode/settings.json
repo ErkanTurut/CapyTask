@@ -1,13 +1,15 @@
 {
-  "deno.enablePaths": ["supabase/functions"],
-  "deno.lint": true,
-  "deno.unstable": true,
   "[typescript]": {
     "editor.defaultFormatter": "denoland.vscode-deno"
   },
+  "deno.enablePaths": [
+    "supabase/functions"
+  ],
+  "deno.lint": true,
+  "deno.unstable": true,
   "workbench.editor.customLabels.patterns": {
-    "**/app/**/page.tsx": "${dirname} - Page",
     "**/app/**/layout.tsx": "${dirname} - Layout",
+    "**/app/**/page.tsx": "${dirname} - Page",
     "**/components/**/index.tsx": "${dirname} - Component"
   }
 }
