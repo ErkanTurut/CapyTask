@@ -4,7 +4,7 @@ import { CaretSortIcon, PlusIcon } from "@radix-ui/react-icons";
 import { Table } from "@tanstack/react-table";
 
 import { DataTableViewOptions } from "@/components/tables/data-table/data-table-view-options";
-import { Button } from "@/ui/button";
+import { Button, buttonVariants } from "@/ui/button";
 import { Input } from "@/ui/input";
 
 import { DataTableFilterCombobox } from "@/components/tables/data-table/data-table-filter-combobox";
@@ -13,6 +13,8 @@ import { cn } from "@/lib/utils";
 import type { DataTableFilterField, DataTableFilterOption } from "@/types";
 import { useSearchParams } from "next/navigation";
 import React from "react";
+import Link from "next/link";
+import { Icons } from "@/components/icons";
 
 interface DataTableToolbarProps<TData>
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -115,6 +117,13 @@ export function DataTableToolbar<TData>({
           />
         )}
         <DataTableViewOptions table={table} />
+        <Link
+          className={buttonVariants({ size: "sm", variant: "default" })}
+          href={"./appointments/create"}
+        >
+          <Icons.plusCircled className="mr-2 size-4 shrink-0" />
+          Create
+        </Link>
       </div>
       <div
         className={cn(

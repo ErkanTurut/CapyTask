@@ -3,9 +3,10 @@ import { trpc } from "@/trpc/server";
 import { notFound } from "next/navigation";
 
 import { WorkOrderHeader } from "@/components/dashboard/work-order/work-order-header";
-import WorkOrderMain from "@/components/dashboard/work-order/work-order-main";
+import { WorkOrderMain } from "@/components/dashboard/work-order/work-order-main";
 import TableSkeleton from "@/components/skeletons/table-skeleton";
 import { Suspense } from "react";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -26,14 +27,26 @@ export default async function Layout({ children, params }: LayoutProps) {
   }
 
   return (
-    <Shell>
-      <div className="grid h-full w-full gap-6 lg:grid-cols-[1fr,0.4fr]">
-        <div className="flex h-full w-full flex-col gap-8">
-          <WorkOrderHeader work_order={work_order} />
-          <Suspense fallback={<TableSkeleton />}>{children}</Suspense>
-        </div>
+    // <Shell>
+    //   <div className="grid h-full w-full gap-6 lg:grid-cols-[1fr,0.4fr]">
+    //     <div className="flex h-full w-full flex-col gap-8">
+    //       <WorkOrderHeader work_order={work_order} />
+    //       <Suspense fallback={<TableSkeleton />}>{children}</Suspense>
+    //     </div>
+    //     <WorkOrderMain work_order={work_order} params={params} />
+    //   </div>
+    // </Shell>
+
+    <div className="grid h-full w-full lg:grid-cols-[1fr,0.4fr]">
+      <div>
+        <WorkOrderHeader work_order={work_order} />
+
+        <Suspense fallback={<TableSkeleton />}>{children}</Suspense>
+      </div>
+
+      <div className="h-full border-l">
         <WorkOrderMain work_order={work_order} params={params} />
       </div>
-    </Shell>
+    </div>
   );
 }

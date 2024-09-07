@@ -11,7 +11,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { addMinutes, endOfDay, format, startOfDay } from "date-fns";
+import { addHours, addMinutes, endOfDay, format, startOfDay } from "date-fns";
 import { formatDateRange } from "little-date";
 import { CalendarIcon } from "lucide-react";
 
@@ -25,6 +25,7 @@ import { TCreateServiceAppointmentSchema } from "@/trpc/server/routes/service_ap
 import { api } from "@/trpc/client";
 import { DateRange } from "react-day-picker";
 import { FormField, FormItem } from "@/components/ui/form";
+import ImprovedTimeScheduler from "./time-scheduler";
 
 interface ServiceAppointmentSchedulerFormProps {
   form: UseFormReturn<TCreateServiceAppointmentSchema>;
@@ -43,20 +44,7 @@ export default function ServiceAppointmentSchedulerForm({
   const [selectedDate, setSelectedDate] = useState<Date>(
     new Date(dateRange.from || new Date()),
   );
-  // const disabledSlots = useMemo(() => {
-  //   const slots: Date[] = [];
-  //   let current = startOfDay(selectedDate);
-  //   const end = endOfDay(selectedDate);
 
-  //   while (current < end) {
-  //     if (current.getHours() < 7 || current.getHours() >= 20) {
-  //       slots.push(new Date(current));
-  //     }
-  //     current = addMinutes(current, 60);
-  //   }
-
-  //   return slots;
-  // }, [selectedDate]);
   return (
     <FormField
       control={form.control}
@@ -163,7 +151,7 @@ export default function ServiceAppointmentSchedulerForm({
               </div>
             </PopoverContent>
           </Popover>
-          <DayScheduler
+          {/* <DayScheduler
             date={selectedDate}
             selectedTimeSlot={{
               from: new Date(field.value.from),
@@ -175,8 +163,40 @@ export default function ServiceAppointmentSchedulerForm({
                 to: time.to?.toISOString(),
               })
             }
-            appointments={[]}
+            appointments={[
+              {
+                id: "skldl",
+                start_date: new Date(),
+                end_date: addHours(new Date(), 1),
+                title: "yo",
+              },
+              {
+                id: "dddd",
+                start_date: new Date(),
+                end_date: addHours(new Date(), 1),
+                title: "dd",
+              },
+            ]}
             className="h-[24rem] rounded-md border"
+          /> */}
+          <ImprovedTimeScheduler
+            date={selectedDate}
+            appointments={[
+              {
+                id: "skldl",
+                start: new Date(),
+                end: addHours(new Date(), 1),
+                title: "yo",
+              },
+              {
+                id: "dddd",
+                start: new Date(),
+                end: addHours(new Date(), 1),
+                title: "dd",
+              },
+            ]}
+            onSelectTimeSlot={(e) => console.log(e)}
+            onSelectAppointment={(e) => console.log(e)}
           />
         </FormItem>
       )}
