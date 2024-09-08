@@ -38,12 +38,10 @@ export default async function Layout({ children, params }: LayoutProps) {
     // </Shell>
 
     <div className="grid h-full w-full lg:grid-cols-[1fr,0.4fr]">
-      <div>
+      <ScrollArea>
         <WorkOrderHeader work_order={work_order} />
-
         <Suspense fallback={<TableSkeleton />}>{children}</Suspense>
-      </div>
-
+      </ScrollArea>
       <div className="h-full border-l">
         <WorkOrderMain work_order={work_order} params={params} />
       </div>
