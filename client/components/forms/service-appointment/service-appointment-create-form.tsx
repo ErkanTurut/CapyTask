@@ -19,6 +19,8 @@ import ServiceAppointmentSchedulerForm from "./service-appointment-scheduler-for
 import { ServiceAppointmentServiceResourceForm } from "./service-appointment-service-resource-form";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import WeekCalendar from "@/components/calendar/week-calendar";
+import { addHours, startOfWeek } from "date-fns";
 
 interface ServiceAppointmentCreateFormProps
   extends React.HTMLAttributes<HTMLFormElement> {
@@ -59,7 +61,6 @@ export function ServiceAppointmentCreateForm({
   // react-hook-form
   const form = useForm<TCreateServiceAppointmentSchema>({
     resolver: zodResolver(createServiceAppointmentSchema),
-
     values: {
       work_order_id: work_order.id,
       team_id: work_order.team_id,
@@ -72,8 +73,6 @@ export function ServiceAppointmentCreateForm({
       service_resource: [],
     },
   });
-
-  console.log(form.formState.errors);
 
   return (
     <Form {...form}>
@@ -105,6 +104,27 @@ export function ServiceAppointmentCreateForm({
           <Button isLoading={isPending} type="submit">
             Create Service Appointment
           </Button>
+        </div>
+        <div className="col-span-full">
+          <WeekCalendar
+            initialTimeFormat="24h"
+            events={[
+              {
+                start: new Date("2024-09-10T12:30:00"),
+                end: new Date("2024-09-10T14:30:00"),
+                title: "Test",
+                color: "blue",
+                id: "1",
+              },
+            ]}
+            disabledTimeRanges={[
+              {
+                start: new Date("2024-09-10T00:00:00"),
+                end: new Date("2024-09-10T07:00:00"),
+              },
+            ]}
+            startDate={new Date()}
+          />
         </div>
       </form>
     </Form>

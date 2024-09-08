@@ -36,7 +36,7 @@ export function ServiceAppointmentServiceResourceForm({
   const { data: service_resource, isFetching } =
     api.db.service_resource.get.textSearch.useQuery(
       { search: value },
-      { refetchOnMount: false },
+      { refetchOnMount: false, initialData: [] },
     );
 
   const handleSelectServiceResource = (selectedId: string) => {

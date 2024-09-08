@@ -1,3 +1,5 @@
+"use client";
+
 import React, {
   useState,
   useRef,
@@ -15,20 +17,10 @@ import {
   differenceInMinutes,
   isSameDay,
 } from "date-fns";
-import { cn, formatDate } from "@/lib/utils";
-import { Database } from "@/types/supabase.types";
+import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useIsMounted } from "@/lib/hooks/use-is-mounted";
 import { DateRange } from "react-day-picker";
 import { Resizable } from "re-resizable";
-
-// Configuration object
-const config = {
-  timeSlotInterval: 60,
-  dayStartHour: 0,
-  dayEndHour: 24,
-  pixelsPerMinute: 1,
-};
 
 // Types
 type ServiceAppointment = {
@@ -38,33 +30,18 @@ type ServiceAppointment = {
   title: string;
 };
 
-interface AppointmentItemProps {
-  appointment: ServiceAppointment;
-  dayStart: Date;
-  pixelsPerMinute: number;
-}
-
-interface TimeSlotItemProps {
-  time: Date;
-  height: number;
-  isSelected: boolean;
-  isDisabled: boolean;
-  onClick: () => void;
-}
-
-interface SelectedTimeSlotOverlayProps {
-  range: DateRange;
-  dayStart: Date;
-  pixelsPerMinute: number;
-  onResize: (height: string) => void;
-}
-
 interface DaySchedulerProps extends React.HTMLAttributes<HTMLDivElement> {
   date: Date;
   appointments: ServiceAppointment[];
   selectedTimeSlot?: DateRange;
   onSelectTimeSlot?: (range: DateRange) => void;
   disabledSlots?: Date[];
+  config?: {
+    timeSlotInterval: number;
+    dayStartHour: number;
+    dayEndHour: number;
+    pixelsPerMinute: number;
+  };
 }
 
 export interface DaySchedulerRef {
@@ -88,56 +65,64 @@ const generateTimeSlots = (
 
 // Components
 const TimeSlotItem = React.memo(
-  forwardRef<HTMLDivElement, TimeSlotItemProps>(
-    ({ time, height, isSelected, isDisabled, onClick }, ref) => (
-      <div
-        ref={ref}
-        className={cn(
-          "flex cursor-pointer border-t border-gray-200",
-          isSelected ? "bg-primary-foreground" : "",
-          isDisabled ? "cursor-not-allowed border bg-muted opacity-50" : "",
-        )}
-        style={{ height: `${height}px` }}
-        onClick={isDisabled ? undefined : onClick}
-      >
-        <div className="w-16 py-1 pr-2 text-right text-xs text-gray-500">
-          {format(time, "HH:mm")}
-        </div>
-        <div className="relative flex-1"></div>
+  forwardRef<
+    HTMLDivElement,
+    {
+      time: Date;
+      height: number;
+      isSelected: boolean;
+      isDisabled: boolean;
+      onClick: () => void;
+    }
+  >(({ time, height, isSelected, isDisabled, onClick }, ref) => (
+    <div
+      ref={ref}
+      className={cn(
+        "flex cursor-pointer border-t border-gray-200",
+        isSelected ? "bg-primary-foreground" : "",
+        isDisabled ? "cursor-not-allowed border bg-muted opacity-50" : "",
+      )}
+      style={{ height: `${height}px` }}
+      onClick={isDisabled ? undefined : onClick}
+    >
+      <div className="w-16 py-1 pr-2 text-right text-xs text-gray-500">
+        {format(time, "HH:mm")}
       </div>
-    ),
-  ),
+      <div className="relative flex-1" />
+    </div>
+  )),
 );
 
 const AppointmentItem = React.memo(
-  forwardRef<HTMLDivElement, AppointmentItemProps>(
-    ({ appointment, dayStart, pixelsPerMinute }, ref) => {
-      const startMinutes = differenceInMinutes(
-        appointment.start_date,
-        dayStart,
-      );
-      const durationMinutes = differenceInMinutes(
-        appointment.end_date,
-        appointment.start_date,
-      );
-      const top = startMinutes * pixelsPerMinute;
-      const height = durationMinutes * pixelsPerMinute;
+  ({
+    appointment,
+    dayStart,
+    pixelsPerMinute,
+  }: {
+    appointment: ServiceAppointment;
+    dayStart: Date;
+    pixelsPerMinute: number;
+  }) => {
+    const startMinutes = differenceInMinutes(appointment.start_date, dayStart);
+    const durationMinutes = differenceInMinutes(
+      appointment.end_date,
+      appointment.start_date,
+    );
+    const top = startMinutes * pixelsPerMinute;
+    const height = durationMinutes * pixelsPerMinute;
 
-      return (
-        <div
-          ref={ref}
-          className="absolute left-16 right-0 overflow-hidden rounded-md bg-gray-400 p-1 text-white"
-          style={{ top: `${top}px`, height: `${height}px`, minHeight: "24px" }}
-        >
-          <div className="text-xs">
-            Appointment (
-            {formatDate({ date: appointment.start_date, format: "LT" })} -{" "}
-            {formatDate({ date: appointment.end_date, format: "LT" })})
-          </div>
+    return (
+      <div
+        className="absolute left-16 right-0 overflow-hidden rounded-md bg-gray-400 p-1 text-white"
+        style={{ top: `${top}px`, height: `${height}px`, minHeight: "24px" }}
+      >
+        <div className="text-xs">
+          {appointment.title} ({format(appointment.start_date, "HH:mm")} -{" "}
+          {format(appointment.end_date, "HH:mm")})
         </div>
-      );
-    },
-  ),
+      </div>
+    );
+  },
 );
 
 const SelectedTimeSlotOverlay = React.memo(
@@ -146,11 +131,13 @@ const SelectedTimeSlotOverlay = React.memo(
     dayStart,
     pixelsPerMinute,
     onResize,
-  }: SelectedTimeSlotOverlayProps) => {
+  }: {
+    range: DateRange;
+    dayStart: Date;
+    pixelsPerMinute: number;
+    onResize: (height: string) => void;
+  }) => {
     if (!range.from || !range.to) return null;
-
-    const endTime = addMinutes(dayStart, config.dayEndHour * 60);
-    const totalMinutes = differenceInMinutes(endTime, range.from);
 
     const startMinutes = differenceInMinutes(range.from, dayStart);
     const durationMinutes = differenceInMinutes(range.to, range.from);
@@ -164,25 +151,12 @@ const SelectedTimeSlotOverlay = React.memo(
           top: `${top}px`,
           height: `${height}px`,
           minHeight: "24px",
-          position: "absolute",
         }}
-        size={{
-          width: "auto",
-          height: `${height}px`,
-        }}
-        snap={{
-          y: Array.from(
-            { length: Math.ceil((totalMinutes * pixelsPerMinute) / 15) },
-            (_, i) => i * 15,
-          ),
-        }}
-        onResize={(_, direction, ref) => {
-          onResize(ref.style.height);
-        }}
+        size={{ width: "auto", height: `${height}px` }}
+        onResize={(_, __, ref) => onResize(ref.style.height)}
       >
         <div className="text-xs">
-          Selected ({formatDate({ date: range.from, format: "LT" })} -{" "}
-          {formatDate({ date: range.to, format: "LT" })})
+          Selected ({format(range.from, "HH:mm")} - {format(range.to, "HH:mm")})
         </div>
       </Resizable>
     );
@@ -199,28 +173,29 @@ export const DayScheduler = forwardRef<DaySchedulerRef, DaySchedulerProps>(
       onSelectTimeSlot,
       disabledSlots = [],
       className,
+      config = {
+        timeSlotInterval: 60,
+        dayStartHour: 0,
+        dayEndHour: 24,
+        pixelsPerMinute: 1,
+      },
     },
     ref,
   ) => {
-    if (!date) {
-      return "Pick a date range";
-    }
-
     const scrollViewportRef = useRef<HTMLDivElement>(null);
     const timeSlotRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
-    const lastDateRef = useRef(date);
 
     const startTime = useMemo(
       () => addMinutes(startOfDay(date), config.dayStartHour * 60),
-      [date],
+      [date, config.dayStartHour],
     );
     const endTime = useMemo(
       () => addMinutes(startOfDay(date), config.dayEndHour * 60),
-      [date],
+      [date, config.dayEndHour],
     );
     const timeSlots = useMemo(
       () => generateTimeSlots(startTime, endTime, config.timeSlotInterval),
-      [startTime, endTime],
+      [startTime, endTime, config.timeSlotInterval],
     );
 
     const filteredAppointments = useMemo(
@@ -258,15 +233,8 @@ export const DayScheduler = forwardRef<DaySchedulerRef, DaySchedulerProps>(
     useImperativeHandle(ref, () => ({ scrollToFirstAvailableSlot }));
 
     useEffect(() => {
-      if (!isSameDay(date, lastDateRef.current)) {
-        scrollToFirstAvailableSlot();
-        lastDateRef.current = date;
-      }
-    }, [date, scrollToFirstAvailableSlot]);
-
-    useEffect(() => {
       scrollToFirstAvailableSlot();
-    }, []);
+    }, [date, scrollToFirstAvailableSlot]);
 
     const handleSlotClick = useCallback(
       (slotTime: Date) => {
@@ -275,8 +243,27 @@ export const DayScheduler = forwardRef<DaySchedulerRef, DaySchedulerProps>(
           onSelectTimeSlot({ from: slotTime, to: endTime });
         }
       },
-      [isSlotDisabled, onSelectTimeSlot],
+      [isSlotDisabled, onSelectTimeSlot, config.timeSlotInterval],
     );
+
+    const handleResizeSelectedSlot = useCallback(
+      (height: string) => {
+        if (selectedTimeSlot?.from && onSelectTimeSlot) {
+          const newEndTime = addMinutes(
+            selectedTimeSlot.from,
+            Math.round(parseInt(height) / config.pixelsPerMinute),
+          );
+          if (newEndTime > selectedTimeSlot.from) {
+            onSelectTimeSlot({ from: selectedTimeSlot.from, to: newEndTime });
+          }
+        }
+      },
+      [selectedTimeSlot, onSelectTimeSlot, config.pixelsPerMinute],
+    );
+
+    if (!date) {
+      return <div className="p-4 text-center">Please select a date</div>;
+    }
 
     return (
       <ScrollArea className={cn("h-[16rem]", className)}>
@@ -313,20 +300,7 @@ export const DayScheduler = forwardRef<DaySchedulerRef, DaySchedulerProps>(
               range={selectedTimeSlot}
               dayStart={startTime}
               pixelsPerMinute={config.pixelsPerMinute}
-              onResize={(height) => {
-                if (selectedTimeSlot?.from) {
-                  const newEndTime = addMinutes(
-                    selectedTimeSlot.from,
-                    Math.round(parseInt(height) / config.pixelsPerMinute),
-                  );
-                  if (onSelectTimeSlot && newEndTime > selectedTimeSlot.from) {
-                    onSelectTimeSlot({
-                      from: selectedTimeSlot.from,
-                      to: newEndTime,
-                    });
-                  }
-                }
-              }}
+              onResize={handleResizeSelectedSlot}
             />
           )}
         </div>
