@@ -15,22 +15,45 @@ import { useSearchParams } from "next/navigation";
 import React from "react";
 import Link from "next/link";
 import { Icons } from "@/components/icons";
+import { api, RouterOutput } from "@/trpc/client";
+import { toast } from "sonner";
 
-interface DataTableToolbarProps<TData>
-  extends React.HTMLAttributes<HTMLDivElement> {
-  table: Table<TData>;
-  filterFields?: DataTableFilterField<TData>[];
+interface DataTableToolbarProps extends React.HTMLAttributes<HTMLDivElement> {
+  table: Table<
+    NonNullable<
+      RouterOutput["db"]["service_appointment"]["get"]["byWorkOrder"]["data"]
+    >[number]
+  >;
+  filterFields?: DataTableFilterField<
+    NonNullable<
+      RouterOutput["db"]["service_appointment"]["get"]["byWorkOrder"]["data"]
+    >[number]
+  >[];
 }
 
-export function DataTableToolbar<TData>({
+export function DataTableToolbar({
   table,
   filterFields = [],
   className,
   ...props
-}: DataTableToolbarProps<TData>) {
+}: DataTableToolbarProps) {
   const searchParams = useSearchParams();
-
-  const options = React.useMemo<DataTableFilterOption<TData>[]>(() => {
+  const utils = api.useUtils();
+  const { mutate, isPending } =
+    api.db.service_appointment.delete.many.useMutation({
+      onSuccess: () => {
+        toast.success("Service Appointment deleted successfully");
+        utils.db.service_appointment.get.byWorkOrder.invalidate();
+        table.toggleAllRowsSelected(false);
+      },
+    });
+  const options = React.useMemo<
+    DataTableFilterOption<
+      NonNullable<
+        RouterOutput["db"]["service_appointment"]["get"]["byWorkOrder"]["data"]
+      >[number]
+    >[]
+  >(() => {
     return filterFields.map((field) => {
       return {
         id: crypto.randomUUID(),
@@ -58,7 +81,11 @@ export function DataTableToolbar<TData>({
   }, [options, searchParams]);
 
   const [selectedOptions, setSelectedOptions] = React.useState<
-    DataTableFilterOption<TData>[]
+    DataTableFilterOption<
+      NonNullable<
+        RouterOutput["db"]["service_appointment"]["get"]["byWorkOrder"]["data"]
+      >[number]
+    >[]
   >(initialSelectedOptions);
   const [openFilterBuilder, setOpenFilterBuilder] = React.useState(
     initialSelectedOptions.length > 0 || false,
@@ -90,6 +117,24 @@ export function DataTableToolbar<TData>({
           />
         </div>
 
+        {(table.getIsAllPageRowsSelected() ||
+          table.getIsSomePageRowsSelected()) && (
+          <Button
+            variant="secondary"
+            size="icon"
+            onClick={() => {
+              mutate({
+                ids: table
+                  .getSelectedRowModel()
+                  .rows.map((row) => row.original.id),
+              });
+            }}
+            className="h-7 w-7"
+            isLoading={isPending}
+          >
+            <Icons.trash className="size-4" />
+          </Button>
+        )}
         {(options.length > 0 && selectedOptions.length > 0) ||
         openFilterBuilder ? (
           <Button

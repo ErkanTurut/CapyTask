@@ -15,7 +15,7 @@ import {
 import * as React from "react";
 
 import { DataTable } from "@/components/tables/data-table/data-table";
-import { RouterOutput } from "@/trpc/client";
+import { api, RouterOutput } from "@/trpc/client";
 import { DataTableFilterField } from "@/types";
 import { Database } from "@/types/supabase.types";
 import {
@@ -30,10 +30,12 @@ import { DataTableToolbar } from "./data-table-toolbar";
 import { getColumns } from "./service-appointment-columns";
 
 interface ServiceAppointmentTableProps {
-  data: NonNullable<
-    RouterOutput["db"]["service_appointment"]["get"]["byWorkOrder"]["data"]
+  initialData: NonNullable<
+    RouterOutput["db"]["service_appointment"]["get"]["byWorkOrder"]
   >;
-  rowCount: number;
+  params: {
+    work_order_id: string;
+  };
 }
 
 export const statuses: {
@@ -75,15 +77,24 @@ export const statuses: {
 ];
 
 export function ServiceAppointmentTable({
-  data,
-  rowCount,
+  initialData,
+  params,
 }: ServiceAppointmentTableProps) {
+  const {
+    data: { data, count: rowCount },
+  } = api.db.service_appointment.get.byWorkOrder.useQuery(
+    {
+      work_order_id: params.work_order_id,
+    },
+    { initialData },
+  );
+
   const searchParams = useSearchParams();
 
   const columns = React.useMemo(() => getColumns(), []);
 
   const filterFields: DataTableFilterField<
-    ServiceAppointmentTableProps["data"][number]
+    ServiceAppointmentTableProps["initialData"]["data"][number]
   >[] = [
     {
       label: "Status",
@@ -185,7 +196,7 @@ export function ServiceAppointmentTable({
       rowSelection,
       columnFilters,
     },
-    rowCount,
+    rowCount: rowCount ?? 0,
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,

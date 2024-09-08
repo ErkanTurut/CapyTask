@@ -46,4 +46,16 @@ export const service_appointment = router({
     .mutation(async ({ ctx, input }) => {
       return await createServiceAppointmentHandler({ db: ctx.db, input });
     }),
+
+  delete: {
+    many: protectedProcedure
+      .input(z.object({ ids: z.string().array() }))
+      .mutation(async ({ ctx, input }) => {
+        return await ctx.db
+          .from("service_appointment")
+          .delete()
+          .in("id", input.ids)
+          .throwOnError();
+      }),
+  },
 });
