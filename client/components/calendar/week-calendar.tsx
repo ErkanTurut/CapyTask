@@ -1,127 +1,108 @@
-import React from "react";
+"use client";
+import React, { useMemo } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {
   format,
   addDays,
   startOfWeek,
-  isSameDay,
   startOfDay,
   addHours,
-  isWithinInterval,
-  differenceInHours,
+  isToday,
 } from "date-fns";
+import { WeekCalendarProps, ColorClasses, Event } from "./types";
+import {
+  formatHour,
+  formatEventTime,
+  isTimeDisabled,
+  getEventsForDay,
+  calculateEventOverlaps,
+} from "./utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
+import { formatDateRange } from "little-date";
+import { cn } from "@/lib/utils";
 
-interface Event {
-  id: string;
-  title: string;
-  start: Date;
-  end: Date;
-  description?: string;
-  color: "blue" | "pink" | "indigo";
-}
-
-interface WeekCalendarProps {
-  events: Event[];
-  initialTimeFormat?: "24h" | "12h";
-  disabledTimeRanges?: { start: Date; end: Date }[];
-  disabledSlots?: Date[];
-  startDate: Date;
-  weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
-}
-
-const colorClasses = {
-  blue: "bg-blue-50 hover:bg-blue-100 text-blue-700",
+const colorClasses: ColorClasses = {
+  blue: "bg-blue-50/70 hover:bg-blue-100 text-blue-700",
   pink: "bg-pink-50 hover:bg-pink-100 text-pink-700",
   indigo: "bg-indigo-50 hover:bg-indigo-100 text-indigo-700",
 };
 
-export default function WeekCalendar({
+const WeekCalendar: React.FC<WeekCalendarProps> = ({
   events,
   initialTimeFormat = "12h",
   disabledTimeRanges = [],
   disabledSlots = [],
   startDate,
   weekStartsOn = 1,
-}: WeekCalendarProps) {
-  const [timeFormat, setTimeFormat] = React.useState<"24h" | "12h">(
-    initialTimeFormat,
+  onEventClick,
+  onSlotClick,
+}) => {
+  const hours = useMemo(() => Array.from({ length: 24 }, (_, i) => i), []);
+  const weekDays = useMemo(
+    () =>
+      Array.from({ length: 7 }, (_, i) =>
+        addDays(startOfWeek(startDate, { weekStartsOn }), i),
+      ),
+    [startDate, weekStartsOn],
   );
-  const hours = Array.from({ length: 24 }, (_, i) => i);
-  const weekDays = Array.from({ length: 7 }, (_, i) =>
-    addDays(startOfWeek(startDate, { weekStartsOn }), i),
-  );
-
-  const formatHour = (hour: number) => {
-    const time = addHours(startOfDay(startDate), hour);
-    return format(time, timeFormat === "24h" ? "HH:mm" : "h a");
-  };
-
-  const formatEventTime = (eventDate: Date) => {
-    return format(eventDate, timeFormat === "24h" ? "HH:mm" : "h:mm a");
-  };
-
-  const isTimeDisabled = (slotDate: Date) => {
-    return (
-      disabledTimeRanges.some((range) =>
-        isWithinInterval(slotDate, { start: range.start, end: range.end }),
-      ) ||
-      disabledSlots.some(
-        (disabledSlot) =>
-          isSameDay(slotDate, disabledSlot) &&
-          slotDate.getHours() === disabledSlot.getHours(),
-      )
-    );
-  };
 
   const handleSlotClick = (slotDate: Date) => {
-    if (isTimeDisabled(slotDate)) {
+    if (isTimeDisabled(slotDate, disabledTimeRanges, disabledSlots)) {
       console.log("This time slot is disabled");
       return;
     }
 
     const endDate = addHours(slotDate, 1);
+    onSlotClick?.(slotDate);
     console.log(
-      `Selected time range: ${format(slotDate, "PPpp")} - ${format(
-        endDate,
-        "PPpp",
-      )}`,
+      `Selected time range: ${format(slotDate, "PPpp")} - ${format(endDate, "PPpp")}`,
     );
   };
 
-  const getEventsForDay = (day: Date) => {
-    return events.filter((event) => isSameDay(day, event.start));
-  };
-
-  const renderEvent = (event: Event, dayIndex: number) => {
+  const renderEvent = (event: Event, laneIndex: number, totalLanes: number) => {
     const startHour = event.start.getHours();
     const startMinutes = event.start.getMinutes();
     const endHour = event.end.getHours();
     const endMinutes = event.end.getMinutes();
 
-    // Calculate the top position (start hour + fractional part of minutes)
     const startInHours = startHour + startMinutes / 60;
-
-    // Calculate the duration (end hour + fractional part of minutes) - (start hour + fractional part of minutes)
     const endInHours = endHour + endMinutes / 60;
     const durationInHours = Math.max(0.5, endInHours - startInHours);
 
-    // Update the style to reflect the proportional height and position
+    const laneWidth = 100 / totalLanes;
     const style = {
-      top: `${startInHours * 3}rem`, // Each hour is 3rem tall, so multiply by 3
-      height: `${durationInHours * 3}rem`, // Same here for duration
-      left: "0.25rem",
-      right: "0.25rem",
+      top: `${startInHours * 3}rem`,
+      height: `${durationInHours * 3}rem`,
+      left: `${laneIndex * laneWidth}%`,
+      width: `${laneWidth}%`,
     };
 
     return (
       <div
         key={event.id}
-        className={`absolute flex flex-col overflow-hidden rounded-sm p-1 text-xs leading-4 ${
-          colorClasses[event.color]
-        }`}
+        className={`absolute flex flex-col overflow-hidden rounded-sm p-1 text-xs leading-4 ${colorClasses[event.color]}`}
         style={style}
       >
-        <p className="truncate font-semibold">{event.title}</p>
+        <p
+          onClick={() => onEventClick?.(event)}
+          className="z-10 truncate font-semibold hover:cursor-pointer"
+        >
+          {event.title}
+        </p>
         {event.description && (
           <p className={`truncate text-${event.color}-500`}>
             {event.description}
@@ -129,11 +110,11 @@ export default function WeekCalendar({
         )}
         <p className={`truncate text-${event.color}-500`}>
           <time dateTime={event.start.toISOString()}>
-            {formatEventTime(event.start)}
+            {formatEventTime(event.start, initialTimeFormat)}
           </time>
           {" - "}
           <time dateTime={event.end.toISOString()}>
-            {formatEventTime(event.end)}
+            {formatEventTime(event.end, initialTimeFormat)}
           </time>
         </p>
       </div>
@@ -141,60 +122,80 @@ export default function WeekCalendar({
   };
 
   return (
-    <div className="flex h-full flex-col">
-      <ScrollArea className="flex-grow">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr>
-              <th className="w-10 border-r p-1"></th>
-              {weekDays.map((day, index) => (
-                <th
-                  key={index}
-                  className="border-b border-r p-1 text-center text-xs font-semibold"
-                >
-                  {format(day, "EEE dd/MM")}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {hours.map((hour) => (
-              <tr key={hour} className="h-12">
-                <td className="relative border-r p-1 text-right">
-                  <span className="absolute -top-3 right-1 text-xs leading-5">
-                    {formatHour(hour)}
-                  </span>
-                </td>
-                {weekDays.map((day, dayIndex) => {
-                  const slotDate = addHours(startOfDay(day), hour);
-                  return (
-                    <td
-                      key={`${dayIndex}-${hour}`}
-                      className="relative border-b border-r p-0"
-                    >
-                      <button
-                        type="button"
-                        className={`absolute inset-0 h-full w-full cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-opacity-50 ${
-                          isTimeDisabled(slotDate)
-                            ? "bg-muted hover:cursor-not-allowed"
-                            : "hover:bg-muted/50"
-                        }`}
-                        onClick={() => handleSlotClick(slotDate)}
-                        disabled={isTimeDisabled(slotDate)}
-                        aria-label={`Select time slot ${formatHour(hour)} on ${format(day, "EEEE")}`}
-                      />
-                      {hour === 0 &&
-                        getEventsForDay(day).map((event) =>
-                          renderEvent(event, dayIndex),
-                        )}
-                    </td>
-                  );
-                })}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </ScrollArea>
-    </div>
+    <Table>
+      <TableHeader>
+        <TableRow className="hover:bg-transparent">
+          <TableHead className="w-10 border-r p-1"></TableHead>
+          {weekDays.map((day, index) => (
+            <TableHead
+              key={index}
+              className={cn(
+                "p-1 text-center text-xs font-semibold",
+                isToday(day) && "bg-secondary text-foreground",
+              )}
+            >
+              {format(day, "EEE dd/MM")}
+            </TableHead>
+          ))}
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {hours.map((hour) => (
+          <TableRow key={hour} className="h-12 hover:bg-transparent">
+            <TableCell className="relative border-r p-1 text-right">
+              <span className="absolute -top-4 right-1 font-mono text-xs leading-5">
+                {formatHour(hour, startDate, initialTimeFormat)}
+              </span>
+            </TableCell>
+            {weekDays.map((day, dayIndex) => {
+              const slotDate = addHours(startOfDay(day), hour);
+              const dayEvents = getEventsForDay(day, events);
+              const eventLanes = calculateEventOverlaps(dayEvents);
+              return (
+                <TableCell key={`${dayIndex}-${hour}`} className="relative p-0">
+                  {hour === 0 &&
+                    eventLanes.map((lane, laneIndex) =>
+                      lane.map((event) =>
+                        renderEvent(event, laneIndex, eventLanes.length),
+                      ),
+                    )}
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          className={`absolute inset-0 h-full w-full rounded-none ${
+                            isTimeDisabled(
+                              slotDate,
+                              disabledTimeRanges,
+                              disabledSlots,
+                            )
+                              ? "bg-border hover:cursor-not-allowed"
+                              : "transition-shadow duration-700 hover:shadow-inner"
+                          }`}
+                          onClick={() => handleSlotClick(slotDate)}
+                          disabled={isTimeDisabled(
+                            slotDate,
+                            disabledTimeRanges,
+                            disabledSlots,
+                          )}
+                          aria-label={`Select time slot ${formatHour(hour, startDate, initialTimeFormat)} on ${format(day, "EEEE")}`}
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent className="bg-secondary text-foreground">
+                        {formatDateRange(slotDate, addHours(slotDate, 1))}
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </TableCell>
+              );
+            })}
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
-}
+};
+
+export default WeekCalendar;
