@@ -40,7 +40,7 @@ export default async function Layout({
       <Sidebar params={params} />
       <main className="flex w-full flex-col overflow-x-hidden rounded-md border bg-background">
         <Header />
-        <div className="flex-1">{children}</div>
+        <div className="flex-1 overflow-hidden">{children}</div>
       </main>
     </div>
   );

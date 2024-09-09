@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import WeekCalendar from "@/components/calendar/week-calendar";
 import { addHours, startOfWeek } from "date-fns";
+import DayCalendar from "@/components/calendar/day-calendar";
 
 interface ServiceAppointmentCreateFormProps
   extends React.HTMLAttributes<HTMLFormElement> {
@@ -116,6 +117,13 @@ export function ServiceAppointmentCreateForm({
                 color: "blue",
                 id: "1",
               },
+              {
+                start: new Date("2024-09-10T12:00:00"),
+                end: new Date("2024-09-10T14:30:00"),
+                title: "Test 2",
+                color: "pink",
+                id: "1",
+              },
             ]}
             disabledTimeRanges={[
               {
@@ -124,6 +132,32 @@ export function ServiceAppointmentCreateForm({
               },
             ]}
             startDate={new Date()}
+          />
+          <DayCalendar
+            initialTimeFormat="24h"
+            events={[
+              {
+                start: new Date("2024-09-10T12:30:00"),
+                end: new Date("2024-09-10T14:30:00"),
+                title: "Test",
+                color: "blue",
+                id: "1",
+              },
+              {
+                start: new Date("2024-09-10T12:00:00"),
+                end: new Date("2024-09-10T14:30:00"),
+                title: "Test 2",
+                color: "pink",
+                id: "1",
+              },
+            ]}
+            disabledTimeRanges={[
+              {
+                start: new Date("2024-09-10T00:00:00"),
+                end: new Date("2024-09-10T07:00:00"),
+              },
+            ]}
+            date={new Date("2024-09-10")}
           />
         </div>
       </form>

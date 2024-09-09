@@ -8,6 +8,7 @@ import {
   PageHeaderHeading,
 } from "@/components/page-header";
 import { Shell } from "@/components/shells";
+import WeekCalendar from "@/components/calendar/week-calendar";
 interface PageProps {
   params: {
     url_key: string;
@@ -24,7 +25,40 @@ export default async function Page({ params }: PageProps) {
   if (!work_order) return notFound();
   return (
     <Shell>
-      <PageHeader id="appointment-create-header">
+      {/* <WeekCalendar
+        initialTimeFormat="24h"
+        events={[
+          {
+            start: new Date("2024-09-10T12:30:00"),
+            end: new Date("2024-09-10T14:30:00"),
+            title: "Test",
+            color: "blue",
+            id: "1",
+          },
+          {
+            start: new Date("2024-09-10T12:00:00"),
+            end: new Date("2024-09-10T14:30:00"),
+            title: "Test 2",
+            color: "pink",
+            id: "1",
+          },
+          {
+            start: new Date("2024-09-23T12:00:00"),
+            end: new Date("2024-09-23T14:30:00"),
+            title: "Test 2",
+            color: "pink",
+            id: "1",
+          },
+        ]}
+        disabledTimeRanges={[
+          {
+            start: new Date("2024-09-10T00:00:00"),
+            end: new Date("2024-09-10T07:00:00"),
+          },
+        ]}
+        startDate={new Date()}
+      /> */}
+      {/* <PageHeader id="appointment-create-header">
         <PageHeaderHeading
           as="h2"
           size="xs"
@@ -35,7 +69,7 @@ export default async function Page({ params }: PageProps) {
         <PageHeaderDescription size="sm">
           Create appointment
         </PageHeaderDescription>
-      </PageHeader>
+      </PageHeader> */}
       <ServiceAppointmentCreateForm work_order={work_order} />
     </Shell>
   );
