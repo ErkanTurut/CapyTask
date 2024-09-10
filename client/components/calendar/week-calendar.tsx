@@ -35,11 +35,7 @@ import {
 import { formatDateRange } from "little-date";
 import { cn } from "@/lib/utils";
 
-const colorClasses: ColorClasses = {
-  blue: "bg-blue-50/70 hover:bg-blue-100 text-blue-700",
-  pink: "bg-pink-50 hover:bg-pink-100 text-pink-700",
-  indigo: "bg-indigo-50 hover:bg-indigo-100 text-indigo-700",
-};
+import { colorClasses } from "./utils";
 
 const WeekCalendar: React.FC<WeekCalendarProps> = ({
   events,

@@ -6,7 +6,7 @@ import {
   isSameDay,
   areIntervalsOverlapping,
 } from "date-fns";
-import { Event } from "./types";
+import { ColorClasses, Event } from "./types";
 
 export const formatHour = (
   hour: number,
@@ -80,4 +80,12 @@ export const calculateEventOverlaps = (dayEvents: Event[]) => {
   });
 
   return eventLanes;
+};
+
+export const colorClasses: ColorClasses = {
+  blue: "bg-blue-50 hover:bg-blue-100 text-blue-700",
+  pink: "bg-pink-50 hover:bg-pink-100 text-pink-700",
+  indigo: "bg-indigo-50 hover:bg-indigo-100 text-indigo-700",
+  placeholder:
+    "bg-gray-50 hover:bg-gray-100 text-gray-700 shadow-sm rounded-md z-10 rounded-lg  hover:cursor-pointer border border-dashed",
 };
