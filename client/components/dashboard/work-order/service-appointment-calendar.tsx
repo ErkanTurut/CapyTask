@@ -263,17 +263,23 @@ function AppointmentDialog({
   };
 
   const selectedServiceResourcesEvents: Event[] =
-    selectedServiceResources?.map((selectedServiceResource, index) => {
-      return {
-        start: new Date(),
-        end: new Date(),
-        title:
-          selectedServiceResource.user?.first_name ||
-          selectedServiceResource.id,
-        color: "blue",
-        id: selectedServiceResource.id,
-      };
-    }) ?? [];
+    selectedServiceResources?.flatMap(
+      (selectedServiceResource) =>
+        selectedServiceResource.assigned_resource?.flatMap(
+          (assignedResource) => {
+            if (!assignedResource || !assignedResource.service_appointment) {
+              return [];
+            }
+            return {
+              start: new Date(assignedResource.service_appointment.start_date),
+              end: new Date(assignedResource.service_appointment.end_date),
+              title: assignedResource.service_appointment.id,
+              color: "blue",
+              id: assignedResource.service_appointment.id,
+            };
+          },
+        ) ?? [],
+    ) ?? [];
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

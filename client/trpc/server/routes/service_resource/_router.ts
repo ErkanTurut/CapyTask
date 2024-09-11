@@ -34,7 +34,7 @@ export const service_resource = router({
 
         const { data, error } = await db
           .from("service_resource")
-          .select("*, user!inner(*)")
+          .select("*, user!inner(*), assigned_resource(service_appointment(*))")
           .textSearch("user.full_name", search);
 
         const { data: embedding, error: embeddingError } =
