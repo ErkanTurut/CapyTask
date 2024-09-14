@@ -27,10 +27,14 @@ export const work_order = router({
     byId: protectedProcedure
       .input(ZGetWorkOrderSchema.pick({ id: true }))
       .query(async ({ ctx, input }) => {
-        return await getWorkOrderHandler({
+        const { data } = await getWorkOrderHandler({
           input,
           db: ctx.db,
         });
+        if (!data) {
+          return notFound();
+        }
+        return data;
       }),
     byTeamIdentity: protectedProcedure
       .input(ZGetWorkOrderSchema.pick({ team_identity: true, range: true }))

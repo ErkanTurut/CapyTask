@@ -3,9 +3,10 @@ import { protectedProcedure, router } from "../../trpc";
 
 export const service_resource = router({
   get: {
-    test: protectedProcedure
+    recommendation: protectedProcedure
       .input(
         z.object({
+          team_identity: z.string(),
           from: z.string().datetime(),
           to: z.string().datetime(),
         }),
@@ -13,9 +14,12 @@ export const service_resource = router({
       .query(async ({ ctx: { db }, input }) => {
         const { data, error } = await db
           .from("service_resource")
-          .select("*, user(*), service_appointment(*)")
-          .gt("service_appointment.start_date", input.from)
-          .lt("service_appointment.end_date", input.to);
+          .select(
+            "*,team!inner(identity), user!inner(*), assigned_resource(service_appointment(*))",
+          )
+          .eq("team.identity", input.team_identity)
+          .gt("assigned_resource.service_appointment.start_date", input.from)
+          .lt("assigned_resource.service_appointment.end_date", input.to);
         if (error) {
           throw error;
         }
@@ -24,7 +28,6 @@ export const service_resource = router({
     textSearch: protectedProcedure
       .input(
         z.object({
-          // team_id: z.string(),
           search: z.string(),
         }),
       )

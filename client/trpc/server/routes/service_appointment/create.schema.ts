@@ -10,20 +10,13 @@ export const assignedResourceSchema = z.object({
 
 export const createServiceAppointmentSchema = z.object({
   work_order_id: z.string(),
-  team_id: z.string(),
-  workspace_id: z.string(),
   date_range: z.object({
     from: z.string().datetime(),
     to: z.string().datetime(),
   }),
-
+  location_id: z.string(),
   work_order_item_id: z.string().nullish(),
-  service_resource: z
-    .object({
-      id: z.string(),
-    })
-    .array()
-    .optional(),
+  service_resource: z.string().array().optional(),
 });
 
 export type TCreateServiceAppointmentSchema = z.infer<

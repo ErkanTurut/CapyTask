@@ -331,42 +331,29 @@ export type Database = {
           end_date: string
           id: string
           start_date: string
-          team_id: string
           updated_at: string
           work_order_id: string
           work_order_item_id: string | null
-          workspace_id: string
         }
         Insert: {
           created_at?: string
           end_date: string
           id?: string
           start_date: string
-          team_id: string
           updated_at?: string
           work_order_id: string
           work_order_item_id?: string | null
-          workspace_id: string
         }
         Update: {
           created_at?: string
           end_date?: string
           id?: string
           start_date?: string
-          team_id?: string
           updated_at?: string
           work_order_id?: string
           work_order_item_id?: string | null
-          workspace_id?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "service_appointment_team_id_fkey"
-            columns: ["team_id"]
-            isOneToOne: false
-            referencedRelation: "team"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "service_appointment_work_order_id_fkey"
             columns: ["work_order_id"]
@@ -379,13 +366,6 @@ export type Database = {
             columns: ["work_order_item_id"]
             isOneToOne: false
             referencedRelation: "work_order_item"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "service_appointment_workspace_id_fkey"
-            columns: ["workspace_id"]
-            isOneToOne: false
-            referencedRelation: "workspace"
             referencedColumns: ["id"]
           },
         ]

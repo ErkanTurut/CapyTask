@@ -16,8 +16,6 @@ export const createServiceAppointmentHandler = async ({
     .from("service_appointment")
     .insert({
       work_order_id: input.work_order_id,
-      team_id: input.team_id,
-      workspace_id: input.workspace_id,
       start_date: input.date_range.from,
       end_date: input.date_range.to,
       work_order_item_id: input.work_order_item_id,
@@ -30,9 +28,9 @@ export const createServiceAppointmentHandler = async ({
   }
 
   if (input.service_resource) {
-    const service_resources = input.service_resource.map((resource) => ({
+    const service_resources = input.service_resource.map((id) => ({
       service_appointment_id: data.id,
-      service_resource_id: resource.id,
+      service_resource_id: id,
     }));
     const { data: assigned_resources, error: assigned_resources_error } =
       await db.from("assigned_resource").upsert(service_resources, {
