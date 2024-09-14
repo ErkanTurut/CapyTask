@@ -1,4 +1,4 @@
-import ServiceAppointmentCalendar from "@/components/dashboard/work-order/service-appointment-calendar";
+import ServiceAppointmentCalendar from "@/components/dashboard/work-order/service-appointment/service-appointment-calendar";
 import { Shell } from "@/components/shells";
 import { ServiceAppointmentTable } from "@/components/tables/service-appointment/service-appointment-table";
 import { trpc } from "@/trpc/server";
@@ -23,6 +23,7 @@ export default async function Page({ params }: PageProps) {
         <ServiceAppointmentCalendar
           initialData={initialData}
           work_order_id={params.work_order_id}
+          team_identity={params.team_identity}
         />
       </Suspense>
     </Shell>
