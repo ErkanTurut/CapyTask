@@ -105,7 +105,7 @@ const DayCalendar: React.FC<DayCalendarProps> = ({
       <TableHeader>
         <TableRow className="hover:bg-transparent">
           <TableHead className="w-10 border-r p-1"></TableHead>
-          <TableHead className="p-1 text-center text-xs font-semibold">
+          <TableHead className="sticky top-0 p-1 text-center text-xs font-semibold">
             {format(date, "EEEE, MMMM d")}
           </TableHead>
         </TableRow>

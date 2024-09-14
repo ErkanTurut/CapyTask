@@ -155,35 +155,33 @@ const WeekCalendar: React.FC<WeekCalendarProps> = ({
                         renderEvent(event, laneIndex, eventLanes.length),
                       ),
                     )}
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          className={`absolute inset-0 h-full w-full rounded-none ${
-                            isTimeDisabled(
-                              slotDate,
-                              disabledTimeRanges,
-                              disabledSlots,
-                            )
-                              ? "bg-border hover:cursor-not-allowed"
-                              : "transition-shadow duration-700 hover:shadow-inner"
-                          }`}
-                          onClick={() => handleSlotClick(slotDate)}
-                          disabled={isTimeDisabled(
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        className={`absolute inset-0 h-full w-full rounded-none ${
+                          isTimeDisabled(
                             slotDate,
                             disabledTimeRanges,
                             disabledSlots,
-                          )}
-                          aria-label={`Select time slot ${formatHour(hour, startDate, initialTimeFormat)} on ${format(day, "EEEE")}`}
-                        />
-                      </TooltipTrigger>
-                      <TooltipContent className="bg-secondary text-foreground">
-                        {formatDateRange(slotDate, addHours(slotDate, 1))}
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                          )
+                            ? "bg-border hover:cursor-not-allowed"
+                            : "transition-shadow duration-700 hover:shadow-inner"
+                        }`}
+                        onClick={() => handleSlotClick(slotDate)}
+                        disabled={isTimeDisabled(
+                          slotDate,
+                          disabledTimeRanges,
+                          disabledSlots,
+                        )}
+                        aria-label={`Select time slot ${formatHour(hour, startDate, initialTimeFormat)} on ${format(day, "EEEE")}`}
+                      />
+                    </TooltipTrigger>
+                    <TooltipContent className="bg-secondary text-foreground">
+                      {formatDateRange(slotDate, addHours(slotDate, 1))}
+                    </TooltipContent>
+                  </Tooltip>
                 </TableCell>
               );
             })}
