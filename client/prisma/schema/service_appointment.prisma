@@ -3,20 +3,14 @@ model service_appointment {
   work_order_id      String
   created_at         DateTime            @default(now()) @db.Timestamptz(6)
   updated_at         DateTime            @default(now()) @updatedAt @db.Timestamptz(6)
-  team_id            String
-  workspace_id       String
   end_date           DateTime            @db.Timestamptz(6)
   start_date         DateTime            @db.Timestamptz(6)
   work_order_item_id String?
   assigned_resource  assigned_resource[]
-  team               team                @relation(fields: [team_id], references: [id])
   work_order         work_order          @relation(fields: [work_order_id], references: [id])
   work_order_item    work_order_item?    @relation(fields: [work_order_item_id], references: [id])
-  workspace          workspace           @relation(fields: [workspace_id], references: [id])
 
   @@index([work_order_id])
-  @@index([team_id])
-  @@index([workspace_id])
   @@index([start_date])
   @@index([end_date])
   @@index([work_order_item_id])
