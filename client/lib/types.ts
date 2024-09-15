@@ -58,7 +58,7 @@ export interface DomainVerificationResponse {
 }
 
 export interface Shift {
-  days: number[]; 
+  days: number[];
   start_time: string;
   end_time: string;
 }

@@ -7,9 +7,12 @@ import {
   setHours,
   setMinutes,
   isWithinInterval,
+  startOfDay,
+  endOfDay,
+  addDays,
 } from "date-fns";
 
-export function removeOverlaps({
+export function findAvailableRanges({
   scheduleRange,
   unavailableSlots,
 }: {
@@ -19,7 +22,7 @@ export function removeOverlaps({
   const sortedSlots = unavailableSlots.sort(
     (a, b) => new Date(a.from).getTime() - new Date(b.from).getTime(),
   );
-  const availableSlots: TimeSlot[] = [];
+  const availableRanges: TimeSlot[] = [];
   let currentFrom = new Date(scheduleRange.from);
   const scheduleEnd = new Date(scheduleRange.to);
 
@@ -28,7 +31,7 @@ export function removeOverlaps({
     const slotTo = new Date(slot.to);
 
     if (currentFrom < slotFrom) {
-      availableSlots.push({
+      availableRanges.push({
         from: currentFrom.toISOString(),
         to: slotFrom.toISOString(),
       });
@@ -37,13 +40,13 @@ export function removeOverlaps({
   });
 
   if (currentFrom < scheduleEnd) {
-    availableSlots.push({
+    availableRanges.push({
       from: currentFrom.toISOString(),
       to: scheduleEnd.toISOString(),
     });
   }
 
-  return availableSlots;
+  return availableRanges;
 }
 
 /**
@@ -98,18 +101,19 @@ export function groupTimeSlotsByDay(
   );
 }
 
-export function removeShiftFromDateRange(
+export function getWorkShiftsFromDateRange(
   startDate: Date,
   endDate: Date,
   shift: Shift,
-): Date[] {
-  const availableDates: Date[] = [];
-  const currentDate = new Date(startDate);
+): { date: Date; start: Date; end: Date }[] {
+  const workShifts: { date: Date; start: Date; end: Date }[] = [];
+  let currentDate = startOfDay(startDate);
+  const rangeEnd = endOfDay(endDate);
 
   const shiftStart = parse(shift.start_time, "HH:mm", new Date());
   const shiftEnd = parse(shift.end_time, "HH:mm", new Date());
 
-  while (currentDate <= endDate) {
+  while (currentDate <= rangeEnd) {
     const dayOfWeek = getISODay(currentDate);
     if (shift.days.includes(dayOfWeek)) {
       const currentShiftStart = setMinutes(
@@ -121,17 +125,14 @@ export function removeShiftFromDateRange(
         shiftEnd.getMinutes(),
       );
 
-      if (
-        isWithinInterval(currentDate, {
-          start: currentShiftStart,
-          end: currentShiftEnd,
-        })
-      ) {
-        availableDates.push(new Date(currentDate));
-      }
+      workShifts.push({
+        date: currentDate,
+        start: currentShiftStart,
+        end: currentShiftEnd,
+      });
     }
-    currentDate.setDate(currentDate.getDate() + 1);
+    currentDate = addDays(currentDate, 1);
   }
 
-  return availableDates;
+  return workShifts;
 }
