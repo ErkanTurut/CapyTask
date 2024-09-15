@@ -70,7 +70,7 @@ const DayCalendar: React.FC<DayCalendarProps> = ({
 
     return (
       <div
-        key={event.id}
+        key={laneIndex}
         className={`absolute flex flex-col overflow-hidden rounded-sm p-1 text-xs leading-4 ${
           colorClasses[event.color]
         }`}

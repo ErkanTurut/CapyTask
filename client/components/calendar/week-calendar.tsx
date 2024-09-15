@@ -18,7 +18,7 @@ import {
   addHours,
   isToday,
 } from "date-fns";
-import { WeekCalendarProps, ColorClasses, Event } from "./types";
+import { ColorClasses, Event } from "./types";
 import {
   formatHour,
   formatEventTime,
@@ -37,12 +37,20 @@ import { cn } from "@/lib/utils";
 
 import { colorClasses } from "./utils";
 
+export interface WeekCalendarProps {
+  events: Event[];
+  initialTimeFormat?: "24h" | "12h";
+  disabled?: (date: Date) => boolean;
+  startDate: Date;
+  weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
+  onEventClick?: (event: Event) => void;
+  onSlotClick?: (slotDate: Date) => void;
+}
 const WeekCalendar: React.FC<WeekCalendarProps> = ({
   events,
   initialTimeFormat = "12h",
-  disabledTimeRanges = [],
-  disabledSlots = [],
   startDate,
+  disabled,
   weekStartsOn = 1,
   onEventClick,
   onSlotClick,
@@ -57,7 +65,7 @@ const WeekCalendar: React.FC<WeekCalendarProps> = ({
   );
 
   const handleSlotClick = (slotDate: Date) => {
-    if (isTimeDisabled(slotDate, disabledTimeRanges, disabledSlots)) {
+    if (disabled && disabled(slotDate)) {
       console.log("This time slot is disabled");
       return;
     }
@@ -161,20 +169,17 @@ const WeekCalendar: React.FC<WeekCalendarProps> = ({
                         type="button"
                         variant="ghost"
                         className={`absolute inset-0 h-full w-full rounded-none ${
-                          isTimeDisabled(
-                            slotDate,
-                            disabledTimeRanges,
-                            disabledSlots,
-                          )
+                          disabled && disabled(slotDate)
                             ? "bg-border hover:cursor-not-allowed"
                             : "transition-shadow duration-700 hover:shadow-inner"
                         }`}
                         onClick={() => handleSlotClick(slotDate)}
-                        disabled={isTimeDisabled(
-                          slotDate,
-                          disabledTimeRanges,
-                          disabledSlots,
-                        )}
+                        // disabled={isTimeDisabled(
+                        //   slotDate,
+                        //   disabledTimeRanges,
+                        //   disabledSlots,
+                        // )}
+                        disabled={disabled?.(slotDate)}
                         aria-label={`Select time slot ${formatHour(hour, startDate, initialTimeFormat)} on ${format(day, "EEEE")}`}
                       />
                     </TooltipTrigger>
