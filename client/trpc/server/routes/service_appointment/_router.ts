@@ -10,7 +10,7 @@ export const service_appointment = router({
       .query(async ({ ctx, input }) => {
         const { data, error, count } = await ctx.db
           .from("service_appointment")
-          .select("*", { count: "exact" })
+          .select("*, assigned_resource(*)", { count: "exact" })
           .eq("work_order_id", input.work_order_id);
 
         if (error) {
