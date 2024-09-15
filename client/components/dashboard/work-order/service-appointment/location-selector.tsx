@@ -71,7 +71,7 @@ function LocationSelector({
       <PopoverTrigger asChild>
         <Button
           isLoading={isFetching}
-          className="w-80 justify-start font-normal"
+          className="w-72 justify-start font-normal sm:w-60 md:w-80"
           variant={"outline"}
           type="button"
         >
@@ -80,7 +80,7 @@ function LocationSelector({
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className={cn("w-80 p-0")}
+        className={cn("w-72 p-0 sm:w-60 md:w-80")}
         align="center"
         onCloseAutoFocus={(e) => e.preventDefault()}
         sideOffset={6}

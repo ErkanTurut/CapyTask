@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { DateRange } from "react-day-picker";
-import { Event } from "@/components/calendar/types";
 import DayCalendar from "@/components/calendar/day-calendar";
+import { Event } from "@/components/calendar/types";
+import { Icons } from "@/components/icons";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -11,32 +12,37 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
-import TimeSelector from "./time-selector";
-import ServiceResourceSelector from "./service-resource-selector";
-import { api, RouterOutput } from "@/trpc/client";
-import { LocationSelector } from "./location-selector";
-import { Icons } from "@/components/icons";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  createServiceAppointmentSchema,
-  TCreateServiceAppointmentSchema,
-} from "@/trpc/server/routes/service_appointment/create.schema";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { toast } from "sonner";
-import { Separator } from "@/components/ui/separator";
-import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { api, RouterOutput } from "@/trpc/client";
+import {
+  createServiceAppointmentSchema,
+  TCreateServiceAppointmentSchema,
+} from "@/trpc/server/routes/service_appointment/create.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { DateRange } from "react-day-picker";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { LocationSelector } from "./location-selector";
+import ServiceResourceSelector from "./service-resource-selector";
+import TimeSelector from "./time-selector";
+import { endOfDay, startOfDay } from "date-fns";
+import {
+  findAvailableRanges,
+  getWorkShiftsFromDateRange,
+} from "@/lib/service-appointment/utils";
+import { Shift } from "@/lib/types";
+import { experimental_useObject as useObject } from "ai/react";
+import { z } from "zod";
+import { cn } from "@/lib/utils";
 
 interface AppointmentDialogProps {
   open: boolean;
@@ -46,6 +52,7 @@ interface AppointmentDialogProps {
   date: Date;
   events?: Event[];
   work_order_id: string;
+  team_identity: string;
 }
 
 export default function AppointmentDialog({
@@ -56,8 +63,16 @@ export default function AppointmentDialog({
   date,
   events,
   work_order_id,
+  team_identity,
 }: AppointmentDialogProps) {
-  const params = useParams() as { team_identity: string };
+  const [selectedServiceResources, setSelectedServiceResources] = useState<
+    RouterOutput["db"]["service_resource"]["get"]["textSearch"] | undefined
+  >(undefined);
+  const [assignedResources, setAssignedResources] = useState<string[]>([]);
+  const [selectedLocation, setSelectedLocations] = useState<
+    RouterOutput["db"]["location"]["get"]["textSearch"][number] | undefined
+  >(undefined);
+
   const utils = api.useUtils();
   const { mutate, isPending } = api.db.service_appointment.create.useMutation({
     onSuccess: () => {
@@ -83,6 +98,7 @@ export default function AppointmentDialog({
       },
       work_order_item_id: undefined,
       service_resource: [],
+      location_id: undefined,
     },
   });
   const placeHolderEvent: Event | null =
@@ -96,11 +112,17 @@ export default function AppointmentDialog({
         }
       : null;
 
-  const [selectedServiceResources, setSelectedServiceResources] = useState<
-    RouterOutput["db"]["service_resource"]["get"]["textSearch"] | undefined
-  >(undefined);
-
-  const [assignedResources, setAssignedResources] = useState<string[]>([]);
+  useEffect(() => {
+    form.reset({
+      work_order_id,
+      date_range: {
+        from: dateRange.from?.toISOString(),
+        to: dateRange.to?.toISOString(),
+      },
+      work_order_item_id: undefined,
+      service_resource: [],
+    });
+  }, [dateRange.from, dateRange.to, work_order_id]);
 
   const handleServiceResourceSelect = (
     serviceResource: RouterOutput["db"]["service_resource"]["get"]["textSearch"][number],
@@ -126,13 +148,15 @@ export default function AppointmentDialog({
         "service_resource",
         selectedServiceResources
           ?.filter((sr) => sr.id !== serviceResource)
-          .map((sr) => sr.id),
+          .map((sr) => sr.id) ?? [],
       );
     } else {
       setAssignedResources((prev) => [...prev, serviceResource]);
       form.setValue(
         "service_resource",
-        selectedServiceResources?.map((sr) => sr.id).concat(serviceResource),
+        selectedServiceResources
+          ?.map((sr) => sr.id)
+          .filter((sr) => sr !== serviceResource) ?? [],
       );
     }
   };
@@ -148,17 +172,16 @@ export default function AppointmentDialog({
             return {
               start: new Date(assignedResource.service_appointment.start_date),
               end: new Date(assignedResource.service_appointment.end_date),
-              title: assignedResource.service_appointment.id,
+              title:
+                selectedServiceResource.first_name +
+                " " +
+                selectedServiceResource.last_name,
               color: "blue",
               id: assignedResource.service_appointment.id,
             };
           },
         ) ?? [],
     ) ?? [];
-
-  const [selectedLocation, setSelectedLocations] = useState<
-    RouterOutput["db"]["location"]["get"]["textSearch"][number] | undefined
-  >(undefined);
 
   const handleLocationSelect = (
     location: RouterOutput["db"]["location"]["get"]["textSearch"][number],
@@ -172,16 +195,70 @@ export default function AppointmentDialog({
     }
   };
 
+  const shift: Shift = {
+    start_time: "07:00",
+    end_time: "19:00",
+    days: [1, 2, 3, 4, 5], // Monday to Friday
+  };
+
+  const workShit = getWorkShiftsFromDateRange(
+    startOfDay(date),
+    endOfDay(date),
+    shift,
+  );
+
   const { data } = api.db.service_resource.get.recommendation.useQuery(
     {
-      team_identity: params.team_identity,
-      from: dateRange.from?.toISOString(),
-      to: dateRange.to?.toISOString(),
+      team_identity,
+      from: workShit[0].start.toISOString(),
+      to: workShit[0].end.toISOString(),
     },
     { enabled: Boolean(dateRange.from) && Boolean(dateRange.to) },
   );
+
+  const { object, submit, isLoading } = useObject({
+    api: "/api/ai/service-resource",
+    schema: z.object({
+      recommendations: z.array(
+        z.object({
+          id: z.string(),
+          is_active: z.boolean(),
+          availableSlots: z.array(
+            z.object({
+              start: z.string(),
+              end: z.string(),
+            }),
+          ),
+          first_name: z.string(),
+          last_name: z.string(),
+        }),
+      ),
+    }),
+    onFinish(event) {
+      if (!event.object || event.object.recommendations.length === 0 || !data) {
+        return;
+      }
+      console.log(event.object);
+
+      const foundResources = event.object.recommendations.map(
+        (recommendation) => {
+          return data.find((item) => item.id === recommendation.id);
+        },
+      );
+      setSelectedServiceResources(
+        foundResources.filter((resource) => resource !== undefined),
+      );
+    },
+  });
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog
+      open={open}
+      onOpenChange={(open) => {
+        form.reset();
+        onOpenChange(open);
+      }}
+    >
       <DialogContent className="max-h-dvh overflow-hidden sm:max-w-[825px]">
         <Form {...form}>
           <form
@@ -250,10 +327,64 @@ export default function AppointmentDialog({
                       </FormItem>
                     )}
                   />
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant={"ghost"}
+                    onClick={() => {
+                      submit(JSON.stringify(data));
+                    }}
+                    className={`shrink-0 text-muted-foreground hover:bg-transparent ${isLoading && "animate-pulse text-primary hover:text-primary"} `}
+                  >
+                    <Icons.sparkles className="mr-2 size-4" />
+                    <span className="text-xs font-medium">Recommend</span>
+                  </Button>
 
                   <ScrollArea className="grid h-full overflow-hidden">
                     <div className="flex flex-col gap-1">
+                      {/* <div className="flex flex-col gap-1">
+                        {object?.recommendations?.map(
+                          (recommendation, index) => {
+                            if (!recommendation) {
+                              return null;
+                            }
+                            return ServiceRessourceCard(
+                              {
+                                id: recommendation.id,
+                                is_assigned: assignedResources.includes(
+                                  recommendation?.id || "",
+                                ),
+                                first_name:
+                                  recommendation?.user?.first_name || undefined,
+                                last_name:
+                                  recommendation?.user?.last_name || undefined,
+                                image_uri:
+                                  recommendation?.user?.image_uri || undefined,
+                              },
+                              handleAssignResource,
+                              true,
+                            );
+                          },
+                        )}
+                      </div> */}
                       {selectedServiceResources?.map(
+                        (selectedServiceResource) => {
+                          return ServiceRessourceCard(
+                            {
+                              id: selectedServiceResource.id,
+                              is_assigned: assignedResources.includes(
+                                selectedServiceResource.id,
+                              ),
+                              first_name:
+                                selectedServiceResource.first_name || undefined,
+                              last_name:
+                                selectedServiceResource.last_name || undefined,
+                            },
+                            handleAssignResource,
+                          );
+                        },
+                      )}
+                      {/* {selectedServiceResources?.map(
                         (selectedServiceResource) => {
                           const initials =
                             selectedServiceResource.user?.first_name
@@ -314,7 +445,7 @@ export default function AppointmentDialog({
                             </div>
                           );
                         },
-                      )}
+                      )} */}
                     </div>
                   </ScrollArea>
                 </div>
@@ -343,5 +474,71 @@ export default function AppointmentDialog({
         </Form>
       </DialogContent>
     </Dialog>
+  );
+}
+
+function ServiceRessourceCard(
+  serviceResource: {
+    id?: string;
+    is_assigned?: boolean;
+    first_name?: string;
+    last_name?: string;
+    image_uri?: string;
+  },
+  onAssign: (id: string) => void,
+  is_recommended?: boolean,
+) {
+  const initials =
+    `${serviceResource.first_name?.[0] ?? ""}${serviceResource.last_name?.[0] ?? ""}`.toUpperCase();
+
+  return (
+    <div
+      key={serviceResource.id}
+      className={cn(
+        "flex w-80 items-center justify-between rounded-md border border-transparent bg-secondary px-2 py-1",
+        {
+          "border-dashed border-border": is_recommended,
+        },
+      )}
+    >
+      <div className="flex items-center justify-between gap-2">
+        <Avatar className="h-6 w-6 border">
+          <AvatarImage
+            src={
+              serviceResource.image_uri ||
+              `https://avatar.vercel.sh/${initials}.svg?text=${initials}`
+            }
+            alt={initials}
+          />
+          <AvatarFallback className="text-[0.6rem]">{initials}</AvatarFallback>
+        </Avatar>
+        <span
+          className={`truncate text-xs font-medium ${is_recommended && "text-primary"}`}
+        >
+          {serviceResource.first_name} {serviceResource.last_name}
+        </span>
+      </div>
+      <div className="flex grow-0 items-center justify-between gap-1">
+        <Button
+          type="button"
+          size="sm"
+          variant={"outline"}
+          className="ml-auto"
+          onClick={() => {
+            serviceResource.id && onAssign(serviceResource.id);
+          }}
+        >
+          {serviceResource.is_assigned ? "Unassign" : "Assign"}
+        </Button>
+        <Button
+          type="button"
+          size="icon"
+          variant={"outline"}
+          className="ml-auto h-7 w-7 shadow-none"
+        >
+          <Icons.dotsHorizontal className="h-4 w-4 text-muted-foreground" />
+        </Button>
+      </div>
+    </div>
   );
 }

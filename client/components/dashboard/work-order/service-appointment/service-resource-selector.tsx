@@ -71,7 +71,7 @@ export default function ServiceResourceSelector({
       <PopoverTrigger asChild>
         <Button
           isLoading={isFetching}
-          className="w-80 justify-start font-normal"
+          className="w-72 justify-start font-normal sm:w-60 md:w-80"
           variant={"outline"}
           type="button"
         >
@@ -80,7 +80,7 @@ export default function ServiceResourceSelector({
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className={cn("w-80 p-0")}
+        className={cn("w-72 p-0 sm:w-60 md:w-80")}
         align="center"
         onCloseAutoFocus={(e) => e.preventDefault()}
         sideOffset={6}
@@ -114,8 +114,7 @@ export default function ServiceResourceSelector({
                       )}
                     />
                     <span>
-                      {service_resource.user?.first_name}{" "}
-                      {service_resource.user?.last_name}
+                      {service_resource.first_name} {service_resource.last_name}
                     </span>
                   </div>
                 </CommandItem>

@@ -1,16 +1,28 @@
 "use client";
 
-import { use, useState } from "react";
-import { addHours, addWeeks, subWeeks } from "date-fns";
+import { use, useEffect, useMemo, useState } from "react";
+import {
+  addDays,
+  addHours,
+  addWeeks,
+  eachDayOfInterval,
+  endOfWeek,
+  isSameDay,
+  isWithinInterval,
+  startOfWeek,
+  subWeeks,
+} from "date-fns";
 import { parseAsTimestamp, useQueryStates } from "nuqs";
 
 import { Event } from "@/components/calendar/types";
 import WeekCalendar from "@/components/calendar/week-calendar";
 import { api, RouterOutput } from "@/trpc/client";
 import DateSelector from "./date-selector";
-import WeekNavigator from "./week-navigation";
+import WeekNavigator from "@/components/calendar/week-navigation";
 import AppointmentDialog from "./appointment-dialog";
 import { notFound } from "next/navigation";
+import { Shift } from "@/lib/types";
+import { getWorkShiftsFromDateRange } from "@/lib/service-appointment/utils";
 
 interface ServiceAppointmentCalendarProps {
   work_order_id: string;
@@ -19,12 +31,21 @@ interface ServiceAppointmentCalendarProps {
   >;
   team_identity: string;
 }
-
+interface TimeRange {
+  start: Date;
+  end: Date;
+}
 export default function ServiceAppointmentCalendar({
   work_order_id,
   initialData,
   team_identity,
 }: ServiceAppointmentCalendarProps) {
+  const shift: Shift = {
+    start_time: "07:00",
+    end_time: "19:00",
+    days: [1, 2, 3, 4, 5], // Monday to Friday
+  };
+
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedRange, setSelectedRange] = useQueryStates({
     from: parseAsTimestamp,
@@ -65,19 +86,22 @@ export default function ServiceAppointmentCalendar({
 
   return (
     <div className="flex flex-col gap-4">
-      <AppointmentDialog
-        open={selectedRange.from !== null}
-        onOpenChange={(open) =>
-          !open && setSelectedRange({ from: null, to: null })
-        }
-        dateRange={{
-          from: selectedRange.from ?? undefined,
-          to: selectedRange.to ?? undefined,
-        }}
-        date={selectedRange.from ?? new Date()}
-        onDateRangeChange={setSelectedRange}
-        work_order_id={work_order_id}
-      />
+      {selectedRange.from && (
+        <AppointmentDialog
+          open={selectedRange.from !== null}
+          onOpenChange={(open) =>
+            !open && setSelectedRange({ from: null, to: null })
+          }
+          dateRange={{
+            from: selectedRange.from ?? undefined,
+            to: selectedRange.to ?? undefined,
+          }}
+          date={selectedRange.from}
+          onDateRangeChange={setSelectedRange}
+          work_order_id={work_order_id}
+          team_identity={team_identity}
+        />
+      )}
       <div className="flex items-center justify-between">
         <DateSelector
           selectedDate={selectedDate}
@@ -93,18 +117,22 @@ export default function ServiceAppointmentCalendar({
       <WeekCalendar
         initialTimeFormat="24h"
         events={serviceAppointmentEvents}
-        disabledTimeRanges={[
-          {
-            start: new Date("2024-09-10T00:00:00"),
-            end: new Date("2024-09-10T07:00:00"),
-          },
-        ]}
         startDate={selectedDate}
         onSlotClick={(date) => {
           setSelectedRange({
             from: date,
             to: addHours(date, 1),
           });
+        }}
+        disabled={(date) => {
+          const workShifts = getWorkShiftsFromDateRange(
+            startOfWeek(selectedDate, { weekStartsOn: 1 }),
+            endOfWeek(selectedDate, { weekStartsOn: 1 }),
+            shift,
+          );
+          return !workShifts.some((shift) =>
+            isWithinInterval(date, { start: shift.start, end: shift.end }),
+          );
         }}
       />
     </div>
