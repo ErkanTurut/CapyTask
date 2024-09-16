@@ -12,6 +12,7 @@ import { api } from "@/trpc/client";
 import superjson from "superjson";
 import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 export function Providers({
   children,
@@ -62,13 +63,14 @@ export function Providers({
             defaultTheme="system"
             enableSystem
           >
+            <TooltipProvider>
+              {children}
+              <Toaster
+                closeButton
+                position={isMobile ? "top-center" : "bottom-right"}
+              />
+            </TooltipProvider>
             <TailwindIndicator />
-
-            {children}
-            <Toaster
-              closeButton
-              position={isMobile ? "top-center" : "bottom-right"}
-            />
           </NextThemesProvider>
           <ReactQueryDevtools initialIsOpen={false} />
         </ReactQueryStreamedHydration>

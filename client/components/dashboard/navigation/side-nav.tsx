@@ -21,14 +21,13 @@ import {
 import { Label } from "@/components/ui/label";
 
 export const navItemVariants = cva(
-  "text-muted-foreground group flex w-full  items-center rounded-sm border px-3 py-1  h-7 text-xs font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ",
+  "text-muted-foreground group flex w-full  items-center rounded-sm  px-3 py-1  h-7 text-xs font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ",
   {
     variants: {
       variant: {
-        default:
-          " border-transparent hover:bg-accent hover:text-accent-foreground",
-        active: "bg-muted/50 border-border text-foreground font-medium",
-        disabled: "pointer-events-none opacity-60 border-transparent",
+        default: "hover:bg-muted/50 hover:text-accent-foreground",
+        active: "bg-muted shadow-inner text-foreground font-medium",
+        disabled: "pointer-events-none opacity-60 ",
       },
     },
     defaultVariants: {

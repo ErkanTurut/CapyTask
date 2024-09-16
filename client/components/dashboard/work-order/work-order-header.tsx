@@ -16,7 +16,7 @@ interface WorkOrderHeaderProps {
 
 export async function WorkOrderHeader({ work_order }: WorkOrderHeaderProps) {
   return (
-    <div className="grid gap-4 border-b sm:grid-cols-2">
+    <div className="grid gap-4 border-b bg-background p-6 pb-0 sm:grid-cols-2">
       <PageHeader
         id="work-order-header"
         aria-labelledby="work-order-header-heading"
@@ -31,8 +31,7 @@ export async function WorkOrderHeader({ work_order }: WorkOrderHeaderProps) {
         <StatusSelector status={work_order.status} />
         <PrioritySelector status={work_order.priority} />
       </section>
-
-      <WorkOrderTabs />
+      <WorkOrderTabs className="col-span-full" />
     </div>
   );
 }

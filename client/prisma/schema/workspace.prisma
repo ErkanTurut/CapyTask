@@ -12,10 +12,10 @@ model workspace {
   company            company[]
   location           location[]
   team               team[]
+  work_order         work_order[]
   work_plan_template work_plan_template[]
   user               user                 @relation(fields: [created_by], references: [id])
   workspace_user     workspace_user[]
-  work_order         work_order[]
 
   @@index([url_key])
 }

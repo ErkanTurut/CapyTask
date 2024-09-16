@@ -66,6 +66,9 @@ module.exports = {
         sans: ["var(--font-geist-sans)"],
         mono: ["var(--font-geist-mono)"],
       },
+      transitionProperty: {
+        width: "width",
+      },
       keyframes: {
         "accordion-down": {
           from: { height: 0 },

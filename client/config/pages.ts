@@ -27,11 +27,19 @@ export const workOrderPagesConfig: Page[] = [
     segment: "locations",
   },
   {
+    title: "Appointments",
+    description: "All assets.",
+    href: "/appointments",
+    icon: "lightning",
+    segment: "appointments",
+  },
+  {
     title: "Resources",
     description: "All assets.",
     href: "/resources",
     icon: "lightning",
     segment: "resources",
+    disabled: true,
   },
 ];
 

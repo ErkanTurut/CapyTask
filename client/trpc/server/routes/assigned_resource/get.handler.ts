@@ -13,7 +13,7 @@ export async function getAssignedResourceByWorkOrder({
 }) {
   return await db
     .from("assigned_resource")
-    .select("*, user(*)", {
+    .select("*, service_resource(*)", {
       count: "exact",
     })
     .eq("work_order_id", input.work_order_id)

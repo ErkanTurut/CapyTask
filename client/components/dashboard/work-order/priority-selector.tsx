@@ -1,7 +1,7 @@
 "use client";
 import { Icons, IconType } from "@/components/icons";
 import { Database } from "@/types/supabase.types";
-import { ComboBox } from "@/components/popoverCombobox";
+import { PopoverComboBox } from "@/components/popoverCombobox";
 import { useState } from "react";
 
 export interface StatusConfig {
@@ -45,7 +45,7 @@ export const PrioritySelector = ({
 
   const Icon = selectedStatus.icon ? Icons[selectedStatus.icon] : null;
   return (
-    <ComboBox
+    <PopoverComboBox
       className="w-[10rem]"
       options={statusConfig}
       onSelect={setSelectedStatus}
@@ -55,6 +55,6 @@ export const PrioritySelector = ({
         {selectedStatus.label}
         <Icons.caretSort className="size-4 text-muted-foreground group-hover:text-accent-foreground" />
       </div>
-    </ComboBox>
+    </PopoverComboBox>
   );
 };
