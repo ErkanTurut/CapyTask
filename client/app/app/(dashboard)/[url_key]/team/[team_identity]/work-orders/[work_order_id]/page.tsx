@@ -1,3 +1,4 @@
+import { Shell } from "@/components/shells";
 import { WorkOrderItemTable } from "@/components/tables/work-order-item/work-order-item-table";
 import { trpc } from "@/trpc/server";
 import { notFound } from "next/navigation";
@@ -20,10 +21,8 @@ export default async function Page({ params }: PageProps) {
     return null;
   }
   return (
-    <div className="flex h-full flex-col gap-2">
-      <div className="grid h-full">
-        <WorkOrderItemTable data={work_order_item} rowCount={count ?? 0} />
-      </div>
-    </div>
+    <Shell>
+      <WorkOrderItemTable data={work_order_item} rowCount={count ?? 0} />
+    </Shell>
   );
 }

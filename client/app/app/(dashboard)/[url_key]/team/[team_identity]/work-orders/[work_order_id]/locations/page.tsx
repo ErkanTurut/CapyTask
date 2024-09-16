@@ -2,6 +2,7 @@ import { trpc } from "@/trpc/server";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LocationTable } from "@/components/tables/location/work-order-item-table";
+import { Shell } from "@/components/shells";
 interface PageProps {
   params: {
     url_key: string;
@@ -17,5 +18,9 @@ export default async function Page({ params }: PageProps) {
   if (!data) {
     return null;
   }
-  return <LocationTable data={data} rowCount={count || 0} />;
+  return (
+    <Shell>
+      <LocationTable data={data} rowCount={count || 0} />
+    </Shell>
+  );
 }

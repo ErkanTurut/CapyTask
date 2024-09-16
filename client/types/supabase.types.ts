@@ -374,6 +374,7 @@ export type Database = {
         Row: {
           created_at: string
           first_name: string
+          full_name: unknown | null
           id: string
           is_active: boolean
           last_name: string
@@ -384,6 +385,7 @@ export type Database = {
         Insert: {
           created_at?: string
           first_name: string
+          full_name?: unknown | null
           id?: string
           is_active?: boolean
           last_name: string
@@ -394,6 +396,7 @@ export type Database = {
         Update: {
           created_at?: string
           first_name?: string
+          full_name?: unknown | null
           id?: string
           is_active?: boolean
           last_name?: string
@@ -453,6 +456,45 @@ export type Database = {
           },
         ]
       }
+      service_resource_skill: {
+        Row: {
+          created_at: string
+          id: string
+          service_resource_id: string
+          skill_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          service_resource_id: string
+          skill_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          service_resource_id?: string
+          skill_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_resource_skill_service_resource_id_fkey"
+            columns: ["service_resource_id"]
+            isOneToOne: false
+            referencedRelation: "service_resource"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_resource_skill_skill_id_fkey"
+            columns: ["skill_id"]
+            isOneToOne: false
+            referencedRelation: "skill"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       shift: {
         Row: {
           days: number[] | null
@@ -484,6 +526,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      skill: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       team: {
         Row: {

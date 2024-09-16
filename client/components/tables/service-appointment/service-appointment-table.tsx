@@ -28,9 +28,10 @@ import {
 import { useSearchParams } from "next/navigation";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { getColumns } from "./service-appointment-columns";
+import { use } from "react";
 
 interface ServiceAppointmentTableProps {
-  initialData: NonNullable<
+  initialData: Promise<
     RouterOutput["db"]["service_appointment"]["get"]["byWorkOrder"]
   >;
   params: {
@@ -86,7 +87,7 @@ export function ServiceAppointmentTable({
     {
       work_order_id: params.work_order_id,
     },
-    { initialData },
+    { initialData: use(initialData) },
   );
 
   const searchParams = useSearchParams();
@@ -94,7 +95,7 @@ export function ServiceAppointmentTable({
   const columns = React.useMemo(() => getColumns(), []);
 
   const filterFields: DataTableFilterField<
-    ServiceAppointmentTableProps["initialData"]["data"][number]
+    RouterOutput["db"]["service_appointment"]["get"]["byWorkOrder"]["data"][number]
   >[] = [
     {
       label: "Status",

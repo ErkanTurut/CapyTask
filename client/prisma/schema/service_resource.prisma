@@ -1,16 +1,19 @@
 model service_resource {
-  id                       String                     @id @default(dbgenerated("nanoid(10)"))
-  user_id                  String                     @db.Uuid
-  is_active                Boolean                    @default(true)
-  created_at               DateTime                   @default(now()) @db.Timestamptz(6)
-  updated_at               DateTime                   @default(now()) @updatedAt @db.Timestamptz(6)
-  team_id                  String
-  first_name               String
-  last_name                String
+  id         String                   @id @default(dbgenerated("nanoid(10)"))
+  user_id    String                   @db.Uuid
+  is_active  Boolean                  @default(true)
+  created_at DateTime                 @default(now()) @db.Timestamptz(6)
+  updated_at DateTime                 @default(now()) @updatedAt @db.Timestamptz(6)
+  team_id    String
+  first_name String
+  last_name  String
+  full_name  Unsupported("tsvector")? @default(dbgenerated("to_tsvector('simple'::regconfig, ((COALESCE(first_name, ''::text) || ' '::text) || COALESCE(last_name, ''::text)))"))
+
   assigned_resource        assigned_resource[]
   team                     team                       @relation(fields: [team_id], references: [id])
   user                     user                       @relation(fields: [user_id], references: [id])
   service_resource_absence service_resource_absence[]
+  service_resource_skill   service_resource_skill[]
 
   @@index([user_id])
   @@index([team_id])
@@ -42,4 +45,17 @@ model assigned_resource {
   @@unique([service_appointment_id, service_resource_id])
   @@index([service_appointment_id])
   @@index([service_resource_id])
+}
+
+model service_resource_skill {
+  id                  String           @id @default(dbgenerated("nanoid(10)"))
+  service_resource_id String
+  skill_id            String
+  created_at          DateTime         @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime         @default(now()) @updatedAt @db.Timestamptz(6)
+  service_resource    service_resource @relation(fields: [service_resource_id], references: [id])
+  skill               skill            @relation(fields: [skill_id], references: [id])
+
+  @@index([service_resource_id])
+  @@index([skill_id])
 }

@@ -12,7 +12,12 @@ import {
   startOfWeek,
   subWeeks,
 } from "date-fns";
-import { parseAsTimestamp, useQueryStates } from "nuqs";
+import {
+  parseAsBoolean,
+  parseAsTimestamp,
+  useQueryState,
+  useQueryStates,
+} from "nuqs";
 
 import { Event } from "@/components/calendar/types";
 import WeekCalendar from "@/components/calendar/week-calendar";

@@ -49,6 +49,8 @@ import {
   ArrowLeftIcon,
   ArrowDownIcon,
   QuestionMarkCircledIcon,
+  TableIcon,
+  CalendarIcon,
 } from "@radix-ui/react-icons";
 import { IconProps } from "@radix-ui/react-icons/dist/types";
 import {
@@ -213,6 +215,8 @@ export const Icons = {
   arrowLeft: ArrowLeftIcon,
   arrowDown: ArrowDownIcon,
   questionMarkCircled: QuestionMarkCircledIcon,
+  table: TableIcon,
+  calendar: CalendarIcon,
   sparkles: (props: IconProps) => {
     return (
       <svg
