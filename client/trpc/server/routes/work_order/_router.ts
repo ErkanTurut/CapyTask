@@ -1,3 +1,5 @@
+import "server-only";
+
 import { TRPCError } from "@trpc/server";
 import { protectedProcedure, router } from "../../trpc";
 import { createWorkOrderHandler } from "./create.handler";
@@ -19,15 +21,20 @@ import { ZGetWorkOrderSchema } from "./get.schema";
 import { updateWorkOrderStatusHandler } from "./update.handler";
 import { ZUpdateWorkOrderSchema } from "./update.schema";
 import { unstable_cache } from "next/cache";
+import { notFound } from "next/navigation";
 export const work_order = router({
   get: {
     byId: protectedProcedure
       .input(ZGetWorkOrderSchema.pick({ id: true }))
       .query(async ({ ctx, input }) => {
-        return await getWorkOrderHandler({
+        const { data } = await getWorkOrderHandler({
           input,
           db: ctx.db,
         });
+        if (!data) {
+          return notFound();
+        }
+        return data;
       }),
     byTeamIdentity: protectedProcedure
       .input(ZGetWorkOrderSchema.pick({ team_identity: true, range: true }))
@@ -61,13 +68,6 @@ export const work_order = router({
           input,
           db: ctx.db,
         });
-
-        if (error) {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            cause: error,
-          });
-        }
         return data;
       }),
   },

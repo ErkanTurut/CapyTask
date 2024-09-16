@@ -1,0 +1,8 @@
+model shift {
+  id         String   @id @default(dbgenerated("nanoid(10)"))
+  team_id    String
+  days       Int[]
+  start_time DateTime @db.Time(6)
+  end_time   DateTime @db.Time(6)
+  team       team     @relation(fields: [team_id], references: [id])
+}

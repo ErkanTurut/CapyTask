@@ -6,7 +6,7 @@ import { Database } from "@/types/supabase.types";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Icons } from "../icons";
-import { ComboBox } from "../popoverCombobox";
+import { ComboBox } from "../popoverCombobox_old";
 
 interface StatusSelectorProps {
   status: {

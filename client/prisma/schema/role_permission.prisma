@@ -5,3 +5,14 @@ model role_permission {
 
   @@unique([role, permission])
 }
+
+enum role {
+  ADMIN
+  MANAGER
+  SUPERVISOR
+  TECHNICIAN
+  ENGINEER
+  QUALITY_INSPECTOR
+  OPERATOR
+  OTHER
+}

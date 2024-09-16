@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 
 import { DateTimePickerPopover } from "@/components/date-time-picker-popover";
 import { Icons } from "@/components/icons";
-import { ComboBox } from "@/components/popoverCombobox";
+import { ComboBox } from "@/components/popoverCombobox_old";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";

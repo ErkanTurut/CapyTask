@@ -1,31 +1,34 @@
 model work_order {
-  id               String             @id @default(dbgenerated("nanoid(10)"))
-  public_id        String             @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name             String
-  description      String?
-  created_at       DateTime           @default(now()) @db.Timestamptz(6)
-  updated_at       DateTime           @default(now()) @updatedAt @db.Timestamptz(6)
-  status           Status             @default(OPEN)
-  team_id          String
-  workspace_id     String
-  work_plan_id     String?
-  location_id      String?
-  company_id       String
-  priority         Priority           @default(LOW)
-  sheduled_end     DateTime?          @db.Timestamptz(6)
-  sheduled_start   DateTime?          @db.Timestamptz(6)
-  type             WorkOrderType      @default(INSPECTION)
-  source           WorkOrderSource
-  requested_by_id  String?            @db.Uuid
-  company          company            @relation(fields: [company_id], references: [id])
-  location         location?          @relation(fields: [location_id], references: [id])
-  requested_by     user?              @relation(fields: [requested_by_id], references: [id])
-  team             team               @relation(fields: [team_id], references: [id])
-  work_plan        work_plan?         @relation(fields: [work_plan_id], references: [id])
-  workspace        workspace          @relation(fields: [workspace_id], references: [id])
-  work_order_asset work_order_asset[]
-  // work_step_item   work_step_item[]
-  work_step        work_step[]
+  id                  String                   @id @default(dbgenerated("nanoid(10)"))
+  public_id           String                   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                String
+  description         String?
+  created_at          DateTime                 @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime                 @default(now()) @updatedAt @db.Timestamptz(6)
+  status              Status                   @default(OPEN)
+  team_id             String
+  work_plan_id        String?
+  location_id         String?
+  company_id          String
+  priority            Priority                 @default(LOW)
+  sheduled_end        DateTime?                @db.Timestamptz(6)
+  sheduled_start      DateTime?                @db.Timestamptz(6)
+  type                WorkOrderType            @default(INSPECTION)
+  source              WorkOrderSource
+  requested_by_id     String?                  @db.Uuid
+  workspace_id        String
+  ended_at            DateTime?                @db.Timestamptz(6)
+  started_at          DateTime?                @db.Timestamptz(6)
+  sheduled_range      Unsupported("tstzrange")
+  service_appointment service_appointment[]
+  company             company                  @relation(fields: [company_id], references: [id])
+  location            location?                @relation(fields: [location_id], references: [id])
+  requested_by        user?                    @relation(fields: [requested_by_id], references: [id])
+  team                team                     @relation(fields: [team_id], references: [id])
+  work_plan           work_plan?               @relation(fields: [work_plan_id], references: [id])
+  workspace           workspace                @relation(fields: [workspace_id], references: [id])
+  work_order_item     work_order_item[]
+  work_step           work_step[]
 
   @@index([team_id])
   @@index([workspace_id])
@@ -34,14 +37,20 @@ model work_order {
   @@index([company_id])
 }
 
-model work_order_asset {
-  work_order_id String
-  asset_id      String
-  status        Status     @default(OPEN)
-  asset         asset      @relation(fields: [asset_id], references: [id])
-  work_order    work_order @relation(fields: [work_order_id], references: [id], onDelete: Cascade)
+model work_order_item {
+  id                  String                @id @default(dbgenerated("nanoid(10)"))
+  work_order_id       String
+  asset_id            String?
+  location_id         String?
+  created_at          DateTime              @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime              @default(now()) @updatedAt @db.Timestamptz(6)
+  status              Status                @default(OPEN)
+  service_appointment service_appointment[]
+  asset               asset?                @relation(fields: [asset_id], references: [id])
+  location            location?             @relation(fields: [location_id], references: [id])
+  work_order          work_order            @relation(fields: [work_order_id], references: [id], onDelete: Cascade)
 
-  @@id([work_order_id, asset_id])
   @@index([asset_id])
+  @@index([location_id])
   @@index([work_order_id])
 }

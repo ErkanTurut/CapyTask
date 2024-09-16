@@ -1,4 +1,5 @@
 "use client";
+import { Icons } from "@/components/icons";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,23 +8,19 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { useWindowScroll } from "@/lib/hooks/use-scroll";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useMemo } from "react";
 
 interface headerProps {}
 
 export default function Header({}: headerProps) {
-  const [{ y }] = useWindowScroll();
-  const _isScroll = useMemo(() => y && y > 4, [y]);
   return (
     <div
       className={cn(
-        "sticky top-0 flex w-full border-b border-transparent p-2 shadow-none transition-all duration-200 hover:border-border",
-        _isScroll && "border-border bg-background shadow",
+        "group/btn sticky top-0 flex h-[49.5px] w-full items-center justify-between border-b border-border p-2 shadow-none backdrop-blur-sm transition-all duration-200",
       )}
     >
-      <Breadcrumb className="flex h-7 items-center rounded-md border p-2 hover:bg-muted/40">
+      <Breadcrumb className="flex h-7 items-center rounded-md border bg-background p-2 hover:bg-muted/40">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="/">Home</BreadcrumbLink>
@@ -38,6 +35,15 @@ export default function Header({}: headerProps) {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
+      <div className="flex items-center gap-2">
+        <Button size={"sm"} variant={"outline"} className="shadow-none">
+          <Icons.chatBubble className="mr-2 h-4 text-muted-foreground" />
+          Feedback
+        </Button>
+        <Button size={"icon"} variant={"ghost"} className="h-7 w-7">
+          <Icons.bell className="h-4" />
+        </Button>
+      </div>
     </div>
   );
 }

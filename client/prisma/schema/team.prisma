@@ -1,17 +1,19 @@
 model team {
-  id           String       @id @default(dbgenerated("nanoid(10)"))
-  name         String
-  description  String?
-  image_uri    String?
-  created_at   DateTime     @default(now()) @db.Timestamptz(6)
-  updated_at   DateTime     @default(now()) @updatedAt @db.Timestamptz(6)
-  workspace_id String
-  identity     String
-  public_id    String       @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  workspace    workspace    @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
-  team_user    team_user[]
-  work_order   work_order[]
-  work_plan    work_plan[]
+  id               String             @id @default(dbgenerated("nanoid(10)"))
+  name             String
+  description      String?
+  image_uri        String?
+  created_at       DateTime           @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime           @default(now()) @updatedAt @db.Timestamptz(6)
+  workspace_id     String
+  identity         String
+  public_id        String             @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  service_resource service_resource[]
+  shift            shift[]
+  workspace        workspace          @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
+  team_user        team_user[]
+  work_order       work_order[]
+  work_plan        work_plan[]
 
   @@unique([identity, workspace_id])
   @@unique([name, workspace_id])

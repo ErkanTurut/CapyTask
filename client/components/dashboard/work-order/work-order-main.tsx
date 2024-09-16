@@ -1,4 +1,3 @@
-"use client";
 import { Copy } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -22,17 +21,17 @@ interface WorkOrderMainProps {
   work_order: NonNullable<RouterOutput["db"]["work_order"]["get"]["detail"]>;
 }
 
-export default function WorkOrderMain({
+export async function WorkOrderMain({
   params,
   work_order,
 }: WorkOrderMainProps) {
   return (
-    <Card className="overflow-hidden shadow-sm" x-chunk="dashboard-05-chunk-4">
-      <CardHeader className="flex flex-row items-start border-b border-dashed bg-muted/40">
-        <div className="grid gap-0.5">
-          <CardTitle className="group flex items-center gap-2 text-lg">
+    <div className="flex h-full flex-col">
+      <div className="flex flex-row items-start bg-muted/50 px-6 py-4">
+        <div className="grid gap-2">
+          <div className="group flex items-center gap-2 font-semibold">
             ID : {work_order.id}
-            <Button
+            {/* <Button
               size="icon"
               variant="outline"
               className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
@@ -42,15 +41,15 @@ export default function WorkOrderMain({
             >
               <Copy className="h-3 w-3" />
               <span className="sr-only">Copy Order ID</span>
-            </Button>
-          </CardTitle>
-          <CardDescription>
+            </Button> */}
+          </div>
+          <div className="text-sm text-muted-foreground">
             Created at
             {formatDate({ date: work_order.created_at, format: "LLLL" })}
-          </CardDescription>
+          </div>
         </div>
-      </CardHeader>
-      <CardContent className="p-6 text-sm">
+      </div>
+      <div className="p-6 text-sm">
         <div className="grid gap-3">
           <div className="font-semibold">Contract Information</div>
           <dl className="grid gap-3">
@@ -142,15 +141,15 @@ export default function WorkOrderMain({
             </div>
           </dl>
         </div>
-      </CardContent>
-      <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
+      </div>
+      <div className="mt-auto flex flex-row items-center border-t bg-muted/50 px-6 py-3">
         <div className="text-xs text-muted-foreground">
           Updated at{" "}
           <time dateTime="2023-11-23">
             {formatDate({ date: work_order.updated_at, format: "LLL" })}
           </time>
         </div>
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   );
 }

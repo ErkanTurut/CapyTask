@@ -26,6 +26,9 @@ export const createClient = cache(() => {
           }
         },
       },
+      auth: {
+        autoRefreshToken: false,
+      },
     },
   );
 });

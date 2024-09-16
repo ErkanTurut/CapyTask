@@ -51,6 +51,10 @@ export async function createWorkOrderHandler({
       status: input.status,
       workspace_id: input.workspace_id,
       work_plan_id: work_plan.id,
+      sheduled_range: [
+        input.sheduled_start?.toUTCString(),
+        input.sheduled_end?.toUTCString(),
+      ],
     })
     .select("*")
     .single();
@@ -67,9 +71,10 @@ export async function createWorkOrderHandler({
       return {
         asset_id: asset.id,
         work_order_id: work_order.id,
+        location_id: asset.location_id,
       };
     });
-    await db.from("work_order_asset").upsert(assets);
+    await db.from("work_order_item").upsert(assets);
 
     const assetSteps = input.asset.flatMap((asset) => {
       if (asset.work_step) {

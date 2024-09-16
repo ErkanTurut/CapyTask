@@ -126,6 +126,45 @@ export type Database = {
           },
         ]
       }
+      assigned_resource: {
+        Row: {
+          created_at: string
+          id: string
+          service_appointment_id: string
+          service_resource_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          service_appointment_id: string
+          service_resource_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          service_appointment_id?: string
+          service_resource_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assigned_resource_service_appointment_id_fkey"
+            columns: ["service_appointment_id"]
+            isOneToOne: false
+            referencedRelation: "service_appointment"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assigned_resource_service_resource_id_fkey"
+            columns: ["service_resource_id"]
+            isOneToOne: false
+            referencedRelation: "service_resource"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       company: {
         Row: {
           created_at: string
@@ -286,6 +325,232 @@ export type Database = {
         }
         Relationships: []
       }
+      service_appointment: {
+        Row: {
+          created_at: string
+          end_date: string
+          id: string
+          start_date: string
+          updated_at: string
+          work_order_id: string
+          work_order_item_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          end_date: string
+          id?: string
+          start_date: string
+          updated_at?: string
+          work_order_id: string
+          work_order_item_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          end_date?: string
+          id?: string
+          start_date?: string
+          updated_at?: string
+          work_order_id?: string
+          work_order_item_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_appointment_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "work_order"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_appointment_work_order_item_id_fkey"
+            columns: ["work_order_item_id"]
+            isOneToOne: false
+            referencedRelation: "work_order_item"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_resource: {
+        Row: {
+          created_at: string
+          first_name: string
+          full_name: unknown | null
+          id: string
+          is_active: boolean
+          last_name: string
+          team_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          first_name: string
+          full_name?: unknown | null
+          id?: string
+          is_active?: boolean
+          last_name: string
+          team_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          first_name?: string
+          full_name?: unknown | null
+          id?: string
+          is_active?: boolean
+          last_name?: string
+          team_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_resource_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "team"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_resource_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_resource_absence: {
+        Row: {
+          created_at: string
+          end_date: string
+          id: string
+          service_resource_id: string
+          start_date: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          end_date: string
+          id?: string
+          service_resource_id: string
+          start_date: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          end_date?: string
+          id?: string
+          service_resource_id?: string
+          start_date?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_resource_absence_service_resource_id_fkey"
+            columns: ["service_resource_id"]
+            isOneToOne: false
+            referencedRelation: "service_resource"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_resource_skill: {
+        Row: {
+          created_at: string
+          id: string
+          service_resource_id: string
+          skill_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          service_resource_id: string
+          skill_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          service_resource_id?: string
+          skill_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_resource_skill_service_resource_id_fkey"
+            columns: ["service_resource_id"]
+            isOneToOne: false
+            referencedRelation: "service_resource"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_resource_skill_skill_id_fkey"
+            columns: ["skill_id"]
+            isOneToOne: false
+            referencedRelation: "skill"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shift: {
+        Row: {
+          days: number[] | null
+          end_time: string
+          id: string
+          start_time: string
+          team_id: string
+        }
+        Insert: {
+          days?: number[] | null
+          end_time: string
+          id?: string
+          start_time: string
+          team_id: string
+        }
+        Update: {
+          days?: number[] | null
+          end_time?: string
+          id?: string
+          start_time?: string
+          team_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shift_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "team"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      skill: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       team: {
         Row: {
           created_at: string
@@ -369,6 +634,7 @@ export type Database = {
           email: string
           external_id: string | null
           first_name: string | null
+          full_name: unknown | null
           id: string
           image_uri: string | null
           last_name: string | null
@@ -379,6 +645,7 @@ export type Database = {
           email: string
           external_id?: string | null
           first_name?: string | null
+          full_name?: unknown | null
           id?: string
           image_uri?: string | null
           last_name?: string | null
@@ -389,6 +656,7 @@ export type Database = {
           email?: string
           external_id?: string | null
           first_name?: string | null
+          full_name?: unknown | null
           id?: string
           image_uri?: string | null
           last_name?: string | null
@@ -401,6 +669,7 @@ export type Database = {
           company_id: string
           created_at: string
           description: string | null
+          ended_at: string | null
           id: string
           location_id: string | null
           name: string
@@ -408,8 +677,10 @@ export type Database = {
           public_id: string
           requested_by_id: string | null
           sheduled_end: string | null
+          sheduled_range: unknown
           sheduled_start: string | null
           source: Database["public"]["Enums"]["WorkOrderSource"]
+          started_at: string | null
           status: Database["public"]["Enums"]["Status"]
           team_id: string
           type: Database["public"]["Enums"]["WorkOrderType"]
@@ -421,6 +692,7 @@ export type Database = {
           company_id: string
           created_at?: string
           description?: string | null
+          ended_at?: string | null
           id?: string
           location_id?: string | null
           name: string
@@ -428,8 +700,10 @@ export type Database = {
           public_id?: string
           requested_by_id?: string | null
           sheduled_end?: string | null
+          sheduled_range: unknown
           sheduled_start?: string | null
           source: Database["public"]["Enums"]["WorkOrderSource"]
+          started_at?: string | null
           status?: Database["public"]["Enums"]["Status"]
           team_id: string
           type?: Database["public"]["Enums"]["WorkOrderType"]
@@ -441,6 +715,7 @@ export type Database = {
           company_id?: string
           created_at?: string
           description?: string | null
+          ended_at?: string | null
           id?: string
           location_id?: string | null
           name?: string
@@ -448,8 +723,10 @@ export type Database = {
           public_id?: string
           requested_by_id?: string | null
           sheduled_end?: string | null
+          sheduled_range?: unknown
           sheduled_start?: string | null
           source?: Database["public"]["Enums"]["WorkOrderSource"]
+          started_at?: string | null
           status?: Database["public"]["Enums"]["Status"]
           team_id?: string
           type?: Database["public"]["Enums"]["WorkOrderType"]
@@ -502,32 +779,51 @@ export type Database = {
           },
         ]
       }
-      work_order_asset: {
+      work_order_item: {
         Row: {
-          asset_id: string
+          asset_id: string | null
+          created_at: string
+          id: string
+          location_id: string | null
           status: Database["public"]["Enums"]["Status"]
+          updated_at: string
           work_order_id: string
         }
         Insert: {
-          asset_id: string
+          asset_id?: string | null
+          created_at?: string
+          id?: string
+          location_id?: string | null
           status?: Database["public"]["Enums"]["Status"]
+          updated_at?: string
           work_order_id: string
         }
         Update: {
-          asset_id?: string
+          asset_id?: string | null
+          created_at?: string
+          id?: string
+          location_id?: string | null
           status?: Database["public"]["Enums"]["Status"]
+          updated_at?: string
           work_order_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "work_order_asset_asset_id_fkey"
+            foreignKeyName: "work_order_item_asset_id_fkey"
             columns: ["asset_id"]
             isOneToOne: false
             referencedRelation: "asset"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "work_order_asset_work_order_id_fkey"
+            foreignKeyName: "work_order_item_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "location"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "work_order_item_work_order_id_fkey"
             columns: ["work_order_id"]
             isOneToOne: false
             referencedRelation: "work_order"
@@ -634,7 +930,7 @@ export type Database = {
           status: Database["public"]["Enums"]["Status"]
           step_order: number | null
           updated_at: string
-          work_order_id: string
+          work_order_id: string | null
           work_plan_id: string
           work_step_template_id: string | null
         }
@@ -650,7 +946,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["Status"]
           step_order?: number | null
           updated_at?: string
-          work_order_id: string
+          work_order_id?: string | null
           work_plan_id: string
           work_step_template_id?: string | null
         }
@@ -666,7 +962,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["Status"]
           step_order?: number | null
           updated_at?: string
-          work_order_id?: string
+          work_order_id?: string | null
           work_plan_id?: string
           work_step_template_id?: string | null
         }
@@ -844,6 +1140,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_available_time_slots: {
+        Args: {
+          schedule_range: unknown
+          unavailable_time_slots: Json
+        }
+        Returns: {
+          id: number
+          available_time_slots: Json
+        }[]
+      }
       manage_work_plan: {
         Args: {
           _work_plan_template_id: string
@@ -897,6 +1203,15 @@ export type Database = {
           step: number
         }
         Returns: string
+      }
+      remove_overlaps: {
+        Args: {
+          main_range: unknown
+          other_ranges: unknown[]
+        }
+        Returns: {
+          result_range: unknown
+        }[]
       }
       upsert_work_order_assets: {
         Args: {
