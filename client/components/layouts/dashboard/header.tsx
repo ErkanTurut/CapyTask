@@ -17,7 +17,7 @@ export default function Header({}: headerProps) {
   return (
     <div
       className={cn(
-        "group/btn sticky top-0 z-50 flex w-full justify-between border-b border-border p-2 shadow-none backdrop-blur-sm transition-all duration-200",
+        "group/btn sticky top-0 flex h-[49.5px] w-full items-center justify-between border-b border-border p-2 shadow-none backdrop-blur-sm transition-all duration-200",
       )}
     >
       <Breadcrumb className="flex h-7 items-center rounded-md border bg-background p-2 hover:bg-muted/40">

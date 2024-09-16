@@ -56,3 +56,14 @@ export interface DomainVerificationResponse {
     reason: string;
   }[];
 }
+
+export interface Shift {
+  days: number[];
+  start_time: string;
+  end_time: string;
+}
+
+export interface TimeSlot {
+  from: string;
+  to: string;
+}

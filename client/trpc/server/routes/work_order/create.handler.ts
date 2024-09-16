@@ -51,6 +51,10 @@ export async function createWorkOrderHandler({
       status: input.status,
       workspace_id: input.workspace_id,
       work_plan_id: work_plan.id,
+      sheduled_range: [
+        input.sheduled_start?.toUTCString(),
+        input.sheduled_end?.toUTCString(),
+      ],
     })
     .select("*")
     .single();
