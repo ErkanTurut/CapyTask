@@ -257,17 +257,17 @@ export function MultiFilterRow<TData>({
           setSelectedOption(
             allOptions.find((option) => option.value === value),
           );
-          setSelectedOptions((prev) =>
-            prev.map((item) => {
-              if (item.id === option.id) {
-                return {
-                  ...item,
-                  value: value as keyof TData,
-                };
-              }
-              return item;
-            }),
-          );
+          // setSelectedOptions((prev) =>
+          //   prev.map((item) => {
+          //     if (item.id === option.id) {
+          //       return {
+          //         ...item,
+          //         value: value as keyof TData,
+          //       };
+          //     }
+          //     return item;
+          //   }),
+          // );
         }}
       >
         <SelectTrigger className="h-8 w-full text-xs capitalize">

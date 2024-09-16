@@ -20,29 +20,25 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { getWorkShiftsFromDateRange } from "@/lib/service-appointment/utils";
+import { Shift } from "@/lib/types";
+import { cn } from "@/lib/utils";
 import { api, RouterOutput } from "@/trpc/client";
 import {
   createServiceAppointmentSchema,
   TCreateServiceAppointmentSchema,
 } from "@/trpc/server/routes/service_appointment/create.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useParams } from "next/navigation";
+import { experimental_useObject as useObject } from "ai/react";
+import { endOfDay, startOfDay } from "date-fns";
 import { useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
 import { LocationSelector } from "./location-selector";
 import ServiceResourceSelector from "./service-resource-selector";
 import TimeSelector from "./time-selector";
-import { endOfDay, startOfDay } from "date-fns";
-import {
-  findAvailableRanges,
-  getWorkShiftsFromDateRange,
-} from "@/lib/service-appointment/utils";
-import { Shift } from "@/lib/types";
-import { experimental_useObject as useObject } from "ai/react";
-import { z } from "zod";
-import { cn } from "@/lib/utils";
 
 interface AppointmentDialogProps {
   open: boolean;
@@ -234,21 +230,17 @@ export default function AppointmentDialog({
         }),
       ),
     }),
-    onFinish(event) {
-      if (!event.object || event.object.recommendations.length === 0 || !data) {
-        return;
-      }
-      console.log(event.object);
-
-      const foundResources = event.object.recommendations.map(
-        (recommendation) => {
-          return data.find((item) => item.id === recommendation.id);
-        },
-      );
-      setSelectedServiceResources(
-        foundResources.filter((resource) => resource !== undefined),
-      );
-    },
+    // onFinish(event) {
+    //   if (!event.object || event.object.recommendations.length === 0 || !data) {
+    //     return;
+    //   }
+    //   const foundResources = event.object.recommendations
+    //     .map((recommendation) => {
+    //       return data.find((item) => item.id === recommendation.id);
+    //     })
+    //     .filter((resource) => resource !== undefined);
+    //   setSelectedServiceResources(foundResources);
+    // },
   });
 
   return (
