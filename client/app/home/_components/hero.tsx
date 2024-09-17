@@ -6,6 +6,7 @@ import {
   PageHeaderHeading,
 } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
+import { Crown } from "lucide-react";
 import { FC } from "react";
 interface heroProps {}
 
@@ -23,17 +24,24 @@ const Hero: FC<heroProps> = ({}) => {
       </div>
 
       <PageHeader>
-        <PageHeaderHeading className="text-center" size={"lg"}>
-          Unlock Efficiency with buddy
+        <PageHeaderHeading as="h1" className="text-center" size={"lg"}>
+          You're the{" "}
+          <span className="relative inline-block">
+            <Crown className="absolute -top-6 left-1/2 h-8 w-8 -translate-x-1/2 rotate-12 transform text-yellow-400" />
+            King
+          </span>{" "}
+          of the Field.
         </PageHeaderHeading>
-        <PageHeaderDescription className="mx-auto text-center" size={"lg"}>
-          Simplify preventive maintenance and inspections with our intuitive
-          platform. Collaborate seamlessly, create customized Inspection Plans,
-          and execute inspections with precision. Experience efficiency like
-          never before.
+        <PageHeaderHeading as="h2" className="mx-auto text-center" size={"sm"}>
+          Let Buddy Handle the Rest
+        </PageHeaderHeading>
+
+        <PageHeaderDescription className="mx-auto pt-6 text-center" size={"sm"}>
+          Streamline your field service operations with Buddy. Manage jobs,
+          track time, and delight customers effortlessly.
         </PageHeaderDescription>
       </PageHeader>
-      <div className=" flex items-center justify-center gap-6">
+      <div className="flex items-center justify-center gap-6">
         <Button>Get Started Today</Button>
         <Button variant="outline">
           Learn more <Icons.arrowRight className="ml-2 h-4 w-4" />

@@ -18,7 +18,7 @@ import {
   addHours,
   isToday,
 } from "date-fns";
-import { ColorClasses, Event } from "./types";
+import { Event } from "./types";
 import {
   formatHour,
   formatEventTime,

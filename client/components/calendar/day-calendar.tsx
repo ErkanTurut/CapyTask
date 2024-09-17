@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { format, addHours, startOfDay } from "date-fns";
-import { DayCalendarProps, ColorClasses, Event } from "./types";
+import { Event } from "./types";
 import {
   formatHour,
   formatEventTime,
@@ -26,6 +26,20 @@ import {
 import { formatDateRange } from "little-date";
 import { colorClasses } from "./utils";
 
+export interface DayCalendarProps extends React.HTMLAttributes<HTMLDivElement> {
+  events: Event[];
+  initialTimeFormat?: "24h" | "12h";
+  disabledTimeRanges?: { start: Date; end: Date }[];
+  disabledSlots?: Date[];
+  date: Date;
+  onEventClick?: (event: Event) => void;
+  onSlotClick?: (slotDate: Date) => void;
+  onPlaceholderUpdate?: (event: Event) => void;
+}
+export type ColorClasses = {
+  [key in Event["color"]]: string;
+};
+
 const DayCalendar: React.FC<DayCalendarProps> = ({
   events,
   initialTimeFormat = "12h",
@@ -34,6 +48,7 @@ const DayCalendar: React.FC<DayCalendarProps> = ({
   date,
   onEventClick,
   onSlotClick,
+  className,
 }) => {
   const hours = useMemo(() => Array.from({ length: 24 }, (_, i) => i), []);
 
@@ -77,7 +92,7 @@ const DayCalendar: React.FC<DayCalendarProps> = ({
         style={style}
       >
         <div
-          className="z-10 hover:cursor-pointer"
+          className="hover:cursor-pointer"
           onClick={() => onEventClick?.(event)}
         >
           <p className="truncate font-semibold">{event.title}</p>
@@ -101,11 +116,11 @@ const DayCalendar: React.FC<DayCalendarProps> = ({
   };
 
   return (
-    <Table>
+    <Table className={className}>
       <TableHeader>
         <TableRow className="hover:bg-transparent">
           <TableHead className="w-10 border-r p-1"></TableHead>
-          <TableHead className="sticky top-0 p-1 text-center text-xs font-semibold">
+          <TableHead className="sticky top-0 z-20 bg-background p-1 text-center text-xs font-semibold">
             {format(date, "EEEE, MMMM d")}
           </TableHead>
         </TableRow>

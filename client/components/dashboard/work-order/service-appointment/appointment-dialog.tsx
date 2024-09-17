@@ -263,16 +263,21 @@ export default function AppointmentDialog({
 
             <div className="grid h-full w-full gap-2 overflow-hidden border-b sm:grid-cols-[1fr,0.8fr]">
               <div className="sm:border-r">
-                <ScrollArea className="h-[26rem] p-2">
-                  <DayCalendar
-                    initialTimeFormat="24h"
-                    events={
-                      placeHolderEvent
-                        ? [placeHolderEvent, ...selectedServiceResourcesEvents]
-                        : selectedServiceResourcesEvents
-                    }
-                    date={date}
-                  />
+                <ScrollArea className="h-[26rem]">
+                  <div className="grid px-2">
+                    <DayCalendar
+                      initialTimeFormat="24h"
+                      events={
+                        placeHolderEvent
+                          ? [
+                              placeHolderEvent,
+                              ...selectedServiceResourcesEvents,
+                            ]
+                          : selectedServiceResourcesEvents
+                      }
+                      date={date}
+                    />
+                  </div>
                 </ScrollArea>
                 <FormField
                   control={form.control}
