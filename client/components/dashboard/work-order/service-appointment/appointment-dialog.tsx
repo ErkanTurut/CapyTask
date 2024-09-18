@@ -39,6 +39,7 @@ import { z } from "zod";
 import { LocationSelector } from "./location-selector";
 import ServiceResourceSelector from "./service-resource-selector";
 import TimeSelector from "./time-selector";
+import { WorkItemSelector } from "./work-item-selector";
 
 interface AppointmentDialogProps {
   open: boolean;
@@ -67,6 +68,10 @@ export default function AppointmentDialog({
   const [assignedResources, setAssignedResources] = useState<string[]>([]);
   const [selectedLocation, setSelectedLocations] = useState<
     RouterOutput["db"]["location"]["get"]["textSearch"][number] | undefined
+  >(undefined);
+  const [selectedWorkItem, setSelectedWorkItem] = useState<
+    | RouterOutput["db"]["work_order_item"]["get"]["byWorkOrder"]["data"][number]
+    | undefined
   >(undefined);
 
   const utils = api.useUtils();
@@ -191,6 +196,18 @@ export default function AppointmentDialog({
     }
   };
 
+  const handleWorkItemSelect = (
+    workItem: RouterOutput["db"]["work_order_item"]["get"]["byWorkOrder"]["data"][number],
+  ) => {
+    if (selectedWorkItem?.id === workItem.id) {
+      setSelectedWorkItem(undefined);
+      form.resetField("work_order_item_id");
+    } else {
+      setSelectedWorkItem(workItem);
+      form.setValue("work_order_item_id", workItem.id);
+    }
+  };
+
   const shift: Shift = {
     start_time: "07:00",
     end_time: "19:00",
@@ -242,6 +259,11 @@ export default function AppointmentDialog({
     //   setSelectedServiceResources(foundResources);
     // },
   });
+
+  const { data: work_order_item } =
+    api.db.work_order_item.get.byWorkOrder.useQuery({
+      work_order_id,
+    });
 
   return (
     <Dialog
@@ -307,7 +329,7 @@ export default function AppointmentDialog({
                   )}
                 />
               </div>
-              <div className="flex h-full flex-col justify-between overflow-hidden pb-2">
+              <div className="flex h-full flex-col justify-between gap-2 overflow-hidden pb-2">
                 <div className="flex h-full flex-col gap-2 overflow-hidden">
                   <FormField
                     control={form.control}
@@ -462,10 +484,28 @@ export default function AppointmentDialog({
                     </FormItem>
                   )}
                 />
+                <FormField
+                  control={form.control}
+                  name="work_order_item_id"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormMessage />
+                      <FormControl>
+                        <WorkItemSelector
+                          onSelect={handleWorkItemSelect}
+                          selectedValue={selectedWorkItem}
+                          workOrderItems={work_order_item?.data ?? []}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
               </div>
             </div>
             <DialogFooter>
-              <Button type="submit">Save changes</Button>
+              <Button isLoading={isPending} type="submit">
+                Save changes
+              </Button>
             </DialogFooter>
           </form>
         </Form>

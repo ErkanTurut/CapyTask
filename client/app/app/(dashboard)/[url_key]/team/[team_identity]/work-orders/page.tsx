@@ -8,6 +8,7 @@ import {
 import TableSkeleton from "@/components/skeletons/table-skeleton";
 import { Suspense } from "react";
 import TableContainer from "@/components/tables/work-order/TableContainer";
+import { ScrollArea } from "@/components/ui/scroll-area";
 interface PageProps {
   searchParams: { [key: string]: string | string[] | undefined };
   params: {
@@ -23,21 +24,26 @@ export default function Page({ searchParams, params }: PageProps) {
     ? parseInt(searchParams["limit"] as string)
     : 10;
   return (
-    <Shell>
-      <PageHeader id="account-header" aria-labelledby="account-header-heading">
-        <PageHeaderHeading size="sm" className="flex items-center gap-1">
-          Work Orders
-        </PageHeaderHeading>
-        <PageHeaderDescription size="sm">
-          View and manage your work orders
-        </PageHeaderDescription>
-      </PageHeader>
+    <ScrollArea className="h-full">
+      <Shell>
+        <PageHeader
+          id="account-header"
+          aria-labelledby="account-header-heading"
+        >
+          <PageHeaderHeading size="sm" className="flex items-center gap-1">
+            Work Orders
+          </PageHeaderHeading>
+          <PageHeaderDescription size="sm">
+            View and manage your work orders
+          </PageHeaderDescription>
+        </PageHeader>
 
-      <Shell variant={"bento"}>
-        <Suspense fallback={<TableSkeleton />}>
-          <TableContainer params={params} searchParams={{ limit, page }} />
-        </Suspense>
+        <Shell variant={"bento"}>
+          <Suspense fallback={<TableSkeleton />}>
+            <TableContainer params={params} searchParams={{ limit, page }} />
+          </Suspense>
+        </Shell>
       </Shell>
-    </Shell>
+    </ScrollArea>
   );
 }

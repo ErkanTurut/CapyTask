@@ -17,50 +17,23 @@ import {
   CommandGroup,
   CommandItem,
   CommandEmpty,
-  CommandLoading,
 } from "@/components/ui/command";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Icons } from "@/components/icons";
 
-interface ServiceResourceSelectorProps {
+interface WorkItemSelectorProps {
   onSelect: (
-    location: RouterOutput["db"]["location"]["get"]["textSearch"][number],
+    location: RouterOutput["db"]["work_order_item"]["get"]["byWorkOrder"]["data"][number],
   ) => void;
-  selectedValue?: RouterOutput["db"]["location"]["get"]["textSearch"][number];
-  workOrderItem: RouterOutput["db"]["work_order_item"]["get"]["byWorkOrder"]["data"][number];
+  selectedValue?: RouterOutput["db"]["work_order_item"]["get"]["byWorkOrder"]["data"][number];
+  workOrderItems: RouterOutput["db"]["work_order_item"]["get"]["byWorkOrder"]["data"];
 }
 
-function LocationSelector({
+function WorkItemSelector({
   onSelect,
   selectedValue,
-}: ServiceResourceSelectorProps) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [searchValue, setSearchValue] = useState("");
+  workOrderItems,
+}: WorkItemSelectorProps) {
   const [open, setOpen] = useState(false);
-  const [isTyping, setIsTyping] = useState(false);
-
-  // const { data: locations, isFetching } =
-  //   api.db.location.get.textSearch.useQuery(
-  //     { search: searchValue },
-  //     {
-  //       refetchOnMount: false,
-  //       initialData: selectedValue && [selectedValue],
-  //       enabled: Boolean(searchValue),
-  //     },
-  //   );
-
-  const handleOnSearchChange = useDebouncedCallback(async (e: string) => {
-    setIsTyping(false);
-    if (e === "") {
-      return;
-    }
-    setSearchValue(e);
-  }, 400);
-
-  const handleTyping = async (e: string) => {
-    setIsTyping(true);
-    handleOnSearchChange(e);
-  };
 
   return (
     <Popover
@@ -75,8 +48,12 @@ function LocationSelector({
           variant={"outline"}
           type="button"
         >
-          <Icons.SewingPin className="mr-2 h-4 w-4" />
-          <span>{selectedValue?.name ?? "Select a location"}</span>
+          <Icons.gear className="mr-2 h-4 w-4" />
+          <span>
+            {selectedValue
+              ? `${selectedValue?.asset?.name} ${selectedValue?.location?.name}`
+              : "Select a work item"}
+          </span>
         </Button>
       </PopoverTrigger>
       <PopoverContent
@@ -86,50 +63,39 @@ function LocationSelector({
         sideOffset={6}
         side="top"
       >
-        <Command shouldFilter={false} className="rounded-sm">
+        <Command className="rounded-sm">
           <CommandInput
-            onValueChange={handleTyping}
+            // onValueChange={handleTyping}
             className="text-xs leading-normal"
             placeholder="Type to search..."
-            ref={inputRef}
           />
           <CommandList>
             <CommandGroup>
-              {locations?.map((location) => (
+              {workOrderItems?.map((workOrderItem) => (
                 <CommandItem
-                  key={location.id}
-                  value={location.id}
+                  key={workOrderItem.id}
+                  value={`${JSON.stringify(workOrderItem.asset)} ${JSON.stringify(workOrderItem.location)}`}
                   onSelect={async () => {
-                    onSelect?.(location);
+                    onSelect?.(workOrderItem);
                   }}
                 >
                   <div className="flex flex-col items-start gap-1">
                     <span
-                      className={`text-xs font-medium ${selectedValue && selectedValue.id === location.id && "underline"}`}
+                      className={`text-xs font-medium ${selectedValue && selectedValue.id === workOrderItem.id && "underline"}`}
                     >
-                      {location.name} ({location.location_type})
+                      {workOrderItem.asset?.name} {workOrderItem.location?.name}
                     </span>
-                    <address className="text-xs text-muted-foreground">
-                      {location.address?.street}, {location.address?.state}{" "}
-                      {location.address?.postal_code}, {location.address?.city},{" "}
-                      {location.address?.country}
-                    </address>
+                    <span className="text-xs text-muted-foreground">
+                      {workOrderItem.status}
+                    </span>
                   </div>
                 </CommandItem>
               ))}
             </CommandGroup>
 
-            {!isFetching && isTyping && (
-              <CommandLoading className="select-none rounded-sm px-2 py-3 text-center text-sm text-muted-foreground">
-                Listening...
-              </CommandLoading>
-            )}
-
-            {!isFetching && !isTyping && (
-              <CommandEmpty className="select-none rounded-sm px-2 py-3 text-center text-sm text-muted-foreground">
-                No results found
-              </CommandEmpty>
-            )}
+            <CommandEmpty className="select-none rounded-sm px-2 py-3 text-center text-sm text-muted-foreground">
+              No results found
+            </CommandEmpty>
           </CommandList>
         </Command>
       </PopoverContent>
@@ -137,4 +103,4 @@ function LocationSelector({
   );
 }
 
-export { LocationSelector };
+export { WorkItemSelector };

@@ -13,6 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Suspense } from "react";
@@ -29,21 +30,23 @@ export default async function createWorkOrder({
 }: createWorkOrderProps) {
   return (
     <Shell>
-      <PageHeader
-        id="work-plan-template-header"
-        aria-labelledby="work-plan-template-header-heading"
-      >
-        <PageHeaderHeading size="sm">Work plan template</PageHeaderHeading>
-        <PageHeaderDescription size="sm">
-          Work plan template are reusable templates that can be used to create
-          work plans for your work orders.
-        </PageHeaderDescription>
-        <Separator />
-      </PageHeader>
+      <ScrollArea>
+        <PageHeader
+          id="work-plan-template-header"
+          aria-labelledby="work-plan-template-header-heading"
+        >
+          <PageHeaderHeading size="sm">Work plan template</PageHeaderHeading>
+          <PageHeaderDescription size="sm">
+            Work plan template are reusable templates that can be used to create
+            work plans for your work orders.
+          </PageHeaderDescription>
+          <Separator />
+        </PageHeader>
 
-      <Suspense fallback={<CardSkeleton />}>
-        <WorkOrderCreateForm />
-      </Suspense>
+        <Suspense fallback={<CardSkeleton />}>
+          <WorkOrderCreateForm />
+        </Suspense>
+      </ScrollArea>
     </Shell>
   );
 }
