@@ -36,7 +36,7 @@ export default function Header({}: headerProps) {
         </BreadcrumbList>
       </Breadcrumb>
       <div className="flex items-center gap-2">
-        <Button size={"sm"} variant={"outline"} className="shadow-none">
+        <Button size={"sm"} variant={"ghost"} className="shadow-none">
           <Icons.chatBubble className="mr-2 h-4 text-muted-foreground" />
           Feedback
         </Button>

@@ -54,16 +54,5 @@ export default async function Page({ params }: PageProps) {
         </TabsContent>
       </Tabs>
     </Shell>
-    // <div className="flex h-full flex-col gap-2">
-    //   <div className="grid h-full">
-    // <ServiceAppointmentTable
-    //   // rowCount={count ?? 0}
-    //   // data={service_appointments}
-    //   params={params}
-    //   initialData={{ data: data ?? [], count: count ?? 0 }}
-    // />
-    //   </div>
-
-    // </div>
   );
 }
