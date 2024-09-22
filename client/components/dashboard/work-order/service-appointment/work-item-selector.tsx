@@ -69,34 +69,36 @@ function WorkItemSelector({
             className="text-xs leading-normal"
             placeholder="Type to search..."
           />
-          <CommandList>
-            <CommandGroup>
-              {workOrderItems?.map((workOrderItem) => (
-                <CommandItem
-                  key={workOrderItem.id}
-                  value={`${JSON.stringify(workOrderItem.asset)} ${JSON.stringify(workOrderItem.location)}`}
-                  onSelect={async () => {
-                    onSelect?.(workOrderItem);
-                  }}
-                >
-                  <div className="flex flex-col items-start gap-1">
-                    <span
-                      className={`text-xs font-medium ${selectedValue && selectedValue.id === workOrderItem.id && "underline"}`}
-                    >
-                      {workOrderItem.asset?.name} {workOrderItem.location?.name}
-                    </span>
-                    <span className="text-xs text-muted-foreground">
-                      {workOrderItem.status}
-                    </span>
-                  </div>
-                </CommandItem>
-              ))}
-            </CommandGroup>
-
-            <CommandEmpty className="select-none rounded-sm px-2 py-3 text-center text-sm text-muted-foreground">
-              No results found
-            </CommandEmpty>
-          </CommandList>
+          <ScrollArea className="h-60">
+            <CommandList className="max-h-full">
+              <CommandGroup>
+                {workOrderItems?.map((workOrderItem) => (
+                  <CommandItem
+                    key={workOrderItem.id}
+                    value={`${JSON.stringify(workOrderItem.asset)} ${JSON.stringify(workOrderItem.location)}`}
+                    onSelect={async () => {
+                      onSelect?.(workOrderItem);
+                    }}
+                  >
+                    <div className="flex flex-col items-start gap-1">
+                      <span
+                        className={`text-xs font-medium ${selectedValue && selectedValue.id === workOrderItem.id && "underline"}`}
+                      >
+                        {workOrderItem.asset?.name}{" "}
+                        {workOrderItem.location?.name}
+                      </span>
+                      <span className="text-xs text-muted-foreground">
+                        {workOrderItem.status}
+                      </span>
+                    </div>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+              <CommandEmpty className="select-none rounded-sm px-2 py-3 text-center text-sm text-muted-foreground">
+                No results found
+              </CommandEmpty>
+            </CommandList>
+          </ScrollArea>
         </Command>
       </PopoverContent>
     </Popover>
