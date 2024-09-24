@@ -29,13 +29,13 @@ export default async function createWorkOrder({
   params,
 }: createWorkOrderProps) {
   return (
-    <Shell>
-      <ScrollArea>
+    <ScrollArea className="h-full">
+      <Shell>
         <PageHeader
           id="work-plan-template-header"
           aria-labelledby="work-plan-template-header-heading"
         >
-          <PageHeaderHeading size="sm">Work plan template</PageHeaderHeading>
+          <PageHeaderHeading size="sm">Create work order</PageHeaderHeading>
           <PageHeaderDescription size="sm">
             Work plan template are reusable templates that can be used to create
             work plans for your work orders.
@@ -44,9 +44,9 @@ export default async function createWorkOrder({
         </PageHeader>
 
         <Suspense fallback={<CardSkeleton />}>
-          <WorkOrderCreateForm />
+          {/* <WorkOrderCreateForm /> */}
         </Suspense>
-      </ScrollArea>
-    </Shell>
+      </Shell>
+    </ScrollArea>
   );
 }

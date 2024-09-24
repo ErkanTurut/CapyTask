@@ -36,9 +36,6 @@ export interface DayCalendarProps extends React.HTMLAttributes<HTMLDivElement> {
   onSlotClick?: (slotDate: Date) => void;
   onPlaceholderUpdate?: (event: Event) => void;
 }
-export type ColorClasses = {
-  [key in Event["color"]]: string;
-};
 
 const DayCalendar: React.FC<DayCalendarProps> = ({
   events,
@@ -170,7 +167,7 @@ const DayCalendar: React.FC<DayCalendarProps> = ({
                   </TooltipTrigger>
                   <TooltipContent
                     align="start"
-                    className="bg-secondary text-foreground"
+                    className="bg-secondary-foreground text-secondary"
                   >
                     {formatDateRange(
                       addHours(startOfDay(date), hour),

@@ -19,11 +19,9 @@ export default function Page({ params, searchParams }: PageProps) {
     : 10;
   return (
     <Shell>
-      <Shell variant={"bento"}>
-        <Suspense fallback={<TableSkeleton />}>
-          <TableContainer params={params} searchParams={{ limit, page }} />
-        </Suspense>
-      </Shell>
+      <Suspense fallback={<TableSkeleton />}>
+        <TableContainer params={params} searchParams={{ limit, page }} />
+      </Suspense>
     </Shell>
   );
 }

@@ -7,3 +7,7 @@ export interface Event {
   color: "blue" | "pink" | "indigo" | "placeholder";
   isPlaceholder?: boolean;
 }
+
+export type ColorClasses = {
+  [key in Event["color"]]: string;
+};

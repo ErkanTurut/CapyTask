@@ -183,7 +183,7 @@ const WeekCalendar: React.FC<WeekCalendarProps> = ({
                         aria-label={`Select time slot ${formatHour(hour, startDate, initialTimeFormat)} on ${format(day, "EEEE")}`}
                       />
                     </TooltipTrigger>
-                    <TooltipContent className="bg-secondary text-foreground">
+                    <TooltipContent className="bg-secondary-foreground text-secondary">
                       {formatDateRange(slotDate, addHours(slotDate, 1))}
                     </TooltipContent>
                   </Tooltip>

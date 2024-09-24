@@ -273,7 +273,7 @@ export default function AppointmentDialog({
         onOpenChange(open);
       }}
     >
-      <DialogContent className="max-h-dvh overflow-hidden sm:max-w-[825px]">
+      <DialogContent className="overflow-hidden sm:max-w-[925px]">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit((values) => mutate(values))}
@@ -285,7 +285,7 @@ export default function AppointmentDialog({
 
             <div className="grid h-full w-full gap-2 overflow-hidden border-b sm:grid-cols-[1fr,0.8fr]">
               <div className="sm:border-r">
-                <ScrollArea className="h-[26rem]">
+                <ScrollArea className="h-[28rem]">
                   <div className="grid px-2">
                     <DayCalendar
                       initialTimeFormat="24h"
@@ -329,7 +329,7 @@ export default function AppointmentDialog({
                   )}
                 />
               </div>
-              <div className="flex h-full flex-col justify-between gap-2 overflow-hidden pb-2">
+              <div className="flex h-full flex-col items-center justify-between gap-2 overflow-hidden pb-2">
                 <div className="flex h-full flex-col gap-2 overflow-hidden">
                   <FormField
                     control={form.control}
