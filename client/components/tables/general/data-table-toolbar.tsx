@@ -71,8 +71,8 @@ export function DataTableToolbar<TDataRow, TData, TError>({
             size="sm"
             onClick={() => table.resetColumnFilters()}
           >
+            <Icons.cross className="mr-2 h-4 w-4" />
             Reset
-            <Icons.cross className="ml-2 h-4 w-4" />
           </Button>
         )}
       </div>
@@ -84,8 +84,8 @@ export function DataTableToolbar<TDataRow, TData, TError>({
           className={buttonVariants({ size: "sm" })}
           href={`${pathname}/create`}
         >
+          <Icons.plusCircled className="mr-2 h-4 w-4" />
           Create
-          <Icons.plusCircled className="ml-2 h-4 w-4" />
         </Link>
       </div>
     </div>

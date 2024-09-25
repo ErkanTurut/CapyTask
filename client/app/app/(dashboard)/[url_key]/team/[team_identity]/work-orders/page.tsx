@@ -9,6 +9,8 @@ import TableSkeleton from "@/components/skeletons/table-skeleton";
 import { Suspense } from "react";
 import TableContainer from "@/components/tables/work-order/TableContainer";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { SheetDemo } from "./create-work-order-sheet";
 interface PageProps {
   searchParams: { [key: string]: string | string[] | undefined };
   params: {
@@ -37,12 +39,12 @@ export default function Page({ searchParams, params }: PageProps) {
             View and manage your work orders
           </PageHeaderDescription>
         </PageHeader>
+        <Separator />
+        <SheetDemo />
 
-        <Shell variant={"bento"}>
-          <Suspense fallback={<TableSkeleton />}>
-            <TableContainer params={params} searchParams={{ limit, page }} />
-          </Suspense>
-        </Shell>
+        <Suspense fallback={<TableSkeleton />}>
+          <TableContainer params={params} searchParams={{ limit, page }} />
+        </Suspense>
       </Shell>
     </ScrollArea>
   );
