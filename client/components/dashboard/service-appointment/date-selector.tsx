@@ -38,7 +38,6 @@ export default function DateSelector({
           mode="single"
           selected={selectedDate}
           onSelect={(date) => date && onDateChange(date)}
-          className="border-b border-dashed"
         />
       </PopoverContent>
     </Popover>

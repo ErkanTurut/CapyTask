@@ -29,7 +29,7 @@ export default async function Layout({ children, params }: LayoutProps) {
   return (
     <div className="grid h-full w-full lg:grid-cols-[1fr,0.4fr]">
       <ScrollArea className="h-full">
-        <WorkOrderHeader work_order={work_order} />
+        <WorkOrderHeader initial_work_order={work_order} />
         <Suspense fallback={<TableSkeleton />}>{children}</Suspense>
       </ScrollArea>
       <div className="hidden h-full border-l lg:block">

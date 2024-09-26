@@ -1,3 +1,4 @@
+"use client";
 import {
   PageHeader,
   PageHeaderDescription,
@@ -11,10 +12,21 @@ import { StatusSelector } from "./status-selector";
 import { api } from "@/trpc/client";
 
 interface WorkOrderHeaderProps {
-  work_order: NonNullable<RouterOutput["db"]["work_order"]["get"]["detail"]>;
+  initial_work_order: NonNullable<
+    RouterOutput["db"]["work_order"]["get"]["detail"]
+  >;
 }
 
-export async function WorkOrderHeader({ work_order }: WorkOrderHeaderProps) {
+export function WorkOrderHeader({ initial_work_order }: WorkOrderHeaderProps) {
+  const { data: work_order } = api.db.work_order.get.byId.useQuery(
+    {
+      id: initial_work_order.id,
+    },
+    {
+      initialData: initial_work_order,
+    },
+  );
+
   return (
     <div className="grid gap-4 border-b bg-background p-6 pb-0 sm:grid-cols-2">
       <PageHeader

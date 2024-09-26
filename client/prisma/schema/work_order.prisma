@@ -29,6 +29,7 @@ model work_order {
   workspace           workspace                @relation(fields: [workspace_id], references: [id])
   work_order_item     work_order_item[]
   work_step           work_step[]
+  note                note[]
 
   @@index([team_id])
   @@index([workspace_id])

@@ -307,6 +307,54 @@ export type Database = {
           },
         ]
       }
+      note: {
+        Row: {
+          content: string
+          created_by_id: string
+          createdAt: string
+          id: string
+          metadata: Json | null
+          type: Database["public"]["Enums"]["NoteType"]
+          updatedAt: string
+          work_order_id: string
+        }
+        Insert: {
+          content: string
+          created_by_id: string
+          createdAt?: string
+          id?: string
+          metadata?: Json | null
+          type: Database["public"]["Enums"]["NoteType"]
+          updatedAt: string
+          work_order_id: string
+        }
+        Update: {
+          content?: string
+          created_by_id?: string
+          createdAt?: string
+          id?: string
+          metadata?: Json | null
+          type?: Database["public"]["Enums"]["NoteType"]
+          updatedAt?: string
+          work_order_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "note_created_by_id_fkey"
+            columns: ["created_by_id"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "note_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "work_order"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       role_permission: {
         Row: {
           id: string
@@ -1246,6 +1294,13 @@ export type Database = {
     }
     Enums: {
       LocationType: "BUILDING" | "FLOOR" | "ROOM" | "AREA" | "OTHER"
+      NoteType:
+        | "STATUS_CHANGE"
+        | "COMMENT"
+        | "DELAY_NOTIFICATION"
+        | "RESOURCE_REQUEST"
+        | "CUSTOMER_COMMUNICATION"
+        | "INTERNAL_COMMUNICATION"
       Permission: "CREATE" | "READ" | "UPDATE" | "DELETE"
       Priority: "LOW" | "MEDIUM" | "HIGH"
       role:

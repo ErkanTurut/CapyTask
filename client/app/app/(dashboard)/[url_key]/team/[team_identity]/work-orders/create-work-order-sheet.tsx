@@ -22,9 +22,6 @@ export function SheetDemo() {
   if (isDesktop) {
     return (
       <Sheet>
-        <SheetTrigger asChild>
-          <Button variant="outline">Open</Button>
-        </SheetTrigger>
         <SheetContent className="flex flex-col">
           <SheetHeader>
             <SheetTitle className="text-xl">Create Work Order</SheetTitle>

@@ -14,6 +14,7 @@ model user {
   work_order       work_order[]
   workspace        workspace[]
   workspace_user   workspace_user[]
+  note             note[]
 
   @@index([full_name], type: Gin)
 }

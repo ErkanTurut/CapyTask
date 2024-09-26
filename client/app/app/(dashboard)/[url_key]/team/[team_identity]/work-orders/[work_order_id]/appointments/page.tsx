@@ -23,7 +23,7 @@ export default async function Page({ params, searchParams }: PageProps) {
 
   return (
     <Shell>
-      <Tabs value="" defaultValue="service_appointment_table">
+      <Tabs defaultValue="service_appointment_table">
         <TabsList>
           <TabsTrigger value="service_appointment_table">
             <Icons.table className="mr-2 size-4" />
