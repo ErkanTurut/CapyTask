@@ -89,11 +89,14 @@ export const work_order = router({
     }),
   update: {
     status: protectedProcedure
-      .input(ZUpdateWorkOrderSchema.pick({ id: true, status: true }))
+      .input(
+        ZUpdateWorkOrderSchema.pick({ id: true, status: true, note: true }),
+      )
       .mutation(async ({ ctx, input }) => {
         updateWorkOrderStatusHandler({
           input,
           db: ctx.db,
+          ctx,
         });
       }),
   },

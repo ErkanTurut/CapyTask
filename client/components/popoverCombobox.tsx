@@ -25,17 +25,10 @@ interface Option<T> {
 
 interface ComboBoxProps<T> {
   options: Option<T>[];
-  onSelect: ({
-    prevValue,
-    value,
-  }: {
-    prevValue: Option<T> | undefined;
-    value: Option<T>;
-  }) => void;
+  onSelect: (value: Option<T>) => void;
   children: React.ReactNode;
   placeholder?: string;
   className?: string;
-  selectedValue?: T;
 }
 
 export function PopoverComboBox<T extends string>({
@@ -44,12 +37,8 @@ export function PopoverComboBox<T extends string>({
   children,
   placeholder = "Type to search...",
   className,
-  selectedValue,
 }: ComboBoxProps<T>) {
   const [open, setOpen] = React.useState(false);
-  const [currentValue, setCurrentValue] = React.useState<Option<T> | undefined>(
-    options.find((option) => option.value === selectedValue),
-  );
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -72,13 +61,19 @@ export function PopoverComboBox<T extends string>({
                   key={status.value}
                   value={status.value}
                   onSelect={async () => {
-                    const prevValue = currentValue;
-                    setCurrentValue(status);
-                    onSelect({ prevValue, value: status });
+                    onSelect(status);
                     setOpen(false);
                   }}
                 >
                   <div className="flex items-center gap-2">
+                    {status.icon && (
+                      <>
+                        {(() => {
+                          const Icon = Icons[status.icon];
+                          return <Icon className="size-4" />;
+                        })()}
+                      </>
+                    )}
                     <span>{status.label}</span>
                   </div>
                 </CommandItem>

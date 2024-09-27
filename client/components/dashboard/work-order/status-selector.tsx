@@ -104,18 +104,20 @@ export const StatusSelector = ({
         nextStatus={selectedStatus}
         open={open}
         onClose={() => setOpen(!open)}
-        onSubmit={() => {
+        onSubmit={({ note }) => {
           setOpen(false);
+          console.log(note);
           mutate({
             id: params.work_order_id,
             status: selectedStatus.value,
+            note,
           });
         }}
       />
       <PopoverComboBox
         className="w-[10rem]"
         options={statusConfig}
-        onSelect={({ prevValue, value }) => {
+        onSelect={(value) => {
           handleSelect(value);
         }}
       >
@@ -140,8 +142,9 @@ export function StatusChangeModal({
   onClose?: () => void;
   prevStatus?: StatusConfig;
   nextStatus?: StatusConfig;
-  onSubmit?: () => void;
+  onSubmit: ({ note }: { note?: string }) => void;
 }) {
+  const [note, setNote] = useState("");
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
@@ -167,6 +170,9 @@ export function StatusChangeModal({
               Note
             </Label>
             <Textarea
+              id="note"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
               placeholder="Add note"
               className="h-48 max-h-64 shadow-none"
             />
@@ -176,7 +182,7 @@ export function StatusChangeModal({
               Cancel
             </Button>
 
-            <Button onClick={onSubmit}>Change status</Button>
+            <Button onClick={() => onSubmit({ note })}>Change status</Button>
           </div>
         </div>
       </DialogContent>

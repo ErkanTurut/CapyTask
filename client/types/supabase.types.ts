@@ -310,32 +310,32 @@ export type Database = {
       note: {
         Row: {
           content: string
+          created_at: string
           created_by_id: string
-          createdAt: string
           id: string
           metadata: Json | null
           type: Database["public"]["Enums"]["NoteType"]
-          updatedAt: string
+          updated_at: string
           work_order_id: string
         }
         Insert: {
           content: string
+          created_at?: string
           created_by_id: string
-          createdAt?: string
           id?: string
           metadata?: Json | null
           type: Database["public"]["Enums"]["NoteType"]
-          updatedAt: string
+          updated_at?: string
           work_order_id: string
         }
         Update: {
           content?: string
+          created_at?: string
           created_by_id?: string
-          createdAt?: string
           id?: string
           metadata?: Json | null
           type?: Database["public"]["Enums"]["NoteType"]
-          updatedAt?: string
+          updated_at?: string
           work_order_id?: string
         }
         Relationships: [
