@@ -1,125 +1,47 @@
 "use client";
-import { Icons, IconType } from "@/components/icons";
-import { Database } from "@/types/supabase.types";
+import { useState } from "react";
+import { Icons } from "@/components/icons";
 import { PopoverComboBox } from "@/components/popoverCombobox";
-import { useEffect, useState } from "react";
-import { api } from "@/trpc/client";
-import { useParams } from "next/navigation";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-export interface StatusConfig {
-  value: Database["public"]["Enums"]["Status"];
-  label: string;
-  icon?: IconType;
+import { StatusChangeModal } from "./status-change-modal";
+import { StatusConfig, statusConfig } from "./status-config";
+import { Database } from "@/types/supabase.types";
+
+interface StatusSelectorProps {
+  status: Database["public"]["Enums"]["Status"];
 }
 
-export const statusConfig: StatusConfig[] = [
-  {
-    value: "OPEN",
-    label: "Open",
-    icon: "greenPulse",
-  },
-  {
-    value: "IN_PROGRESS",
-    label: "In Progress",
-    icon: "bluePulse",
-  },
-  {
-    value: "ON_HOLD",
-    label: "On Hold",
-    icon: "yellowPulse",
-  },
-  {
-    value: "COMPLETED",
-    label: "Completed",
-    icon: "checkCircled",
-  },
-  {
-    value: "CANCELED",
-    label: "Cancelled",
-    icon: "CrossCircled",
-  },
-];
-
-export const StatusSelector = ({
-  status,
-}: {
-  status: Database["public"]["Enums"]["Status"];
-}) => {
-  const [open, setOpen] = useState(false);
-  const params = useParams() as { work_order_id: string };
+export function StatusSelector({ status }: StatusSelectorProps) {
+  const [isOpen, setIsOpen] = useState(false);
   const initialStatus = statusConfig.find(
     (_status) => _status.value === status,
   );
-  if (!initialStatus) {
-    return null;
-  }
+  const [selectedStatus, setSelectedStatus] = useState<
+    StatusConfig | undefined
+  >(undefined);
 
-  const [selectedStatus, setSelectedStatus] =
-    useState<StatusConfig>(initialStatus);
+  if (!initialStatus) return null;
 
-  useEffect(() => {
-    setSelectedStatus(initialStatus);
-  }, [status]);
+  const handleSelect = (status: StatusConfig) => {
+    if (status.value === initialStatus.value) return;
+    setSelectedStatus(status);
+    setIsOpen(true);
+  };
 
   const Icon = initialStatus.icon ? Icons[initialStatus.icon] : null;
-
-  const utils = api.useUtils();
-  const { mutate } = api.db.work_order.update.status.useMutation({
-    onSuccess: () => {
-      toast.success("Status updated successfully");
-      utils.db.work_order.get.byId.invalidate();
-    },
-  });
-
-  const handleSelect = async (status: StatusConfig) => {
-    if (status.value === initialStatus.value) {
-      return;
-    }
-    setSelectedStatus(status);
-    setOpen(true);
-
-    // mutate({
-    //   id: params.work_order_id,
-    //   status: status.value,
-    // });
-  };
 
   return (
     <>
       <StatusChangeModal
         prevStatus={initialStatus}
-        nextStatus={selectedStatus}
-        open={open}
-        onClose={() => setOpen(!open)}
-        onSubmit={({ note }) => {
-          setOpen(false);
-          console.log(note);
-          mutate({
-            id: params.work_order_id,
-            status: selectedStatus.value,
-            note,
-          });
-        }}
+        selectedStatus={selectedStatus}
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
       />
       <PopoverComboBox
         className="w-[10rem]"
         options={statusConfig}
-        onSelect={(value) => {
-          handleSelect(value);
-        }}
+        onSelect={handleSelect}
+        selected={initialStatus}
       >
         <div className="inline-flex cursor-pointer items-center gap-2 rounded-full border bg-opacity-65 px-2.5 py-1 text-xs font-semibold transition-colors">
           {Icon && <Icon className="size-4 text-muted-foreground" />}
@@ -128,64 +50,5 @@ export const StatusSelector = ({
         </div>
       </PopoverComboBox>
     </>
-  );
-};
-
-export function StatusChangeModal({
-  open,
-  onClose,
-  prevStatus,
-  nextStatus,
-  onSubmit,
-}: {
-  open?: boolean;
-  onClose?: () => void;
-  prevStatus?: StatusConfig;
-  nextStatus?: StatusConfig;
-  onSubmit: ({ note }: { note?: string }) => void;
-}) {
-  const [note, setNote] = useState("");
-  return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader className="pb-4">
-          <DialogTitle>Confirm</DialogTitle>
-        </DialogHeader>
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col text-sm font-normal text-muted-foreground">
-            <span>Are you sure you want to change the status?</span>
-            <div className="flex items-center gap-1">
-              <span>From</span>
-              <span className="rounded-full border px-1 font-medium text-foreground">
-                {prevStatus?.label}
-              </span>
-              <span>To</span>
-              <span className="rounded-full border px-1 font-medium text-foreground">
-                {nextStatus?.label}
-              </span>
-            </div>
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="note" className="text-left font-semibold">
-              Note
-            </Label>
-            <Textarea
-              id="note"
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              placeholder="Add note"
-              className="h-48 max-h-64 shadow-none"
-            />
-          </div>
-          <div className="flex items-center justify-end gap-2">
-            <Button onClick={onClose} variant={"secondary"}>
-              Cancel
-            </Button>
-
-            <Button onClick={() => onSubmit({ note })}>Change status</Button>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
   );
 }

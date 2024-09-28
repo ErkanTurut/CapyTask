@@ -26,6 +26,7 @@ interface Option<T> {
 interface ComboBoxProps<T> {
   options: Option<T>[];
   onSelect: (value: Option<T>) => void;
+  selected?: Option<T>;
   children: React.ReactNode;
   placeholder?: string;
   className?: string;
@@ -37,6 +38,7 @@ export function PopoverComboBox<T extends string>({
   children,
   placeholder = "Type to search...",
   className,
+  selected,
 }: ComboBoxProps<T>) {
   const [open, setOpen] = React.useState(false);
 
@@ -66,15 +68,11 @@ export function PopoverComboBox<T extends string>({
                   }}
                 >
                   <div className="flex items-center gap-2">
-                    {status.icon && (
-                      <>
-                        {(() => {
-                          const Icon = Icons[status.icon];
-                          return <Icon className="size-4" />;
-                        })()}
-                      </>
-                    )}
-                    <span>{status.label}</span>
+                    <span
+                      className={selected === status ? "underline" : undefined}
+                    >
+                      {status.label}
+                    </span>
                   </div>
                 </CommandItem>
               ))}
