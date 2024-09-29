@@ -2,7 +2,10 @@ import "server-only";
 
 import { TRPCError } from "@trpc/server";
 import { protectedProcedure, router } from "../../trpc";
-import { createWorkOrderHandler } from "./create.handler";
+import {
+  createWorkOrderHandler,
+  createWorkOrderWithItemsHandler,
+} from "./create.handler";
 import {
   ZCreateWorkOrderSchema,
   ZCreateWorkOrderWithItemsSchema,
@@ -22,6 +25,7 @@ import { updateWorkOrderStatusHandler } from "./update.handler";
 import { ZUpdateWorkOrderSchema } from "./update.schema";
 import { unstable_cache } from "next/cache";
 import { notFound } from "next/navigation";
+import { z } from "zod";
 export const work_order = router({
   get: {
     byId: protectedProcedure
@@ -102,11 +106,23 @@ export const work_order = router({
   },
 
   create: protectedProcedure
-    .input(ZCreateWorkOrderWithItemsSchema)
+    .input(ZCreateWorkOrderSchema)
     .mutation(async ({ ctx, input }) => {
-      return await createWorkOrderHandler({
+      const { data, error } = await createWorkOrderHandler({
         input,
         db: ctx.db,
       });
+
+      if (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: error.message,
+        });
+      }
+      return data;
+      // return await createWorkOrderHandler({
+      //   input,
+      //   db: ctx.db,
+      // });
     }),
 });

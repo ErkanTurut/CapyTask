@@ -13,7 +13,7 @@ import { api } from "@/trpc/client";
 
 interface WorkOrderHeaderProps {
   initial_work_order: NonNullable<
-    RouterOutput["db"]["work_order"]["get"]["detail"]
+    RouterOutput["db"]["work_order"]["get"]["byId"]
   >;
 }
 

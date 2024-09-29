@@ -11,7 +11,7 @@ import {
 } from "./create.schema";
 import { nanoid } from "nanoid";
 
-export async function createWorkOrderHandler({
+export async function createWorkOrderWithItemsHandler({
   input,
   db,
 }: {
@@ -104,4 +104,24 @@ export async function createWorkOrderHandler({
     work_order,
     work_plan,
   };
+}
+
+export async function createWorkOrderHandler({
+  input,
+  db,
+}: {
+  input: TCreateWorkOrderSchema;
+  db: SupabaseClient;
+}) {
+  return await db
+    .from("work_order")
+    .insert({
+      name: input.name,
+      description: input.description,
+      company_id: input.company_id,
+      team_id: input.team_id,
+      workspace_id: input.workspace_id,
+    })
+    .select("*")
+    .single();
 }

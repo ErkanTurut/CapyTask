@@ -55,7 +55,7 @@ export async function WorkOrderMain({
           <dl className="grid gap-3">
             <div className="flex items-center justify-between">
               <dt className="text-muted-foreground">Service contract</dt>
-              <dd>{work_order.company?.name}</dd>
+              <dd>ABC</dd>
             </div>
             <div className="flex items-center justify-between">
               <dt className="text-muted-foreground">Activity line</dt>

@@ -12,7 +12,7 @@ interface TableProps {
 }
 
 const TableContainer: FC<TableProps> = async ({ searchParams, params }) => {
-  const initialData = await trpc.db.work_order.get.byTeamIdentity({
+  const initialData = trpc.db.work_order.get.byTeamIdentity({
     team_identity: params.team_identity,
     range: {
       start: (searchParams.page - 1) * searchParams.limit,

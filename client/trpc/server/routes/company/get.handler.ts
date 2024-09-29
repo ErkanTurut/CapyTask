@@ -9,7 +9,7 @@ type opts = {
 };
 
 export const searchCompanyHandler = async ({ input, db }: opts) => {
-  return await db.from("company").select().textSearch("name", input.query, {
+  return await db.from("company").select().textSearch("name", input.search, {
     type: "websearch",
   });
 };

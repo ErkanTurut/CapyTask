@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const ZSearchCompanySchema = z.object({
-  query: z.string(),
+  search: z.string(),
 });
 
 export interface TSearchCompanySchema

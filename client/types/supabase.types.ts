@@ -380,7 +380,7 @@ export type Database = {
           id: string
           start_date: string
           updated_at: string
-          work_order_id: string
+          work_order_id: string | null
           work_order_item_id: string | null
         }
         Insert: {
@@ -389,7 +389,7 @@ export type Database = {
           id?: string
           start_date: string
           updated_at?: string
-          work_order_id: string
+          work_order_id?: string | null
           work_order_item_id?: string | null
         }
         Update: {
@@ -398,7 +398,7 @@ export type Database = {
           id?: string
           start_date?: string
           updated_at?: string
-          work_order_id?: string
+          work_order_id?: string | null
           work_order_item_id?: string | null
         }
         Relationships: [
@@ -725,9 +725,8 @@ export type Database = {
           public_id: string
           requested_by_id: string | null
           sheduled_end: string | null
-          sheduled_range: unknown
           sheduled_start: string | null
-          source: Database["public"]["Enums"]["WorkOrderSource"]
+          source: Database["public"]["Enums"]["WorkOrderSource"] | null
           started_at: string | null
           status: Database["public"]["Enums"]["Status"]
           team_id: string
@@ -748,9 +747,8 @@ export type Database = {
           public_id?: string
           requested_by_id?: string | null
           sheduled_end?: string | null
-          sheduled_range: unknown
           sheduled_start?: string | null
-          source: Database["public"]["Enums"]["WorkOrderSource"]
+          source?: Database["public"]["Enums"]["WorkOrderSource"] | null
           started_at?: string | null
           status?: Database["public"]["Enums"]["Status"]
           team_id: string
@@ -771,9 +769,8 @@ export type Database = {
           public_id?: string
           requested_by_id?: string | null
           sheduled_end?: string | null
-          sheduled_range?: unknown
           sheduled_start?: string | null
-          source?: Database["public"]["Enums"]["WorkOrderSource"]
+          source?: Database["public"]["Enums"]["WorkOrderSource"] | null
           started_at?: string | null
           status?: Database["public"]["Enums"]["Status"]
           team_id?: string
