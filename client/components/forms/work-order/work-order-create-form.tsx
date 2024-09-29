@@ -1,54 +1,64 @@
 "use client";
 
-import React, { use } from "react";
+import React, { useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Form } from "@/components/ui/form";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
+import { toast } from "sonner";
 import { catchError, cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 
-import { api, RouterInput } from "@/trpc/client";
+import { api, RouterOutput } from "@/trpc/client";
+import { useRouter } from "next/navigation";
+
+import { Textarea } from "@/components/ui/textarea";
 import {
-  TCreateWorkOrderWithItemsSchema,
-  ZCreateWorkOrderWithItemsSchema,
+  TCreateWorkOrderSchema,
+  ZCreateWorkOrderSchema,
 } from "@/trpc/server/routes/work_order/create.schema";
-import { notFound, useParams, useRouter } from "next/navigation";
-import { WorkOrderGeneralForm } from "./work-order-general-form";
-import { WorkOrderItemsForm } from "./work-order-items-form";
+import { CompanySelector } from "./company-selector";
 
 interface WorkOrderCreateFormProps
-  extends React.HTMLAttributes<HTMLFormElement> {}
+  extends React.HTMLAttributes<HTMLFormElement> {
+  workspace_id: string;
+  team_id: string;
+  onCreated?: (
+    workOrder: RouterOutput["db"]["work_order"]["get"]["byId"],
+  ) => void;
+}
 
-export function WorkOrderCreateForm({ className }: WorkOrderCreateFormProps) {
-  const router = useRouter();
-  const { team_identity, url_key } = useParams() as {
-    team_identity: string;
-    url_key: string;
-  };
-
-  const [team, {}] = api.db.team.getByIdentity.useSuspenseQuery({
-    identity: team_identity,
-  });
-  const [{ data: workspace }, {}] =
-    api.db.workspace.getByUrlKey.useSuspenseQuery({
-      url_key,
-    });
-  if (!team || !workspace) {
-    throw notFound();
-  }
-  if (!team_identity || !url_key) {
-    throw new Error("Missing team_identity or url_key");
-  }
-
+export function WorkOrderCreateForm({
+  className,
+  workspace_id,
+  team_id,
+  onCreated,
+}: WorkOrderCreateFormProps) {
+  const [selectedCompany, setSelectedCompany] = useState<
+    RouterOutput["db"]["company"]["get"]["textSearch"][number] | undefined
+  >(undefined);
   const { mutate, isPending } = api.db.work_order.create.useMutation({
     onSuccess(data) {
-      router.push(`./${data?.work_order.id}`);
       form.reset();
+      onCreated?.(data);
     },
     onError(err) {
       catchError(new Error(err.message));
@@ -56,49 +66,78 @@ export function WorkOrderCreateForm({ className }: WorkOrderCreateFormProps) {
   });
 
   // react-hook-form
-  const form = useForm<TCreateWorkOrderWithItemsSchema>({
-    resolver: zodResolver(ZCreateWorkOrderWithItemsSchema),
+  const form = useForm<TCreateWorkOrderSchema>({
+    resolver: zodResolver(ZCreateWorkOrderSchema),
     defaultValues: {
-      company_id: undefined,
       name: undefined,
       description: undefined,
-      location_id: "xc9zBwVtbm",
-      source: "MANUAL_ENTRY",
-      team_id: team.id,
-      type: "MAINTENANCE",
-      asset: [],
-      priority: "LOW",
-      status: "OPEN",
-      workspace_id: workspace.id,
-      sheduled_start: undefined,
-      sheduled_end: undefined,
+      workspace_id,
+      company_id: undefined,
+      team_id,
     },
   });
+
+  async function onSubmit(data: TCreateWorkOrderSchema) {
+    mutate(data);
+  }
 
   return (
     <Form {...form}>
       <form
         className={cn("grid gap-4", className)}
-        onSubmit={(...args) =>
-          void form.handleSubmit((data) => {
-            mutate(data);
-            // console.log(data);
-          })(...args)
-        }
+        onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
       >
-        <Card>
-          <CardContent className="flex flex-col gap-8 pt-6">
-            <WorkOrderGeneralForm form={form} />
-            <WorkOrderItemsForm form={form} />
-          </CardContent>
-
-          <CardFooter>
-            <Button isLoading={isPending} disabled={!form.formState.isDirty}>
-              Create now
-              <span className="sr-only">Create now</span>
-            </Button>
-          </CardFooter>
-        </Card>
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input placeholder="example" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Textarea
+                  className="max-h-32"
+                  placeholder="example"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="company_id"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <CompanySelector
+                  onSelect={(value) => {
+                    setSelectedCompany(value);
+                    form.setValue("company_id", value.id);
+                  }}
+                  selectedValue={selectedCompany}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit" disabled={isPending}>
+          Create
+        </Button>
       </form>
     </Form>
   );
