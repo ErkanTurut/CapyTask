@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { trpc } from "@/trpc/server";
 import { TableData } from "./TableData";
+import { WorkOrderTable } from "./new/work-order-table";
 interface TableProps {
   searchParams: {
     limit: number;
@@ -21,11 +22,12 @@ const TableContainer: FC<TableProps> = async ({ searchParams, params }) => {
   });
 
   return (
-    <TableData
-      initialData={initialData}
-      params={params}
-      searchParams={searchParams}
-    />
+    // <TableData
+    //   initialData={initialData}
+    //   params={params}
+    //   searchParams={searchParams}
+    // />
+    <WorkOrderTable initialData={initialData} />
   );
 };
 
