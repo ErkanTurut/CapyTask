@@ -24,6 +24,7 @@ export function DataTableToolbar<TData>({
   table,
   filterFields = [],
   className,
+  children,
   ...props
 }: DataTableToolbarProps<TData>) {
   const searchParams = useSearchParams();
@@ -117,6 +118,7 @@ export function DataTableToolbar<TData>({
           />
         )}
         <DataTableViewOptions table={table} />
+        {children}
       </div>
       <div
         className={cn(

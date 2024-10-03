@@ -41,7 +41,7 @@ export default function Page({ searchParams, params }: PageProps) {
         <Separator />
 
         <Suspense fallback={<TableSkeleton />}>
-          <TableContainer params={params} searchParams={{ limit, page }} />
+          <TableContainer params={params} searchParams={searchParams} />
         </Suspense>
       </Shell>
     </ScrollArea>

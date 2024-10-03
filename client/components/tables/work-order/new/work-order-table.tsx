@@ -10,7 +10,6 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  useReactTable,
 } from "@tanstack/react-table";
 import { use, type ComponentType, useMemo, useCallback, useState } from "react";
 
@@ -29,6 +28,8 @@ import { getColumns } from "./work-order-columns";
 import { useParams, usePathname, useSearchParams } from "next/navigation";
 import { DataTableFilterField } from "@/types";
 import { trpc } from "@/trpc/server";
+import { useDataTable } from "@/lib/hooks/use-data-table";
+import { Button } from "@/components/ui/button";
 
 interface WorkOrderTableProps {
   initialData: NonNullable<
@@ -177,33 +178,25 @@ export function WorkOrderTable({ initialData }: WorkOrderTableProps) {
     },
   );
 
-  const table = useReactTable({
+  const { table } = useDataTable({
     data: queryResult.data.data || [],
     columns,
-    state: {
-      sorting,
-      columnVisibility,
-      rowSelection,
-      columnFilters,
-    },
+    filterFields,
     rowCount: queryResult.data.count || 0,
-    enableRowSelection: true,
-    onRowSelectionChange: setRowSelection,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    filterFromLeafRows: true,
+
+    /* optional props */
+    enableAdvancedFilter: true,
+    initialState: {},
+    // For remembering the previous row selection on page change
+    getRowId: (originalRow, index) => `${originalRow.id}-${index}`,
+    /* */
   });
 
   return (
     <DataTable table={table}>
-      <DataTableToolbar table={table} filterFields={filterFields} />
+      <DataTableToolbar table={table} filterFields={filterFields}>
+        <Button size={"sm"}>Create</Button>
+      </DataTableToolbar>
     </DataTable>
   );
 }
