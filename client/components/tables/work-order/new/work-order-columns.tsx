@@ -12,6 +12,9 @@ import { DataTableColumnHeader } from "../../data-table/data-table-column-header
 import { RouterOutput } from "@/trpc/client";
 import { statuses } from "./work-order-table";
 import { Leaves } from "@/types";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
 
 interface ColumnType<TData extends RowData, TValue = unknown>
   extends Omit<ColumnDef<TData, TValue>, "accessoryKey"> {
@@ -50,14 +53,24 @@ export function getColumns(): ColumnType<
     {
       accessorKey: "name",
       header: ({ column }) => {
-        return <DataTableColumnHeader column={column} title="Asset" />;
+        return <DataTableColumnHeader column={column} title="Name" />;
       },
       cell: ({ row }) => {
         return (
           <div className="flex space-x-2">
-            <span className="max-w-[11.25rem] truncate font-medium">
+            {/* <span className="max-w-[11.25rem] truncate font-medium">
+              <Link
               {row.original.name}
-            </span>
+            </span> */}
+            <Link
+              href={{ pathname: `work-orders/${row.original.id}` }}
+              className={cn(
+                buttonVariants({ variant: "link", size: "sm" }),
+                "underline",
+              )}
+            >
+              {row.original.name}
+            </Link>
           </div>
         );
       },
