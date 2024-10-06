@@ -14,7 +14,7 @@
 // import { Icons } from "@/components/icons";
 // import { Button, buttonVariants } from "@/components/ui/button";
 // import { cn } from "@/lib/utils";
-// import { Tooltip, TooltipContent, TooltipTrigger } from "@/ui/tooltip";
+// import { Tooltip, TooltipContent, TooltipTrigger } from "@gembuddy/ui/tooltip";
 // import { useState } from "react";
 
 // import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";

@@ -1,13 +1,13 @@
 import { SignOut } from "@/components/sign-out";
 import { getI18n } from "@/locales/server";
-import { getUser } from "@gembuddy/supabase/queries";
+import { trpc } from "@gembuddy/trpc/server";
 
 export const metadata = {
   title: "Home",
 };
 
 export default async function Page() {
-  const { data } = await getUser();
+  const { data } = await trpc.db.user.getCurrentUser();
   const t = await getI18n();
 
   return (

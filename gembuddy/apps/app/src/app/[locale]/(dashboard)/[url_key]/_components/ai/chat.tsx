@@ -3,7 +3,7 @@
 // // import { Thread } from "@/components/ui/assistant-ui/thread";
 // import { Icons } from "@/components/icons";
 // import { Button } from "@/components/ui/button";
-// import { Input } from "@/ui/input";
+// import { Input } from "@gembuddy/ui/input";
 
 // import { useActions, useUIState } from "ai/rsc";
 

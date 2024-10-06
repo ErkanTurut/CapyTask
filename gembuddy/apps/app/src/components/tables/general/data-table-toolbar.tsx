@@ -3,8 +3,8 @@
 import { Table } from "@tanstack/react-table";
 import { Icons } from "@/components/icons";
 
-import { Button, buttonVariants } from "@/ui/button";
-import { Input } from "@/ui/input";
+import { Button, buttonVariants } from "@gembuddy/ui/button";
+import { Input } from "@gembuddy/ui/input";
 import { DataTableViewOptions } from "@/components/tables/general/data-table-view-options";
 
 import Link from "next/link";
@@ -47,7 +47,7 @@ export function DataTableToolbar<TDataRow, TData, TError>({
         <Icons.spinner
           className={cn(
             "h-4 w-4",
-            isFetching && "animate-spin duration-700 ease-in-out",
+            isFetching && "animate-spin duration-700 ease-in-out"
           )}
         />
       </Button>

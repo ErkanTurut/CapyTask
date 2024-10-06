@@ -33,7 +33,7 @@ export const navItemVariants = cva(
     defaultVariants: {
       variant: "default",
     },
-  },
+  }
 );
 
 const transformPaths = (paths: string[]): string[] => {
@@ -101,7 +101,7 @@ export const NavMenu = ({
                     subItems: subItem.subItems,
                     href: item.href.toString() + subItem.href,
                     active: pathname.startsWith(
-                      "/" + params.url_key + item.href + subItem.href,
+                      "/" + params.url_key + item.href + subItem.href
                     ),
                   };
                 })}

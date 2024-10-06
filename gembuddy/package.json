@@ -1,5 +1,5 @@
 {
-  "name": "buddy",
+  "name": "gembuddy",
   "private": true,
   "workspaces": [
     "packages/*",

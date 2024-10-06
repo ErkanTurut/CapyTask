@@ -1,9 +1,9 @@
 "use client";
 import React, { FC, useState } from "react";
 
-import { cn, generateAvatar } from "@/lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "@/ui/avatar";
-import { Button } from "@/ui/button";
+import { cn, generateAvatar } from "@gembuddy/ui/";
+import { Avatar, AvatarFallback, AvatarImage } from "@gembuddy/ui/avatar";
+import { Button } from "@gembuddy/ui/button";
 
 import { Icons } from "@/components/icons";
 import {
@@ -59,7 +59,7 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({
           className={cn(
             "w-full shadow-none",
             isCollapsed && "[&>span]:w-auto [&>svg]:hidden",
-            className,
+            className
           )}
           size={isCollapsed ? "icon" : "default"}
         >
@@ -75,7 +75,7 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({
           <span
             className={cn(
               "w-full cursor-pointer overflow-x-auto overflow-ellipsis whitespace-nowrap", // Adjust the max-width as needed
-              isCollapsed && "hidden",
+              isCollapsed && "hidden"
             )}
           >
             {selectedWorkspace.name}
@@ -122,7 +122,7 @@ const WorkspaceNav: FC<WorkspaceNavProps> = ({
                         "ml-auto h-4 w-4 min-w-min",
                         selectedWorkspace.url_key === workspace.url_key
                           ? "opacity-100"
-                          : "opacity-0",
+                          : "opacity-0"
                       )}
                     />
                   </CommandItem>

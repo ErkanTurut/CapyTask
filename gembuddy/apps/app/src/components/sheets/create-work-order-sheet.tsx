@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
 import { useMediaQuery } from "@/lib/hooks/use-media-query";
-import { Drawer, DrawerContent, DrawerHeader } from "@/ui/drawer";
+import { Drawer, DrawerContent, DrawerHeader } from "@gembuddy/ui/drawer";
 import { useQueryState, parseAsBoolean } from "nuqs";
 import { WorkOrderCreateForm } from "../forms/work-order/work-order-create-form";
 import { api } from "@/trpc/client";
@@ -20,7 +20,7 @@ export function CreateWorkOrderSheet() {
   const params = useParams() as { team_identity: string };
   const [open, setOpen] = useQueryState(
     "create",
-    parseAsBoolean.withDefault(false),
+    parseAsBoolean.withDefault(false)
   );
   const utils = api.useUtils();
   const isDesktop = useMediaQuery("(min-width: 768px)");

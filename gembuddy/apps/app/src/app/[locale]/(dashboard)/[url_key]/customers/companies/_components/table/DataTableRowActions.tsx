@@ -5,14 +5,14 @@ import { Row, Table } from "@tanstack/react-table";
 
 import { catchError } from "@/lib/utils";
 import { api, RouterOutput } from "@/trpc/client";
-import { Button } from "@/ui/button";
+import { Button } from "@gembuddy/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/ui/dropdown-menu";
+} from "@gembuddy/ui/dropdown-menu";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
 

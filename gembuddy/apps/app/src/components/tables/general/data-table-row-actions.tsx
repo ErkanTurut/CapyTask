@@ -3,7 +3,7 @@
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Row } from "@tanstack/react-table";
 
-import { Button } from "@/ui/button";
+import { Button } from "@gembuddy/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,7 +16,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@/ui/dropdown-menu";
+} from "@gembuddy/ui/dropdown-menu";
 import { Database } from "@/types/supabase.types";
 
 interface DataTableRowActionsProps<TData> {

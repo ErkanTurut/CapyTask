@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import Header from "@/components/layouts/dashboard/header";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sidebar } from "@/components/dashboard/sidebar/sidebar";
-import { trpc } from "@/trpc/server";
+import { trpc } from "@gembuddy/trpc/server";
 import { notFound, redirect } from "next/navigation";
 
 interface DashboardLayoutProps {

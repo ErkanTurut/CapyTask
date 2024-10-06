@@ -4,8 +4,8 @@ import { CaretSortIcon, PlusIcon } from "@radix-ui/react-icons";
 import { Table } from "@tanstack/react-table";
 
 import { DataTableViewOptions } from "@/components/tables/data-table/data-table-view-options";
-import { Button } from "@/ui/button";
-import { Input } from "@/ui/input";
+import { Button } from "@gembuddy/ui/button";
+import { Input } from "@gembuddy/ui/input";
 
 import { DataTableFilterCombobox } from "@/components/tables/data-table/data-table-filter-combobox";
 import { DataTableFilterItem } from "@/components/tables/data-table/data-table-filter-item";
@@ -59,7 +59,7 @@ export function DataTableToolbar<TData>({
     DataTableFilterOption<TData>[]
   >(initialSelectedOptions);
   const [openFilterBuilder, setOpenFilterBuilder] = React.useState(
-    initialSelectedOptions.length > 0 || false,
+    initialSelectedOptions.length > 0 || false
   );
   const [openCombobox, setOpenCombobox] = React.useState(false);
 
@@ -72,7 +72,7 @@ export function DataTableToolbar<TData>({
     <div
       className={cn(
         "flex w-full flex-col space-y-2.5 overflow-auto",
-        className,
+        className
       )}
       {...props}
     >
@@ -108,8 +108,8 @@ export function DataTableToolbar<TData>({
             options={options.filter(
               (option) =>
                 !selectedOptions.some(
-                  (selectedOption) => selectedOption.value === option.value,
-                ),
+                  (selectedOption) => selectedOption.value === option.value
+                )
             )}
             selectedOptions={selectedOptions}
             setSelectedOptions={setSelectedOptions}
@@ -121,7 +121,7 @@ export function DataTableToolbar<TData>({
       <div
         className={cn(
           "flex items-center gap-2",
-          !openFilterBuilder && "hidden",
+          !openFilterBuilder && "hidden"
         )}
       >
         {selectedOptions

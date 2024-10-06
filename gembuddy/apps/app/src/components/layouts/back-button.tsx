@@ -1,7 +1,7 @@
 "use client";
 import { FC } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/ui/button";
+import { Button } from "@gembuddy/ui/button";
 import { Icons } from "@/components/icons";
 
 interface backButtonProps {}

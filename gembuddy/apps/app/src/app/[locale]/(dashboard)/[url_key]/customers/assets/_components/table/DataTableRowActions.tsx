@@ -3,7 +3,7 @@
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Row, Table } from "@tanstack/react-table";
 
-import { Button } from "@/ui/button";
+import { Button } from "@gembuddy/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "@/ui/dropdown-menu";
+} from "@gembuddy/ui/dropdown-menu";
 import { api, RouterOutput } from "@/trpc/client";
 import { toast } from "sonner";
 import { catchError } from "@/lib/utils";
