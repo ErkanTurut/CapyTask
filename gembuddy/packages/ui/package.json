@@ -31,7 +31,11 @@
     "./dialog": "./src/components/dialog.tsx",
     "./icons": "./src/components/icons.tsx",
     "./tailwind.config": "./tailwind.config.ts",
-    "./postcss": "./postcss.config.js"
+    "./postcss": "./postcss.config.js",
+    "./accordion": "./src/components/accordion.tsx",
+    "./alert": "./src/components/alert.tsx",
+    "./aspect-ratio": "./src/components/aspect-ratio.tsx",
+    "./avatar": "./src/components/avatar.tsx"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.1",
