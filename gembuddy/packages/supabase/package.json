@@ -25,6 +25,7 @@
     "./client": "./src/clients/client.ts",
     "./middleware": "./src/clients/middleware.ts",
     "./types": "./src/types/index.ts",
-    "./resources": "./src/resources/index.ts"
+    "./resources": "./src/resources/index.ts",
+    "./resources/*": "./src/resources/*/index.ts"
   }
 }

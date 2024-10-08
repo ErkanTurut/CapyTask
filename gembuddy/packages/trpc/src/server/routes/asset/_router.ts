@@ -1,26 +1,36 @@
 import { protectedProcedure, router } from "../../trpc";
-import {
-  getAssetByTeamHandler,
-  getAssetByWorkOrderHandler,
-  getAssetByWorkspaceHandler,
-  searchAssetHandler,
-} from "./get.handler";
-import { ZGetAssetSchema, ZSearchAssetSchema } from "./get.schema";
-import { createAssetHandler } from "./create.handler";
-import { ZAssetCreateSchema } from "./create.schema";
-import { ZAssetDeleteSchema } from "./delete.schema";
-import { deleteAssetHandler } from "./delete.handler";
+// import {
+//   getAssetByTeamHandler,
+//   getAssetByWorkOrderHandler,
+//   getAssetByWorkspaceHandler,
+//   searchAssetHandler,
+// } from "./get.handler";
+// import { ZGetAssetSchema, ZSearchAssetSchema } from "./get.schema";
+// import { createAssetHandler } from "./create.handler";
+// import { ZAssetCreateSchema } from "./create.schema";
+// import { ZAssetDeleteSchema } from "./delete.schema";
+// import { deleteAssetHandler } from "./delete.handler";
 import { TRPCError } from "@trpc/server";
+import {
+  createAsset,
+  deleteAsset,
+  getAssetByWorkspace,
+  getAssetsByTeam,
+  getAssetsByWorkOrder,
+  searchAsset,
+  updateAsset,
+} from "@gembuddy/supabase/resources/asset";
 
 export const asset = router({
   get: {
     byTeam: protectedProcedure
       .input(ZGetAssetSchema.pick({ team_identity: true, range: true }))
       .query(async ({ ctx, input }) => {
-        return await getAssetByTeamHandler({
-          input,
+        const { data, count } = await getAssetsByTeam({
           db: ctx.db,
+          input,
         });
+        return { data, count };
       }),
     byWorkOrder: protectedProcedure
       .input(ZGetAssetSchema.pick({ work_order_id: true }))
