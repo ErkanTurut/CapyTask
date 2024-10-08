@@ -32,8 +32,8 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { Slot, type SlotProps } from "@radix-ui/react-slot";
 
-import { cn, composeRefs } from "@/lib/utils";
-import { Button, type ButtonProps } from "@/components/ui/button";
+import { cn, composeRefs } from "../utils";
+import { Button, type ButtonProps } from "./button";
 
 interface SortableProps<TData extends { fieldId: UniqueIdentifier }>
   extends DndContextProps {
@@ -114,7 +114,7 @@ function Sortable<TData extends { fieldId: UniqueIdentifier }>({
   const sensors = useSensors(
     useSensor(MouseSensor),
     useSensor(TouchSensor),
-    useSensor(KeyboardSensor),
+    useSensor(KeyboardSensor)
   );
 
   return (
@@ -125,7 +125,7 @@ function Sortable<TData extends { fieldId: UniqueIdentifier }>({
       onDragEnd={({ active, over }) => {
         if (over && active.id !== over?.id) {
           const activeIndex = value.findIndex(
-            (item) => item.fieldId === active.id,
+            (item) => item.fieldId === active.id
           );
           const overIndex = value.findIndex((item) => item.fieldId === over.id);
 
@@ -230,7 +230,7 @@ const SortableItem = React.forwardRef<HTMLDivElement, SortableItemProps>(
         attributes,
         listeners,
       }),
-      [attributes, listeners],
+      [attributes, listeners]
     );
     const style: React.CSSProperties = {
       opacity: isDragging ? 0.4 : undefined,
@@ -250,7 +250,7 @@ const SortableItem = React.forwardRef<HTMLDivElement, SortableItemProps>(
         />
       </SortableItemContext.Provider>
     );
-  },
+  }
 );
 SortableItem.displayName = "SortableItem";
 
