@@ -1,15 +1,5 @@
 import { protectedProcedure, router } from "../../trpc";
-// import {
-//   getAssetByTeamHandler,
-//   getAssetByWorkOrderHandler,
-//   getAssetByWorkspaceHandler,
-//   searchAssetHandler,
-// } from "./get.handler";
-// import { ZGetAssetSchema, ZSearchAssetSchema } from "./get.schema";
-// import { createAssetHandler } from "./create.handler";
-// import { ZAssetCreateSchema } from "./create.schema";
-// import { ZAssetDeleteSchema } from "./delete.schema";
-// import { deleteAssetHandler } from "./delete.handler";
+
 import { TRPCError } from "@trpc/server";
 import {
   createAsset,
@@ -20,66 +10,77 @@ import {
   searchAsset,
   updateAsset,
 } from "@gembuddy/supabase/resources/asset";
+import {
+  ZAssetCreateSchema,
+  ZAssetDeleteSchema,
+  ZAssetUpdateSchema,
+  ZGetAssetByTeam,
+  ZGetAssetByWorkOrder,
+  ZGetAssetByWorkspace,
+  ZSearchAssetSchema,
+} from "./schema";
 
 export const asset = router({
   get: {
     byTeam: protectedProcedure
-      .input(ZGetAssetSchema.pick({ team_identity: true, range: true }))
+      .input(ZGetAssetByTeam)
       .query(async ({ ctx, input }) => {
-        const { data, count } = await getAssetsByTeam({
+        return await getAssetsByTeam({
           db: ctx.db,
           input,
         });
-        return { data, count };
       }),
     byWorkOrder: protectedProcedure
-      .input(ZGetAssetSchema.pick({ work_order_id: true }))
+      .input(ZGetAssetByWorkOrder)
       .query(async ({ ctx, input }) => {
-        return await getAssetByWorkOrderHandler({
-          input,
+        return await getAssetsByWorkOrder({
           db: ctx.db,
+          input,
         });
       }),
     byWorkspace: protectedProcedure
-      .input(ZGetAssetSchema.pick({ url_key: true, range: true }))
+      .input(ZGetAssetByWorkspace)
       .query(async ({ ctx, input }) => {
-        return await getAssetByWorkspaceHandler({
-          input,
+        return await getAssetByWorkspace({
           db: ctx.db,
+          input,
         });
       }),
 
     textSearch: protectedProcedure
       .input(ZSearchAssetSchema)
       .query(async ({ ctx, input }) => {
-        const { data, error } = await searchAssetHandler({
-          input,
+        return await searchAsset({
           db: ctx.db,
+          input,
         });
-        if (error) {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            cause: error,
-          });
-        }
-        return data;
       }),
   },
   create: protectedProcedure
     .input(ZAssetCreateSchema)
     .mutation(async ({ ctx, input }) => {
-      return await createAssetHandler({
-        input,
+      return await createAsset({
         db: ctx.db,
+        input,
+      });
+    }),
+
+  update: protectedProcedure
+    .input(ZAssetUpdateSchema)
+    .mutation(async ({ ctx, input }) => {
+      return await updateAsset({
+        db: ctx.db,
+        input,
+        id: input.asset_id,
       });
     }),
 
   delete: protectedProcedure
     .input(ZAssetDeleteSchema)
     .mutation(async ({ ctx, input }) => {
-      return await deleteAssetHandler({
-        input,
+      return await deleteAsset({
         db: ctx.db,
+        input,
       });
     }),
 });
