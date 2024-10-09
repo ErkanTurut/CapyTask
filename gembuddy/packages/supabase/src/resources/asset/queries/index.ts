@@ -14,7 +14,7 @@ export async function getAssetsByTeam({
   db: Client;
   input: getAssetsParams;
 }) {
-  const { data, count } = await db
+  const { data, count, error } = await db
     .from("asset")
     .select("*, team!inner(*)", { count: "estimated" })
     .eq("team.identity", input.team_identity)

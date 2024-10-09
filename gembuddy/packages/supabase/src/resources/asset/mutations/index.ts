@@ -39,14 +39,13 @@ export async function updateAsset({
   return { data };
 }
 
-export async function deleteAsset(
-  db: Client,
-  input: {
-    assets: {
-      asset_id: string;
-    }[];
-  }
-) {
+export async function deleteAsset({
+  db,
+  input,
+}: {
+  db: Client;
+  input: { assets: { asset_id: string }[] };
+}) {
   const { status } = await db
     .from("asset")
     .delete()
