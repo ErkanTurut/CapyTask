@@ -6,12 +6,15 @@ import type {
   TablesUpdate,
 } from "../../../types";
 
-export async function getTeamById(
-  db: Client,
+export async function getTeamById({
+  db,
+  input,
+}: {
+  db: Client;
   input: {
     id: string;
-  }
-) {
+  };
+}) {
   const { data } = await db
     .from("team")
     .select("*")
@@ -22,12 +25,15 @@ export async function getTeamById(
   return { data };
 }
 
-export async function getTeamByIdentity(
-  db: Client,
+export async function getTeamByIdentity({
+  db,
+  input,
+}: {
+  db: Client;
   input: {
     identity: string;
-  }
-) {
+  };
+}) {
   const { data } = await db
     .from("team")
     .select("*")
@@ -38,12 +44,15 @@ export async function getTeamByIdentity(
   return { data };
 }
 
-export async function getTeamByWorkspace(
-  db: Client,
+export async function getTeamByWorkspace({
+  db,
+  input,
+}: {
+  db: Client;
   input: {
     workspace_id: string;
-  }
-) {
+  };
+}) {
   const { data } = await db
     .from("team")
     .select("*, workspace(id)")
@@ -53,12 +62,15 @@ export async function getTeamByWorkspace(
   return { data };
 }
 
-export async function getTeamByUrlKey(
-  db: Client,
+export async function getTeamByUrlKey({
+  db,
+  input,
+}: {
+  db: Client;
   input: {
     url_key: string;
-  }
-) {
+  };
+}) {
   const { data } = await db
     .from("team")
     .select("*, workspace(url_key)")

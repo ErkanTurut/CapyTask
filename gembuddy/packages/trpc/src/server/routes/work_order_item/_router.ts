@@ -1,50 +1,66 @@
 import "server-only";
 
-import { protectedProcedure, router } from "@/trpc/server/trpc";
-import { getWorkOrderItemByWorkOrderHandler } from "./get.handler";
-import { ZGetWorkOrderItemByWorkOrderSchema } from "./get.schema";
-import { z } from "zod";
-import { TRPCError } from "@trpc/server";
+import { protectedProcedure, router } from "../../trpc";
+
+import {
+  createWorkOrderItem,
+  getWorkOrderItemByWorkOrder,
+  updateWorkOrderItem,
+  getWorkOrderItemById,
+  searchWorkOrderItem,
+} from "@gembuddy/supabase/resources/work_order_item";
+import {
+  ZCreateWorkOrderItemSchema,
+  ZGetWorkOrderItemByWorkOrderSchema,
+  ZGetWorkOrderItemByIdSchema,
+  ZSearchWorkOrderItemSchema,
+  ZUpdateWorkOrderItemSchema,
+} from "./schema";
+
 export const work_order_item = router({
   get: {
     byWorkOrder: protectedProcedure
       .input(ZGetWorkOrderItemByWorkOrderSchema)
       .query(async ({ ctx, input }) => {
-        const { data, count, error } = await ctx.db
-          .from("work_order_item")
-          .select("*,asset(*),location(*)", {
-            count: "exact",
-          })
-          .eq("work_order_id", input.work_order_id);
-
-        if (error) {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: "Failed to get work order items",
-          });
-        }
-        return { data, count };
+        return await getWorkOrderItemByWorkOrder({
+          db: ctx.db,
+          input,
+        });
       }),
     textSearch: protectedProcedure
-      .input(
-        z.object({
-          search: z.string(),
-        }),
-      )
+      .input(ZSearchWorkOrderItemSchema)
       .query(async ({ ctx: { db }, input }) => {
-        // transform space to %
-        const search = input.search.replace(/ /g, "%");
-
-        const { data, error } = await db
-          .from("work_order_item")
-          .select("*, asset(*), location(*)")
-          .textSearch("name", search);
-
-        if (error) {
-          throw error;
-        }
-
-        return data;
+        return await searchWorkOrderItem({
+          db,
+          input,
+        });
+      }),
+    byId: protectedProcedure
+      .input(ZGetWorkOrderItemByIdSchema)
+      .query(async ({ ctx, input }) => {
+        return await getWorkOrderItemById({
+          db: ctx.db,
+          input,
+        });
+      }),
+  },
+  create: protectedProcedure
+    .input(ZCreateWorkOrderItemSchema)
+    .mutation(async ({ ctx, input }) => {
+      return await createWorkOrderItem({
+        db: ctx.db,
+        input,
+      });
+    }),
+  update: {
+    byId: protectedProcedure
+      .input(ZUpdateWorkOrderItemSchema)
+      .mutation(async ({ ctx, input }) => {
+        return await updateWorkOrderItem({
+          db: ctx.db,
+          input,
+          id: input.work_order_item_id,
+        });
       }),
   },
 });

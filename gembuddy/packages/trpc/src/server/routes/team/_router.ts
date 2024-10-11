@@ -1,54 +1,76 @@
+import "server-only";
+
 import { protectedProcedure, router } from "../../trpc";
 
-import { createTeamHandler } from "./create.handler";
-import { ZCreateTeamSchema } from "./create.schema";
 import {
-  getTeamByIdentityHandler,
-  getTeamHandler,
-  getTeamsByWorkspaceUrlKeyHandler,
-} from "./get.handler";
-import { ZGetTeamSchema } from "./get.schema";
-import { updateTeamHandler } from "./update.handler";
-import { ZUpdateTeamSchema } from "./update.schema";
+  createTeam,
+  getTeamById,
+  getTeamByIdentity,
+  getTeamByUrlKey,
+  getTeamByWorkspace,
+  updateTeam,
+} from "@gembuddy/supabase/resources/team";
+import {
+  ZCreateTeamSchema,
+  ZGetTeamByIdSchema,
+  ZGetTeamByTeamIdentitySchema,
+  ZGetTeamByUrlKeySchema,
+  ZGetTeamByWorkspaceSchema,
+  ZUpdateTeamSchema,
+} from "./schema";
 
 export const team = router({
   create: protectedProcedure
     .input(ZCreateTeamSchema)
     .mutation(async ({ ctx, input }) => {
-      return await createTeamHandler({
+      return await createTeam({
         input,
         db: ctx.db,
       });
     }),
 
+  get: {
+    byId: protectedProcedure
+      .input(ZGetTeamByIdSchema)
+      .query(async ({ ctx, input }) => {
+        return await getTeamById({
+          input,
+          db: ctx.db,
+        });
+      }),
+    byIdentity: protectedProcedure
+      .input(ZGetTeamByTeamIdentitySchema)
+      .query(async ({ ctx, input }) => {
+        return await getTeamByIdentity({
+          input,
+          db: ctx.db,
+        });
+      }),
+    byUrlKey: protectedProcedure
+      .input(ZGetTeamByUrlKeySchema)
+      .query(async ({ ctx, input }) => {
+        return await getTeamByUrlKey({
+          input,
+          db: ctx.db,
+        });
+      }),
+
+    byWorkspace: protectedProcedure
+      .input(ZGetTeamByWorkspaceSchema)
+      .query(async ({ ctx, input }) => {
+        return await getTeamByWorkspace({
+          input,
+          db: ctx.db,
+        });
+      }),
+  },
   update: protectedProcedure
     .input(ZUpdateTeamSchema)
     .mutation(async ({ ctx, input }) => {
-      return await updateTeamHandler({
+      return await updateTeam({
         input,
         db: ctx.db,
-      });
-    }),
-
-  get: protectedProcedure
-    .input(ZGetTeamSchema.pick({ id: true }))
-    .query(async ({ ctx, input }) => {
-      return await getTeamHandler({ input, db: ctx.db });
-    }),
-  getByIdentity: protectedProcedure
-    .input(ZGetTeamSchema.pick({ identity: true }))
-    .query(async ({ ctx, input }) => {
-      return await getTeamByIdentityHandler({
-        input,
-        db: ctx.db,
-      });
-    }),
-  getByWorkspaceUrlKey: protectedProcedure
-    .input(ZGetTeamSchema.pick({ url_key: true }))
-    .query(async ({ ctx, input }) => {
-      return await getTeamsByWorkspaceUrlKeyHandler({
-        input,
-        db: ctx.db,
+        id: input.team_id,
       });
     }),
 });

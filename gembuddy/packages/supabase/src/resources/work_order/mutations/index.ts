@@ -43,20 +43,19 @@ export async function updateWorkOrder({
   return { data };
 }
 
-export async function deleteWorkOrder(
-  db: Client,
+export async function deleteWorkOrders({
+  db,
+  input,
+}: {
+  db: Client;
   input: {
-    work_orders: {
-      work_order_id: string;
-    }[];
-  }
-) {
+    work_order_id: string[];
+  };
+}) {
   const { status } = await db
     .from("work_order")
     .delete()
-    .in("work_order_id", [
-      input.work_orders.map((work_order) => work_order.work_order_id),
-    ])
+    .in("work_order_id", input.work_order_id)
     .throwOnError();
 
   return { status };

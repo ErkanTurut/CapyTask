@@ -1,6 +1,7 @@
+import "server-only";
+
 import { protectedProcedure, router } from "../../trpc";
 
-import { TRPCError } from "@trpc/server";
 import {
   createAsset,
   deleteAsset,
@@ -14,16 +15,16 @@ import {
   ZAssetCreateSchema,
   ZAssetDeleteSchema,
   ZAssetUpdateSchema,
-  ZGetAssetByTeam,
-  ZGetAssetByWorkOrder,
-  ZGetAssetByWorkspace,
+  ZGetAssetByTeamSchema,
+  ZGetAssetByWorkOrderSchema,
+  ZGetAssetByWorkspaceSchema,
   ZSearchAssetSchema,
 } from "./schema";
 
 export const asset = router({
   get: {
     byTeam: protectedProcedure
-      .input(ZGetAssetByTeam)
+      .input(ZGetAssetByTeamSchema)
       .query(async ({ ctx, input }) => {
         return await getAssetsByTeam({
           db: ctx.db,
@@ -31,7 +32,7 @@ export const asset = router({
         });
       }),
     byWorkOrder: protectedProcedure
-      .input(ZGetAssetByWorkOrder)
+      .input(ZGetAssetByWorkOrderSchema)
       .query(async ({ ctx, input }) => {
         return await getAssetsByWorkOrder({
           db: ctx.db,
@@ -39,7 +40,7 @@ export const asset = router({
         });
       }),
     byWorkspace: protectedProcedure
-      .input(ZGetAssetByWorkspace)
+      .input(ZGetAssetByWorkspaceSchema)
       .query(async ({ ctx, input }) => {
         return await getAssetByWorkspace({
           db: ctx.db,

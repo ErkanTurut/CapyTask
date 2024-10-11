@@ -1,53 +1,76 @@
-import { z } from "zod";
+import "server-only";
+
 import { protectedProcedure, router } from "../../trpc";
 import {
-  getLocationByWorkOrder,
-  getLocationByWorkspaceHandler,
-} from "./get.handler";
+  getLocationByWorkOrderItem,
+  getLocationByWorkspace,
+  createLocation,
+  getLocationById,
+  searchLocation,
+  updateLocation,
+} from "@gembuddy/supabase/resources/location";
 import {
-  ZGetLocationByWorkOrderSchema,
-  ZGetLocationSchema,
-} from "./get.schema";
+  ZCreateLocationSchema,
+  ZGetLocationByIdSchema,
+  ZGetLocationByWorkOrderItemSchema,
+  ZGetLocationByWorkspaceSchema,
+  ZSearchLocationSchema,
+  ZUpdateLocationSchema,
+} from "./shema";
 
 export const location = router({
   get: {
-    byWorkspace: protectedProcedure
-      .input(ZGetLocationSchema.pick({ url_key: true, range: true }))
+    getLocationById: protectedProcedure
+      .input(ZGetLocationByIdSchema)
       .query(async ({ ctx, input }) => {
-        return await getLocationByWorkspaceHandler({
+        return await getLocationById({
+          db: ctx.db,
+          input,
+        });
+      }),
+    byWorkspace: protectedProcedure
+      .input(ZGetLocationByWorkspaceSchema)
+      .query(async ({ ctx, input }) => {
+        return await getLocationByWorkspace({
           input,
           db: ctx.db,
         });
       }),
-    byWorkOrder: protectedProcedure
-      .input(ZGetLocationByWorkOrderSchema)
+    byWorkOrderItem: protectedProcedure
+      .input(ZGetLocationByWorkOrderItemSchema)
       .query(async ({ ctx, input }) => {
-        return await getLocationByWorkOrder({
+        return await getLocationByWorkOrderItem({
           input,
           db: ctx.db,
         });
       }),
 
     textSearch: protectedProcedure
-      .input(
-        z.object({
-          search: z.string(),
-        }),
-      )
-      .query(async ({ ctx: { db }, input }) => {
-        // transform space to %
-        const search = input.search.replace(/ /g, "%");
-
-        const { data, error } = await db
-          .from("location")
-          .select("*, address(*), location(*)")
-          .textSearch("name", search);
-
-        if (error) {
-          throw error;
-        }
-
-        return data;
+      .input(ZSearchLocationSchema)
+      .query(async ({ ctx, input }) => {
+        return await searchLocation({
+          db: ctx.db,
+          input,
+        });
       }),
   },
+
+  create: protectedProcedure
+    .input(ZCreateLocationSchema)
+    .mutation(async ({ ctx, input }) => {
+      return await createLocation({
+        db: ctx.db,
+        input,
+      });
+    }),
+
+  update: protectedProcedure
+    .input(ZUpdateLocationSchema)
+    .mutation(async ({ ctx, input }) => {
+      return await updateLocation({
+        db: ctx.db,
+        input,
+        id: input.location_id,
+      });
+    }),
 });

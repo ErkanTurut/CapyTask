@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-export const ZGetAssetByTeam = z.object({
+export const ZGetAssetByTeamSchema = z.object({
   team_identity: z.string(),
   range: z.object({
     from: z.number(),
@@ -8,9 +8,9 @@ export const ZGetAssetByTeam = z.object({
   }),
 });
 
-export type TGetAssetByTeam = z.infer<typeof ZGetAssetByTeam>;
+export type TGetAssetByTeamSchema = z.infer<typeof ZGetAssetByTeamSchema>;
 
-export const ZGetAssetByWorkspace = z.object({
+export const ZGetAssetByWorkspaceSchema = z.object({
   url_key: z.string(),
   range: z.object({
     from: z.number(),
@@ -18,13 +18,17 @@ export const ZGetAssetByWorkspace = z.object({
   }),
 });
 
-export type TGetAssetByWorkspace = z.infer<typeof ZGetAssetByWorkspace>;
+export type TGetAssetByWorkspaceSchema = z.infer<
+  typeof ZGetAssetByWorkspaceSchema
+>;
 
-export const ZGetAssetByWorkOrder = z.object({
+export const ZGetAssetByWorkOrderSchema = z.object({
   work_order_id: z.string(),
 });
 
-export type TGetAssetByWorkOrder = z.infer<typeof ZGetAssetByWorkOrder>;
+export type TGetAssetByWorkOrderSchema = z.infer<
+  typeof ZGetAssetByWorkOrderSchema
+>;
 
 export const ZSearchAssetSchema = z.object({
   search: z.string(),

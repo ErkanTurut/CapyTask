@@ -43,16 +43,19 @@ export async function updateServiceAppointment({
   return { data };
 }
 
-export async function deleteServiceAppointment(
-  db: Client,
+export async function deleteServiceAppointments({
+  db,
+  input,
+}: {
+  db: Client;
   input: {
-    service_appointments_id: string[];
-  }
-) {
+    service_appointment_id: string[];
+  };
+}) {
   const { status } = await db
     .from("service_appointment")
     .delete()
-    .in("service_appointment_id", input.service_appointments_id)
+    .in("service_appointment_id", input.service_appointment_id)
     .throwOnError();
 
   return { status };

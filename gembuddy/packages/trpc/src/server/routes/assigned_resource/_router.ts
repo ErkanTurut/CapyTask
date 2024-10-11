@@ -1,3 +1,5 @@
+import "server-only";
+
 import { createAssignedResource } from "@gembuddy/supabase/resources/assigned_resource";
 import { protectedProcedure, router } from "../../trpc";
 import { ZCreateAssignedResourceSchema } from "./schema";

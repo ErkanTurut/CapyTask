@@ -1,106 +1,69 @@
 import "server-only";
 
-import { TRPCError } from "@trpc/server";
 import { protectedProcedure, router } from "../../trpc";
+
 import {
-  createWorkOrderHandler,
-  createWorkOrderWithItemsHandler,
-} from "./create.handler";
+  createWorkOrder,
+  deleteWorkOrders,
+  getWorkOrderById,
+  getWorkOrdersByTeam,
+  searchWorkOrder,
+  updateWorkOrder,
+} from "@gembuddy/supabase/resources/work_order";
 import {
   ZCreateWorkOrderSchema,
-  ZCreateWorkOrderWithItemsSchema,
-} from "./create.schema";
-import { deleteWorkOrderHandler } from "./delete.handler";
-import { ZDeleteWorkOrderSchema } from "./delete.schema";
-import {
-  getWorkOrderDetailHandler,
-  getWorkOrderHandler,
-  getWorkOrderStatusHandler,
-  getWorkOrderStepsHandler,
-  getWorkOrdersByIdentityHandler,
-  searchWorkOrderHandler,
-} from "./get.handler";
-import { ZGetWorkOrderSchema } from "./get.schema";
-import { updateWorkOrderStatusHandler } from "./update.handler";
-import { ZUpdateWorkOrderSchema } from "./update.schema";
-import { unstable_cache } from "next/cache";
-import { notFound } from "next/navigation";
-import { z } from "zod";
+  ZDeleteWorkOrderManySchema,
+  ZGetWorkOrderByIdSchema,
+  ZGetWorkOrderByTeamSchema,
+  ZSearchWorkOrderSchema,
+  ZUpdateWorkOrderSchema,
+} from "./schema";
 export const work_order = router({
   get: {
     byId: protectedProcedure
-      .input(ZGetWorkOrderSchema.pick({ id: true }))
+      .input(ZGetWorkOrderByIdSchema)
       .query(async ({ ctx, input }) => {
-        const { data } = await getWorkOrderHandler({
-          input,
+        return await getWorkOrderById({
           db: ctx.db,
+          input,
         });
-        if (!data) {
-          return notFound();
-        }
-        return data;
       }),
-    byTeamIdentity: protectedProcedure
-      .input(ZGetWorkOrderSchema.pick({ team_identity: true, range: true }))
+    byTeam: protectedProcedure
+      .input(ZGetWorkOrderByTeamSchema)
       .query(async ({ ctx, input }) => {
-        return await getWorkOrdersByIdentityHandler({
+        return await getWorkOrdersByTeam({
           input,
           db: ctx.db,
         });
       }),
-    withSteps: protectedProcedure
-      .input(ZGetWorkOrderSchema.pick({ id: true }))
+    textSearch: protectedProcedure
+      .input(ZSearchWorkOrderSchema)
       .query(async ({ ctx, input }) => {
-        return await getWorkOrderStepsHandler({
+        return await searchWorkOrder({
           input,
           db: ctx.db,
         });
-      }),
-    status: protectedProcedure
-      .input(ZGetWorkOrderSchema.pick({ id: true }))
-      .query(async ({ ctx, input }) => {
-        const { data } = await getWorkOrderStatusHandler({
-          input,
-          db: ctx.db,
-        });
-        return data;
-      }),
-    detail: protectedProcedure
-      .input(ZGetWorkOrderSchema.pick({ id: true }))
-      .query(async ({ ctx, input }) => {
-        const { data, error } = await getWorkOrderDetailHandler({
-          input,
-          db: ctx.db,
-        });
-        return data;
       }),
   },
-  search: protectedProcedure
-    .input(ZGetWorkOrderSchema.pick({ q: true, team_identity: true }))
-    .query(async ({ ctx, input }) => {
-      return await searchWorkOrderHandler({
-        input,
-        db: ctx.db,
-      });
-    }),
-  delete: protectedProcedure
-    .input(ZDeleteWorkOrderSchema)
-    .mutation(async ({ ctx, input }) => {
-      return await deleteWorkOrderHandler({
-        input,
-        db: ctx.db,
-      });
-    }),
-  update: {
-    status: protectedProcedure
-      .input(
-        ZUpdateWorkOrderSchema.pick({ id: true, status: true, note: true }),
-      )
+
+  delete: {
+    many: protectedProcedure
+      .input(ZDeleteWorkOrderManySchema)
       .mutation(async ({ ctx, input }) => {
-        updateWorkOrderStatusHandler({
+        return await deleteWorkOrders({
           input,
           db: ctx.db,
-          ctx,
+        });
+      }),
+  },
+  update: {
+    status: protectedProcedure
+      .input(ZUpdateWorkOrderSchema)
+      .mutation(async ({ ctx, input }) => {
+        return await updateWorkOrder({
+          db: ctx.db,
+          input,
+          id: input.work_order_id,
         });
       }),
   },
@@ -108,21 +71,9 @@ export const work_order = router({
   create: protectedProcedure
     .input(ZCreateWorkOrderSchema)
     .mutation(async ({ ctx, input }) => {
-      const { data, error } = await createWorkOrderHandler({
-        input,
+      return await createWorkOrder({
         db: ctx.db,
+        input,
       });
-
-      if (error) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: error.message,
-        });
-      }
-      return data;
-      // return await createWorkOrderHandler({
-      //   input,
-      //   db: ctx.db,
-      // });
     }),
 });

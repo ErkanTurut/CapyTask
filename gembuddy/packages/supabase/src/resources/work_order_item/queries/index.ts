@@ -1,7 +1,7 @@
 import "server-only";
 import type { Client } from "../../../types";
 
-export async function geWorkOrderItemByWorkOrder({
+export async function getWorkOrderItemByWorkOrder({
   db,
   input,
 }: {
@@ -19,4 +19,41 @@ export async function geWorkOrderItemByWorkOrder({
     .throwOnError();
 
   return { data };
+}
+
+export async function getWorkOrderItemById({
+  db,
+  input,
+}: {
+  db: Client;
+  input: {
+    id: string;
+  };
+}) {
+  const { data } = await db
+    .from("work_order_item")
+    .select("*")
+    .eq("id", input.id)
+    .single()
+    .throwOnError();
+
+  return { data };
+}
+
+export async function searchWorkOrderItem({
+  db,
+  input,
+}: {
+  db: Client;
+  input: {
+    search: string;
+  };
+}) {
+  const { data } = await db
+    .from("work_order_item")
+    .select()
+    .textSearch("name", input.search.replace(/ /g, "%"), {
+      type: "websearch",
+    })
+    .throwOnError();
 }

@@ -49,7 +49,7 @@ export async function getServiceAppointmentByServiceResources({
 }: {
   db: Client;
   input: {
-    service_resources_id: string[];
+    service_resource_id: string[];
     date_range: {
       from: string | undefined;
       to: string | undefined;
@@ -59,7 +59,7 @@ export async function getServiceAppointmentByServiceResources({
   const { data } = await db
     .from("service_appointment")
     .select()
-    .in("assigned_resource.service_resource_id", input.service_resources_id)
+    .in("assigned_resource.service_resource_id", input.service_resource_id)
     .gte("start_date", input.date_range.from)
     .lte("end_date", input.date_range.to)
     .throwOnError();
