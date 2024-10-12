@@ -23,7 +23,7 @@ export type TGetWorkPlanTemplateByWorkspaceSchema = z.infer<
 export const ZCreateWorkPlanTemplateSchema = z.object({
   name: z.string(),
   workspace_id: z.string(),
-  description: z.string().nullable(),
+  description: z.string().optional(),
 });
 
 export type TCreateWorkPlanTemplateSchema = z.infer<
@@ -43,4 +43,16 @@ export const ZUpdateWorkPlanTemplateSchema = z
 
 export type TUpdateWorkPlanTemplateSchema = z.infer<
   typeof ZUpdateWorkPlanTemplateSchema
+>;
+
+export const ZGetWorkPlanTemplateByUrlKeySchema = z.object({
+  url_key: z.string(),
+  range: z.object({
+    from: z.number(),
+    to: z.number(),
+  }),
+});
+
+export type TGetWorkPlanTemplateByUrlKeySchema = z.infer<
+  typeof ZGetWorkPlanTemplateByUrlKeySchema
 >;

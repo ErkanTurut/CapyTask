@@ -19,7 +19,7 @@ interface createPageProps {
 }
 
 export default async function createPage({ params }: createPageProps) {
-  const { data } = await trpc.db.workspace.getByUrlKey({
+  const { data } = await trpc.db.workspace.get.byUrlKey({
     url_key: params.url_key,
   });
   if (!data) {

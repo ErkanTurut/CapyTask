@@ -10,7 +10,7 @@ import { DataTableViewOptions } from "@/components/tables/general/data-table-vie
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { DefinedUseTRPCQueryResult } from "@trpc/react-query/dist/shared";
+import { DefinedUseTRPCQueryResult } from "@trpc/react-query/shared";
 import { useState } from "react";
 
 interface DataTableToolbarProps<TDataRow, TData, TError> {

@@ -9,12 +9,16 @@ export async function createAssignedResource({
   input: TablesInsert<"assigned_resource">;
   db: Client;
 }) {
-  const { data } = await db
+  const { data, error } = await db
     .from("assigned_resource")
     .insert(input)
     .select("*")
     .single()
     .throwOnError();
+
+  if (error) {
+    throw error;
+  }
 
   return { data };
 }

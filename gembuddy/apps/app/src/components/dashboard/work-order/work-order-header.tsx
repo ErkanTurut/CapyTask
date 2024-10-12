@@ -6,10 +6,10 @@ import {
 } from "@/components/page-header";
 
 import { WorkOrderTabs } from "@/components/dashboard/work-order/work-order-tabs";
-import { RouterOutput } from "@gembuddy/trpc/server/trpc";
+import { RouterOutput } from "@gembuddy/trpc/client";
 import { PrioritySelector } from "./priority-selector";
 import { StatusSelector } from "./status-selector";
-import { api } from "@/trpc/client";
+import { api } from "@gembuddy/trpc/client";
 
 interface WorkOrderHeaderProps {
   initial_work_order: NonNullable<
@@ -18,14 +18,20 @@ interface WorkOrderHeaderProps {
 }
 
 export function WorkOrderHeader({ initial_work_order }: WorkOrderHeaderProps) {
-  const { data: work_order } = api.db.work_order.get.byId.useQuery(
+  const {
+    data: { data: work_order },
+  } = api.db.work_order.get.byId.useQuery(
     {
-      id: initial_work_order.id,
+      id: initial_work_order.data.id,
     },
     {
       initialData: initial_work_order,
     }
   );
+
+  if (!work_order) {
+    return null;
+  }
 
   return (
     <div className="grid gap-4 border-b bg-background p-6 pb-0 sm:grid-cols-2">

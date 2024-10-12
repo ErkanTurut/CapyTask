@@ -12,16 +12,22 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@gembuddy/ui/dropdown-menu";
-import { api, RouterOutput } from "@/trpc/client";
+import { api, RouterOutput } from "@gembuddy/trpc/client";
 import { toast } from "sonner";
 import { catchError } from "@/lib/utils";
 import { Database } from "@gembuddy/supabase/types";
 import { useParams } from "next/navigation";
 
 interface DataTableRowActionsProps<TData> {
-  row: Row<RouterOutput["db"]["asset"]["get"]["byWorkspace"]["data"][number]>;
+  row: Row<
+    NonNullable<
+      RouterOutput["db"]["asset"]["get"]["byWorkspace"]["data"]
+    >[number]
+  >;
   table: Table<
-    RouterOutput["db"]["asset"]["get"]["byWorkspace"]["data"][number]
+    NonNullable<
+      RouterOutput["db"]["asset"]["get"]["byWorkspace"]["data"]
+    >[number]
   >;
 }
 

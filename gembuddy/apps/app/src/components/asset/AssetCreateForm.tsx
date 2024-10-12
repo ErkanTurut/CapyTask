@@ -19,13 +19,13 @@ import { toast } from "sonner";
 
 import { Button } from "@gembuddy/ui/button";
 
-import { api } from "@/trpc/client";
+import { api } from "@gembuddy/trpc/client";
 
 import { useRouter } from "next/navigation";
 import {
   TAssetCreateSchema,
   ZAssetCreateSchema,
-} from "@gembuddy/trpc/server/routes/asset/create.schema";
+} from "@gembuddy/trpc/schema/asset";
 
 interface AssetCreateFormProps extends React.HTMLAttributes<HTMLFormElement> {
   team_id: string;
@@ -58,7 +58,6 @@ export default function AssetCreateForm({
     resolver: zodResolver(ZAssetCreateSchema),
     defaultValues: {
       name: "",
-
       description: "",
       workspace_id,
     },

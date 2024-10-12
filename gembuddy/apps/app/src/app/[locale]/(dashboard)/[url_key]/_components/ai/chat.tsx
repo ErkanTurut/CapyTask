@@ -8,7 +8,7 @@
 // import { useActions, useUIState } from "ai/rsc";
 
 // import { Form, FormField, FormItem, FormMessage } from "@gembuddy/ui/form";
-// import { api } from "@/trpc/client";
+// import { api } from "@gembuddy/trpc/client";
 // import { ClientMessage } from "./actions";
 
 // import { zodResolver } from "@hookform/resolvers/zod";

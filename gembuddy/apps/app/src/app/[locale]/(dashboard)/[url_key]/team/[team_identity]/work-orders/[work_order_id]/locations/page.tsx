@@ -12,7 +12,7 @@ interface PageProps {
 }
 
 export default async function Page({ params }: PageProps) {
-  const { data, count } = await trpc.db.location.get.byWorkOrder({
+  const { data, count } = await trpc.db.location.get.byWorkOrderItem({
     work_order_id: params.work_order_id,
   });
   if (!data) {

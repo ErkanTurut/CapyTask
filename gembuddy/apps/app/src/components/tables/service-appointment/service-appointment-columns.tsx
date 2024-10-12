@@ -9,9 +9,9 @@ import {
 } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../data-table/data-table-column-header";
 
-import { RouterOutput } from "@/trpc/client";
+import { RouterOutput } from "@gembuddy/trpc/client";
 import { statuses } from "./service-appointment-table";
-import { Leaves } from "@/types";
+import { Leaves } from "../types";
 
 interface ColumnType<TData extends RowData, TValue = unknown>
   extends Omit<ColumnDef<TData, TValue>, "accessoryKey"> {

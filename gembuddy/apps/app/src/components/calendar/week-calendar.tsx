@@ -31,7 +31,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "../ui/tooltip";
+} from "@gembuddy/ui/tooltip";
 import { formatDateRange } from "little-date";
 import { cn } from "@/lib/utils";
 

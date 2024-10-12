@@ -8,11 +8,11 @@ import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { DataTableRowActions } from "./DataTableRowActions";
 
-import { RouterOutput } from "@/trpc/client";
+import { RouterOutput } from "@gembuddy/trpc/client";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 
 export const columns: ColumnDef<
-  RouterOutput["db"]["work_order"]["get"]["byTeamIdentity"]["data"][number]
+  NonNullable<RouterOutput["db"]["work_order"]["get"]["byTeam"]["data"]>[number]
 >[] = [
   {
     id: "select",

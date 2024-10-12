@@ -14,7 +14,7 @@ import {
 import { use, type ComponentType, useMemo, useCallback, useState } from "react";
 
 import { DataTable } from "@/components/tables/data-table/data-table";
-import { api, RouterOutput } from "@/trpc/client";
+import { api, RouterOutput } from "@gembuddy/trpc/client";
 import { Database } from "@gembuddy/supabase/types";
 import {
   CheckCircledIcon,
@@ -26,14 +26,14 @@ import {
 import { DataTableToolbar } from "./data-table-toolbar";
 import { getColumns } from "./work-order-columns";
 import { useParams, usePathname, useSearchParams } from "next/navigation";
-import { DataTableFilterField } from "@/types";
+import { DataTableFilterField } from "../../types";
 import { trpc } from "@gembuddy/trpc/server";
 import { useDataTable } from "@/lib/hooks/use-data-table";
 import { Button } from "@gembuddy/ui/button";
 
 interface WorkOrderTableProps {
   initialData: NonNullable<
-    ReturnType<(typeof trpc)["db"]["work_order"]["get"]["byTeamIdentity"]>
+    ReturnType<(typeof trpc)["db"]["work_order"]["get"]["byTeam"]>
   >;
 }
 
@@ -82,23 +82,15 @@ export function WorkOrderTable({ initialData }: WorkOrderTableProps) {
   const columns = useMemo(() => getColumns(), []);
 
   const filterFields: DataTableFilterField<
-    Awaited<WorkOrderTableProps["initialData"]>["data"][number]
+    NonNullable<
+      RouterOutput["db"]["work_order"]["get"]["byTeam"]["data"]
+    >[number]
   >[] = [
     {
       label: "Status",
       value: "status",
       options: statuses,
     },
-    // {
-    //   label: "Location",
-    //   value: "location_id",
-    //   options: data
-    //     .flatMap((work_order_item) => work_order_item.location)
-    //     .map((location) => ({
-    //       label: location?.name || "",
-    //       value: location?.id || "",
-    //     })),
-    // },
   ];
 
   // Memoize computation of searchableColumns and filterableColumns
@@ -163,12 +155,12 @@ export function WorkOrderTable({ initialData }: WorkOrderTableProps) {
     useState<ColumnFiltersState>(initialColumnFilters);
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const queryResult = api.db.work_order.get.byTeamIdentity.useQuery(
+  const queryResult = api.db.work_order.get.byTeam.useQuery(
     {
       team_identity: params.team_identity,
       range: {
-        start: 0,
-        end: 10,
+        from: 0,
+        to: 10,
       },
     },
     {

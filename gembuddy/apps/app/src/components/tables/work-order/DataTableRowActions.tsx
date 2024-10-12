@@ -4,7 +4,7 @@ import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Row, Table } from "@tanstack/react-table";
 
 import { catchError } from "@/lib/utils";
-import { api, RouterOutput } from "@/trpc/client";
+import { api, RouterOutput } from "@gembuddy/trpc/client";
 import { Button } from "@gembuddy/ui/button";
 import {
   DropdownMenu,
@@ -18,10 +18,14 @@ import { toast } from "sonner";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<
-    RouterOutput["db"]["work_order"]["get"]["byTeamIdentity"]["data"][number]
+    NonNullable<
+      RouterOutput["db"]["work_order"]["get"]["byTeam"]["data"]
+    >[number]
   >;
   table: Table<
-    RouterOutput["db"]["work_order"]["get"]["byTeamIdentity"]["data"][number]
+    NonNullable<
+      RouterOutput["db"]["work_order"]["get"]["byTeam"]["data"]
+    >[number]
   >;
 }
 

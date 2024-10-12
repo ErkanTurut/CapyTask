@@ -10,7 +10,7 @@ export async function getWorkOrderItemByWorkOrder({
     work_order_id: string;
   };
 }) {
-  const { data } = await db
+  const { data, count } = await db
     .from("work_order_item")
     .select("*,asset(*),location(*)", {
       count: "exact",
@@ -18,7 +18,7 @@ export async function getWorkOrderItemByWorkOrder({
     .eq("work_order_id", input.work_order_id)
     .throwOnError();
 
-  return { data };
+  return { data, count };
 }
 
 export async function getWorkOrderItemById({

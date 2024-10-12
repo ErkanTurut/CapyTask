@@ -20,11 +20,11 @@ import {
   FormControl,
   FormMessage,
 } from "@gembuddy/ui/form";
-import { api } from "@/trpc/client";
+import { api } from "@gembuddy/trpc/client";
 import {
   TUpdateWorkOrderSchema,
   ZUpdateWorkOrderSchema,
-} from "@gembuddy/trpc/server/routes/work_order/update.schema";
+} from "@gembuddy/trpc/schema/work_order";
 import { StatusConfig } from "./status-config";
 
 interface StatusChangeModalProps {

@@ -82,9 +82,11 @@ export async function searchLocation({
 }) {
   const { data } = await db
     .from("location")
-    .select()
+    .select("*, address(*)")
     .textSearch("name", input.search.replace(/ /g, "%"), {
       type: "websearch",
     })
     .throwOnError();
+
+  return data;
 }

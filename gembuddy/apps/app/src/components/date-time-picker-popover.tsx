@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@gembuddy/ui/button";
 import { Calendar } from "@gembuddy/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@gembuddy/ui/popover";
-import { Label } from "./ui/label";
+import { Label } from "@gembuddy/ui/label";
 import { TimePickerInput } from "./time-picker-input";
 import { Icons } from "./icons";
 

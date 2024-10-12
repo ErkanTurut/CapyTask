@@ -4,9 +4,9 @@ import * as React from "react";
 import { Button } from "@gembuddy/ui/button";
 import { Icons } from "@/components/icons";
 
-import { Provider } from "@/types";
+import { Provider } from "@gembuddy/supabase/types";
 import { catchError } from "@/lib/utils";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@gembuddy/supabase/client";
 
 const oauthProviders = [
   { name: "Google", provider: "google", icon: "google" },

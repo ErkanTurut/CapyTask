@@ -27,6 +27,7 @@
   },
   "exports": {
     "./server": "./src/server.ts",
-    "./client": "./src/client.ts"
+    "./client": "./src/client.ts",
+    "./schema/*": "./src/server/routes/*/schema.ts"
   }
 }

@@ -2,7 +2,7 @@
 import { useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { cn } from "@/lib/utils";
-import { api, RouterOutput } from "@/trpc/client";
+import { api, RouterOutput } from "@gembuddy/trpc/client";
 import { Button } from "@gembuddy/ui/button";
 import { ScrollArea } from "@gembuddy/ui/scroll-area";
 import { Popover, PopoverContent, PopoverTrigger } from "@gembuddy/ui/popover";
@@ -18,9 +18,13 @@ import { Icons } from "@/components/icons";
 
 interface WorkItemSelectorProps {
   onSelect: (
-    location: RouterOutput["db"]["work_order_item"]["get"]["byWorkOrder"]["data"][number]
+    location: NonNullable<
+      RouterOutput["db"]["work_order_item"]["get"]["byWorkOrder"]["data"]
+    >[number]
   ) => void;
-  selectedValue?: RouterOutput["db"]["work_order_item"]["get"]["byWorkOrder"]["data"][number];
+  selectedValue?: NonNullable<
+    RouterOutput["db"]["work_order_item"]["get"]["byWorkOrder"]["data"]
+  >[number];
   workOrderItems: RouterOutput["db"]["work_order_item"]["get"]["byWorkOrder"]["data"];
 }
 

@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 interface UserNavProps {}
 
 export default async function UserNav({}: UserNavProps) {
-  const { data: user } = await trpc.db.user.getCurrentUser();
+  const { data: user } = await trpc.db.user.get.currentUser();
 
   if (!user) {
     redirect("/login");

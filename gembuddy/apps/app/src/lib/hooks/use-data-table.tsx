@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import type { DataTableFilterField } from "@/types";
+import type { DataTableFilterField } from "../../components/tables/types";
 import {
   getCoreRowModel,
   getFacetedRowModel,
@@ -98,7 +98,9 @@ export function useDataTable<TData>({
     search.per_page ?? props.initialState?.pagination?.pageSize ?? 10;
   const sort =
     search.sort ??
-    `${props.initialState?.sorting?.[0]?.id}.${props.initialState?.sorting?.[0]?.desc ? "desc" : "asc"}`;
+    `${props.initialState?.sorting?.[0]?.id}.${
+      props.initialState?.sorting?.[0]?.desc ? "desc" : "asc"
+    }`;
   const [column, order] = sort?.split(".") ?? [];
 
   // Memoize computation of searchableColumns and filterableColumns
@@ -124,7 +126,7 @@ export function useDataTable<TData>({
 
       return newSearchParams.toString();
     },
-    [searchParams],
+    [searchParams]
   );
 
   // Initial column filters
@@ -132,10 +134,10 @@ export function useDataTable<TData>({
     return Array.from(searchParams.entries()).reduce<ColumnFiltersState>(
       (filters, [key, value]) => {
         const filterableColumn = filterableColumns.find(
-          (column) => column.value === key,
+          (column) => column.value === key
         );
         const searchableColumn = searchableColumns.find(
-          (column) => column.value === key,
+          (column) => column.value === key
         );
 
         if (filterableColumn) {
@@ -152,7 +154,7 @@ export function useDataTable<TData>({
 
         return filters;
       },
-      [],
+      []
     );
   }, [filterableColumns, searchableColumns, searchParams]);
 
@@ -175,7 +177,7 @@ export function useDataTable<TData>({
       pageIndex,
       pageSize,
     }),
-    [pageIndex, pageSize],
+    [pageIndex, pageSize]
   );
 
   // Handle server-side sorting
@@ -197,7 +199,7 @@ export function useDataTable<TData>({
       })}`,
       {
         scroll: false,
-      },
+      }
     );
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -209,10 +211,10 @@ export function useDataTable<TData>({
       JSON.stringify(
         columnFilters.filter((filter) => {
           return searchableColumns.find((column) => column.value === filter.id);
-        }),
+        })
       ),
-      500,
-    ),
+      500
+    )
   ) as ColumnFiltersState;
 
   const filterableColumnFilters = columnFilters.filter((filter) => {
@@ -258,7 +260,7 @@ export function useDataTable<TData>({
       if (
         (searchableColumns.find((column) => column.value === key) &&
           !debouncedSearchableColumnFilters.find(
-            (column) => column.id === key,
+            (column) => column.id === key
           )) ||
         (filterableColumns.find((column) => column.value === key) &&
           !filterableColumnFilters.find((column) => column.id === key))

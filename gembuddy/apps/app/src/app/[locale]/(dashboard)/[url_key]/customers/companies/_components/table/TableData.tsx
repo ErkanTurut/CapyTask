@@ -1,6 +1,6 @@
 "use client";
 import { DataTable } from "@/components/tables/general/data-table";
-import { api, RouterOutput } from "@/trpc/client";
+import { api, RouterOutput } from "@gembuddy/trpc/client";
 import type { trpc } from "@gembuddy/trpc/server";
 import { columns } from "./columns";
 
@@ -25,8 +25,8 @@ export function TableData({
     {
       url_key: params.url_key,
       range: {
-        start: (searchParams.page - 1) * searchParams.limit,
-        end: (searchParams.page - 1) * searchParams.limit + searchParams.limit,
+        from: (searchParams.page - 1) * searchParams.limit,
+        to: (searchParams.page - 1) * searchParams.limit + searchParams.limit,
       },
     },
     { initialData, refetchOnMount: false, staleTime: 1000 * 60 }

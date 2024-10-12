@@ -27,12 +27,12 @@ import { catchError, cn } from "@/lib/utils";
 
 import { Button } from "@gembuddy/ui/button";
 
-import { api } from "@/trpc/client";
+import { api } from "@gembuddy/trpc/client";
 import { useRouter } from "next/navigation";
 import {
   TCreateWorkPlanTemplateSchema,
   ZCreateWorkPlanTemplateSchema,
-} from "@gembuddy/trpc/server/routes/work_plan_template/create.schema";
+} from "@gembuddy/trpc/schema/work_plan_template";
 import { Textarea } from "@gembuddy/ui/textarea";
 
 interface WorkPlanTemplateCreateFormProps
@@ -54,14 +54,11 @@ export function WorkPlanTemplateCreateForm({
 
       utils.db.work_plan_template.get.byWorkspace.invalidate(
         {
-          url_key: workspace_id,
+          workspace_id,
         },
         { type: "all" }
       );
       form.reset();
-    },
-    onSettled(data) {
-      router.push(`./${data?.id}`);
     },
     onError(err) {
       catchError(new Error(err.message));
@@ -73,7 +70,7 @@ export function WorkPlanTemplateCreateForm({
     resolver: zodResolver(ZCreateWorkPlanTemplateSchema),
     values: {
       name: "",
-      description: undefined,
+      description: "",
       workspace_id,
     },
   });

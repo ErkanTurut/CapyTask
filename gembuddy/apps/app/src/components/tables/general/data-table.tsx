@@ -28,7 +28,7 @@ import {
 
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
-import { DefinedUseTRPCQueryResult } from "@trpc/react-query/dist/shared";
+import { DefinedUseTRPCQueryResult } from "@trpc/react-query/shared";
 
 type A<T> = Partial<{
   [P in keyof T]: boolean;

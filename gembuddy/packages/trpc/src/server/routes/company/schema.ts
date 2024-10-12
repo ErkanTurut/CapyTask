@@ -24,7 +24,7 @@ export const ZCompanyCreateSchema = z.object({
 
 export type TCompanyCreateSchema = z.infer<typeof ZCompanyCreateSchema>;
 
-export const ZCompanyUpdateSchema = z
+export const ZUpdateCompanySchema = z
   .object({
     name: z.string(),
     description: z.string().nullable(),
@@ -40,4 +40,16 @@ export const ZCompanyUpdateSchema = z
     })
   );
 
-export type TCompanyUpdateSchema = z.infer<typeof ZCompanyUpdateSchema>;
+export type TUpdateCompanySchema = z.infer<typeof ZUpdateCompanySchema>;
+
+export const ZGetCompanyByWorkspaceSchema = z.object({
+  url_key: z.string(),
+  range: z.object({
+    from: z.number().int().nonnegative(),
+    to: z.number().int().positive(),
+  }),
+});
+
+export type TGetCompanyByWorkspaceSchema = z.infer<
+  typeof ZGetCompanyByWorkspaceSchema
+>;

@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { NavItem } from "@/types";
+import { NavItem } from "./types";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -35,7 +35,7 @@ export function NavLink({ children, item }: navLinkProps) {
       className={cn(
         "border-transparent text-sm text-muted-foreground hover:text-accent-foreground",
         pathname === item.href &&
-          "border-b-2 border-primary font-medium text-primary hover:text-primary",
+          "border-b-2 border-primary font-medium text-primary hover:text-primary"
       )}
       href={item.href || "#"}
     >

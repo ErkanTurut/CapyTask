@@ -2,7 +2,7 @@
 import { useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { cn } from "@/lib/utils";
-import { api, RouterOutput } from "@/trpc/client";
+import { api, RouterOutput } from "@gembuddy/trpc/client";
 import { Button } from "@gembuddy/ui/button";
 import { ScrollArea } from "@gembuddy/ui/scroll-area";
 import { Popover, PopoverContent, PopoverTrigger } from "@gembuddy/ui/popover";
@@ -20,9 +20,13 @@ import { Icons } from "@/components/icons";
 
 interface ServiceResourceSelectorProps {
   onSelect: (
-    location: RouterOutput["db"]["location"]["get"]["textSearch"][number]
+    location: NonNullable<
+      RouterOutput["db"]["location"]["get"]["textSearch"]
+    >[number]
   ) => void;
-  selectedValue?: RouterOutput["db"]["location"]["get"]["textSearch"][number];
+  selectedValue?: NonNullable<
+    RouterOutput["db"]["location"]["get"]["textSearch"]
+  >[number];
 }
 
 function LocationSelector({

@@ -18,12 +18,12 @@ import { Input } from "@gembuddy/ui/input";
 import { catchError } from "@/lib/utils";
 import { toast } from "sonner";
 
-import { Button } from "../ui/button";
-import { api } from "@/trpc/client";
+import { Button } from "@gembuddy/ui/button";
+import { api } from "@gembuddy/trpc/client";
 import {
   TCreateWorkspaceSchema,
   ZCreateWorkspaceSchema,
-} from "@gembuddy/trpc/server/routes/workspace/create.schema";
+} from "@gembuddy/trpc/schema/workspace";
 
 export function CreateWorspaceForm() {
   const router = useRouter();

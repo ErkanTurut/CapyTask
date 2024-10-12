@@ -29,8 +29,8 @@ export async function getWorkspaceByUser({
 }) {
   const { data } = await db
     .from("workspace")
-    .select("*, user(id)")
-    .eq("user.id", input.user_id)
+    .select("*, workspace_user(user_id)")
+    .eq("workspace_user.user_id", input.user_id)
     .throwOnError();
 
   return { data };

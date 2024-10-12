@@ -38,7 +38,7 @@ export type TSearchAssetSchema = z.infer<typeof ZSearchAssetSchema>;
 
 export const ZAssetCreateSchema = z.object({
   name: z.string(),
-  description: z.string().nullable(),
+  description: z.string().optional(),
   location_id: z.string().nullable(),
   workspace_id: z.string(),
   created_at: z.string().optional(),
@@ -52,7 +52,7 @@ export type TAssetCreateSchema = z.infer<typeof ZAssetCreateSchema>;
 export const ZAssetUpdateSchema = z
   .object({
     name: z.string(),
-    description: z.string().nullable(),
+    description: z.string().optional(),
     location_id: z.string().nullable(),
     workspace_id: z.string(),
     created_at: z.string().optional(),

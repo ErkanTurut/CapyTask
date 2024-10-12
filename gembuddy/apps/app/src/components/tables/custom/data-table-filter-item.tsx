@@ -1,10 +1,10 @@
 import * as React from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import type { DataTableFilterOption } from "@/types";
+import type { DataTableFilterOption } from "../types";
 import { TrashIcon } from "@radix-ui/react-icons";
 import type { Table } from "@tanstack/react-table";
 
-import { dataTableConfig } from "@/config/data-table";
+import { dataTableConfig } from "../config";
 import { cn } from "@/lib/utils";
 import { useDebounce } from "@/lib/hooks/use-debounce";
 import { Button } from "@gembuddy/ui/button";

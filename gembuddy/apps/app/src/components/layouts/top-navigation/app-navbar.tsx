@@ -1,4 +1,4 @@
-import { siteConfig } from "@/config/site.config";
+import { siteConfig } from "./site.config";
 import Link from "next/link";
 import { FC } from "react";
 

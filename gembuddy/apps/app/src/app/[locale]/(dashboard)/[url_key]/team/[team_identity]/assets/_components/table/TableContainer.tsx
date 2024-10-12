@@ -15,8 +15,8 @@ const TableContainer: FC<TableProps> = async ({ searchParams, params }) => {
   const initialData = await trpc.db.asset.get.byTeam({
     team_identity: params.team_identity,
     range: {
-      start: (searchParams.page - 1) * searchParams.limit,
-      end: (searchParams.page - 1) * searchParams.limit + searchParams.limit,
+      from: (searchParams.page - 1) * searchParams.limit,
+      to: (searchParams.page - 1) * searchParams.limit + searchParams.limit,
     },
   });
 

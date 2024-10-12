@@ -33,12 +33,35 @@ export async function getWorkPlanTemplatesByWorkspace({
     };
   };
 }) {
-  const { data } = await db
+  const { data, count } = await db
     .from("work_plan_template")
-    .select()
+    .select("*", { count: "estimated" })
     .eq("workspace_id", input.workspace_id)
     .range(input.range.from, input.range.to)
     .throwOnError();
 
-  return { data };
+  return { data, count };
+}
+
+export async function getWorkPlanTemplatesByUrlKey({
+  db,
+  input,
+}: {
+  db: Client;
+  input: {
+    url_key: string;
+    range: {
+      from: number;
+      to: number;
+    };
+  };
+}) {
+  const { data, count } = await db
+    .from("work_plan_template")
+    .select("*, workspace(url_key)", { count: "estimated" })
+    .eq("workspace.url_key", input.url_key)
+    .range(input.range.from, input.range.to)
+    .throwOnError();
+
+  return { data, count };
 }

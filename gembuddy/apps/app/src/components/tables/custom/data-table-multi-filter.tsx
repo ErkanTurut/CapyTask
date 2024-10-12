@@ -1,6 +1,6 @@
 import * as React from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import type { DataTableFilterOption } from "@/types";
+import type { DataTableFilterOption } from "../types";
 import {
   CopyIcon,
   DotsHorizontalIcon,
@@ -9,7 +9,7 @@ import {
 } from "@radix-ui/react-icons";
 import type { Table } from "@tanstack/react-table";
 
-import { dataTableConfig, type DataTableConfig } from "@/config/data-table";
+import { dataTableConfig, type DataTableConfig } from "../config";
 import { useDebounce } from "@/lib/hooks/use-debounce";
 import { Button } from "@gembuddy/ui/button";
 import {
@@ -77,7 +77,6 @@ export function DataTableMultiFilter<TData>({
               options={options}
               setSelectedOptions={setSelectedOptions}
               operator={operator}
-              // @ts-expect-error
               setOperator={setOperator}
             />
           ))}

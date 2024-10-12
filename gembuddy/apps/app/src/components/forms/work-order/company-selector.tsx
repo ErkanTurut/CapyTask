@@ -2,7 +2,7 @@
 import { useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { cn } from "@/lib/utils";
-import { api, RouterOutput } from "@/trpc/client";
+import { api, RouterOutput } from "@gembuddy/trpc/client";
 import { Button } from "@gembuddy/ui/button";
 import { ScrollArea } from "@gembuddy/ui/scroll-area";
 import { Popover, PopoverContent, PopoverTrigger } from "@gembuddy/ui/popover";
@@ -20,9 +20,13 @@ import { Icons } from "@/components/icons";
 
 interface CompanySelectorProps {
   onSelect: (
-    serviceResource: RouterOutput["db"]["company"]["get"]["textSearch"][number]
+    serviceResource: NonNullable<
+      RouterOutput["db"]["company"]["get"]["textSearch"]["data"]
+    >[number]
   ) => void;
-  selectedValue?: RouterOutput["db"]["company"]["get"]["textSearch"][number];
+  selectedValue?: NonNullable<
+    RouterOutput["db"]["company"]["get"]["textSearch"]["data"]
+  >[number];
 }
 
 export function CompanySelector({
@@ -88,7 +92,7 @@ export function CompanySelector({
           />
           <CommandList>
             <CommandGroup>
-              {company?.map((company) => (
+              {company?.data?.map((company) => (
                 <CommandItem
                   key={company.id}
                   value={company.id}

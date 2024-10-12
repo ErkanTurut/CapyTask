@@ -99,12 +99,10 @@ const pulse = ({
   colorValue: "green" | "red" | "blue" | "yellow";
   props: LucideProps;
 }) => {
-  const pulseColors: {
-    [key: string]: {
-      color: string;
-      pulseColor: string;
-    };
-  } = {
+  const pulseColors: Record<
+    "green" | "red" | "blue" | "yellow",
+    { color: string; pulseColor: string }
+  > = {
     green: {
       color: "#5BB98B",
       pulseColor: "#5BB98B",

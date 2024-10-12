@@ -9,7 +9,7 @@ import {
   TabsContainer,
   TabsLink,
 } from "@/components/dashboard/navigation/tabs-link";
-import { type Page, workOrderPagesConfig } from "@/config/pages";
+import { type Page, workOrderPagesConfig } from "./config";
 
 export function WorkOrderTabs({ className }: { className?: string }) {
   const params = useParams() as {

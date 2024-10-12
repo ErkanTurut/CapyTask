@@ -15,8 +15,8 @@ import {
 import * as React from "react";
 
 import { DataTable } from "@/components/tables/data-table/data-table";
-import { api, RouterOutput } from "@/trpc/client";
-import { DataTableFilterField } from "@/types";
+import { api, RouterOutput } from "@gembuddy/trpc/client";
+import { DataTableFilterField } from "../types";
 import { Database } from "@gembuddy/supabase/types";
 import {
   CheckCircledIcon,
@@ -25,7 +25,7 @@ import {
   QuestionMarkCircledIcon,
   StopwatchIcon,
 } from "@radix-ui/react-icons";
-import { useSearchParams } from "next/navigation";
+import { notFound, useSearchParams } from "next/navigation";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { getColumns } from "./service-appointment-columns";
 import { use } from "react";
@@ -90,12 +90,18 @@ export function ServiceAppointmentTable({
     { initialData: use(initialData) }
   );
 
+  if (!data) {
+    throw notFound();
+  }
+
   const searchParams = useSearchParams();
 
   const columns = React.useMemo(() => getColumns(), []);
 
   const filterFields: DataTableFilterField<
-    RouterOutput["db"]["service_appointment"]["get"]["byWorkOrder"]["data"][number]
+    NonNullable<
+      RouterOutput["db"]["service_appointment"]["get"]["byWorkOrder"]["data"]
+    >[number]
   >[] = [
     {
       label: "Status",

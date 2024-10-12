@@ -24,11 +24,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@gembuddy/ui/card";
-import { api, RouterOutput } from "@/trpc/client";
+import { api, RouterOutput } from "@gembuddy/trpc/client";
 import {
   TUpsertWorkStepTemplateSchema,
   ZUpsertWorkStepTemplateSchema,
-} from "@gembuddy/trpc/server/routes/work_step_template/upsert.schema";
+} from "@gembuddy/trpc/schema/work_step_template";
 import {
   ChevronRightIcon,
   DragHandleDots2Icon,
@@ -37,7 +37,6 @@ import {
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Icons } from "@/components/icons";
-import { CreatWorkStepTemplateModal } from "@/components/modals/CreateWorkStepTemplateModal";
 interface StepsSortableTableFormProps
   extends React.HTMLAttributes<HTMLFormElement> {
   initialData: NonNullable<
@@ -69,12 +68,12 @@ export function StepsSortableTableForm({
       },
       { initialData: initialData }
     );
-  if (!work_step_template) return notFound();
+  if (!work_step_template || !work_step_template.data) return notFound();
 
   const form = useForm<TUpsertWorkStepTemplateSchema>({
     resolver: zodResolver(ZUpsertWorkStepTemplateSchema),
     values: {
-      work_step_template,
+      work_step_template: work_step_template.data,
     },
   });
 

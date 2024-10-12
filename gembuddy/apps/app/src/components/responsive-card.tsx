@@ -25,8 +25,7 @@ import {
 } from "@gembuddy/ui/drawer";
 import useWindowSize from "@/lib/hooks/use-window-size";
 import { useRouter } from "next/navigation";
-import { Button } from "./ui/button";
-import { Icons } from "./icons";
+import { Button } from "@gembuddy/ui/button";
 interface ResponsiveCardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }

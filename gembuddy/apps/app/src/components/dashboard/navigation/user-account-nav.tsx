@@ -1,8 +1,5 @@
 "use client";
-import { Icons } from "@/components/icons";
-import ThemeToggle from "@/components/theme-toggle";
-import { Avatar, AvatarFallback, AvatarImage } from "@gembuddy/ui/avatar";
-import { Button } from "@gembuddy/ui/button";
+import { FC } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,7 +11,10 @@ import {
   DropdownMenuTrigger,
 } from "@gembuddy/ui/dropdown-menu";
 import Link from "next/link";
-import { FC } from "react";
+import { Button } from "@gembuddy/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@gembuddy/ui/avatar";
+import { Icons } from "@/components/icons";
+import ThemeToggle from "@/components/theme-toggle";
 
 import { cn, generateAvatar } from "@/lib/utils";
 

@@ -11,14 +11,16 @@ import {
 } from "@gembuddy/ui/card";
 import { Separator } from "@gembuddy/ui/separator";
 import { formatDate } from "@/lib/utils";
-import { RouterOutput } from "@/trpc/client";
+import { RouterOutput } from "@gembuddy/trpc/client";
 import Link from "next/link";
 
 interface WorkOrderMainProps {
   params: {
     work_order_id: string;
   };
-  work_order: NonNullable<RouterOutput["db"]["work_order"]["get"]["detail"]>;
+  work_order: NonNullable<
+    RouterOutput["db"]["work_order"]["get"]["byId"]["data"]
+  >;
 }
 
 export async function WorkOrderMain({

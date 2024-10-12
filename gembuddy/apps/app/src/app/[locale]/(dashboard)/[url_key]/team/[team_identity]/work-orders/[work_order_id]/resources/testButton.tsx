@@ -12,7 +12,7 @@
 //   groupTimeSlotsByDay,
 //   removeOverlaps,
 // } from "@/lib/service-resource/utils";
-// import { api } from "@/trpc/client";
+// import { api } from "@gembuddy/trpc/client";
 
 // interface testButtonProps {
 //   range: { from: string; to: string };

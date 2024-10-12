@@ -14,14 +14,14 @@ import {
   FormMessage,
 } from "@gembuddy/ui/form";
 import { ScrollArea } from "@gembuddy/ui/scroll-area";
-import { getWorkShiftsFromDateRange } from "@/lib/service-appointment/utils";
+import { getWorkShiftsFromDateRange } from "@gembuddy/lib/utils";
 import { Shift } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { api, RouterOutput } from "@/trpc/client";
+import { api, RouterOutput } from "@gembuddy/trpc/client";
 import {
-  createServiceAppointmentSchema,
+  ZCreateServiceAppointmentSchema,
   TCreateServiceAppointmentSchema,
-} from "@gembuddy/trpc/server/routes/service_appointment/create.schema";
+} from "@gembuddy/trpc/schema/service_appointment";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { experimental_useObject as useObject } from "ai/react";
 import { endOfDay, startOfDay } from "date-fns";
@@ -57,14 +57,15 @@ export function ServiceAppointmentCreateForm({
   onFinish,
 }: ServiceAppointmentCreateFormProps) {
   const [selectedServiceResources, setSelectedServiceResources] = useState<
-    RouterOutput["db"]["service_resource"]["get"]["textSearch"] | undefined
+    NonNullable<RouterOutput["db"]["location"]["get"]["textSearch"]> | undefined
   >(undefined);
   const [assignedResources, setAssignedResources] = useState<string[]>([]);
   const [selectedLocation, setSelectedLocations] = useState<
-    RouterOutput["db"]["location"]["get"]["textSearch"][number] | undefined
+    | NonNullable<RouterOutput["db"]["location"]["get"]["textSearch"]>[number]
+    | undefined
   >(undefined);
   const [selectedWorkItem, setSelectedWorkItem] = useState<
-    | RouterOutput["db"]["work_order_item"]["get"]["byWorkOrder"]["data"][number]
+    | NonNullable<RouterOutput["db"]["location"]["get"]["textSearch"]>[number]
     | undefined
   >(undefined);
 
@@ -84,7 +85,7 @@ export function ServiceAppointmentCreateForm({
   });
 
   const form = useForm<TCreateServiceAppointmentSchema>({
-    resolver: zodResolver(createServiceAppointmentSchema),
+    resolver: zodResolver(ZCreateServiceAppointmentSchema),
     defaultValues: {
       work_order_id,
       date_range: {

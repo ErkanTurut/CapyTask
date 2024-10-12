@@ -5,13 +5,16 @@ import { protectedProcedure, router } from "../../trpc";
 import {
   createCompany,
   getCompany,
+  getCompanyByWorkspace,
   searchCompany,
   updateCompany,
 } from "@gembuddy/supabase/resources/company";
 import {
-  ZCompanyUpdateSchema,
+  ZUpdateCompanySchema,
   ZGetCompanyByIdSchema,
+  ZGetCompanyByWorkspaceSchema,
   ZSearchCompanySchema,
+  ZCompanyCreateSchema,
 } from "./schema";
 
 export const company = router({
@@ -52,6 +55,14 @@ export const company = router({
           input,
         });
       }),
+    byWorkspace: protectedProcedure
+      .input(ZGetCompanyByWorkspaceSchema)
+      .query(async ({ ctx, input }) => {
+        return await getCompanyByWorkspace({
+          db: ctx.db,
+          input,
+        });
+      }),
     textSearch: protectedProcedure
       .input(ZSearchCompanySchema)
       .query(async ({ ctx, input }) => {
@@ -62,7 +73,7 @@ export const company = router({
       }),
   },
   create: protectedProcedure
-    .input(ZCompanyUpdateSchema)
+    .input(ZCompanyCreateSchema)
     .mutation(async ({ ctx, input }) => {
       return await createCompany({
         db: ctx.db,
@@ -71,7 +82,7 @@ export const company = router({
     }),
 
   update: protectedProcedure
-    .input(ZCompanyUpdateSchema)
+    .input(ZUpdateCompanySchema)
     .mutation(async ({ ctx, input }) => {
       return await updateCompany({
         db: ctx.db,

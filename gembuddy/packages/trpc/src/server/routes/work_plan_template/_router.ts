@@ -5,12 +5,14 @@ import {
   createWorkPlanTemplate,
   getWorkPlanTemplatesByWorkspace,
   updateWorkPlanTemplate,
+  getWorkPlanTemplatesByUrlKey,
 } from "@gembuddy/supabase/resources/work_plan_template";
 import {
   ZGetWorkPlanTemplateByIdSchema,
   ZCreateWorkPlanTemplateSchema,
   ZGetWorkPlanTemplateByWorkspaceSchema,
   ZUpdateWorkPlanTemplateSchema,
+  ZGetWorkPlanTemplateByUrlKeySchema,
 } from "./schema";
 
 export const work_plan_template = router({
@@ -27,6 +29,15 @@ export const work_plan_template = router({
       .input(ZGetWorkPlanTemplateByWorkspaceSchema)
       .query(async ({ ctx, input }) => {
         return await getWorkPlanTemplatesByWorkspace({
+          input,
+          db: ctx.db,
+        });
+      }),
+
+    byUrlKey: protectedProcedure
+      .input(ZGetWorkPlanTemplateByUrlKeySchema)
+      .query(async ({ ctx, input }) => {
+        return await getWorkPlanTemplatesByUrlKey({
           input,
           db: ctx.db,
         });

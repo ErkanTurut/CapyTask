@@ -13,7 +13,7 @@ import { useMediaQuery } from "@/lib/hooks/use-media-query";
 import { Drawer, DrawerContent, DrawerHeader } from "@gembuddy/ui/drawer";
 import { useQueryState, parseAsBoolean } from "nuqs";
 import { WorkOrderCreateForm } from "../forms/work-order/work-order-create-form";
-import { api } from "@/trpc/client";
+import { api } from "@gembuddy/trpc/client";
 import { useParams, useRouter } from "next/navigation";
 
 export function CreateWorkOrderSheet() {
@@ -26,11 +26,11 @@ export function CreateWorkOrderSheet() {
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const router = useRouter();
 
-  const { data: team } = api.db.team.getByIdentity.useQuery({
+  const { data: team } = api.db.team.get.byIdentity.useQuery({
     identity: params.team_identity,
   });
 
-  if (!team) {
+  if (!team || !team.data) {
     return null;
   }
   if (isDesktop) {
@@ -42,14 +42,14 @@ export function CreateWorkOrderSheet() {
           </SheetHeader>
           <div className="flex h-full flex-col justify-between">
             <WorkOrderCreateForm
-              team_id={team.id}
-              workspace_id={team.workspace_id}
+              team_id={team.data.id}
+              workspace_id={team.data.workspace_id}
               onCreated={async (value) => {
-                utils.db.work_order.get.byTeamIdentity.invalidate();
+                utils.db.work_order.get.byTeam.invalidate();
 
                 await setOpen(null);
 
-                router.push(`./work-orders/${value.id}`);
+                router.push(`./work-orders/${value.data?.id}`);
               }}
             />
           </div>

@@ -21,12 +21,12 @@ import { toast } from "sonner";
 
 import { Button } from "@gembuddy/ui/button";
 
-import { api } from "@/trpc/client";
+import { api } from "@gembuddy/trpc/client";
 import { FC } from "react";
 import {
   TCreateTeamSchema,
   ZCreateTeamSchema,
-} from "@gembuddy/trpc/server/routes/team/create.schema";
+} from "@gembuddy/trpc/schema/team";
 
 interface CreateTeamFormProps extends React.HTMLAttributes<HTMLFormElement> {
   workspace_id: string;

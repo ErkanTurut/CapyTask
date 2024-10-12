@@ -2,7 +2,7 @@
 import { useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { cn } from "@/lib/utils";
-import { api, RouterOutput } from "@/trpc/client";
+import { api, RouterOutput } from "@gembuddy/trpc/client";
 import { Button } from "@gembuddy/ui/button";
 import { ScrollArea } from "@gembuddy/ui/scroll-area";
 import { Popover, PopoverContent, PopoverTrigger } from "@gembuddy/ui/popover";
@@ -20,7 +20,9 @@ import { Icons } from "@/components/icons";
 
 interface ServiceResourceSelectorProps {
   onSelect: (
-    serviceResource: RouterOutput["db"]["service_resource"]["get"]["textSearch"][number]
+    serviceResource: NonNullable<
+      RouterOutput["db"]["service_resource"]["get"]["textSearch"]["data"]
+    >[number]
   ) => void;
   selectedValues?: RouterOutput["db"]["service_resource"]["get"]["textSearch"];
 }
@@ -90,7 +92,7 @@ export default function ServiceResourceSelector({
           />
           <CommandList>
             <CommandGroup>
-              {service_resource?.map((service_resource) => (
+              {service_resource?.data?.map((service_resource) => (
                 <CommandItem
                   key={service_resource.id}
                   value={service_resource.id}
@@ -102,7 +104,7 @@ export default function ServiceResourceSelector({
                     <Icons.checkCircled
                       className={cn(
                         "mr-2 h-4 w-4",
-                        selectedValues
+                        selectedValues?.data
                           ?.map((sr) => sr.id)
                           .includes(service_resource.id)
                           ? "opacity-100"

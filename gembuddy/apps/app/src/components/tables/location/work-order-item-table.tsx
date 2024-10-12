@@ -15,7 +15,7 @@ import {
 import * as React from "react";
 
 import { DataTable } from "@/components/tables/data-table/data-table";
-import { RouterOutput } from "@/trpc/client";
+import { RouterOutput } from "@gembuddy/trpc/client";
 import { Database } from "@gembuddy/supabase/types";
 import {
   CheckCircledIcon,
@@ -27,11 +27,11 @@ import {
 import { DataTableToolbar } from "./data-table-toolbar";
 import { getColumns } from "./work-order-item-columns";
 import { usePathname, useSearchParams } from "next/navigation";
-import { DataTableFilterField } from "@/types";
+import { DataTableFilterField } from "../types";
 
 interface AssetTableProps {
   data: NonNullable<
-    RouterOutput["db"]["location"]["get"]["byWorkOrder"]["data"]
+    RouterOutput["db"]["location"]["get"]["byWorkOrderItem"]["data"]
   >;
   rowCount: number;
 }

@@ -12,7 +12,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@gembuddy/ui/dropdown-menu";
-import { api, RouterOutput } from "@/trpc/client";
+import { api, RouterOutput } from "@gembuddy/trpc/client";
 import { toast } from "sonner";
 import { catchError } from "@/lib/utils";
 import { Database } from "@gembuddy/supabase/types";

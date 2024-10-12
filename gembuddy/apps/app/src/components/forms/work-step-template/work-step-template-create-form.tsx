@@ -27,11 +27,11 @@ import {
   CardTitle,
 } from "@gembuddy/ui/card";
 import { Textarea } from "@gembuddy/ui/textarea";
-import { api } from "@/trpc/client";
+import { api } from "@gembuddy/trpc/client";
 import {
   TCreateWorkStepTemplateSchema,
   ZCreateWorkStepTemplateSchema,
-} from "@gembuddy/trpc/server/routes/work_step_template/create.schema";
+} from "@gembuddy/trpc/schema/work_step_template";
 
 interface WorkStepTemplateFormProps
   extends React.HTMLAttributes<HTMLFormElement> {

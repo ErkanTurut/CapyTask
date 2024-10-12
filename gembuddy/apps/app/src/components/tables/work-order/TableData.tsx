@@ -1,6 +1,6 @@
 "use client";
 import { DataTable } from "@/components/tables/general/data-table";
-import { api } from "@/trpc/client";
+import { api } from "@gembuddy/trpc/client";
 import type { trpc } from "@gembuddy/trpc/server";
 import { columns } from "./columns";
 import { use } from "react";
@@ -13,7 +13,7 @@ interface AssetTableProps {
     team_identity: string;
   };
   initialData: NonNullable<
-    ReturnType<(typeof trpc)["db"]["work_order"]["get"]["byTeamIdentity"]>
+    ReturnType<(typeof trpc)["db"]["work_order"]["get"]["byTeam"]>
   >;
   searchParams: {
     limit: number;
@@ -27,12 +27,12 @@ export function TableData({
   initialData,
 }: AssetTableProps) {
   const [open, setOpen] = useQueryState("create", parseAsBoolean);
-  const queryResult = api.db.work_order.get.byTeamIdentity.useQuery(
+  const queryResult = api.db.work_order.get.byTeam.useQuery(
     {
       team_identity: params.team_identity,
       range: {
-        start: (searchParams.page - 1) * searchParams.limit,
-        end: (searchParams.page - 1) * searchParams.limit + searchParams.limit,
+        from: (searchParams.page - 1) * searchParams.limit,
+        to: (searchParams.page - 1) * searchParams.limit + searchParams.limit,
       },
     },
     {

@@ -21,13 +21,13 @@ import { toast } from "sonner";
 
 import { Button } from "@gembuddy/ui/button";
 
-import { api } from "@/trpc/client";
+import { api } from "@gembuddy/trpc/client";
 import { Database } from "@gembuddy/supabase/types";
 import { FC } from "react";
 import {
   TUpdateTeamSchema,
   ZUpdateTeamSchema,
-} from "@gembuddy/trpc/server/routes/team/update.schema";
+} from "@gembuddy/trpc/schema/team";
 
 interface UpdateTeamFormProps extends React.HTMLAttributes<HTMLFormElement> {
   team: Database["public"]["Tables"]["team"]["Row"];

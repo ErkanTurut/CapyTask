@@ -1,23 +1,18 @@
 "use client";
 import { Icons } from "@/components/icons";
+import { useMultibandTrackVolume } from "@/lib/hooks/use-track-volume";
 import { Button } from "@gembuddy/ui/button";
 import {
-  LiveKitRoom,
-  RoomAudioRenderer,
-  useLocalParticipant,
-  ControlBar,
-  useRoomContext,
-  useConnectionState,
-  useConnectionQualityIndicator,
   TrackReferenceOrPlaceholder,
-  useTracks,
+  useConnectionState,
+  useLocalParticipant,
   useRemoteParticipants,
+  useRoomContext,
+  useTracks,
 } from "@livekit/components-react";
-import { useMultibandTrackVolume } from "@/lib/hooks/use-track-volume";
-import { RoomEvent, Track, ConnectionState } from "livekit-client";
+import { ConnectionState, RoomEvent, Track } from "livekit-client";
 import { useMemo } from "react";
 import { AgentMultibandAudioVisualizer } from "./AgentMultibandAudioVisualizer";
-import { BorderBeam } from "@gembuddy/ui/border-beam";
 
 export function VoiceAgent() {
   const Room = useRoomContext();

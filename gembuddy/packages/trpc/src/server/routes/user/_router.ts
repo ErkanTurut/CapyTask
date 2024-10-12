@@ -27,8 +27,11 @@ export const user = router({
         return getUserById({ input, db: ctx.db });
       }),
     currentUser: protectedProcedure.query(async ({ ctx }) => {
-      return getCurrentUser({
+      return getUserById({
         db: ctx.db,
+        input: {
+          id: ctx.session.user.id,
+        },
       });
     }),
   },

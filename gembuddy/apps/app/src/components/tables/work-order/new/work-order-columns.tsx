@@ -9,9 +9,9 @@ import {
 } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../../data-table/data-table-column-header";
 
-import { RouterOutput } from "@/trpc/client";
+import { RouterOutput } from "@gembuddy/trpc/client";
 import { statuses } from "./work-order-table";
-import { Leaves } from "@/types";
+import { Leaves } from "../../types";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@gembuddy/ui/button";
@@ -22,9 +22,7 @@ interface ColumnType<TData extends RowData, TValue = unknown>
 }
 
 export function getColumns(): ColumnType<
-  NonNullable<
-    RouterOutput["db"]["work_order"]["get"]["byTeamIdentity"]["data"]
-  >[number]
+  NonNullable<RouterOutput["db"]["work_order"]["get"]["byTeam"]["data"]>[number]
 >[] {
   return [
     {

@@ -28,11 +28,11 @@ const TableContainer: FC<TableProps> = async ({ searchParams, params }) => {
   console.log(search);
   console.log(searchParams);
 
-  const initialData = trpc.db.work_order.get.byTeamIdentity({
+  const initialData = trpc.db.work_order.get.byTeam({
     team_identity: params.team_identity,
     range: {
-      start: 1,
-      end: 10,
+      from: 1,
+      to: 10,
     },
   });
 

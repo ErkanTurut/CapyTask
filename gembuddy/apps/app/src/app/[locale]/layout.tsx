@@ -1,10 +1,11 @@
 import "@gembuddy/ui/globals.css";
-import { Footer } from "@/components/footer";
 import { cn } from "@gembuddy/ui/cn";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
+import { headers } from "next/headers";
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "Create v1",
@@ -31,16 +32,16 @@ export default function RootLayout({
           "antialiased"
         )}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-
-          <Footer />
-        </ThemeProvider>
+        <Providers headers={headers()}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </Providers>
       </body>
     </html>
   );

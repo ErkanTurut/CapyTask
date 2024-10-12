@@ -1,6 +1,6 @@
 "use client";
 import { DataTable } from "@/components/tables/general/data-table";
-import { api, RouterOutput } from "@/trpc/client";
+import { api, RouterOutput } from "@gembuddy/trpc/client";
 import { columns } from "./columns";
 
 interface AssetTableProps {
@@ -8,7 +8,7 @@ interface AssetTableProps {
     url_key: string;
   };
   initialData: NonNullable<
-    RouterOutput["db"]["work_plan_template"]["get"]["byWorkspace"]
+    RouterOutput["db"]["work_plan_template"]["get"]["byUrlKey"]
   >;
   searchParams: {
     limit: number;
@@ -21,15 +21,15 @@ export function TableData({
   searchParams,
   initialData,
 }: AssetTableProps) {
-  const queryResult = api.db.work_plan_template.get.byWorkspace.useQuery(
+  const queryResult = api.db.work_plan_template.get.byUrlKey.useQuery(
     {
       url_key: params.url_key,
       range: {
-        start: (searchParams.page - 1) * searchParams.limit,
-        end: (searchParams.page - 1) * searchParams.limit + searchParams.limit,
+        from: (searchParams.page - 1) * searchParams.limit,
+        to: (searchParams.page - 1) * searchParams.limit + searchParams.limit,
       },
     },
-    { initialData, staleTime: 1000 * 60, refetchOnMount: true },
+    { initialData, staleTime: 1000 * 60, refetchOnMount: true }
   );
 
   return (

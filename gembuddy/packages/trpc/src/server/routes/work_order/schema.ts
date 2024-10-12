@@ -3,7 +3,7 @@ import z from "zod";
 export const ZCreateWorkOrderSchema = z.object({
   company_id: z.string(),
   created_at: z.string().optional(),
-  description: z.string().nullable().optional(),
+  description: z.string().optional(),
   ended_at: z.string().nullable().optional(),
   id: z.string().optional(),
   location_id: z.string().nullable().optional(),

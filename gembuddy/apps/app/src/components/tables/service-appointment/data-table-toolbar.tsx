@@ -10,12 +10,12 @@ import { Input } from "@gembuddy/ui/input";
 import { DataTableFilterCombobox } from "@/components/tables/data-table/data-table-filter-combobox";
 import { DataTableFilterItem } from "@/components/tables/data-table/data-table-filter-item";
 import { cn } from "@/lib/utils";
-import type { DataTableFilterField, DataTableFilterOption } from "@/types";
+import type { DataTableFilterField, DataTableFilterOption } from "../types";
 import { useSearchParams } from "next/navigation";
 import React from "react";
 import Link from "next/link";
 import { Icons } from "@/components/icons";
-import { api, RouterOutput } from "@/trpc/client";
+import { api, RouterOutput } from "@gembuddy/trpc/client";
 import { toast } from "sonner";
 
 interface DataTableToolbarProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -124,7 +124,7 @@ export function DataTableToolbar({
             size="icon"
             onClick={() => {
               mutate({
-                ids: table
+                service_appointment_id: table
                   .getSelectedRowModel()
                   .rows.map((row) => row.original.id),
               });

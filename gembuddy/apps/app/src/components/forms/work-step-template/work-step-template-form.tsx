@@ -28,11 +28,11 @@ import {
   CardTitle,
 } from "@gembuddy/ui/card";
 import { Textarea } from "@gembuddy/ui/textarea";
-import { api, RouterOutput } from "@/trpc/client";
+import { api, RouterOutput } from "@gembuddy/trpc/client";
 import {
   TUpdateWorkStepTemplateSchema,
   ZUpdateWorkStepTemplateSchema,
-} from "@gembuddy/trpc/server/routes/work_step_template/update.schema";
+} from "@gembuddy/trpc/schema/work_step_template";
 
 interface WorkStepTemplateFormProps
   extends React.HTMLAttributes<HTMLFormElement> {
@@ -54,60 +54,25 @@ export function WorkStepTemplateForm({
       { id: work_step_template_id },
       { initialData: initialData }
     );
-  if (!work_step_template) return null;
+  if (!work_step_template || !work_step_template.data) return null;
 
   const form = useForm<TUpdateWorkStepTemplateSchema>({
     resolver: zodResolver(ZUpdateWorkStepTemplateSchema),
     values: {
-      id: work_step_template.id,
-      name: work_step_template.name,
-      description: work_step_template.description || "",
+      id: work_step_template.data.id,
+      name: work_step_template.data.name,
+      description: work_step_template.data.description || "",
     },
   });
 
   const { isPending, mutate } = api.db.work_step_template.update.useMutation({
-    onMutate: async (variables) => {
-      await utils.db.work_step_template.get.byWorkPlanTemplate.cancel({
-        work_plan_template_id: work_step_template.work_plan_template_id,
-      });
-
-      const prev_work_step_templates =
-        utils.db.work_step_template.get.byWorkPlanTemplate.getData({
-          work_plan_template_id: work_step_template.work_plan_template_id,
-        });
-      if (prev_work_step_templates) {
-        utils.db.work_step_template.get.byWorkPlanTemplate.setData(
-          {
-            work_plan_template_id: work_step_template.work_plan_template_id,
-          },
-          prev_work_step_templates.map((work_step_template) =>
-            work_step_template.id === variables.id
-              ? { ...work_step_template, ...variables }
-              : work_step_template
-          )
-        );
-      }
-      return { prev_work_step_templates };
-    },
     onSuccess: async (data, variables) => {
       toast.success("Updated successfully");
 
       form.reset(variables);
     },
     onError: (err, data, ctx) => {
-      utils.db.work_step_template.get.byWorkPlanTemplate.setData(
-        {
-          work_plan_template_id: work_step_template.work_plan_template_id,
-        },
-        ctx?.prev_work_step_templates
-      );
       catchError(new Error(err.message));
-    },
-    onSettled: () => {
-      utils.db.work_step_template.get.byWorkPlanTemplate.invalidate({
-        work_plan_template_id: work_step_template.work_plan_template_id,
-      });
-      refetch();
     },
   });
 
@@ -123,8 +88,10 @@ export function WorkStepTemplateForm({
       >
         <Card className="shadow-sm">
           <CardHeader>
-            <CardTitle>{work_step_template.name}</CardTitle>
-            <CardDescription>{work_step_template.description}</CardDescription>
+            <CardTitle>{work_step_template.data.name}</CardTitle>
+            <CardDescription>
+              {work_step_template.data.description}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <FormField

@@ -9,8 +9,8 @@ import {
 } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../data-table/data-table-column-header";
 
-import { RouterOutput } from "@/trpc/client";
-import { Leaves } from "@/types";
+import { RouterOutput } from "@gembuddy/trpc/client";
+import { Leaves } from "../types";
 
 interface ColumnType<TData extends RowData, TValue = unknown>
   extends Omit<ColumnDef<TData, TValue>, "accessoryKey"> {
@@ -19,7 +19,7 @@ interface ColumnType<TData extends RowData, TValue = unknown>
 
 export function getColumns(): ColumnType<
   NonNullable<
-    RouterOutput["db"]["location"]["get"]["byWorkOrder"]["data"]
+    RouterOutput["db"]["location"]["get"]["byWorkOrderItem"]["data"]
   >[number]
 >[] {
   return [

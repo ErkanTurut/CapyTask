@@ -1,6 +1,6 @@
 "use client";
 import { DataTable } from "@/components/tables/general/data-table";
-import { api } from "@/trpc/client";
+import { api } from "@gembuddy/trpc/client";
 import type { trpc } from "@gembuddy/trpc/server";
 import { columns } from "./columns";
 
@@ -26,8 +26,8 @@ export function TableData({
     {
       team_identity: params.team_identity,
       range: {
-        start: (searchParams.page - 1) * searchParams.limit,
-        end: (searchParams.page - 1) * searchParams.limit + searchParams.limit,
+        from: (searchParams.page - 1) * searchParams.limit,
+        to: (searchParams.page - 1) * searchParams.limit + searchParams.limit,
       },
     },
     { initialData }

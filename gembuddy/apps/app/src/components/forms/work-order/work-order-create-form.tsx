@@ -27,23 +27,21 @@ import { catchError, cn } from "@/lib/utils";
 
 import { Button } from "@gembuddy/ui/button";
 
-import { api, RouterOutput } from "@/trpc/client";
+import { api, RouterOutput } from "@gembuddy/trpc/client";
 import { useRouter } from "next/navigation";
 
 import { Textarea } from "@gembuddy/ui/textarea";
 import {
   TCreateWorkOrderSchema,
   ZCreateWorkOrderSchema,
-} from "@gembuddy/trpc/server/routes/work_order/create.schema";
+} from "@gembuddy/trpc/schema/work_order";
 import { CompanySelector } from "./company-selector";
 
 interface WorkOrderCreateFormProps
   extends React.HTMLAttributes<HTMLFormElement> {
   workspace_id: string;
   team_id: string;
-  onCreated?: (
-    workOrder: RouterOutput["db"]["work_order"]["get"]["byId"]
-  ) => void;
+  onCreated?: (workOrder: RouterOutput["db"]["work_order"]["create"]) => void;
 }
 
 export function WorkOrderCreateForm({
@@ -53,12 +51,18 @@ export function WorkOrderCreateForm({
   onCreated,
 }: WorkOrderCreateFormProps) {
   const [selectedCompany, setSelectedCompany] = useState<
-    RouterOutput["db"]["company"]["get"]["textSearch"][number] | undefined
+    | NonNullable<
+        RouterOutput["db"]["company"]["get"]["textSearch"]["data"]
+      >[number]
+    | undefined
   >(undefined);
   const { mutate, isPending } = api.db.work_order.create.useMutation({
     onSuccess(data) {
       form.reset();
-      onCreated?.(data);
+
+      if (data) {
+        onCreated?.(data);
+      }
     },
     onError(err) {
       catchError(new Error(err.message));

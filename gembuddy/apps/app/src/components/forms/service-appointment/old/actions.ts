@@ -4,7 +4,7 @@ import { streamObject } from "ai";
 import { openai } from "@ai-sdk/openai";
 import { createStreamableValue } from "ai/rsc";
 import { z } from "zod";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@gembuddy/supabase/server";
 
 const recommendationReasonEnum = z.enum([
   "SKILL_MATCH",
@@ -20,7 +20,7 @@ const aiRecommendationSchema = z.object({
   reasons: z
     .array(recommendationReasonEnum)
     .describe(
-      "The reasons why the recommendation was made. Max 3 reasons. The reasons should be a list of strings.",
+      "The reasons why the recommendation was made. Max 3 reasons. The reasons should be a list of strings."
     ),
   insight: z.string().describe("The insight of the recommendation"),
 });

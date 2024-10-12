@@ -18,14 +18,13 @@ interface LayoutProps {
 }
 
 export default async function Layout({ children, params }: LayoutProps) {
-  const work_order = await trpc.db.work_order.get.detail({
+  const work_order = await trpc.db.work_order.get.byId({
     id: params.work_order_id,
   });
 
-  if (!work_order) {
+  if (!work_order || !work_order.data) {
     return notFound();
   }
-
   return (
     <div className="grid h-full w-full lg:grid-cols-[1fr,0.4fr]">
       <ScrollArea className="h-full">
@@ -33,7 +32,7 @@ export default async function Layout({ children, params }: LayoutProps) {
         <Suspense fallback={<TableSkeleton />}>{children}</Suspense>
       </ScrollArea>
       <div className="hidden h-full border-l lg:block">
-        <WorkOrderMain work_order={work_order} params={params} />
+        <WorkOrderMain work_order={work_order.data} params={params} />
       </div>
     </div>
   );

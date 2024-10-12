@@ -23,6 +23,8 @@ export const useTrackVolume = (track?: Track) => {
       let sum = 0;
       for (let i = 0; i < dataArray.length; i++) {
         const a = dataArray[i];
+        //@ts-ignore
+
         sum += a * a;
       }
       setVolume(Math.sqrt(sum / dataArray.length) / 255);
@@ -62,7 +64,7 @@ export const useMultibandTrackVolume = (
   track?: Track,
   bands: number = 5,
   loPass: number = 100,
-  hiPass: number = 600,
+  hiPass: number = 600
 ) => {
   const [frequencyBands, setFrequencyBands] = useState<Float32Array[]>([]);
 
@@ -84,6 +86,7 @@ export const useMultibandTrackVolume = (
       analyser.getFloatFrequencyData(dataArray);
       let frequencies: Float32Array = new Float32Array(dataArray.length);
       for (let i = 0; i < dataArray.length; i++) {
+        //@ts-ignore
         frequencies[i] = dataArray[i];
       }
       frequencies = frequencies.slice(loPass, hiPass);
@@ -93,7 +96,7 @@ export const useMultibandTrackVolume = (
       const chunks: Float32Array[] = [];
       for (let i = 0; i < bands; i++) {
         chunks.push(
-          normalizedFrequencies.slice(i * chunkSize, (i + 1) * chunkSize),
+          normalizedFrequencies.slice(i * chunkSize, (i + 1) * chunkSize)
         );
       }
 

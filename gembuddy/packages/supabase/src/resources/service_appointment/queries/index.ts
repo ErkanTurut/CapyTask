@@ -34,13 +34,13 @@ export async function getServiceAppointmentByWorkOrder({
     work_order_id: string;
   };
 }) {
-  const { data } = await db
+  const { data, count } = await db
     .from("service_appointment")
     .select()
     .eq("work_order_id", input.work_order_id)
     .throwOnError();
 
-  return { data };
+  return { data, count };
 }
 
 export async function getServiceAppointmentByServiceResources({

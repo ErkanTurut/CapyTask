@@ -19,7 +19,7 @@
 
 // import { Tabs, TabsContent, TabsList, TabsTrigger } from "@gembuddy/ui/tabs";
 
-// import { api } from "@/trpc/client";
+// import { api } from "@gembuddy/trpc/client";
 
 // import { VoiceAgent } from "./call";
 // import Chat from "./chat";

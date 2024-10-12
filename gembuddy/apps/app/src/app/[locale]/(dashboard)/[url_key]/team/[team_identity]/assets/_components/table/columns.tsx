@@ -11,10 +11,10 @@ import { DataTableRowActions } from "./DataTableRowActions";
 
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Database } from "@gembuddy/supabase/types";
-import { RouterOutput } from "@/trpc/client";
+import { RouterOutput } from "@gembuddy/trpc/client";
 
 export const columns: ColumnDef<
-  RouterOutput["db"]["asset"]["get"]["byTeam"]["data"][number]
+  NonNullable<RouterOutput["db"]["asset"]["get"]["byTeam"]["data"]>[number]
 >[] = [
   {
     id: "select",
