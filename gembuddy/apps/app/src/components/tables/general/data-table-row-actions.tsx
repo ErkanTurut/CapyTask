@@ -17,7 +17,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@gembuddy/ui/dropdown-menu";
-import { Database } from "@/types/supabase.types";
+import { Database } from "@gembuddy/supabase/types";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;

@@ -1,8 +1,8 @@
-import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Separator } from "@gembuddy/ui/separator";
+import { Skeleton } from "@gembuddy/ui/skeleton";
 import WorkspaceSkeleton from "@/components/workspace/workspace-skeleton";
 import { cn } from "@/lib/utils";
-import { trpc } from "@/trpc/server";
+import { trpc } from "@gembuddy/trpc/server";
 import { Suspense } from "react";
 import UserNav from "./selector/user-account-nav";
 import WorkspaceSelector from "./selector/workspace-selector";
@@ -74,14 +74,14 @@ const teamNav: NavItem[] = [
 ];
 
 export async function Sidebar({ className, params }: SidebarProps) {
-  const { data: teams } = await trpc.db.team.getByWorkspaceUrlKey({
+  const { data: teams } = await trpc.db.team.get.byUrlKey({
     url_key: params.url_key,
   });
   return (
     <aside
       className={cn(
         "z-50 hidden w-full overflow-hidden py-[1px] md:block",
-        className,
+        className
       )}
     >
       <div className="flex h-full w-full flex-col justify-between">

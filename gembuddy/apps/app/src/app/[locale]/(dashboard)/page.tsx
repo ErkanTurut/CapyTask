@@ -7,7 +7,7 @@ export const metadata = {
 };
 
 export default async function Page() {
-  const { data } = await trpc.db.user.getCurrentUser();
+  const { data } = await trpc.db.user.get.currentUser();
   const t = await getI18n();
 
   return (

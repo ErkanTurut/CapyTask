@@ -1,7 +1,7 @@
 "use client";
 import React, { useMemo } from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@gembuddy/ui/scroll-area";
+import { Button } from "@gembuddy/ui/button";
 import {
   Table,
   TableBody,
@@ -9,7 +9,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@gembuddy/ui/table";
 import {
   format,
   addDays,
@@ -59,9 +59,9 @@ const WeekCalendar: React.FC<WeekCalendarProps> = ({
   const weekDays = useMemo(
     () =>
       Array.from({ length: 7 }, (_, i) =>
-        addDays(startOfWeek(startDate, { weekStartsOn }), i),
+        addDays(startOfWeek(startDate, { weekStartsOn }), i)
       ),
-    [startDate, weekStartsOn],
+    [startDate, weekStartsOn]
   );
 
   const handleSlotClick = (slotDate: Date) => {
@@ -73,7 +73,10 @@ const WeekCalendar: React.FC<WeekCalendarProps> = ({
     const endDate = addHours(slotDate, 1);
     onSlotClick?.(slotDate);
     console.log(
-      `Selected time range: ${format(slotDate, "PPpp")} - ${format(endDate, "PPpp")}`,
+      `Selected time range: ${format(slotDate, "PPpp")} - ${format(
+        endDate,
+        "PPpp"
+      )}`
     );
   };
 
@@ -98,7 +101,9 @@ const WeekCalendar: React.FC<WeekCalendarProps> = ({
     return (
       <div
         key={event.id}
-        className={`absolute flex flex-col overflow-hidden rounded-sm p-1 text-xs leading-4 ${colorClasses[event.color]}`}
+        className={`absolute flex flex-col overflow-hidden rounded-sm p-1 text-xs leading-4 ${
+          colorClasses[event.color]
+        }`}
         style={style}
       >
         <p
@@ -135,7 +140,7 @@ const WeekCalendar: React.FC<WeekCalendarProps> = ({
               key={index}
               className={cn(
                 "p-1 text-center text-xs font-semibold",
-                isToday(day) && "bg-secondary text-foreground",
+                isToday(day) && "bg-secondary text-foreground"
               )}
             >
               {format(day, "EEE dd/MM")}
@@ -160,8 +165,8 @@ const WeekCalendar: React.FC<WeekCalendarProps> = ({
                   {hour === 0 &&
                     eventLanes.map((lane, laneIndex) =>
                       lane.map((event) =>
-                        renderEvent(event, laneIndex, eventLanes.length),
-                      ),
+                        renderEvent(event, laneIndex, eventLanes.length)
+                      )
                     )}
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -180,7 +185,11 @@ const WeekCalendar: React.FC<WeekCalendarProps> = ({
                         //   disabledSlots,
                         // )}
                         disabled={disabled?.(slotDate)}
-                        aria-label={`Select time slot ${formatHour(hour, startDate, initialTimeFormat)} on ${format(day, "EEEE")}`}
+                        aria-label={`Select time slot ${formatHour(
+                          hour,
+                          startDate,
+                          initialTimeFormat
+                        )} on ${format(day, "EEEE")}`}
                       />
                     </TooltipTrigger>
                     <TooltipContent className="bg-secondary-foreground text-secondary">

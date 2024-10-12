@@ -17,7 +17,7 @@ import * as React from "react";
 import { DataTable } from "@/components/tables/data-table/data-table";
 import { api, RouterOutput } from "@/trpc/client";
 import { DataTableFilterField } from "@/types";
-import { Database } from "@/types/supabase.types";
+import { Database } from "@gembuddy/supabase/types";
 import {
   CheckCircledIcon,
   CircleIcon,
@@ -87,7 +87,7 @@ export function ServiceAppointmentTable({
     {
       work_order_id: params.work_order_id,
     },
-    { initialData: use(initialData) },
+    { initialData: use(initialData) }
   );
 
   const searchParams = useSearchParams();
@@ -148,17 +148,17 @@ export function ServiceAppointmentTable({
 
       return newSearchParams.toString();
     },
-    [searchParams],
+    [searchParams]
   );
 
   const initialColumnFilters: ColumnFiltersState = React.useMemo(() => {
     return Array.from(searchParams.entries()).reduce<ColumnFiltersState>(
       (filters, [key, value]) => {
         const filterableColumn = filterableColumns.find(
-          (column) => column.value === key,
+          (column) => column.value === key
         );
         const searchableColumn = searchableColumns.find(
-          (column) => column.value === key,
+          (column) => column.value === key
         );
 
         if (filterableColumn) {
@@ -175,7 +175,7 @@ export function ServiceAppointmentTable({
 
         return filters;
       },
-      [],
+      []
     );
   }, [filterableColumns, searchableColumns, searchParams]);
 

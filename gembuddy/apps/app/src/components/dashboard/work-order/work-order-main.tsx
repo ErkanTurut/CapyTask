@@ -1,6 +1,6 @@
 import { Copy } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@gembuddy/ui/button";
 import {
   Card,
   CardContent,
@@ -8,8 +8,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+} from "@gembuddy/ui/card";
+import { Separator } from "@gembuddy/ui/separator";
 import { formatDate } from "@/lib/utils";
 import { RouterOutput } from "@/trpc/client";
 import Link from "next/link";

@@ -1,7 +1,7 @@
 "use client";
 import React, { FC, useState } from "react";
 
-import { cn, generateAvatar } from "@gembuddy/ui/";
+import { cn, generateAvatar } from "@gembuddy/ui/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@gembuddy/ui/avatar";
 import { Button } from "@gembuddy/ui/button";
 
@@ -14,11 +14,10 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-} from "../../ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
+} from "@gembuddy/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@gembuddy/ui/popover";
 
-import { useSidebar } from "@/lib/store";
-import { Database } from "@/types/supabase.types";
+import { Database } from "@gembuddy/supabase/types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 

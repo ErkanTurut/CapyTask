@@ -9,10 +9,10 @@
 //   FormField,
 //   FormItem,
 //   FormMessage,
-// } from "@/components/ui/form";
-// import { Input } from "@/components/ui/input";
+// } from "@gembuddy/ui/form";
+// import { Input } from "@gembuddy/ui/input";
 
-// import { Button } from "@/components/ui/button";
+// import { Button } from "@gembuddy/ui/button";
 
 // import { Icons } from "@/components/icons";
 // import {
@@ -21,21 +21,21 @@
 //   DialogFooter,
 //   DialogTitle,
 //   DialogTrigger,
-// } from "@/components/ui/dialog";
-// import { Separator } from "@/components/ui/separator";
+// } from "@gembuddy/ui/dialog";
+// import { Separator } from "@gembuddy/ui/separator";
 // import {
 //   Sortable,
 //   SortableDragHandle,
 //   SortableItem,
-// } from "@/components/ui/sortable";
-// import { Textarea } from "@/components/ui/textarea";
-// import { TCreateWorkOrderWithItemsSchema } from "@/trpc/server/routes/work_order/create.schema";
+// } from "@gembuddy/ui/sortable";
+// import { Textarea } from "@gembuddy/ui/textarea";
+// import { TCreateWorkOrderWithItemsSchema } from "@gembuddy/trpc/server/routes/work_order/create.schema";
 
-// import { VisuallyHidden } from "@/components/ui/vizually-hidden";
+// import { VisuallyHidden } from "@gembuddy/ui/vizually-hidden";
 // import {
 //   TCreateWorkStepSchema,
 //   ZCreateWorkStepSchema,
-// } from "@/trpc/server/routes/work_step/create.schema";
+// } from "@gembuddy/trpc/server/routes/work_step/create.schema";
 // import { DragHandleDots2Icon, TrashIcon } from "@radix-ui/react-icons";
 // import { useState } from "react";
 // import type { UseFormReturn } from "react-hook-form";

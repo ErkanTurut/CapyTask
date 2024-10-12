@@ -11,8 +11,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { trpc } from "@/trpc/server";
+} from "@gembuddy/ui/card";
+import { trpc } from "@gembuddy/trpc/server";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 

@@ -6,14 +6,14 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@gembuddy/ui/card";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@gembuddy/ui/dialog";
 import {
   Drawer,
   DrawerClose,
@@ -22,7 +22,7 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-} from "@/components/ui/drawer";
+} from "@gembuddy/ui/drawer";
 import useWindowSize from "@/lib/hooks/use-window-size";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";

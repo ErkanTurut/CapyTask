@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { DateRange } from "react-day-picker";
-import { Label } from "@/components/ui/label";
+import { Label } from "@gembuddy/ui/label";
 import { TimePickerInput } from "@/components/time-picker-input";
 
 interface TimeSelectorProps {

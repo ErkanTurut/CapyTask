@@ -1,12 +1,8 @@
 "use client";
 
 import { Icons } from "@/components/icons";
-import { Button, buttonVariants } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Button, buttonVariants } from "@gembuddy/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@gembuddy/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { NavItem } from "@/types";
 import { type VariantProps } from "class-variance-authority";
@@ -16,9 +12,9 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
+} from "@gembuddy/ui/accordion";
+import { Avatar, AvatarImage } from "@gembuddy/ui/avatar";
+import { Separator } from "@gembuddy/ui/separator";
 import { useSidebar } from "@/lib/store";
 import { usePathname } from "next/navigation";
 
@@ -61,7 +57,7 @@ const NavLink = ({
           variant: isActive ? "default" : item.variant || "ghost",
           size: size,
         }),
-        "h-6 justify-start shadow-none",
+        "h-6 justify-start shadow-none"
       )}
     >
       {Icon && (
@@ -95,7 +91,7 @@ const NavItemWithTooltip = ({
           href={href}
           className={cn(
             buttonVariants({ variant: item.variant || "ghost", size: "icon" }),
-            "h-8 w-8",
+            "h-8 w-8"
           )}
         >
           {Icon && <Icon strokeWidth={1} className="h-4 w-4 shrink-0" />}
@@ -153,7 +149,7 @@ export function Nav({
                 <AccordionTrigger
                   className={cn(
                     buttonVariants({ variant: item.variant || "ghost", size }),
-                    "group h-6 justify-between",
+                    "group h-6 justify-between"
                   )}
                   disabled={item.disabled}
                 >
@@ -180,7 +176,7 @@ export function Nav({
                           className={cn(
                             "ml-auto",
                             item.variant === "default" &&
-                              "text-background dark:text-white",
+                              "text-background dark:text-white"
                           )}
                         >
                           {item.label}

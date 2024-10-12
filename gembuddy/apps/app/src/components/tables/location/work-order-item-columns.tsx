@@ -1,6 +1,6 @@
 "use client";
 
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@gembuddy/ui/checkbox";
 import {
   ColumnDef,
   AccessorColumnDef,

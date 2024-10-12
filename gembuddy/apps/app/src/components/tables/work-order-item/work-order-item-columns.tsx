@@ -1,6 +1,6 @@
 "use client";
 
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@gembuddy/ui/checkbox";
 import {
   ColumnDef,
   AccessorColumnDef,
@@ -73,7 +73,7 @@ export function getColumns(): ColumnType<
       ),
       cell: ({ row }) => {
         const status = statuses.find(
-          (status) => status.value === row.getValue("status"),
+          (status) => status.value === row.getValue("status")
         );
 
         if (!status) {

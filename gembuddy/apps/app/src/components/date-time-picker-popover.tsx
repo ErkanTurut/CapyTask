@@ -5,13 +5,9 @@ import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Button } from "@gembuddy/ui/button";
+import { Calendar } from "@gembuddy/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@gembuddy/ui/popover";
 import { Label } from "./ui/label";
 import { TimePickerInput } from "./time-picker-input";
 import { Icons } from "./icons";
@@ -33,7 +29,7 @@ export function DateTimePickerPopover({
           variant={"outline"}
           className={cn(
             "w-[230px] justify-start text-left font-normal",
-            !date && "text-muted-foreground",
+            !date && "text-muted-foreground"
           )}
           type="button"
         >

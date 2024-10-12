@@ -1,8 +1,8 @@
 "use client";
 
 import { DataTableColumnHeader } from "@/components/tables/general/data-table-column-header";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Button, buttonVariants } from "@gembuddy/ui/button";
+import { Checkbox } from "@gembuddy/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
@@ -47,7 +47,7 @@ export const columns: ColumnDef<
           href={{ pathname: `work-orders/${row.original.id}` }}
           className={cn(
             buttonVariants({ variant: "link", size: "sm" }),
-            "underline",
+            "underline"
           )}
         >
           {row.original.name}

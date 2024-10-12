@@ -3,13 +3,9 @@ import { useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { cn } from "@/lib/utils";
 import { api, RouterOutput } from "@/trpc/client";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Button } from "@gembuddy/ui/button";
+import { ScrollArea } from "@gembuddy/ui/scroll-area";
+import { Popover, PopoverContent, PopoverTrigger } from "@gembuddy/ui/popover";
 import {
   Command,
   CommandInput,
@@ -18,13 +14,13 @@ import {
   CommandItem,
   CommandEmpty,
   CommandLoading,
-} from "@/components/ui/command";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+} from "@gembuddy/ui/command";
+import { Avatar, AvatarFallback, AvatarImage } from "@gembuddy/ui/avatar";
 import { Icons } from "@/components/icons";
 
 interface CompanySelectorProps {
   onSelect: (
-    serviceResource: RouterOutput["db"]["company"]["get"]["textSearch"][number],
+    serviceResource: RouterOutput["db"]["company"]["get"]["textSearch"][number]
   ) => void;
   selectedValue?: RouterOutput["db"]["company"]["get"]["textSearch"][number];
 }
@@ -43,7 +39,7 @@ export function CompanySelector({
     {
       refetchOnMount: false,
       enabled: Boolean(searchValue),
-    },
+    }
   );
 
   const handleOnSearchChange = useDebouncedCallback(async (e: string) => {
@@ -106,7 +102,7 @@ export function CompanySelector({
                         "mr-2 h-4 w-4",
                         selectedValue && selectedValue.id === company.id
                           ? "opacity-100"
-                          : "opacity-0",
+                          : "opacity-0"
                       )}
                     />
                     <span>{company.name}</span>

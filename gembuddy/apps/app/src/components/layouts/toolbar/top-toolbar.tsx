@@ -12,7 +12,7 @@ import {
   MenubarSubContent,
   MenubarSubTrigger,
   MenubarTrigger,
-} from "@/components/ui/menubar";
+} from "@gembuddy/ui/menubar";
 
 import { FC } from "react";
 import BackButton from "../back-button";

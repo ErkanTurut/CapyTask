@@ -7,13 +7,9 @@ import type { Table } from "@tanstack/react-table";
 import { dataTableConfig } from "@/config/data-table";
 import { cn } from "@/lib/utils";
 import { useDebounce } from "@/lib/hooks/use-debounce";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Button } from "@gembuddy/ui/button";
+import { Input } from "@gembuddy/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@gembuddy/ui/popover";
 import {
   Select,
   SelectContent,
@@ -21,7 +17,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@gembuddy/ui/select";
 
 import { DataTableAdvancedFacetedFilter } from "./data-table-advanced-faceted-filter";
 
@@ -47,16 +43,16 @@ export function DataTableFilterItem<TData>({
   const searchParams = useSearchParams();
 
   const column = table.getColumn(
-    selectedOption.value ? String(selectedOption.value) : "",
+    selectedOption.value ? String(selectedOption.value) : ""
   );
 
   const selectedValues = new Set(
-    selectedOptions.find((item) => item.value === column?.id)?.filterValues,
+    selectedOptions.find((item) => item.value === column?.id)?.filterValues
   );
 
   const filterValues = Array.from(selectedValues);
   const filterOperator = selectedOptions.find(
-    (item) => item.value === column?.id,
+    (item) => item.value === column?.id
   )?.filterOperator;
 
   const operators =
@@ -68,7 +64,7 @@ export function DataTableFilterItem<TData>({
   const debounceValue = useDebounce(value, 500);
   const [open, setOpen] = React.useState(defaultOpen);
   const [selectedOperator, setSelectedOperator] = React.useState(
-    operators.find((c) => c.value === filterOperator) ?? operators[0],
+    operators.find((c) => c.value === filterOperator) ?? operators[0]
   );
 
   // Create query string
@@ -86,7 +82,7 @@ export function DataTableFilterItem<TData>({
 
       return newSearchParams.toString();
     },
-    [searchParams],
+    [searchParams]
   );
 
   // Update query string
@@ -122,7 +118,7 @@ export function DataTableFilterItem<TData>({
           size="sm"
           className={cn(
             "h-7 gap-0 truncate rounded-full",
-            (selectedValues.size > 0 || value.length > 0) && "bg-muted/50",
+            (selectedValues.size > 0 || value.length > 0) && "bg-muted/50"
           )}
         >
           <span className="font-medium capitalize">{selectedOption.label}</span>
@@ -156,7 +152,7 @@ export function DataTableFilterItem<TData>({
               value={selectedOperator?.value}
               onValueChange={(value) => {
                 setSelectedOperator(
-                  operators.find((c) => c.value === value) ?? operators[0],
+                  operators.find((c) => c.value === value) ?? operators[0]
                 );
               }}
             >
@@ -185,7 +181,7 @@ export function DataTableFilterItem<TData>({
             className="size-7 text-muted-foreground"
             onClick={() => {
               setSelectedOptions((prev) =>
-                prev.filter((item) => item.value !== selectedOption.value),
+                prev.filter((item) => item.value !== selectedOption.value)
               );
 
               const newSearchParams = createQueryString({

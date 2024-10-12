@@ -1,22 +1,14 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@gembuddy/ui/button";
 import {
   Command,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@gembuddy/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@gembuddy/ui/popover";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@gembuddy/ui/tooltip";
 import * as React from "react";
 
 import { Icons } from "./icons";
@@ -45,7 +37,7 @@ export function ComboBox<T extends string>({
   const [openTooltip, setOpenTooltip] = React.useState(false);
 
   const [selectedOption, setSelectedOption] = React.useState<Option<T>>(
-    options.find((option) => option.value === initialValue) || options[0],
+    options.find((option) => option.value === initialValue) || options[0]
   );
   const [searchValue, setSearchValue] = React.useState("");
 
@@ -135,13 +127,13 @@ export function ComboBox<T extends string>({
                   value={status.value}
                   onSelect={(value) => {
                     handleSelectOption(
-                      options.find((status) => status.value === value)!,
+                      options.find((status) => status.value === value)!
                     );
                   }}
                   className={cn(
                     "group flex w-full items-center justify-between rounded-md text-xs leading-normal text-muted-foreground",
                     selectedOption.value === status.value &&
-                      "text-primary aria-selected:text-primary aria-selected:underline",
+                      "text-primary aria-selected:text-primary aria-selected:underline"
                   )}
                 >
                   <div className="flex items-center">

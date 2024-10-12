@@ -1,6 +1,6 @@
 "use client";
 
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@gembuddy/ui/checkbox";
 import {
   ColumnDef,
   AccessorColumnDef,
@@ -14,7 +14,7 @@ import { statuses } from "./work-order-table";
 import { Leaves } from "@/types";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@gembuddy/ui/button";
 
 interface ColumnType<TData extends RowData, TValue = unknown>
   extends Omit<ColumnDef<TData, TValue>, "accessoryKey"> {
@@ -66,7 +66,7 @@ export function getColumns(): ColumnType<
               href={{ pathname: `work-orders/${row.original.id}` }}
               className={cn(
                 buttonVariants({ variant: "link", size: "sm" }),
-                "underline",
+                "underline"
               )}
             >
               {row.original.name}
@@ -86,7 +86,7 @@ export function getColumns(): ColumnType<
       ),
       cell: ({ row }) => {
         const status = statuses.find(
-          (status) => status.value === row.getValue("status"),
+          (status) => status.value === row.getValue("status")
         );
 
         if (!status) {

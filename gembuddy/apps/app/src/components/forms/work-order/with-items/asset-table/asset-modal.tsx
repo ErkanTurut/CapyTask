@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Button } from "@gembuddy/ui/button";
+import { Card } from "@gembuddy/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -8,17 +8,17 @@ import {
   DialogPortal,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { FormControl, FormField, FormItem } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
+} from "@gembuddy/ui/dialog";
+import { FormControl, FormField, FormItem } from "@gembuddy/ui/form";
+import { Input } from "@gembuddy/ui/input";
+import { Separator } from "@gembuddy/ui/separator";
 import {
   Sortable,
   SortableDragHandle,
   SortableItem,
-} from "@/components/ui/sortable";
+} from "@gembuddy/ui/sortable";
 import { cn } from "@/lib/utils";
-import { TCreateWorkOrderWithItemsSchema } from "@/trpc/server/routes/work_order/create.schema";
+import { TCreateWorkOrderWithItemsSchema } from "@gembuddy/trpc/server/routes/work_order/create.schema";
 import { DragHandleDots2Icon, TrashIcon } from "@radix-ui/react-icons";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
@@ -93,7 +93,7 @@ export function AssetModal({
                 (field, index) => (
                   form.setValue(
                     `asset.${assetIndex}.work_step.${index}.step_order`,
-                    index,
+                    index
                   ),
                   (
                     <SortableItem
@@ -148,7 +148,7 @@ export function AssetModal({
                       </div>
                     </SortableItem>
                   )
-                ),
+                )
               )}
             </div>
           </Sortable>

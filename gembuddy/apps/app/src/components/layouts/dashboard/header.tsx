@@ -7,8 +7,8 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Button } from "@/components/ui/button";
+} from "@gembuddy/ui/breadcrumb";
+import { Button } from "@gembuddy/ui/button";
 import { cn } from "@/lib/utils";
 
 interface headerProps {}
@@ -17,7 +17,7 @@ export default function Header({}: headerProps) {
   return (
     <div
       className={cn(
-        "group/btn sticky top-0 flex h-[49.5px] w-full items-center justify-between border-b border-border p-2 shadow-none backdrop-blur-sm transition-all duration-200",
+        "group/btn sticky top-0 flex h-[49.5px] w-full items-center justify-between border-b border-border p-2 shadow-none backdrop-blur-sm transition-all duration-200"
       )}
     >
       <Breadcrumb className="flex h-7 items-center rounded-md border bg-background p-2 hover:bg-muted/40">

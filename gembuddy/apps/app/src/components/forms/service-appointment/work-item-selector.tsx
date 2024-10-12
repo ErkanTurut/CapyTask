@@ -3,13 +3,9 @@ import { useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { cn } from "@/lib/utils";
 import { api, RouterOutput } from "@/trpc/client";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Button } from "@gembuddy/ui/button";
+import { ScrollArea } from "@gembuddy/ui/scroll-area";
+import { Popover, PopoverContent, PopoverTrigger } from "@gembuddy/ui/popover";
 import {
   Command,
   CommandInput,
@@ -17,12 +13,12 @@ import {
   CommandGroup,
   CommandItem,
   CommandEmpty,
-} from "@/components/ui/command";
+} from "@gembuddy/ui/command";
 import { Icons } from "@/components/icons";
 
 interface WorkItemSelectorProps {
   onSelect: (
-    location: RouterOutput["db"]["work_order_item"]["get"]["byWorkOrder"]["data"][number],
+    location: RouterOutput["db"]["work_order_item"]["get"]["byWorkOrder"]["data"][number]
   ) => void;
   selectedValue?: RouterOutput["db"]["work_order_item"]["get"]["byWorkOrder"]["data"][number];
   workOrderItems: RouterOutput["db"]["work_order_item"]["get"]["byWorkOrder"]["data"];
@@ -75,14 +71,20 @@ function WorkItemSelector({
                 {workOrderItems?.map((workOrderItem) => (
                   <CommandItem
                     key={workOrderItem.id}
-                    value={`${JSON.stringify(workOrderItem.asset)} ${JSON.stringify(workOrderItem.location)}`}
+                    value={`${JSON.stringify(
+                      workOrderItem.asset
+                    )} ${JSON.stringify(workOrderItem.location)}`}
                     onSelect={async () => {
                       onSelect?.(workOrderItem);
                     }}
                   >
                     <div className="flex flex-col items-start gap-1">
                       <span
-                        className={`text-xs font-medium ${selectedValue && selectedValue.id === workOrderItem.id && "underline"}`}
+                        className={`text-xs font-medium ${
+                          selectedValue &&
+                          selectedValue.id === workOrderItem.id &&
+                          "underline"
+                        }`}
                       >
                         {workOrderItem.asset?.name}{" "}
                         {workOrderItem.location?.name}

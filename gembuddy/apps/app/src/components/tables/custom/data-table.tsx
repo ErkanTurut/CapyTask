@@ -9,7 +9,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@gembuddy/ui/table";
 import { DataTablePagination } from "./data-table-pagination";
 
 interface DataTableProps<TData> extends React.HTMLAttributes<HTMLDivElement> {
@@ -45,8 +45,8 @@ export function getCommonPinningStyles<TData>({
     boxShadow: isLastLeftPinnedColumn
       ? "-5px 0 5px -5px hsl(var(--border)) inset"
       : isFirstRightPinnedColumn
-        ? "5px 0 5px -5px hsl(var(--border)) inset"
-        : undefined,
+      ? "5px 0 5px -5px hsl(var(--border)) inset"
+      : undefined,
     left: isPinned === "left" ? `${column.getStart("left")}px` : undefined,
     right: isPinned === "right" ? `${column.getAfter("right")}px` : undefined,
     opacity: isPinned ? 0.97 : 1,
@@ -88,7 +88,7 @@ export function DataTable<TData>({
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext(),
+                            header.getContext()
                           )}
                     </TableHead>
                   );
@@ -112,7 +112,7 @@ export function DataTable<TData>({
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext(),
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}

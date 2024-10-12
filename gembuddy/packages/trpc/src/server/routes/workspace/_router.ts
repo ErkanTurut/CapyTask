@@ -63,5 +63,13 @@ export const workspace = router({
           input,
         });
       }),
+    byCurrentUser: protectedProcedure.query(async ({ ctx }) => {
+      return await getWorkspaceByUser({
+        db: ctx.db,
+        input: {
+          user_id: ctx.session.user.id,
+        },
+      });
+    }),
   },
 });

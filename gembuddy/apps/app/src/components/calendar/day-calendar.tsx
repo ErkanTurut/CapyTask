@@ -1,6 +1,6 @@
 "use calendar";
 import React, { useMemo } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@gembuddy/ui/button";
 import {
   Table,
   TableBody,
@@ -8,7 +8,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@gembuddy/ui/table";
 import { format, addHours, startOfDay } from "date-fns";
 import { Event } from "./types";
 import {
@@ -58,7 +58,10 @@ const DayCalendar: React.FC<DayCalendarProps> = ({
     const endDate = addHours(slotDate, 1);
     onSlotClick?.(slotDate);
     console.log(
-      `Selected time range: ${format(slotDate, "PPpp")} - ${format(endDate, "PPpp")}`,
+      `Selected time range: ${format(slotDate, "PPpp")} - ${format(
+        endDate,
+        "PPpp"
+      )}`
     );
   };
 
@@ -136,8 +139,8 @@ const DayCalendar: React.FC<DayCalendarProps> = ({
                   renderEvent(
                     event,
                     index,
-                    getEventsForDay(date, events).length,
-                  ),
+                    getEventsForDay(date, events).length
+                  )
                 )}
               <TooltipProvider>
                 <Tooltip>
@@ -149,7 +152,7 @@ const DayCalendar: React.FC<DayCalendarProps> = ({
                         isTimeDisabled(
                           addHours(startOfDay(date), hour),
                           disabledTimeRanges,
-                          disabledSlots,
+                          disabledSlots
                         )
                           ? "bg-border hover:cursor-not-allowed"
                           : "transition-shadow duration-700 hover:shadow-inner"
@@ -160,9 +163,13 @@ const DayCalendar: React.FC<DayCalendarProps> = ({
                       disabled={isTimeDisabled(
                         addHours(startOfDay(date), hour),
                         disabledTimeRanges,
-                        disabledSlots,
+                        disabledSlots
                       )}
-                      aria-label={`Select time slot ${formatHour(hour, date, initialTimeFormat)}`}
+                      aria-label={`Select time slot ${formatHour(
+                        hour,
+                        date,
+                        initialTimeFormat
+                      )}`}
                     />
                   </TooltipTrigger>
                   <TooltipContent
@@ -171,7 +178,7 @@ const DayCalendar: React.FC<DayCalendarProps> = ({
                   >
                     {formatDateRange(
                       addHours(startOfDay(date), hour),
-                      addHours(startOfDay(date), hour + 1),
+                      addHours(startOfDay(date), hour + 1)
                     )}
                   </TooltipContent>
                 </Tooltip>

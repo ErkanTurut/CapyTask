@@ -9,15 +9,15 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
+} from "@gembuddy/ui/form";
 
-import { Input } from "@/components/ui/input";
+import { Input } from "@gembuddy/ui/input";
 import { catchError, cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@gembuddy/ui/button";
 
 import { api } from "@/trpc/client";
 
@@ -25,7 +25,7 @@ import { useRouter } from "next/navigation";
 import {
   TAssetCreateSchema,
   ZAssetCreateSchema,
-} from "@/trpc/server/routes/asset/create.schema";
+} from "@gembuddy/trpc/server/routes/asset/create.schema";
 
 interface AssetCreateFormProps extends React.HTMLAttributes<HTMLFormElement> {
   team_id: string;

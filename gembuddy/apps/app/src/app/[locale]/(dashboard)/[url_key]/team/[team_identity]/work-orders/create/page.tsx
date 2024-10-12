@@ -12,10 +12,10 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from "@gembuddy/ui/card";
+import { ScrollArea } from "@gembuddy/ui/scroll-area";
+import { Separator } from "@gembuddy/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@gembuddy/ui/tabs";
 import { Suspense } from "react";
 
 interface createWorkOrderProps {

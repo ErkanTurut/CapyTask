@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { trpc } from "@/trpc/server";
+import { trpc } from "@gembuddy/trpc/server";
 import { TableData } from "./TableData";
 interface TableProps {
   searchParams: {

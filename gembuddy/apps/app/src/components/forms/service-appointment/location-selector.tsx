@@ -3,13 +3,9 @@ import { useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { cn } from "@/lib/utils";
 import { api, RouterOutput } from "@/trpc/client";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Button } from "@gembuddy/ui/button";
+import { ScrollArea } from "@gembuddy/ui/scroll-area";
+import { Popover, PopoverContent, PopoverTrigger } from "@gembuddy/ui/popover";
 import {
   Command,
   CommandInput,
@@ -18,13 +14,13 @@ import {
   CommandItem,
   CommandEmpty,
   CommandLoading,
-} from "@/components/ui/command";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+} from "@gembuddy/ui/command";
+import { Avatar, AvatarFallback, AvatarImage } from "@gembuddy/ui/avatar";
 import { Icons } from "@/components/icons";
 
 interface ServiceResourceSelectorProps {
   onSelect: (
-    location: RouterOutput["db"]["location"]["get"]["textSearch"][number],
+    location: RouterOutput["db"]["location"]["get"]["textSearch"][number]
   ) => void;
   selectedValue?: RouterOutput["db"]["location"]["get"]["textSearch"][number];
 }
@@ -45,7 +41,7 @@ function LocationSelector({
         refetchOnMount: false,
         initialData: selectedValue && [selectedValue],
         enabled: Boolean(searchValue),
-      },
+      }
     );
 
   const handleOnSearchChange = useDebouncedCallback(async (e: string) => {
@@ -105,7 +101,11 @@ function LocationSelector({
                 >
                   <div className="flex flex-col items-start gap-1">
                     <span
-                      className={`text-xs font-medium ${selectedValue && selectedValue.id === location.id && "underline"}`}
+                      className={`text-xs font-medium ${
+                        selectedValue &&
+                        selectedValue.id === location.id &&
+                        "underline"
+                      }`}
                     >
                       {location.name} ({location.location_type})
                     </span>

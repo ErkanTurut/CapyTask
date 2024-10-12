@@ -1,6 +1,6 @@
 "use client";
 import { Icons, IconType } from "@/components/icons";
-import { Database } from "@/types/supabase.types";
+import { Database } from "@gembuddy/supabase/types";
 import { PopoverComboBox } from "@/components/popoverCombobox";
 import { useState } from "react";
 
@@ -34,7 +34,7 @@ export const PrioritySelector = ({
   status: Database["public"]["Enums"]["Priority"];
 }) => {
   const initialStatus = statusConfig.find(
-    (_status) => _status.value === status,
+    (_status) => _status.value === status
   );
   if (!initialStatus) {
     return null;

@@ -6,17 +6,17 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@gembuddy/ui/form";
+import { Input } from "@gembuddy/ui/input";
 
 import { DateTimePickerPopover } from "@/components/date-time-picker-popover";
 import { Icons } from "@/components/icons";
 import { ComboBox } from "@/components/popoverCombobox_old";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
-import { TCreateWorkOrderWithItemsSchema } from "@/trpc/server/routes/work_order/create.schema";
-import { Database } from "@/types/supabase.types";
+import { Button } from "@gembuddy/ui/button";
+import { Separator } from "@gembuddy/ui/separator";
+import { Textarea } from "@gembuddy/ui/textarea";
+import { TCreateWorkOrderWithItemsSchema } from "@gembuddy/trpc/server/routes/work_order/create.schema";
+import { Database } from "@gembuddy/supabase/types";
 import * as React from "react";
 import type { UseFormReturn } from "react-hook-form";
 import CompanySearchForm from "./company-search-form";
@@ -191,7 +191,7 @@ export function WorkOrderGeneralForm({
                       value: status as Database["public"]["Enums"]["Priority"],
                       label,
                       icon,
-                    }),
+                    })
                   )}
                   onSelect={field.onChange}
                 />
@@ -217,7 +217,7 @@ export function WorkOrderGeneralForm({
                         status as Database["public"]["Enums"]["WorkOrderType"],
                       label,
                       icon,
-                    }),
+                    })
                   )}
                   onSelect={field.onChange}
                 />

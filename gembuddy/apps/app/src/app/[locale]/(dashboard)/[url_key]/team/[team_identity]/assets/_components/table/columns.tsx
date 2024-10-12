@@ -1,16 +1,16 @@
 "use client";
 
 import { DataTableColumnHeader } from "@/components/tables/general/data-table-column-header";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Button, buttonVariants } from "@gembuddy/ui/button";
+import { Checkbox } from "@gembuddy/ui/checkbox";
 import { cn } from "@/lib/utils";
-import type { trpc } from "@/trpc/server";
+import type { trpc } from "@gembuddy/trpc/server";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { DataTableRowActions } from "./DataTableRowActions";
 
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
-import { Database } from "@/types/supabase.types";
+import { Database } from "@gembuddy/supabase/types";
 import { RouterOutput } from "@/trpc/client";
 
 export const columns: ColumnDef<
@@ -49,7 +49,7 @@ export const columns: ColumnDef<
           href={{ pathname: `assets/${row.original.id}` }}
           className={cn(
             buttonVariants({ variant: "link", size: "sm" }),
-            "underline",
+            "underline"
           )}
         >
           {row.original.name}

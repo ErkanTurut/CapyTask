@@ -13,20 +13,20 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@gembuddy/ui/form";
+import { Input } from "@gembuddy/ui/input";
 
 import { catchError, cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@gembuddy/ui/button";
 
 import { api } from "@/trpc/client";
 import { FC } from "react";
 import {
   TCreateTeamSchema,
   ZCreateTeamSchema,
-} from "@/trpc/server/routes/team/create.schema";
+} from "@gembuddy/trpc/server/routes/team/create.schema";
 
 interface CreateTeamFormProps extends React.HTMLAttributes<HTMLFormElement> {
   workspace_id: string;

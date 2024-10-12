@@ -11,7 +11,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@gembuddy/ui/card";
 import {
   Form,
   FormControl,
@@ -19,22 +19,22 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@gembuddy/ui/form";
+import { Input } from "@gembuddy/ui/input";
 
 import { toast } from "sonner";
 import { catchError, cn } from "@/lib/utils";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@gembuddy/ui/button";
 
 import { api, RouterOutput } from "@/trpc/client";
 import { useRouter } from "next/navigation";
 
-import { Textarea } from "@/components/ui/textarea";
+import { Textarea } from "@gembuddy/ui/textarea";
 import {
   TCreateWorkOrderSchema,
   ZCreateWorkOrderSchema,
-} from "@/trpc/server/routes/work_order/create.schema";
+} from "@gembuddy/trpc/server/routes/work_order/create.schema";
 import { CompanySelector } from "./company-selector";
 
 interface WorkOrderCreateFormProps
@@ -42,7 +42,7 @@ interface WorkOrderCreateFormProps
   workspace_id: string;
   team_id: string;
   onCreated?: (
-    workOrder: RouterOutput["db"]["work_order"]["get"]["byId"],
+    workOrder: RouterOutput["db"]["work_order"]["get"]["byId"]
   ) => void;
 }
 

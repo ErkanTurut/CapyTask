@@ -12,13 +12,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@gembuddy/ui/form";
+import { Input } from "@gembuddy/ui/input";
 
 import { catchError, cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@gembuddy/ui/button";
 
 import {
   Card,
@@ -26,12 +26,12 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@gembuddy/ui/card";
 import { api, RouterOutput } from "@/trpc/client";
 import {
   TUpdateWorkPlanTemplateSchema,
   ZUpdateWorkPlanTemplateSchema,
-} from "@/trpc/server/routes/work_plan_template/update.schema";
+} from "@gembuddy/trpc/server/routes/work_plan_template/update.schema";
 import { useRouter } from "next/navigation";
 
 interface WorkPlanTemplateGeneralFormProps

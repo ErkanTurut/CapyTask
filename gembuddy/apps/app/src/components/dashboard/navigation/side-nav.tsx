@@ -4,10 +4,10 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
+} from "@gembuddy/ui/accordion";
 import { Icons, IconType } from "@/components/icons";
 
-import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent } from "@gembuddy/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { TooltipTrigger } from "@radix-ui/react-tooltip";
 import { cva } from "class-variance-authority";
@@ -18,7 +18,7 @@ import {
   useSelectedLayoutSegment,
   useSelectedLayoutSegments,
 } from "next/navigation";
-import { Label } from "@/components/ui/label";
+import { Label } from "@gembuddy/ui/label";
 
 export const navItemVariants = cva(
   "text-muted-foreground group flex w-full  items-center rounded-sm  px-3 py-1  h-7 text-xs font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ",

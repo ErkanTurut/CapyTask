@@ -1,8 +1,8 @@
 "use client";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@gembuddy/ui/tabs";
 
-import { TCreateWorkOrderWithItemsSchema } from "@/trpc/server/routes/work_order/create.schema";
+import { TCreateWorkOrderWithItemsSchema } from "@gembuddy/trpc/server/routes/work_order/create.schema";
 
 import {
   PageHeader,

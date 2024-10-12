@@ -11,7 +11,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@gembuddy/ui/card";
 import {
   Form,
   FormControl,
@@ -19,21 +19,21 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@gembuddy/ui/form";
+import { Input } from "@gembuddy/ui/input";
 
 import { toast } from "sonner";
 import { catchError, cn } from "@/lib/utils";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@gembuddy/ui/button";
 
 import { api } from "@/trpc/client";
 import { useRouter } from "next/navigation";
 import {
   TCreateWorkPlanTemplateSchema,
   ZCreateWorkPlanTemplateSchema,
-} from "@/trpc/server/routes/work_plan_template/create.schema";
-import { Textarea } from "@/components/ui/textarea";
+} from "@gembuddy/trpc/server/routes/work_plan_template/create.schema";
+import { Textarea } from "@gembuddy/ui/textarea";
 
 interface WorkPlanTemplateCreateFormProps
   extends React.HTMLAttributes<HTMLFormElement> {
@@ -56,7 +56,7 @@ export function WorkPlanTemplateCreateForm({
         {
           url_key: workspace_id,
         },
-        { type: "all" },
+        { type: "all" }
       );
       form.reset();
     },

@@ -1,13 +1,9 @@
 import { formatDateRange } from "little-date";
 import { startOfWeek, endOfWeek } from "date-fns";
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Button } from "@gembuddy/ui/button";
+import { Calendar } from "@gembuddy/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@gembuddy/ui/popover";
 
 interface DateSelectorProps {
   selectedDate: Date;
@@ -28,7 +24,7 @@ export default function DateSelector({
           <CalendarIcon className="mr-2 h-4 w-4 text-muted-foreground" />
           {formatDateRange(
             startOfWeek(selectedDate, { weekStartsOn: 1 }),
-            endOfWeek(selectedDate, { weekStartsOn: 1 }),
+            endOfWeek(selectedDate, { weekStartsOn: 1 })
           )}
         </Button>
       </PopoverTrigger>

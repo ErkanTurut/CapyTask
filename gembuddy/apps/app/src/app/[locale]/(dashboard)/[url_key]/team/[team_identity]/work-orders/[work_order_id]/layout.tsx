@@ -1,12 +1,12 @@
 import { Shell } from "@/components/shells";
-import { trpc } from "@/trpc/server";
+import { trpc } from "@gembuddy/trpc/server";
 import { notFound } from "next/navigation";
 
 import { WorkOrderHeader } from "@/components/dashboard/work-order/work-order-header";
 import { WorkOrderMain } from "@/components/dashboard/work-order/work-order-main";
 import TableSkeleton from "@/components/skeletons/table-skeleton";
 import { Suspense } from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@gembuddy/ui/scroll-area";
 
 interface LayoutProps {
   children: React.ReactNode;

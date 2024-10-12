@@ -4,27 +4,27 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import { Button } from "@gembuddy/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+} from "@gembuddy/ui/dialog";
+import { Label } from "@gembuddy/ui/label";
+import { Textarea } from "@gembuddy/ui/textarea";
 import {
   Form,
   FormField,
   FormItem,
   FormControl,
   FormMessage,
-} from "@/components/ui/form";
+} from "@gembuddy/ui/form";
 import { api } from "@/trpc/client";
 import {
   TUpdateWorkOrderSchema,
   ZUpdateWorkOrderSchema,
-} from "@/trpc/server/routes/work_order/update.schema";
+} from "@gembuddy/trpc/server/routes/work_order/update.schema";
 import { StatusConfig } from "./status-config";
 
 interface StatusChangeModalProps {

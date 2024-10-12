@@ -6,14 +6,14 @@ import {
   FormField,
   FormItem,
   FormLabel,
-} from "@/components/ui/form";
+} from "@gembuddy/ui/form";
 
 import { Icons } from "@/components/icons";
 import { ModalSearchCommand } from "@/components/modal-search-command";
-import { Button } from "@/components/ui/button";
-import { CommandItem } from "@/components/ui/command";
+import { Button } from "@gembuddy/ui/button";
+import { CommandItem } from "@gembuddy/ui/command";
 import { api, RouterOutput } from "@/trpc/client";
-import { TCreateWorkOrderWithItemsSchema } from "@/trpc/server/routes/work_order/create.schema";
+import { TCreateWorkOrderWithItemsSchema } from "@gembuddy/trpc/server/routes/work_order/create.schema";
 import { useState } from "react";
 import type { UseFormReturn } from "react-hook-form";
 

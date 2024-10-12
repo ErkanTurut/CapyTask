@@ -1,6 +1,6 @@
 "use client";
 import { Icons } from "@/components/icons";
-import { Button } from "@/components/ui/button";
+import { Button } from "@gembuddy/ui/button";
 import {
   LiveKitRoom,
   RoomAudioRenderer,
@@ -17,7 +17,7 @@ import { useMultibandTrackVolume } from "@/lib/hooks/use-track-volume";
 import { RoomEvent, Track, ConnectionState } from "livekit-client";
 import { useMemo } from "react";
 import { AgentMultibandAudioVisualizer } from "./AgentMultibandAudioVisualizer";
-import { BorderBeam } from "@/components/ui/border-beam";
+import { BorderBeam } from "@gembuddy/ui/border-beam";
 
 export function VoiceAgent() {
   const Room = useRoomContext();
@@ -34,7 +34,7 @@ export function VoiceAgent() {
   const aat = tracks.find(
     (trackRef) =>
       trackRef.publication.kind === Track.Kind.Audio &&
-      trackRef.participant.isAgent,
+      trackRef.participant.isAgent
   );
   if (aat) {
     agentAudioTrack = aat;
@@ -47,7 +47,7 @@ export function VoiceAgent() {
 
   const subscribedVolumes = useMultibandTrackVolume(
     agentAudioTrack?.publication?.track,
-    5,
+    5
   );
 
   const AudioTileContent = useMemo(() => {
@@ -113,7 +113,7 @@ export function VoiceAgent() {
           <Button
             onClick={async () => {
               const { accessToken, url } = await fetch("/api/token").then(
-                (res) => res.json(),
+                (res) => res.json()
               );
 
               await Room?.connect(url, accessToken, {

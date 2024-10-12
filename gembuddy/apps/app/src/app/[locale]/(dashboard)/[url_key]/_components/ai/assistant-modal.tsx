@@ -3,21 +3,21 @@
 //   Popover,
 //   PopoverContent,
 //   PopoverTrigger,
-// } from "@/components/ui/popover";
+// } from "@gembuddy/ui/popover";
 // import {
 //   ControlBar,
 //   useLocalParticipant,
 //   useRoomContext,
 // } from "@livekit/components-react";
 
-// // import { Thread } from "@/components/ui/assistant-ui/thread";
+// // import { Thread } from "@gembuddy/ui/assistant-ui/thread";
 // import { Icons } from "@/components/icons";
-// import { Button, buttonVariants } from "@/components/ui/button";
+// import { Button, buttonVariants } from "@gembuddy/ui/button";
 // import { cn } from "@/lib/utils";
 // import { Tooltip, TooltipContent, TooltipTrigger } from "@gembuddy/ui/tooltip";
 // import { useState } from "react";
 
-// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@gembuddy/ui/tabs";
 
 // import { api } from "@/trpc/client";
 

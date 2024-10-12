@@ -6,8 +6,8 @@ import {
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/components/page-header";
-import { Separator } from "@/components/ui/separator";
-import { trpc } from "@/trpc/server";
+import { Separator } from "@gembuddy/ui/separator";
+import { trpc } from "@gembuddy/trpc/server";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 

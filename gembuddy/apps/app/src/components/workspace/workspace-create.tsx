@@ -12,8 +12,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@gembuddy/ui/form";
+import { Input } from "@gembuddy/ui/input";
 
 import { catchError } from "@/lib/utils";
 import { toast } from "sonner";
@@ -23,7 +23,7 @@ import { api } from "@/trpc/client";
 import {
   TCreateWorkspaceSchema,
   ZCreateWorkspaceSchema,
-} from "@/trpc/server/routes/workspace/create.schema";
+} from "@gembuddy/trpc/server/routes/workspace/create.schema";
 
 export function CreateWorspaceForm() {
   const router = useRouter();

@@ -1,5 +1,5 @@
 import UserAccountNav from "@/components/dashboard/navigation/user-account-nav";
-import { trpc } from "@/trpc/server";
+import { trpc } from "@gembuddy/trpc/server";
 import { redirect } from "next/navigation";
 
 interface UserNavProps {}

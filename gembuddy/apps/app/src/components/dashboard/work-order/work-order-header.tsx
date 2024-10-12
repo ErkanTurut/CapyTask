@@ -6,7 +6,7 @@ import {
 } from "@/components/page-header";
 
 import { WorkOrderTabs } from "@/components/dashboard/work-order/work-order-tabs";
-import { RouterOutput } from "@/trpc/server/trpc";
+import { RouterOutput } from "@gembuddy/trpc/server/trpc";
 import { PrioritySelector } from "./priority-selector";
 import { StatusSelector } from "./status-selector";
 import { api } from "@/trpc/client";
@@ -24,7 +24,7 @@ export function WorkOrderHeader({ initial_work_order }: WorkOrderHeaderProps) {
     },
     {
       initialData: initial_work_order,
-    },
+    }
   );
 
   return (

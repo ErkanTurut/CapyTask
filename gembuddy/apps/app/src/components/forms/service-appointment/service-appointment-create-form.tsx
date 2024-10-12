@@ -3,8 +3,8 @@
 import DayCalendar from "@/components/calendar/day-calendar";
 import { Event } from "@/components/calendar/types";
 import { Icons } from "@/components/icons";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@gembuddy/ui/avatar";
+import { Button } from "@gembuddy/ui/button";
 
 import {
   Form,
@@ -12,8 +12,8 @@ import {
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/form";
-import { ScrollArea } from "@/components/ui/scroll-area";
+} from "@gembuddy/ui/form";
+import { ScrollArea } from "@gembuddy/ui/scroll-area";
 import { getWorkShiftsFromDateRange } from "@/lib/service-appointment/utils";
 import { Shift } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -21,7 +21,7 @@ import { api, RouterOutput } from "@/trpc/client";
 import {
   createServiceAppointmentSchema,
   TCreateServiceAppointmentSchema,
-} from "@/trpc/server/routes/service_appointment/create.schema";
+} from "@gembuddy/trpc/server/routes/service_appointment/create.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { experimental_useObject as useObject } from "ai/react";
 import { endOfDay, startOfDay } from "date-fns";
@@ -43,7 +43,7 @@ interface ServiceAppointmentCreateFormProps
   work_order_id: string;
   team_identity: string;
   onFinish?: (
-    data: RouterOutput["db"]["service_appointment"]["create"] | undefined,
+    data: RouterOutput["db"]["service_appointment"]["create"] | undefined
   ) => void;
 }
 
@@ -120,14 +120,14 @@ export function ServiceAppointmentCreateForm({
   }, [dateRange.from, dateRange.to, work_order_id]);
 
   const handleServiceResourceSelect = (
-    serviceResource: RouterOutput["db"]["service_resource"]["get"]["textSearch"][number],
+    serviceResource: RouterOutput["db"]["service_resource"]["get"]["textSearch"][number]
   ) => {
     if (selectedServiceResources?.some((sr) => sr.id === serviceResource.id)) {
       setSelectedServiceResources(
-        (prev) => prev?.filter((sr) => sr.id !== serviceResource.id) ?? [],
+        (prev) => prev?.filter((sr) => sr.id !== serviceResource.id) ?? []
       );
       setAssignedResources((prev) =>
-        prev.filter((resource) => resource !== serviceResource.id),
+        prev.filter((resource) => resource !== serviceResource.id)
       );
     } else {
       setSelectedServiceResources((prev) => [...(prev ?? []), serviceResource]);
@@ -137,13 +137,13 @@ export function ServiceAppointmentCreateForm({
   const handleAssignResource = (serviceResource: string) => {
     if (assignedResources.includes(serviceResource)) {
       setAssignedResources((prev) =>
-        prev.filter((resource) => resource !== serviceResource),
+        prev.filter((resource) => resource !== serviceResource)
       );
       form.setValue(
         "service_resource",
         selectedServiceResources
           ?.filter((sr) => sr.id !== serviceResource)
-          .map((sr) => sr.id) ?? [],
+          .map((sr) => sr.id) ?? []
       );
     } else {
       setAssignedResources((prev) => [...prev, serviceResource]);
@@ -151,7 +151,7 @@ export function ServiceAppointmentCreateForm({
         "service_resource",
         selectedServiceResources
           ?.map((sr) => sr.id)
-          .filter((sr) => sr !== serviceResource) ?? [],
+          .filter((sr) => sr !== serviceResource) ?? []
       );
     }
   };
@@ -174,12 +174,12 @@ export function ServiceAppointmentCreateForm({
               color: "blue",
               id: assignedResource.service_appointment.id,
             };
-          },
-        ) ?? [],
+          }
+        ) ?? []
     ) ?? [];
 
   const handleLocationSelect = (
-    location: RouterOutput["db"]["location"]["get"]["textSearch"][number],
+    location: RouterOutput["db"]["location"]["get"]["textSearch"][number]
   ) => {
     if (selectedLocation?.id === location.id) {
       setSelectedLocations(undefined);
@@ -191,7 +191,7 @@ export function ServiceAppointmentCreateForm({
   };
 
   const handleWorkItemSelect = (
-    workItem: RouterOutput["db"]["work_order_item"]["get"]["byWorkOrder"]["data"][number],
+    workItem: RouterOutput["db"]["work_order_item"]["get"]["byWorkOrder"]["data"][number]
   ) => {
     if (selectedWorkItem?.id === workItem.id) {
       setSelectedWorkItem(undefined);
@@ -211,7 +211,7 @@ export function ServiceAppointmentCreateForm({
   const workShit = getWorkShiftsFromDateRange(
     startOfDay(date),
     endOfDay(date),
-    shift,
+    shift
   );
 
   const { data } = api.db.service_resource.get.recommendation.useQuery(
@@ -220,7 +220,7 @@ export function ServiceAppointmentCreateForm({
       from: workShit[0].start.toISOString(),
       to: workShit[0].end.toISOString(),
     },
-    { enabled: Boolean(dateRange.from) && Boolean(dateRange.to) },
+    { enabled: Boolean(dateRange.from) && Boolean(dateRange.to) }
   );
 
   const { object, submit, isLoading } = useObject({
@@ -234,11 +234,11 @@ export function ServiceAppointmentCreateForm({
             z.object({
               start: z.string(),
               end: z.string(),
-            }),
+            })
           ),
           first_name: z.string(),
           last_name: z.string(),
-        }),
+        })
       ),
     }),
   });
@@ -320,7 +320,9 @@ export function ServiceAppointmentCreateForm({
                 onClick={() => {
                   submit(JSON.stringify(data));
                 }}
-                className={`shrink-0 text-muted-foreground hover:bg-transparent ${isLoading && "animate-pulse text-primary hover:text-primary"} `}
+                className={`shrink-0 text-muted-foreground hover:bg-transparent ${
+                  isLoading && "animate-pulse text-primary hover:text-primary"
+                } `}
               >
                 <Icons.sparkles className="mr-2 size-4" />
                 <span className="text-xs font-medium">Recommend</span>
@@ -333,14 +335,14 @@ export function ServiceAppointmentCreateForm({
                       {
                         id: selectedServiceResource.id,
                         is_assigned: assignedResources.includes(
-                          selectedServiceResource.id,
+                          selectedServiceResource.id
                         ),
                         first_name:
                           selectedServiceResource.first_name || undefined,
                         last_name:
                           selectedServiceResource.last_name || undefined,
                       },
-                      handleAssignResource,
+                      handleAssignResource
                     );
                   })}
                 </div>
@@ -406,10 +408,11 @@ function ServiceRessourceItem(
     image_uri?: string;
   },
   onAssign: (id: string) => void,
-  is_recommended?: boolean,
+  is_recommended?: boolean
 ) {
-  const initials =
-    `${serviceResource.first_name?.[0] ?? ""}${serviceResource.last_name?.[0] ?? ""}`.toUpperCase();
+  const initials = `${serviceResource.first_name?.[0] ?? ""}${
+    serviceResource.last_name?.[0] ?? ""
+  }`.toUpperCase();
 
   return (
     <div
@@ -418,7 +421,7 @@ function ServiceRessourceItem(
         "flex w-80 items-center justify-between rounded-md border border-transparent bg-secondary px-2 py-1",
         {
           "border-dashed border-border": is_recommended,
-        },
+        }
       )}
     >
       <div className="flex items-center justify-between gap-2">
@@ -433,7 +436,9 @@ function ServiceRessourceItem(
           <AvatarFallback className="text-[0.6rem]">{initials}</AvatarFallback>
         </Avatar>
         <span
-          className={`truncate text-xs font-medium ${is_recommended && "text-primary"}`}
+          className={`truncate text-xs font-medium ${
+            is_recommended && "text-primary"
+          }`}
         >
           {serviceResource.first_name} {serviceResource.last_name}
         </span>

@@ -1,13 +1,13 @@
 // "use client";
 
-// // import { Thread } from "@/components/ui/assistant-ui/thread";
+// // import { Thread } from "@gembuddy/ui/assistant-ui/thread";
 // import { Icons } from "@/components/icons";
-// import { Button } from "@/components/ui/button";
+// import { Button } from "@gembuddy/ui/button";
 // import { Input } from "@gembuddy/ui/input";
 
 // import { useActions, useUIState } from "ai/rsc";
 
-// import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
+// import { Form, FormField, FormItem, FormMessage } from "@gembuddy/ui/form";
 // import { api } from "@/trpc/client";
 // import { ClientMessage } from "./actions";
 
@@ -15,9 +15,9 @@
 // import { useForm } from "react-hook-form";
 // import { z } from "zod";
 
-// import { ScrollArea } from "@/components/ui/scroll-area";
+// import { ScrollArea } from "@gembuddy/ui/scroll-area";
 // import { nanoid } from "nanoid";
-// import { Database } from "@/types/supabase.types";
+// import { Database } from "@gembuddy/supabase/types";
 // const formSchema = z.object({
 //   text_input: z.string({ message: "Input must be a string" }).min(1, {
 //     message: "Please enter a message",

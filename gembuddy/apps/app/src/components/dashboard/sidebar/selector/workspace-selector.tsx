@@ -1,5 +1,5 @@
 import WorkspaceNav from "@/components/dashboard/navigation/workspace-navigation";
-import { trpc } from "@/trpc/server";
+import { trpc } from "@gembuddy/trpc/server";
 import { redirect } from "next/navigation";
 
 interface WorkspaceSelectorProps {
@@ -11,12 +11,12 @@ interface WorkspaceSelectorProps {
 export default async function WorkspaceSelector({
   params,
 }: WorkspaceSelectorProps) {
-  const { data: workspaces } = await trpc.db.workspace.getByCurrentUser();
+  const { data: workspaces } = await trpc.db.workspace.get.byCurrentUser();
   if (!workspaces) {
     redirect("/create");
   }
   const workspace = workspaces.find(
-    (workspace) => workspace.url_key === params.url_key,
+    (workspace) => workspace.url_key === params.url_key
   );
 
   if (!workspace) {

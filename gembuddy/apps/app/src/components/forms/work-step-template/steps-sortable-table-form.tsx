@@ -5,15 +5,15 @@ import type React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form, FormControl, FormField, FormItem } from "@gembuddy/ui/form";
+import { Input } from "@gembuddy/ui/input";
 
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@gembuddy/ui/button";
 import {
   Sortable,
   SortableDragHandle,
   SortableItem,
-} from "@/components/ui/sortable";
+} from "@gembuddy/ui/sortable";
 import { catchError, cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -23,12 +23,12 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@gembuddy/ui/card";
 import { api, RouterOutput } from "@/trpc/client";
 import {
   TUpsertWorkStepTemplateSchema,
   ZUpsertWorkStepTemplateSchema,
-} from "@/trpc/server/routes/work_step_template/upsert.schema";
+} from "@gembuddy/trpc/server/routes/work_step_template/upsert.schema";
 import {
   ChevronRightIcon,
   DragHandleDots2Icon,
@@ -67,7 +67,7 @@ export function StepsSortableTableForm({
       {
         work_plan_template_id: work_plan_template_id,
       },
-      { initialData: initialData },
+      { initialData: initialData }
     );
   if (!work_step_template) return notFound();
 
@@ -127,7 +127,7 @@ export function StepsSortableTableForm({
                   (field, index) => (
                     form.setValue(
                       `work_step_template.${index}.step_order`,
-                      index + 1,
+                      index + 1
                     ),
                     (
                       <SortableItem
@@ -197,7 +197,7 @@ export function StepsSortableTableForm({
                                 size: "icon",
                                 variant: "ghost",
                               }),
-                              "size-8 shrink-0",
+                              "size-8 shrink-0"
                             )}
                           >
                             <ChevronRightIcon
@@ -209,7 +209,7 @@ export function StepsSortableTableForm({
                         </div>
                       </SortableItem>
                     )
-                  ),
+                  )
                 )}
               </div>
             </Sortable>

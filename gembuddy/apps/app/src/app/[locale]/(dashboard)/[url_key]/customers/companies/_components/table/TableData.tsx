@@ -1,7 +1,7 @@
 "use client";
 import { DataTable } from "@/components/tables/general/data-table";
 import { api, RouterOutput } from "@/trpc/client";
-import type { trpc } from "@/trpc/server";
+import type { trpc } from "@gembuddy/trpc/server";
 import { columns } from "./columns";
 
 interface AssetTableProps {
@@ -29,7 +29,7 @@ export function TableData({
         end: (searchParams.page - 1) * searchParams.limit + searchParams.limit,
       },
     },
-    { initialData, refetchOnMount: false, staleTime: 1000 * 60 },
+    { initialData, refetchOnMount: false, staleTime: 1000 * 60 }
   );
   return (
     <DataTable

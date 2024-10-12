@@ -4,7 +4,7 @@ import { Icons } from "@/components/icons";
 import { PopoverComboBox } from "@/components/popoverCombobox";
 import { StatusChangeModal } from "./status-change-modal";
 import { StatusConfig, statusConfig } from "./status-config";
-import { Database } from "@/types/supabase.types";
+import { Database } from "@gembuddy/supabase/types";
 
 interface StatusSelectorProps {
   status: Database["public"]["Enums"]["Status"];
@@ -13,7 +13,7 @@ interface StatusSelectorProps {
 export function StatusSelector({ status }: StatusSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const initialStatus = statusConfig.find(
-    (_status) => _status.value === status,
+    (_status) => _status.value === status
   );
   const [selectedStatus, setSelectedStatus] = useState<
     StatusConfig | undefined

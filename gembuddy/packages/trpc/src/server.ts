@@ -12,19 +12,39 @@ const getSession = cache(async () => {
   return await createClient().auth.getSession();
 });
 
-export const trpc = createCallerFactory(appRouter)(async () => {
-  loggerLink({
-    enabled: (opts) =>
-      process.env.NODE_ENV === "development" ||
-      (opts.direction === "down" && opts.result instanceof Error),
-  });
+// export const trpc =
+// createCallerFactory(appRouter)(async () => {
+//   loggerLink({
+//     enabled: (opts) =>
+//       process.env.NODE_ENV === "development" ||
+//       (opts.direction === "down" && opts.result instanceof Error),
+//   });
 
-  return {
-    session: (await getSession()).data.session,
-    headers: {
-      cookie: cookies().toString(),
-      "x-trpc-source": "rsc-invoke",
-    },
-    db: createClient(),
-  };
-});
+//   return {
+//     session: (await getSession()).data.session,
+//     headers: {
+//       cookie: cookies().toString(),
+//       "x-trpc-source": "rsc-invoke",
+//     },
+//     db: createClient(),
+//   };
+// });
+
+export const trpc = createCallerFactory(appRouter)(
+  cache(async () => {
+    loggerLink({
+      enabled: (opts) =>
+        process.env.NODE_ENV === "development" ||
+        (opts.direction === "down" && opts.result instanceof Error),
+    });
+
+    return {
+      session: (await getSession()).data.session,
+      headers: {
+        cookie: cookies().toString(),
+        "x-trpc-source": "rsc-invoke",
+      },
+      db: createClient(),
+    };
+  })
+);

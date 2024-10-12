@@ -1,15 +1,15 @@
 "use client";
 
 import { DataTable } from "@/components/tables/custom/data-table";
-import { TCreateWorkOrderWithItemsSchema } from "@/trpc/server/routes/work_order/create.schema";
+import { TCreateWorkOrderWithItemsSchema } from "@gembuddy/trpc/server/routes/work_order/create.schema";
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { columns } from "./columns";
 
 import { Icons } from "@/components/icons";
 import { ModalSearchCommand } from "@/components/modal-search-command";
-import { Button } from "@/components/ui/button";
-import { CommandItem } from "@/components/ui/command";
+import { Button } from "@gembuddy/ui/button";
+import { CommandItem } from "@gembuddy/ui/command";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/client";
 import { useState } from "react";
@@ -52,7 +52,7 @@ export function AssetTableForm({
     {
       query: inputValue,
     },
-    { refetchOnMount: false },
+    { refetchOnMount: false }
   );
 
   return (
@@ -85,7 +85,7 @@ export function AssetTableForm({
         <div
           className={cn(
             "flex w-full items-center justify-between space-x-2 overflow-auto p-1",
-            className,
+            className
           )}
           {...props}
         >
@@ -108,7 +108,7 @@ export function AssetTableForm({
                 size={"icon"}
                 onClick={() => {
                   remove(
-                    table.getSelectedRowModel().rows.map((row) => row.index),
+                    table.getSelectedRowModel().rows.map((row) => row.index)
                   );
                   table.toggleAllRowsSelected(false);
                 }}

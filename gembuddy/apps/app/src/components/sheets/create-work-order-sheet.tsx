@@ -1,14 +1,14 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@gembuddy/ui/button";
+import { Input } from "@gembuddy/ui/input";
+import { Label } from "@gembuddy/ui/label";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet";
-import { Textarea } from "@/components/ui/textarea";
+} from "@gembuddy/ui/sheet";
+import { Textarea } from "@gembuddy/ui/textarea";
 import { useMediaQuery } from "@/lib/hooks/use-media-query";
 import { Drawer, DrawerContent, DrawerHeader } from "@gembuddy/ui/drawer";
 import { useQueryState, parseAsBoolean } from "nuqs";

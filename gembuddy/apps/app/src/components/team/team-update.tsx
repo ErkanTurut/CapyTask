@@ -13,21 +13,21 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@gembuddy/ui/form";
+import { Input } from "@gembuddy/ui/input";
 
 import { catchError, cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@gembuddy/ui/button";
 
 import { api } from "@/trpc/client";
-import { Database } from "@/types/supabase.types";
+import { Database } from "@gembuddy/supabase/types";
 import { FC } from "react";
 import {
   TUpdateTeamSchema,
   ZUpdateTeamSchema,
-} from "@/trpc/server/routes/team/update.schema";
+} from "@gembuddy/trpc/server/routes/team/update.schema";
 
 interface UpdateTeamFormProps extends React.HTMLAttributes<HTMLFormElement> {
   team: Database["public"]["Tables"]["team"]["Row"];

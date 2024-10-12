@@ -1,6 +1,6 @@
 import { Shell } from "@/components/shells";
 import { WorkOrderItemTable } from "@/components/tables/work-order-item/work-order-item-table";
-import { trpc } from "@/trpc/server";
+import { trpc } from "@gembuddy/trpc/server";
 import { notFound } from "next/navigation";
 
 interface PageProps {

@@ -8,8 +8,8 @@ import {
 import TableSkeleton from "@/components/skeletons/table-skeleton";
 import { Suspense } from "react";
 import TableContainer from "@/components/tables/work-order/TableContainer";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@gembuddy/ui/scroll-area";
+import { Separator } from "@gembuddy/ui/separator";
 interface PageProps {
   searchParams: { [key: string]: string | string[] | undefined };
   params: {

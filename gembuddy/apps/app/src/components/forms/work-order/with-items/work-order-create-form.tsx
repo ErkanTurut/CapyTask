@@ -5,18 +5,18 @@ import React, { use } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Form } from "@/components/ui/form";
+import { Card, CardContent, CardFooter } from "@gembuddy/ui/card";
+import { Form } from "@gembuddy/ui/form";
 
 import { catchError, cn } from "@/lib/utils";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@gembuddy/ui/button";
 
 import { api, RouterInput } from "@/trpc/client";
 import {
   TCreateWorkOrderWithItemsSchema,
   ZCreateWorkOrderWithItemsSchema,
-} from "@/trpc/server/routes/work_order/create.schema";
+} from "@gembuddy/trpc/server/routes/work_order/create.schema";
 import { notFound, useParams, useRouter } from "next/navigation";
 import { WorkOrderGeneralForm } from "./work-order-general-form";
 import { WorkOrderItemsForm } from "./work-order-items-form";

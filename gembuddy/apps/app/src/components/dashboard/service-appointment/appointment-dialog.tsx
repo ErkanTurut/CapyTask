@@ -2,7 +2,7 @@
 
 import { Event } from "@/components/calendar/types";
 import { ServiceAppointmentCreateForm } from "@/components/forms/service-appointment/service-appointment-create-form";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@gembuddy/ui/dialog";
 import { DateRange } from "react-day-picker";
 interface AppointmentDialogProps {
   open: boolean;

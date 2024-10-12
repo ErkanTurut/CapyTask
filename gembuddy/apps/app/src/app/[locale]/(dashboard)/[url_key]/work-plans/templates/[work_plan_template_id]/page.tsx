@@ -1,6 +1,6 @@
 import { WorkPlanTemplateDeleteForm } from "@/components/forms/work-plan-template/work-plan-template-delete.form";
 import { WorkPlanTemplateGeneralForm } from "@/components/forms/work-plan-template/work-plan-template-general-form";
-import { trpc } from "@/trpc/server";
+import { trpc } from "@gembuddy/trpc/server";
 import { notFound } from "next/navigation";
 
 interface PageProps {

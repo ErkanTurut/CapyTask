@@ -9,7 +9,7 @@ import {
   TextIcon,
 } from "@radix-ui/react-icons";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@gembuddy/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -18,12 +18,8 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@gembuddy/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@gembuddy/ui/popover";
 
 interface DataTableFilterComboboxProps<TData> {
   options: DataTableFilterOption<TData>[];
@@ -76,8 +72,8 @@ export function DataTableFilterCombobox<TData>({
                 .filter(
                   (option) =>
                     !selectedOptions.some(
-                      (selectedOption) => selectedOption.value === option.value,
-                    ),
+                      (selectedOption) => selectedOption.value === option.value
+                    )
                 )
                 .map((option) => (
                   <CommandItem

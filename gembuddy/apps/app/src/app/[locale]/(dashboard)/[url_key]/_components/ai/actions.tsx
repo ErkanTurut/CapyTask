@@ -6,7 +6,7 @@
 
 // import CardSkeleton from "@/components/skeletons/card-skeleton";
 // import { Database, createClient } from "@/lib/supabase/server";
-// import { getWorkOrderDetailHandler } from "@/trpc/server/routes/work_order/get.handler";
+// import { getWorkOrderDetailHandler } from "@gembuddy/trpc/server/routes/work_order/get.handler";
 // import { nanoid } from "nanoid";
 // import { cookies } from "next/headers";
 // import { ReactNode } from "react";

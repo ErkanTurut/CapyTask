@@ -15,7 +15,7 @@ import { use, type ComponentType, useMemo, useCallback, useState } from "react";
 
 import { DataTable } from "@/components/tables/data-table/data-table";
 import { api, RouterOutput } from "@/trpc/client";
-import { Database } from "@/types/supabase.types";
+import { Database } from "@gembuddy/supabase/types";
 import {
   CheckCircledIcon,
   CircleIcon,
@@ -27,9 +27,9 @@ import { DataTableToolbar } from "./data-table-toolbar";
 import { getColumns } from "./work-order-columns";
 import { useParams, usePathname, useSearchParams } from "next/navigation";
 import { DataTableFilterField } from "@/types";
-import { trpc } from "@/trpc/server";
+import { trpc } from "@gembuddy/trpc/server";
 import { useDataTable } from "@/lib/hooks/use-data-table";
-import { Button } from "@/components/ui/button";
+import { Button } from "@gembuddy/ui/button";
 
 interface WorkOrderTableProps {
   initialData: NonNullable<
@@ -124,17 +124,17 @@ export function WorkOrderTable({ initialData }: WorkOrderTableProps) {
 
       return newSearchParams.toString();
     },
-    [searchParams],
+    [searchParams]
   );
 
   const initialColumnFilters: ColumnFiltersState = useMemo(() => {
     return Array.from(searchParams.entries()).reduce<ColumnFiltersState>(
       (filters, [key, value]) => {
         const filterableColumn = filterableColumns.find(
-          (column) => column.value === key,
+          (column) => column.value === key
         );
         const searchableColumn = searchableColumns.find(
-          (column) => column.value === key,
+          (column) => column.value === key
         );
 
         if (filterableColumn) {
@@ -151,7 +151,7 @@ export function WorkOrderTable({ initialData }: WorkOrderTableProps) {
 
         return filters;
       },
-      [],
+      []
     );
   }, [filterableColumns, searchableColumns, searchParams]);
 
@@ -175,7 +175,7 @@ export function WorkOrderTable({ initialData }: WorkOrderTableProps) {
       initialData: use(initialData),
       refetchOnMount: false,
       staleTime: 1000 * 60,
-    },
+    }
   );
 
   const { table } = useDataTable({

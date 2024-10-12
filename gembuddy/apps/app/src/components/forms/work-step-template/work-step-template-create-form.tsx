@@ -12,10 +12,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@gembuddy/ui/form";
+import { Input } from "@gembuddy/ui/input";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@gembuddy/ui/button";
 import { catchError, cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -25,13 +25,13 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
+} from "@gembuddy/ui/card";
+import { Textarea } from "@gembuddy/ui/textarea";
 import { api } from "@/trpc/client";
 import {
   TCreateWorkStepTemplateSchema,
   ZCreateWorkStepTemplateSchema,
-} from "@/trpc/server/routes/work_step_template/create.schema";
+} from "@gembuddy/trpc/server/routes/work_step_template/create.schema";
 
 interface WorkStepTemplateFormProps
   extends React.HTMLAttributes<HTMLFormElement> {

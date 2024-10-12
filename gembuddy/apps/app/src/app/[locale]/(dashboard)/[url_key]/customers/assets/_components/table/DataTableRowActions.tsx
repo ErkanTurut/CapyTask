@@ -15,7 +15,7 @@ import {
 import { api, RouterOutput } from "@/trpc/client";
 import { toast } from "sonner";
 import { catchError } from "@/lib/utils";
-import { Database } from "@/types/supabase.types";
+import { Database } from "@gembuddy/supabase/types";
 import { useParams } from "next/navigation";
 
 interface DataTableRowActionsProps<TData> {

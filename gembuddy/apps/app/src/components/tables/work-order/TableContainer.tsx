@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { trpc } from "@/trpc/server";
+import { trpc } from "@gembuddy/trpc/server";
 import { TableData } from "./TableData";
 import { WorkOrderTable } from "./new/work-order-table";
 interface TableProps {

@@ -1,11 +1,11 @@
 "use client";
 import { DataTable } from "@/components/tables/general/data-table";
 import { api } from "@/trpc/client";
-import type { trpc } from "@/trpc/server";
+import type { trpc } from "@gembuddy/trpc/server";
 import { columns } from "./columns";
 import { use } from "react";
 import { CreateWorkOrderSheet } from "@/components/sheets/create-work-order-sheet";
-import { Button } from "@/components/ui/button";
+import { Button } from "@gembuddy/ui/button";
 import { parseAsBoolean, useQueryState } from "nuqs";
 
 interface AssetTableProps {
@@ -39,7 +39,7 @@ export function TableData({
       initialData: use(initialData),
       refetchOnMount: false,
       staleTime: 1000 * 60,
-    },
+    }
   );
   return (
     <>

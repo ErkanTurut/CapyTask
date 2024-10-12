@@ -5,12 +5,8 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@gembuddy/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@gembuddy/ui/popover";
 
 import * as React from "react";
 

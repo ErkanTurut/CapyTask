@@ -1,10 +1,10 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
+import { Input } from "@gembuddy/ui/input";
 
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@gembuddy/ui/button";
+import { Dialog, DialogContent, DialogFooter } from "@gembuddy/ui/dialog";
+import { Textarea } from "@gembuddy/ui/textarea";
 
 import { useParams, useRouter } from "next/navigation";
 import { Separator } from "../ui/separator";
@@ -18,7 +18,7 @@ import {
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/form";
+} from "@gembuddy/ui/form";
 
 import { catchError } from "@/lib/utils";
 import { toast } from "sonner";
@@ -27,7 +27,7 @@ import { api } from "@/trpc/client";
 import {
   TCreateWorkStepTemplateSchema,
   ZCreateWorkStepTemplateSchema,
-} from "@/trpc/server/routes/work_step_template/create.schema";
+} from "@gembuddy/trpc/server/routes/work_step_template/create.schema";
 
 export function CreatWorkStepTemplateModal() {
   const router = useRouter();

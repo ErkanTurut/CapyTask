@@ -2,7 +2,7 @@ import { StepsSortableTableForm } from "@/components/forms/work-step-template/st
 import { WorkStepTemplateForm } from "@/components/forms/work-step-template/work-step-template-form";
 import CardSkeleton from "@/components/skeletons/card-skeleton";
 import { cn } from "@/lib/utils";
-import { trpc } from "@/trpc/server";
+import { trpc } from "@gembuddy/trpc/server";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
@@ -31,7 +31,7 @@ export default async function Page({ searchParams, params }: PageProps) {
     <div
       className={cn(
         "grid flex-1 grid-cols-1 items-start gap-2 md:gap-4",
-        searchParams.step_id && "grid-cols-2",
+        searchParams.step_id && "grid-cols-2"
       )}
     >
       <div>

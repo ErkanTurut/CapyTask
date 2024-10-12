@@ -8,7 +8,7 @@ import {
   PageHeaderHeading,
 } from "@/components/page-header";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { Button } from "@gembuddy/ui/button";
 export default function NotFound() {
   const router = useRouter();
   return (

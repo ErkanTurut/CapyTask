@@ -8,10 +8,10 @@ import {
   CommandGroup,
   CommandInput,
   CommandList,
-} from "@/components/ui/command";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { Skeleton } from "@/components/ui/skeleton";
-import { VisuallyHidden } from "@/components/ui/vizually-hidden";
+} from "@gembuddy/ui/command";
+import { Dialog, DialogContent, DialogTitle } from "@gembuddy/ui/dialog";
+import { Skeleton } from "@gembuddy/ui/skeleton";
+import { VisuallyHidden } from "@gembuddy/ui/vizually-hidden";
 import { CommandLoading } from "cmdk";
 import { useRef, useState } from "react";
 interface ModalSearchCommandProps {

@@ -1,5 +1,8 @@
 "use client";
-import { FC } from "react";
+import { Icons } from "@/components/icons";
+import ThemeToggle from "@/components/theme-toggle";
+import { Avatar, AvatarFallback, AvatarImage } from "@gembuddy/ui/avatar";
+import { Button } from "@gembuddy/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,18 +12,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@gembuddy/ui/dropdown-menu";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Icons } from "@/components/icons";
-import ThemeToggle from "@/components/theme-toggle";
+import { FC } from "react";
 
 import { cn, generateAvatar } from "@/lib/utils";
 
-import { Database } from "@/types/supabase.types";
+import { Database } from "@gembuddy/supabase/types";
 import { useParams } from "next/navigation";
-import { useSidebar } from "@/lib/store/sidebar-provider";
 
 interface UserAccountNavProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -47,7 +46,7 @@ const UserAccountNav: FC<UserAccountNavProps> = ({ className, user }) => {
             "flex items-center justify-start gap-1",
             isCollapsed &&
               "flex h-8 w-8 items-center justify-center overflow-ellipsis [&>span]:w-auto [&>svg]:hidden",
-            className,
+            className
           )}
         >
           <Avatar className={cn("h-6 w-6")}>
@@ -60,7 +59,7 @@ const UserAccountNav: FC<UserAccountNavProps> = ({ className, user }) => {
           <span
             className={cn(
               "cursor-pointer overflow-x-auto overflow-ellipsis whitespace-nowrap",
-              isCollapsed && "hidden",
+              isCollapsed && "hidden"
             )}
           >
             {user.first_name || user.last_name

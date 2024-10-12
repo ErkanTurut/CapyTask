@@ -5,8 +5,8 @@
 // import { generate } from "./actions";
 // import { readStreamableValue } from "ai/rsc";
 // import { Icons } from "@/components/icons";
-// import { Button } from "@/components/ui/button";
-// import { Input } from "@/components/ui/input";
+// import { Button } from "@gembuddy/ui/button";
+// import { Input } from "@gembuddy/ui/input";
 // import {
 //   generateTimeSlots,
 //   groupTimeSlotsByDay,

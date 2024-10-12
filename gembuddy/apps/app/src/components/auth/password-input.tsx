@@ -3,8 +3,8 @@
 import { useState, forwardRef } from "react";
 
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Input, type InputProps } from "@/components/ui/input";
+import { Button } from "@gembuddy/ui/button";
+import { Input, type InputProps } from "@gembuddy/ui/input";
 import { Icons } from "@/components/icons";
 
 const PasswordInput = forwardRef<HTMLInputElement, InputProps>(
@@ -38,7 +38,7 @@ const PasswordInput = forwardRef<HTMLInputElement, InputProps>(
         </Button>
       </div>
     );
-  },
+  }
 );
 PasswordInput.displayName = "PasswordInput";
 

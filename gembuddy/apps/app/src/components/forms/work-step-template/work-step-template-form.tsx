@@ -12,10 +12,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@gembuddy/ui/form";
+import { Input } from "@gembuddy/ui/input";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@gembuddy/ui/button";
 import { catchError, cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -26,13 +26,13 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
+} from "@gembuddy/ui/card";
+import { Textarea } from "@gembuddy/ui/textarea";
 import { api, RouterOutput } from "@/trpc/client";
 import {
   TUpdateWorkStepTemplateSchema,
   ZUpdateWorkStepTemplateSchema,
-} from "@/trpc/server/routes/work_step_template/update.schema";
+} from "@gembuddy/trpc/server/routes/work_step_template/update.schema";
 
 interface WorkStepTemplateFormProps
   extends React.HTMLAttributes<HTMLFormElement> {
@@ -52,7 +52,7 @@ export function WorkStepTemplateForm({
   const { data: work_step_template, refetch } =
     api.db.work_step_template.get.byId.useQuery(
       { id: work_step_template_id },
-      { initialData: initialData },
+      { initialData: initialData }
     );
   if (!work_step_template) return null;
 
@@ -83,8 +83,8 @@ export function WorkStepTemplateForm({
           prev_work_step_templates.map((work_step_template) =>
             work_step_template.id === variables.id
               ? { ...work_step_template, ...variables }
-              : work_step_template,
-          ),
+              : work_step_template
+          )
         );
       }
       return { prev_work_step_templates };
@@ -99,7 +99,7 @@ export function WorkStepTemplateForm({
         {
           work_plan_template_id: work_step_template.work_plan_template_id,
         },
-        ctx?.prev_work_step_templates,
+        ctx?.prev_work_step_templates
       );
       catchError(new Error(err.message));
     },

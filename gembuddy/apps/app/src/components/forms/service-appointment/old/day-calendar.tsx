@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@gembuddy/ui/scroll-area";
 import {
   format,
   isSameDay,
@@ -40,7 +40,7 @@ export default function DayCalendar({
   date,
 }: DayCalendarProps) {
   const [timeFormat, setTimeFormat] = React.useState<"24h" | "12h">(
-    initialTimeFormat,
+    initialTimeFormat
   );
   const hours = Array.from({ length: 24 }, (_, i) => i);
 
@@ -70,13 +70,13 @@ export default function DayCalendar({
   const isTimeDisabled = (slotDate: Date) => {
     return (
       disabledTimeRanges.some((range) =>
-        isWithinInterval(slotDate, { start: range.start, end: range.end }),
+        isWithinInterval(slotDate, { start: range.start, end: range.end })
       ) ||
       disabledSlots.some(
         (disabledSlot) =>
           isSameDay(slotDate, disabledSlot) &&
           slotDate.getHours() === disabledSlot.getHours() &&
-          slotDate.getMinutes() === disabledSlot.getMinutes(),
+          slotDate.getMinutes() === disabledSlot.getMinutes()
       )
     );
   };
@@ -89,7 +89,10 @@ export default function DayCalendar({
 
     const endDate = addMinutes(slotDate, 30);
     console.log(
-      `Selected time range: ${format(slotDate, "PPpp")} - ${format(endDate, "PPpp")}`,
+      `Selected time range: ${format(slotDate, "PPpp")} - ${format(
+        endDate,
+        "PPpp"
+      )}`
     );
   };
 
@@ -135,7 +138,7 @@ export default function DayCalendar({
                     {[0, 30].map((minute) => {
                       const slotDate = addMinutes(
                         startOfDay(date),
-                        hour * 60 + minute,
+                        hour * 60 + minute
                       );
                       return (
                         <li
@@ -152,7 +155,10 @@ export default function DayCalendar({
                             }`}
                             onClick={() => handleSlotClick(slotDate)}
                             disabled={isTimeDisabled(slotDate)}
-                            aria-label={`Select time slot ${formatHour(hour, minute)}`}
+                            aria-label={`Select time slot ${formatHour(
+                              hour,
+                              minute
+                            )}`}
                           />
                         </li>
                       );

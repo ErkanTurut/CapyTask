@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 
 import Header from "@/components/layouts/dashboard/header";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@gembuddy/ui/scroll-area";
 import { Sidebar } from "@/components/dashboard/sidebar/sidebar";
 import { trpc } from "@gembuddy/trpc/server";
 import { notFound, redirect } from "next/navigation";
@@ -27,7 +27,7 @@ export default async function Layout({
     ? (JSON.parse(layout.value) as number[])
     : undefined;
 
-  const { data, error } = await trpc.db.workspace.getByUrlKey({
+  const { data } = await trpc.db.workspace.get.byUrlKey({
     url_key: params.url_key,
   });
 

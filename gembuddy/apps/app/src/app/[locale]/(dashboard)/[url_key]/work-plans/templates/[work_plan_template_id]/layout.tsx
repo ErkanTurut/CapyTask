@@ -13,9 +13,9 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
-import { trpc } from "@/trpc/server";
+} from "@gembuddy/ui/breadcrumb";
+import { Separator } from "@gembuddy/ui/separator";
+import { trpc } from "@gembuddy/trpc/server";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 

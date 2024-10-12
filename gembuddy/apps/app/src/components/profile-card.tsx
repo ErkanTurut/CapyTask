@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@gembuddy/ui/avatar";
 
 import * as React from "react";
 
@@ -27,7 +27,7 @@ export function ProfileCard({
     <div
       className={cn(
         "flex w-full items-center justify-between rounded-md border border-transparent px-2 py-1 transition-all duration-300 hover:border-border hover:shadow-sm",
-        className,
+        className
       )}
     >
       <div className="flex items-center gap-2">

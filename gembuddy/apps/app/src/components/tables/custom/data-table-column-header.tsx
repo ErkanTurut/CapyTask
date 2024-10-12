@@ -7,14 +7,14 @@ import {
 import { type Column } from "@tanstack/react-table";
 
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { Button } from "@gembuddy/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@gembuddy/ui/dropdown-menu";
 
 interface DataTableColumnHeaderProps<TData, TValue>
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -40,8 +40,8 @@ export function DataTableColumnHeader<TData, TValue>({
               column.getIsSorted() === "desc"
                 ? "Sorted descending. Click to sort ascending."
                 : column.getIsSorted() === "asc"
-                  ? "Sorted ascending. Click to sort descending."
-                  : "Not sorted. Click to sort ascending."
+                ? "Sorted ascending. Click to sort descending."
+                : "Not sorted. Click to sort ascending."
             }
             variant="ghost"
             size="sm"

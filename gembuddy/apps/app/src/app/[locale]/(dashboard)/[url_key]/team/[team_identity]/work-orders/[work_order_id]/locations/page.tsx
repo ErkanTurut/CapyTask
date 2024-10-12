@@ -1,6 +1,6 @@
-import { trpc } from "@/trpc/server";
+import { trpc } from "@gembuddy/trpc/server";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@gembuddy/ui/card";
 import { LocationTable } from "@/components/tables/location/work-order-item-table";
 import { Shell } from "@/components/shells";
 interface PageProps {
