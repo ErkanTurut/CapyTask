@@ -43,12 +43,15 @@ export async function updateWorkspace({
   return { data };
 }
 
-export async function deleteWorkspace(
-  db: Client,
+export async function deleteWorkspaceMany({
+  db,
+  input,
+}: {
+  db: Client;
   input: {
     workspace_id: string[];
-  }
-) {
+  };
+}) {
   const { status } = await db
     .from("workspace")
     .delete()

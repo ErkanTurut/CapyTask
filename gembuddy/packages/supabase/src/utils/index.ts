@@ -100,7 +100,8 @@ export function groupTimeSlotsByDay(
   timeSlots: TimeSlot[]
 ): Record<string, TimeSlot[]> {
   return timeSlots.reduce((grouped, slot) => {
-    const slotDate = new Date(slot.from).toISOString().split("T")[0];
+    const slotDate =
+      new Date(slot.from).toISOString().split("T")[0] || "unknown";
     (grouped[slotDate] = grouped[slotDate] || []).push(slot);
     return grouped;
   }, {} as Record<string, TimeSlot[]>);

@@ -7,13 +7,13 @@ export async function getWorkPlanTemplateById({
 }: {
   db: Client;
   input: {
-    work_plan_id: string;
+    id: string;
   };
 }) {
   const { data } = await db
     .from("work_plan_template")
     .select("*")
-    .eq("id", input.work_plan_id)
+    .eq("id", input.id)
     .single()
     .throwOnError();
 
