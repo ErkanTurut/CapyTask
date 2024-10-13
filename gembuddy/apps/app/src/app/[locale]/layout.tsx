@@ -8,8 +8,8 @@ import { headers } from "next/headers";
 import { Providers } from "./providers";
 
 export const metadata: Metadata = {
-  title: "Create v1",
-  description: "Production ready Next.js app",
+  title: "Gembuddy",
+  description: "You Lead. Buddy’s Got Your Back.",
 };
 
 export const viewport = {
@@ -29,7 +29,7 @@ export default function RootLayout({
       <body
         className={cn(
           `${GeistSans.variable} ${GeistMono.variable}`,
-          "antialiased           min-h-screen bg-background"
+          "antialiased   font-sans        min-h-screen bg-background"
         )}
       >
         <Providers headers={headers()}>{children}</Providers>

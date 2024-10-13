@@ -65,6 +65,7 @@ const config = {
       fontFamily: {
         sans: ["var(--font-geist-sans)"],
         mono: ["var(--font-geist-mono)"],
+        departure: ["var(--font-departure-mono)"],
       },
       transitionProperty: {
         width: "width",
