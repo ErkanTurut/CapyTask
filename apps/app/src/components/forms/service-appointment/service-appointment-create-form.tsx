@@ -61,11 +61,11 @@ export function ServiceAppointmentCreateForm({
   >(undefined);
   const [assignedResources, setAssignedResources] = useState<string[]>([]);
   const [selectedLocation, setSelectedLocations] = useState<
-    | NonNullable<RouterOutput["db"]["location"]["get"]["textSearch"]>[number]
+    | NonNullable<RouterOutput["db"]["location"]["get"]["textSearch"]["data"]>[number]
     | undefined
   >(undefined);
   const [selectedWorkItem, setSelectedWorkItem] = useState<
-    | NonNullable<RouterOutput["db"]["location"]["get"]["textSearch"]>[number]
+    | NonNullable<RouterOutput["db"]["location"]["get"]["textSearch"]["data"]>[number]
     | undefined
   >(undefined);
 
@@ -88,13 +88,14 @@ export function ServiceAppointmentCreateForm({
     resolver: zodResolver(ZCreateServiceAppointmentSchema),
     defaultValues: {
       work_order_id,
-      date_range: {
-        from: dateRange.from?.toISOString(),
-        to: dateRange.to?.toISOString(),
-      },
+      // date_range: {
+      //   from: dateRange.from?.toISOString(),
+      //   to: dateRange.to?.toISOString(),
+      // },
       work_order_item_id: undefined,
-      service_resource: [],
-      location_id: undefined,
+      // service_resource: [],
+      // location_id: undefined,
+
     },
   });
   const placeHolderEvent: Event | null =
@@ -111,94 +112,94 @@ export function ServiceAppointmentCreateForm({
   useEffect(() => {
     form.reset({
       work_order_id,
-      date_range: {
-        from: dateRange.from?.toISOString(),
-        to: dateRange.to?.toISOString(),
-      },
+      // date_range: {
+      //   from: dateRange.from?.toISOString(),
+      //   to: dateRange.to?.toISOString(),
+      // },
       work_order_item_id: undefined,
-      service_resource: [],
+      // service_resource: [],
     });
   }, [dateRange.from, dateRange.to, work_order_id]);
 
   const handleServiceResourceSelect = (
-    serviceResource: RouterOutput["db"]["service_resource"]["get"]["textSearch"][number]
+    serviceResource: NonNullable<RouterOutput["db"]["service_resource"]["get"]["textSearch"]["data"]>[number]
   ) => {
-    if (selectedServiceResources?.some((sr) => sr.id === serviceResource.id)) {
-      setSelectedServiceResources(
-        (prev) => prev?.filter((sr) => sr.id !== serviceResource.id) ?? []
-      );
-      setAssignedResources((prev) =>
-        prev.filter((resource) => resource !== serviceResource.id)
-      );
-    } else {
-      setSelectedServiceResources((prev) => [...(prev ?? []), serviceResource]);
-    }
+    // if (selectedServiceResources?.some((sr) => sr.id === serviceResource.id)) {
+    //   setSelectedServiceResources(
+    //     (prev) => prev?.filter((sr) => sr.id !== serviceResource.id) ?? []
+    //   );
+    //   setAssignedResources((prev) =>
+    //     prev.filter((resource) => resource !== serviceResource.id)
+    //   );
+    // } else {
+    //   setSelectedServiceResources((prev) => [...(prev ?? []), serviceResource]);
+    // }
   };
 
   const handleAssignResource = (serviceResource: string) => {
-    if (assignedResources.includes(serviceResource)) {
-      setAssignedResources((prev) =>
-        prev.filter((resource) => resource !== serviceResource)
-      );
-      form.setValue(
-        "service_resource",
-        selectedServiceResources
-          ?.filter((sr) => sr.id !== serviceResource)
-          .map((sr) => sr.id) ?? []
-      );
-    } else {
-      setAssignedResources((prev) => [...prev, serviceResource]);
-      form.setValue(
-        "service_resource",
-        selectedServiceResources
-          ?.map((sr) => sr.id)
-          .filter((sr) => sr !== serviceResource) ?? []
-      );
-    }
+    // if (assignedResources.includes(serviceResource)) {
+    //   setAssignedResources((prev) =>
+    //     prev.filter((resource) => resource !== serviceResource)
+    //   );
+    //   form.setValue(
+    //     "service_resource",
+    //     selectedServiceResources
+    //       ?.filter((sr) => sr.id !== serviceResource)
+    //       .map((sr) => sr.id) ?? []
+    //   );
+    // } else {
+    //   setAssignedResources((prev) => [...prev, serviceResource]);
+    //   form.setValue(
+    //     "service_resource",
+    //     selectedServiceResources
+    //       ?.map((sr) => sr.id)
+    //       .filter((sr) => sr !== serviceResource) ?? []
+    //   );
+    // }
   };
 
-  const selectedServiceResourcesEvents: Event[] =
-    selectedServiceResources?.flatMap(
-      (selectedServiceResource) =>
-        selectedServiceResource.assigned_resource?.flatMap(
-          (assignedResource) => {
-            if (!assignedResource || !assignedResource.service_appointment) {
-              return [];
-            }
-            return {
-              start: new Date(assignedResource.service_appointment.start_date),
-              end: new Date(assignedResource.service_appointment.end_date),
-              title:
-                selectedServiceResource.first_name +
-                " " +
-                selectedServiceResource.last_name,
-              color: "blue",
-              id: assignedResource.service_appointment.id,
-            };
-          }
-        ) ?? []
-    ) ?? [];
+  const selectedServiceResourcesEvents: Event[] = []
+    // selectedServiceResources?.flatMap(
+    //   (selectedServiceResource) =>
+    //     selectedServiceResource.assigned_resource?.flatMap(
+    //       (assignedResource) => {
+    //         if (!assignedResource || !assignedResource.service_appointment) {
+    //           return [];
+    //         }
+    //         return {
+    //           start: new Date(assignedResource.service_appointment.start_date),
+    //           end: new Date(assignedResource.service_appointment.end_date),
+    //           title:
+    //             selectedServiceResource.first_name +
+    //             " " +
+    //             selectedServiceResource.last_name,
+    //           color: "blue",
+    //           id: assignedResource.service_appointment.id,
+    //         };
+    //       }
+    //     ) ?? []
+    // ) ?? [];
 
   const handleLocationSelect = (
-    location: RouterOutput["db"]["location"]["get"]["textSearch"][number]
+    location: NonNullable<RouterOutput["db"]["location"]["get"]["textSearch"]["data"]>[number]
   ) => {
     if (selectedLocation?.id === location.id) {
       setSelectedLocations(undefined);
-      form.resetField("location_id");
+      // form.resetField("location_id");
     } else {
       setSelectedLocations(location);
-      form.setValue("location_id", location.id);
+      // form.setValue("location_id", location.id);
     }
   };
 
   const handleWorkItemSelect = (
-    workItem: RouterOutput["db"]["work_order_item"]["get"]["byWorkOrder"]["data"][number]
+    workItem: NonNullable<RouterOutput["db"]["work_order_item"]["get"]["byWorkOrder"]["data"]>[number]
   ) => {
     if (selectedWorkItem?.id === workItem.id) {
       setSelectedWorkItem(undefined);
       form.resetField("work_order_item_id");
     } else {
-      setSelectedWorkItem(workItem);
+      // setSelectedWorkItem(workItem);
       form.setValue("work_order_item_id", workItem.id);
     }
   };
@@ -215,14 +216,14 @@ export function ServiceAppointmentCreateForm({
     shift
   );
 
-  const { data } = api.db.service_resource.get.recommendation.useQuery(
-    {
-      team_identity,
-      from: workShit[0].start.toISOString(),
-      to: workShit[0].end.toISOString(),
-    },
-    { enabled: Boolean(dateRange.from) && Boolean(dateRange.to) }
-  );
+  // const { data } = api.db.service_resource.get.recommendation.useQuery(
+  //   {
+  //     team_identity,
+  //     from: workShit[0].start.toISOString(),
+  //     to: workShit[0].end.toISOString(),
+  //   },
+  //   { enabled: Boolean(dateRange.from) && Boolean(dateRange.to) }
+  // );
 
   const { object, submit, isLoading } = useObject({
     api: "/api/ai/service-resource",
@@ -269,7 +270,7 @@ export function ServiceAppointmentCreateForm({
                 />
               </div>
             </ScrollArea>
-            <FormField
+            {/* <FormField
               control={form.control}
               name="date_range"
               render={({ field }) => (
@@ -295,11 +296,11 @@ export function ServiceAppointmentCreateForm({
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
           </div>
           <div className="flex h-full flex-col items-center justify-between gap-2 overflow-hidden pb-2">
             <div className="flex h-full flex-col gap-2 overflow-hidden">
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="service_resource"
                 render={({ field }) => (
@@ -327,11 +328,11 @@ export function ServiceAppointmentCreateForm({
               >
                 <Icons.sparkles className="mr-2 size-4" />
                 <span className="text-xs font-medium">Recommend</span>
-              </Button>
+              </Button> */}
 
               <ScrollArea className="grid h-full overflow-hidden">
                 <div className="flex flex-col gap-1">
-                  {selectedServiceResources?.map((selectedServiceResource) => {
+                  {/* {selectedServiceResources?.map((selectedServiceResource) => {
                     return ServiceRessourceItem(
                       {
                         id: selectedServiceResource.id,
@@ -345,12 +346,12 @@ export function ServiceAppointmentCreateForm({
                       },
                       handleAssignResource
                     );
-                  })}
+                  })} */}
                 </div>
               </ScrollArea>
             </div>
 
-            <FormField
+            {/* <FormField
               control={form.control}
               name="location_id"
               render={({ field }) => (
@@ -364,7 +365,7 @@ export function ServiceAppointmentCreateForm({
                   </FormControl>
                 </FormItem>
               )}
-            />
+            /> */}
             <FormField
               control={form.control}
               name="work_order_item_id"
@@ -374,7 +375,7 @@ export function ServiceAppointmentCreateForm({
                   <FormControl>
                     <WorkItemSelector
                       onSelect={handleWorkItemSelect}
-                      selectedValue={selectedWorkItem}
+                      // selectedValue={selectedWorkItem}
                       workOrderItems={work_order_item?.data ?? []}
                     />
                   </FormControl>

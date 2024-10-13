@@ -1,13 +1,13 @@
 interface LayoutProps {
-  create: React.ReactNode;
+
 
   children: React.ReactNode;
 }
 
-export default async function Layout({ children, create }: LayoutProps) {
+export default async function Layout({ children }: LayoutProps) {
   return (
     <>
-      {create} {children}
+ {children}
     </>
   );
 }

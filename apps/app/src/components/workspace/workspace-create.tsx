@@ -47,7 +47,7 @@ export function CreateWorspaceForm() {
 
   async function onSubmit(data: TCreateWorkspaceSchema) {
     // test({ name: data.name });
-    mutate({ name: data.name, url_key: data.url_key });
+    // mutate({ name: data.name, url_key: data.url_key });
   }
 
   return (

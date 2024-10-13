@@ -11,7 +11,11 @@ import TableContainer from "@/components/tables/work-order/TableContainer";
 import { ScrollArea } from "@gembuddy/ui/scroll-area";
 import { Separator } from "@gembuddy/ui/separator";
 interface PageProps {
-  searchParams: { [key: string]: string | string[] | undefined };
+  // searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: {
+    limit: string;
+    page: string;
+  };
   params: {
     team_identity: string;
   };

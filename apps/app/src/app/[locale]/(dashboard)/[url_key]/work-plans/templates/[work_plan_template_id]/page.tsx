@@ -1,5 +1,4 @@
-import { WorkPlanTemplateDeleteForm } from "@/components/forms/work-plan-template/work-plan-template-delete.form";
-import { WorkPlanTemplateGeneralForm } from "@/components/forms/work-plan-template/work-plan-template-general-form";
+
 import { trpc } from "@gembuddy/trpc/server";
 import { notFound } from "next/navigation";
 
@@ -24,9 +23,9 @@ export default async function Page({ searchParams, params }: PageProps) {
   }
 
   return (
-    <>
-      <WorkPlanTemplateGeneralForm work_plan_template={work_plan_template} />
-      <WorkPlanTemplateDeleteForm work_plan_template={work_plan_template} />
-    </>
+    <div>
+      <h1>Work Plan Template</h1>
+      <p>{work_plan_template.data?.name}</p>
+    </div>
   );
 }

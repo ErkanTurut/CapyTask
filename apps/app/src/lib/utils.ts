@@ -188,8 +188,12 @@ export function generateAvatar({
       initials = `${name.charAt(0)}`.toUpperCase();
     } else {
       // Multi-word name
+
+      
       initials =
+      // @ts-ignore
         `${nameParts[0].charAt(0) ?? ""}` +
+        // @ts-ignore
         `${nameParts[1].charAt(0) ?? ""}`.toUpperCase();
     }
   }

@@ -1,12 +1,8 @@
 "use client";
 
-import * as React from "react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@gembuddy/ui/button";
-import { toast } from "sonner";
-import { catchError } from "@/lib/utils";
-import { useAction } from "@/lib/hooks/use-actions";
 // import { signout } from "@/lib/service/auth/actions/signout";
 
 export function Logout() {

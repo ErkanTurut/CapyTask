@@ -15,17 +15,16 @@ import {
   CommandEmpty,
   CommandLoading,
 } from "@gembuddy/ui/command";
-import { Avatar, AvatarFallback, AvatarImage } from "@gembuddy/ui/avatar";
 import { Icons } from "@/components/icons";
 
 interface ServiceResourceSelectorProps {
   onSelect: (
     location: NonNullable<
-      RouterOutput["db"]["location"]["get"]["textSearch"]
+      RouterOutput["db"]["location"]["get"]["textSearch"]["data"]
     >[number]
   ) => void;
   selectedValue?: NonNullable<
-    RouterOutput["db"]["location"]["get"]["textSearch"]
+    RouterOutput["db"]["location"]["get"]["textSearch"]["data"]
   >[number];
 }
 
@@ -43,7 +42,7 @@ function LocationSelector({
       { search: searchValue },
       {
         refetchOnMount: false,
-        initialData: selectedValue && [selectedValue],
+        initialData: selectedValue && {data : [selectedValue]},
         enabled: Boolean(searchValue),
       }
     );
@@ -95,7 +94,7 @@ function LocationSelector({
           />
           <CommandList>
             <CommandGroup>
-              {locations?.map((location) => (
+              {locations?.data?.map((location) => (
                 <CommandItem
                   key={location.id}
                   value={location.id}
