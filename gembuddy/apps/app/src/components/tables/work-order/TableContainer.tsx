@@ -3,9 +3,13 @@ import { trpc } from "@gembuddy/trpc/server";
 import { TableData } from "./TableData";
 import { WorkOrderTable } from "./new/work-order-table";
 interface TableProps {
-  searchParams: { [key: string]: string | string[] | undefined };
+  // searchParams: { [key: string]: string | string[] | undefined };
   params: {
     team_identity: string;
+  };
+  searchParams: {
+    limit: string;
+    page: string;
   };
 }
 
@@ -18,15 +22,21 @@ export const searchParamsSchema = z.object({
   title: z.string().optional(),
   status: z.string().optional(),
   priority: z.string().optional(),
-  from: z.string().optional(),
-  to: z.string().optional(),
+  from: z.number().optional(),
+  to: z.number().optional(),
   operator: z.enum(["and", "or"]).optional(),
 });
 
 const TableContainer: FC<TableProps> = async ({ searchParams, params }) => {
-  const search = searchParamsSchema.parse(searchParams);
-  console.log(search);
-  console.log(searchParams);
+  // const search = searchParamsSchema.parse(searchParams);
+  // console.log(searchParams);
+
+  const page = searchParams["page"]
+    ? parseInt(searchParams["page"] as string)
+    : 1;
+  const limit = searchParams["limit"]
+    ? parseInt(searchParams["limit"] as string)
+    : 10;
 
   const initialData = trpc.db.work_order.get.byTeam({
     team_identity: params.team_identity,
@@ -37,12 +47,15 @@ const TableContainer: FC<TableProps> = async ({ searchParams, params }) => {
   });
 
   return (
-    // <TableData
-    //   initialData={initialData}
-    //   params={params}
-    //   searchParams={searchParams}
-    // />
-    <WorkOrderTable initialData={initialData} />
+    <TableData
+      initialData={initialData}
+      params={params}
+      searchParams={{
+        page: page,
+        limit: limit,
+      }}
+    />
+    // <WorkOrderTable initialData={initialData} />
   );
 };
 

@@ -25,10 +25,12 @@ export function CreateWorkOrderSheet() {
   const utils = api.useUtils();
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const router = useRouter();
-
+  console.log(params);
   const { data: team } = api.db.team.get.byIdentity.useQuery({
     identity: params.team_identity,
   });
+
+  console.log(team);
 
   if (!team || !team.data) {
     return null;

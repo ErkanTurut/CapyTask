@@ -129,6 +129,7 @@ export function WorkOrderCreateForm({
               <FormControl>
                 <CompanySelector
                   onSelect={(value) => {
+                    console.log(value);
                     setSelectedCompany(value);
                     form.setValue("company_id", value.id);
                   }}

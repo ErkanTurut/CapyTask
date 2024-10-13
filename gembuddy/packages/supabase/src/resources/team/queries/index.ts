@@ -34,12 +34,14 @@ export async function getTeamByIdentity({
     identity: string;
   };
 }) {
-  const { data } = await db
+  const { data, error } = await db
     .from("team")
     .select("*")
     .eq("identity", input.identity)
     .single()
     .throwOnError();
+
+  console.log("error", error);
 
   return { data };
 }

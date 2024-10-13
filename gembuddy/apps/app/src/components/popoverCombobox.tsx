@@ -59,6 +59,7 @@ export function PopoverComboBox<T extends string>({
                   key={status.value}
                   value={status.value}
                   onSelect={async () => {
+                    console.log(status);
                     onSelect(status);
                     setOpen(false);
                   }}

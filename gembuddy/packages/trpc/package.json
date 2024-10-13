@@ -26,8 +26,11 @@
     "typescript": "^5.5.4"
   },
   "exports": {
+    "./*": "./src/index.ts",
     "./server": "./src/server.ts",
     "./client": "./src/client.ts",
-    "./schema/*": "./src/server/routes/*/schema.ts"
+    "./schema/*": "./src/server/routes/*/schema.ts",
+    "./context": "./src/server/context.ts",
+    "./router": "./src/server/routes/_app.ts"
   }
 }

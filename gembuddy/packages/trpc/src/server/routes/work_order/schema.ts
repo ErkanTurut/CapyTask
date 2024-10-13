@@ -94,8 +94,8 @@ export type TGetWorkOrderByIdSchema = z.infer<typeof ZGetWorkOrderByIdSchema>;
 export const ZGetWorkOrderByTeamSchema = z.object({
   team_identity: z.string(),
   range: z.object({
-    from: z.number(),
-    to: z.number(),
+    from: z.number().int().nonnegative(),
+    to: z.number().int().positive(),
   }),
 });
 

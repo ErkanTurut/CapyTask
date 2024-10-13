@@ -29,19 +29,10 @@ export default function RootLayout({
       <body
         className={cn(
           `${GeistSans.variable} ${GeistMono.variable}`,
-          "antialiased"
+          "antialiased           min-h-screen bg-background"
         )}
       >
-        <Providers headers={headers()}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-          </ThemeProvider>
-        </Providers>
+        <Providers headers={headers()}>{children}</Providers>
       </body>
     </html>
   );

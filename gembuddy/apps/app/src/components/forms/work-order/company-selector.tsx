@@ -1,22 +1,20 @@
 "use client";
-import { useRef, useState } from "react";
-import { useDebouncedCallback } from "use-debounce";
+import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import { api, RouterOutput } from "@gembuddy/trpc/client";
 import { Button } from "@gembuddy/ui/button";
-import { ScrollArea } from "@gembuddy/ui/scroll-area";
-import { Popover, PopoverContent, PopoverTrigger } from "@gembuddy/ui/popover";
 import {
   Command,
-  CommandInput,
-  CommandList,
-  CommandGroup,
-  CommandItem,
   CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
   CommandLoading,
 } from "@gembuddy/ui/command";
-import { Avatar, AvatarFallback, AvatarImage } from "@gembuddy/ui/avatar";
-import { Icons } from "@/components/icons";
+import { Popover, PopoverContent, PopoverTrigger } from "@gembuddy/ui/popover";
+import { useRef, useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
 
 interface CompanySelectorProps {
   onSelect: (
@@ -97,6 +95,7 @@ export function CompanySelector({
                   key={company.id}
                   value={company.id}
                   onSelect={async () => {
+                    console.log(company);
                     onSelect?.(company);
                   }}
                 >
