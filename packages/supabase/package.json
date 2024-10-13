@@ -1,0 +1,31 @@
+{
+  "name": "@gembuddy/supabase",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@gembuddy/logger": "workspace:*",
+    "@supabase/ssr": "^0.5.1",
+    "date-fns": "^4.1.0",
+    "react": "^18.3.1",
+    "server-only": "^0.0.1",
+    "supabase": "^1.191.3"
+  },
+  "devDependencies": {
+    "@supabase/supabase-js": "^2.45.3",
+    "typescript": "^5.5.4"
+  },
+  "exports": {
+    "./server": "./src/clients/server.ts",
+    "./client": "./src/clients/client.ts",
+    "./middleware": "./src/clients/middleware.ts",
+    "./types": "./src/types/index.ts",
+    "./resources": "./src/resources/index.ts",
+    "./resources/*": "./src/resources/*/index.ts"
+  }
+}
