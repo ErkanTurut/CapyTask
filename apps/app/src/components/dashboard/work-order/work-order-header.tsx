@@ -22,7 +22,7 @@ export function WorkOrderHeader({ initial_work_order }: WorkOrderHeaderProps) {
     data: { data: work_order },
   } = api.db.work_order.get.byId.useQuery(
     {
-      id: initial_work_order.data.id,
+      id: initial_work_order.data!.id,
     },
     {
       initialData: initial_work_order,

@@ -88,5 +88,5 @@ export async function searchLocation({
     })
     .throwOnError();
 
-  return data;
+  return {data};
 }

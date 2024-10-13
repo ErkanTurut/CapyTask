@@ -55,7 +55,7 @@ export function StatusChangeModal({
   const form = useForm<TUpdateWorkOrderSchema>({
     resolver: zodResolver(ZUpdateWorkOrderSchema),
     defaultValues: {
-      note: undefined,
+      // note: undefined,
       status: selectedStatus?.value,
       id: params.work_order_id,
     },
@@ -70,7 +70,8 @@ export function StatusChangeModal({
     mutate({
       id: data.id,
       status: data.status,
-      note: data.note,
+      work_order_id: data.work_order_id,
+      // note: data.note,
     });
   });
 
@@ -95,7 +96,7 @@ export function StatusChangeModal({
                 </span>
               </div>
             </div>
-            <FormField
+            {/* <FormField
               control={form.control}
               name="note"
               render={({ field }) => (
@@ -113,7 +114,7 @@ export function StatusChangeModal({
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
             <div className="flex items-center justify-end gap-2">
               <Button onClick={onClose} variant="secondary" type="button">
                 Cancel
