@@ -4,6 +4,7 @@ import type {
   Database,
   TablesInsert,
   TablesUpdate,
+  Tables
 } from "../../../types";
 
 export async function createServiceAppointment({
@@ -13,15 +14,21 @@ export async function createServiceAppointment({
   input: TablesInsert<"service_appointment">;
   db: Client;
 }) {
-  const { data } = await db
+  const { data, error } = await db
     .from("service_appointment")
     .insert(input)
     .select("*")
     .single()
     .throwOnError();
 
+  if (error) {
+    throw error;
+  }
+
   return { data };
 }
+
+
 
 export async function updateServiceAppointment({
   db,

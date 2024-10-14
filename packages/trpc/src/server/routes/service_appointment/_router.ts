@@ -11,12 +11,14 @@ import {
 } from "@gembuddy/supabase/resources/service_appointment";
 import {
   ZCreateServiceAppointmentSchema,
+  ZCreateServiceAppointmentWithItemsSchema,
   ZDeleteServiceAppointmentSchema,
   ZGetServiceAppointmentByServiceResourcesSchema,
   ZGetServiceAppointmentByWorkOrderSchema,
   ZGetServiceAppointmentSchema,
   ZUpdateServiceAppointmentSchema,
 } from "./schema";
+import { createAssignedResourceMany } from "@gembuddy/supabase/resources";
 
 export const service_appointment = router({
   get: {
@@ -45,11 +47,42 @@ export const service_appointment = router({
         });
       }),
   },
-  create: protectedProcedure
-    .input(ZCreateServiceAppointmentSchema)
-    .mutation(async ({ ctx, input }) => {
-      return await createServiceAppointment({ db: ctx.db, input });
-    }),
+  create: {
+    one: protectedProcedure
+      .input(ZCreateServiceAppointmentSchema)
+      .mutation(async ({ ctx, input }) => {
+        return await createServiceAppointment({
+          db: ctx.db,
+          input,
+        });
+      }),
+    withItems: protectedProcedure
+      .input(ZCreateServiceAppointmentWithItemsSchema)
+      .mutation(async ({ ctx, input }) => {
+        const {data: service_appointment}= await createServiceAppointment({
+          db: ctx.db,
+          input : ZCreateServiceAppointmentSchema.parse(input)
+        });
+        if (input.service_resources){
+          await createAssignedResourceMany({
+            db: ctx.db,
+            input: input.service_resources.service_resource_id.map((service_resource_id) => ({
+              service_appointment_id: service_appointment.id,
+              service_resource_id,
+            })),
+          })
+        }
+
+        return {data: service_appointment };
+
+
+
+
+
+
+      }),
+
+  },
 
   delete: {
     many: protectedProcedure
