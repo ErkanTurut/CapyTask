@@ -21,6 +21,8 @@ import { api, RouterOutput } from "@gembuddy/trpc/client";
 import {
   ZCreateServiceAppointmentSchema,
   TCreateServiceAppointmentSchema,
+  TCreateServiceAppointmentWithItemsSchema,
+  ZCreateServiceAppointmentWithItemsSchema,
 } from "@gembuddy/trpc/schema/service_appointment";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { experimental_useObject as useObject } from "ai/react";
@@ -30,10 +32,10 @@ import { DateRange } from "react-day-picker";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { LocationSelector } from "./location-selector";
-import ServiceResourceSelector from "./service-resource-selector";
-import TimeSelector from "./time-selector";
+
 import { WorkItemSelector } from "./work-item-selector";
+import ServiceResourceSelector from "./service-resource-selector";
+import { LocationSelector } from "./location-selector";
 
 interface ServiceAppointmentCreateFormProps
   extends React.HTMLAttributes<HTMLFormElement> {
@@ -43,7 +45,7 @@ interface ServiceAppointmentCreateFormProps
   work_order_id: string;
   team_identity: string;
   onFinish?: (
-    data: RouterOutput["db"]["service_appointment"]["create"] | undefined
+    data: RouterOutput["db"]["service_appointment"]["create"]["withItems"] | undefined
   ) => void;
 }
 
@@ -57,7 +59,7 @@ export function ServiceAppointmentCreateForm({
   onFinish,
 }: ServiceAppointmentCreateFormProps) {
   const [selectedServiceResources, setSelectedServiceResources] = useState<
-    NonNullable<RouterOutput["db"]["location"]["get"]["textSearch"]> | undefined
+    NonNullable<RouterOutput["db"]["service_resource"]["get"]["textSearch"]> | undefined
   >(undefined);
   const [assignedResources, setAssignedResources] = useState<string[]>([]);
   const [selectedLocation, setSelectedLocations] = useState<
@@ -65,12 +67,12 @@ export function ServiceAppointmentCreateForm({
     | undefined
   >(undefined);
   const [selectedWorkItem, setSelectedWorkItem] = useState<
-    | NonNullable<RouterOutput["db"]["location"]["get"]["textSearch"]["data"]>[number]
+    | NonNullable<RouterOutput["db"]["work_order_item"]["get"]["textSearch"]["data"]>[number]
     | undefined
   >(undefined);
 
   const utils = api.useUtils();
-  const { mutate, isPending } = api.db.service_appointment.create.useMutation({
+  const { mutate, isPending } = api.db.service_appointment.create.withItems.useMutation({
     onSuccess: (data) => {
       toast.success("Appointment created");
       onFinish?.(data);
@@ -84,10 +86,12 @@ export function ServiceAppointmentCreateForm({
     },
   });
 
-  const form = useForm<TCreateServiceAppointmentSchema>({
-    resolver: zodResolver(ZCreateServiceAppointmentSchema),
+  const form = useForm<TCreateServiceAppointmentWithItemsSchema>({
+    resolver: zodResolver(ZCreateServiceAppointmentWithItemsSchema),
     defaultValues: {
       work_order_id,
+      start_date: dateRange.from?.toISOString(),
+      end_date: dateRange.to?.toISOString(),
       // date_range: {
       //   from: dateRange.from?.toISOString(),
       //   to: dateRange.to?.toISOString(),
@@ -95,6 +99,11 @@ export function ServiceAppointmentCreateForm({
       work_order_item_id: undefined,
       // service_resource: [],
       // location_id: undefined,
+      service_resources: {
+        service_resource_id: [],
+      },
+      location_id: undefined,
+
 
     },
   });
@@ -116,6 +125,12 @@ export function ServiceAppointmentCreateForm({
       //   from: dateRange.from?.toISOString(),
       //   to: dateRange.to?.toISOString(),
       // },
+      start_date: dateRange.from?.toISOString(),
+      end_date: dateRange.to?.toISOString(),
+      service_resources: {
+        service_resource_id: [],
+      },
+      location_id: undefined,
       work_order_item_id: undefined,
       // service_resource: [],
     });
@@ -124,71 +139,75 @@ export function ServiceAppointmentCreateForm({
   const handleServiceResourceSelect = (
     serviceResource: NonNullable<RouterOutput["db"]["service_resource"]["get"]["textSearch"]["data"]>[number]
   ) => {
-    // if (selectedServiceResources?.some((sr) => sr.id === serviceResource.id)) {
-    //   setSelectedServiceResources(
-    //     (prev) => prev?.filter((sr) => sr.id !== serviceResource.id) ?? []
-    //   );
-    //   setAssignedResources((prev) =>
-    //     prev.filter((resource) => resource !== serviceResource.id)
-    //   );
-    // } else {
-    //   setSelectedServiceResources((prev) => [...(prev ?? []), serviceResource]);
-    // }
+    if (selectedServiceResources?.data?.some((sr) => sr.id === serviceResource.id)) {
+      setSelectedServiceResources(
+        (prev) => ({
+          data: prev?.data?.filter((sr) => sr.id !== serviceResource.id) ?? []
+        })
+      );
+      setAssignedResources((prev) =>
+        prev.filter((resource) => resource !== serviceResource.id)
+      );
+    } else {
+      setSelectedServiceResources((prev) => ({
+        data: [...(prev?.data ?? []), serviceResource]
+      }));
+    }
   };
 
   const handleAssignResource = (serviceResource: string) => {
-    // if (assignedResources.includes(serviceResource)) {
-    //   setAssignedResources((prev) =>
-    //     prev.filter((resource) => resource !== serviceResource)
-    //   );
-    //   form.setValue(
-    //     "service_resource",
-    //     selectedServiceResources
-    //       ?.filter((sr) => sr.id !== serviceResource)
-    //       .map((sr) => sr.id) ?? []
-    //   );
-    // } else {
-    //   setAssignedResources((prev) => [...prev, serviceResource]);
-    //   form.setValue(
-    //     "service_resource",
-    //     selectedServiceResources
-    //       ?.map((sr) => sr.id)
-    //       .filter((sr) => sr !== serviceResource) ?? []
-    //   );
-    // }
+    if (assignedResources.includes(serviceResource)) {
+      setAssignedResources((prev) =>
+        prev.filter((resource) => resource !== serviceResource)
+      );
+      form.setValue(
+        "service_resources",
+        { service_resource_id: selectedServiceResources
+          ?.data?.filter((sr) => sr.id !== serviceResource)
+          .map((sr) => sr.id) ?? [] }
+      );
+    } else {
+      setAssignedResources((prev) => [...prev, serviceResource]);
+      form.setValue(
+        "service_resources",
+        { service_resource_id: selectedServiceResources
+          ?.data?.map((sr) => sr.id)
+          .filter((sr) => sr !== serviceResource) ?? [] }
+      );
+    }
   };
 
-  const selectedServiceResourcesEvents: Event[] = []
-    // selectedServiceResources?.flatMap(
-    //   (selectedServiceResource) =>
-    //     selectedServiceResource.assigned_resource?.flatMap(
-    //       (assignedResource) => {
-    //         if (!assignedResource || !assignedResource.service_appointment) {
-    //           return [];
-    //         }
-    //         return {
-    //           start: new Date(assignedResource.service_appointment.start_date),
-    //           end: new Date(assignedResource.service_appointment.end_date),
-    //           title:
-    //             selectedServiceResource.first_name +
-    //             " " +
-    //             selectedServiceResource.last_name,
-    //           color: "blue",
-    //           id: assignedResource.service_appointment.id,
-    //         };
-    //       }
-    //     ) ?? []
-    // ) ?? [];
+  const selectedServiceResourcesEvents: Event[] = 
+    selectedServiceResources?.data?.flatMap(
+      (selectedServiceResource) =>
+        selectedServiceResource.assigned_resource?.flatMap(
+          (assignedResource) => {
+            if (!assignedResource || !assignedResource.service_appointment) {
+              return [];
+            }
+            return {
+              start: new Date(assignedResource.service_appointment.start_date),
+              end: new Date(assignedResource.service_appointment.end_date),
+              title:
+                selectedServiceResource.first_name +
+                " " +
+                selectedServiceResource.last_name,
+              color: "blue",
+              id: assignedResource.service_appointment.id,
+            };
+          }
+        ) ?? []
+    ) ?? [];
 
   const handleLocationSelect = (
     location: NonNullable<RouterOutput["db"]["location"]["get"]["textSearch"]["data"]>[number]
   ) => {
     if (selectedLocation?.id === location.id) {
       setSelectedLocations(undefined);
-      // form.resetField("location_id");
+      form.resetField("location_id");
     } else {
       setSelectedLocations(location);
-      // form.setValue("location_id", location.id);
+      form.setValue("location_id", location.id);
     }
   };
 
@@ -199,7 +218,7 @@ export function ServiceAppointmentCreateForm({
       setSelectedWorkItem(undefined);
       form.resetField("work_order_item_id");
     } else {
-      // setSelectedWorkItem(workItem);
+      setSelectedWorkItem(workItem);
       form.setValue("work_order_item_id", workItem.id);
     }
   };
@@ -300,9 +319,9 @@ export function ServiceAppointmentCreateForm({
           </div>
           <div className="flex h-full flex-col items-center justify-between gap-2 overflow-hidden pb-2">
             <div className="flex h-full flex-col gap-2 overflow-hidden">
-              {/* <FormField
+              <FormField
                 control={form.control}
-                name="service_resource"
+                name="service_resources"
                 render={({ field }) => (
                   <FormItem>
                     <FormMessage />
@@ -320,7 +339,7 @@ export function ServiceAppointmentCreateForm({
                 size="sm"
                 variant={"ghost"}
                 onClick={() => {
-                  submit(JSON.stringify(data));
+                  // submit(JSON.stringify(data));
                 }}
                 className={`shrink-0 text-muted-foreground hover:bg-transparent ${
                   isLoading && "animate-pulse text-primary hover:text-primary"
@@ -328,11 +347,11 @@ export function ServiceAppointmentCreateForm({
               >
                 <Icons.sparkles className="mr-2 size-4" />
                 <span className="text-xs font-medium">Recommend</span>
-              </Button> */}
+              </Button>
 
               <ScrollArea className="grid h-full overflow-hidden">
                 <div className="flex flex-col gap-1">
-                  {/* {selectedServiceResources?.map((selectedServiceResource) => {
+                  {selectedServiceResources?.data?.map((selectedServiceResource) => {
                     return ServiceRessourceItem(
                       {
                         id: selectedServiceResource.id,
@@ -346,12 +365,12 @@ export function ServiceAppointmentCreateForm({
                       },
                       handleAssignResource
                     );
-                  })} */}
+                  })}
                 </div>
               </ScrollArea>
             </div>
 
-            {/* <FormField
+            <FormField
               control={form.control}
               name="location_id"
               render={({ field }) => (
@@ -365,7 +384,7 @@ export function ServiceAppointmentCreateForm({
                   </FormControl>
                 </FormItem>
               )}
-            /> */}
+            />
             <FormField
               control={form.control}
               name="work_order_item_id"
@@ -375,7 +394,7 @@ export function ServiceAppointmentCreateForm({
                   <FormControl>
                     <WorkItemSelector
                       onSelect={handleWorkItemSelect}
-                      // selectedValue={selectedWorkItem}
+                      selectedValue={selectedWorkItem}
                       workOrderItems={work_order_item?.data ?? []}
                     />
                   </FormControl>
