@@ -20,7 +20,7 @@ interface WorkItemSelectorProps {
   onSelect: (
     location: NonNullable<
       RouterOutput["db"]["work_order_item"]["get"]["byWorkOrder"]["data"]
-    >[number]
+    >[number],
   ) => void;
   selectedValue?: NonNullable<
     RouterOutput["db"]["work_order_item"]["get"]["byWorkOrder"]["data"]
@@ -76,7 +76,7 @@ function WorkItemSelector({
                   <CommandItem
                     key={workOrderItem.id}
                     value={`${JSON.stringify(
-                      workOrderItem.asset
+                      workOrderItem.asset,
                     )} ${JSON.stringify(workOrderItem.location)}`}
                     onSelect={async () => {
                       onSelect?.(workOrderItem);

@@ -21,7 +21,7 @@ interface ServiceResourceSelectorProps {
   onSelect: (
     location: NonNullable<
       RouterOutput["db"]["location"]["get"]["textSearch"]["data"]
-    >[number]
+    >[number],
   ) => void;
   selectedValue?: NonNullable<
     RouterOutput["db"]["location"]["get"]["textSearch"]["data"]
@@ -42,9 +42,9 @@ function LocationSelector({
       { search: searchValue },
       {
         refetchOnMount: false,
-        initialData: selectedValue && {data : [selectedValue]},
+        initialData: selectedValue && { data: [selectedValue] },
         enabled: Boolean(searchValue),
-      }
+      },
     );
 
   const handleOnSearchChange = useDebouncedCallback(async (e: string) => {
