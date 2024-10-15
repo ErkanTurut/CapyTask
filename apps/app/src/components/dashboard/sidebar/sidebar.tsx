@@ -81,7 +81,7 @@ export async function Sidebar({ className, params }: SidebarProps) {
     <aside
       className={cn(
         "z-50 hidden w-full overflow-hidden py-[1px] md:block",
-        className
+        className,
       )}
     >
       <div className="flex h-full w-full flex-col justify-between">

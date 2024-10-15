@@ -50,7 +50,7 @@ export function DataTableMultiFilter<TData>({
 }: DataTableMultiFilterProps<TData>) {
   const [open, setOpen] = React.useState(defaultOpen);
   const [operator, setOperator] = React.useState(
-    dataTableConfig.logicalOperators[0]
+    dataTableConfig.logicalOperators[0],
   );
 
   return (
@@ -90,7 +90,7 @@ export function DataTableMultiFilter<TData>({
             className="w-full justify-start"
             onClick={() => {
               setSelectedOptions((prev) =>
-                prev.filter((item) => !item.isMulti)
+                prev.filter((item) => !item.isMulti),
               );
             }}
           >
@@ -167,7 +167,7 @@ export function MultiFilterRow<TData>({
 
       return newSearchParams.toString();
     },
-    [searchParams]
+    [searchParams],
   );
 
   // Update query string
@@ -181,7 +181,7 @@ export function MultiFilterRow<TData>({
         })}`,
         {
           scroll: false,
-        }
+        },
       );
     }
 
@@ -192,7 +192,7 @@ export function MultiFilterRow<TData>({
         })}`,
         {
           scroll: false,
-        }
+        },
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -207,7 +207,7 @@ export function MultiFilterRow<TData>({
         })}`,
         {
           scroll: false,
-        }
+        },
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -222,7 +222,7 @@ export function MultiFilterRow<TData>({
           value={operator?.value}
           onValueChange={(value) =>
             setOperator(
-              dataTableConfig.logicalOperators.find((o) => o.value === value)
+              dataTableConfig.logicalOperators.find((o) => o.value === value),
             )
           }
         >
@@ -250,7 +250,7 @@ export function MultiFilterRow<TData>({
         value={String(selectedOption?.value)}
         onValueChange={(value) => {
           setSelectedOption(
-            allOptions.find((option) => option.value === value)
+            allOptions.find((option) => option.value === value),
           );
           // setSelectedOptions((prev) =>
           //   prev.map((item) => {
@@ -304,7 +304,7 @@ export function MultiFilterRow<TData>({
           <DataTableFacetedFilter
             key={selectedOption.id}
             column={table.getColumn(
-              selectedOption.value ? String(selectedOption.value) : ""
+              selectedOption.value ? String(selectedOption.value) : "",
             )}
             title={selectedOption.label}
             options={selectedOption.options}
@@ -329,7 +329,7 @@ export function MultiFilterRow<TData>({
           <DropdownMenuItem
             onClick={() => {
               setSelectedOptions((prev) =>
-                prev.filter((item) => item.id !== option.id)
+                prev.filter((item) => item.id !== option.id),
               );
             }}
           >

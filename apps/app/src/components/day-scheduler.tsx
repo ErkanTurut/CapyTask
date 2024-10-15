@@ -52,7 +52,7 @@ export interface DaySchedulerRef {
 const generateTimeSlots = (
   start: Date,
   end: Date,
-  intervalMinutes: number
+  intervalMinutes: number,
 ): Date[] => {
   const slots: Date[] = [];
   let current = start;
@@ -80,7 +80,7 @@ const TimeSlotItem = React.memo(
       className={cn(
         "flex cursor-pointer border-t border-gray-200",
         isSelected ? "bg-primary-foreground" : "",
-        isDisabled ? "cursor-not-allowed border bg-muted opacity-50" : ""
+        isDisabled ? "cursor-not-allowed border bg-muted opacity-50" : "",
       )}
       style={{ height: `${height}px` }}
       onClick={isDisabled ? undefined : onClick}
@@ -90,7 +90,7 @@ const TimeSlotItem = React.memo(
       </div>
       <div className="relative flex-1" />
     </div>
-  ))
+  )),
 );
 
 const AppointmentItem = React.memo(
@@ -106,7 +106,7 @@ const AppointmentItem = React.memo(
     const startMinutes = differenceInMinutes(appointment.start_date, dayStart);
     const durationMinutes = differenceInMinutes(
       appointment.end_date,
-      appointment.start_date
+      appointment.start_date,
     );
     const top = startMinutes * pixelsPerMinute;
     const height = durationMinutes * pixelsPerMinute;
@@ -122,7 +122,7 @@ const AppointmentItem = React.memo(
         </div>
       </div>
     );
-  }
+  },
 );
 
 const SelectedTimeSlotOverlay = React.memo(
@@ -160,7 +160,7 @@ const SelectedTimeSlotOverlay = React.memo(
         </div>
       </Resizable>
     );
-  }
+  },
 );
 
 // Main component
@@ -180,30 +180,30 @@ export const DayScheduler = forwardRef<DaySchedulerRef, DaySchedulerProps>(
         pixelsPerMinute: 1,
       },
     },
-    ref
+    ref,
   ) => {
     const scrollViewportRef = useRef<HTMLDivElement>(null);
     const timeSlotRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
     const startTime = useMemo(
       () => addMinutes(startOfDay(date), config.dayStartHour * 60),
-      [date, config.dayStartHour]
+      [date, config.dayStartHour],
     );
     const endTime = useMemo(
       () => addMinutes(startOfDay(date), config.dayEndHour * 60),
-      [date, config.dayEndHour]
+      [date, config.dayEndHour],
     );
     const timeSlots = useMemo(
       () => generateTimeSlots(startTime, endTime, config.timeSlotInterval),
-      [startTime, endTime, config.timeSlotInterval]
+      [startTime, endTime, config.timeSlotInterval],
     );
 
     const filteredAppointments = useMemo(
       () =>
         appointments.filter((appointment) =>
-          isSameDay(new Date(appointment.start_date), date)
+          isSameDay(new Date(appointment.start_date), date),
         ),
-      [appointments, date]
+      [appointments, date],
     );
 
     const isSlotDisabled = useCallback(
@@ -212,14 +212,14 @@ export const DayScheduler = forwardRef<DaySchedulerRef, DaySchedulerProps>(
           (disabledSlot) =>
             isSameDay(slot, disabledSlot) &&
             slot.getHours() === disabledSlot.getHours() &&
-            slot.getMinutes() === disabledSlot.getMinutes()
+            slot.getMinutes() === disabledSlot.getMinutes(),
         ),
-      [disabledSlots]
+      [disabledSlots],
     );
 
     const scrollToFirstAvailableSlot = useCallback(() => {
       const firstAvailableSlot = timeSlots.find(
-        (slot) => !isSlotDisabled(slot)
+        (slot) => !isSlotDisabled(slot),
       );
       if (firstAvailableSlot) {
         const slotKey = firstAvailableSlot.toISOString();
@@ -243,7 +243,7 @@ export const DayScheduler = forwardRef<DaySchedulerRef, DaySchedulerProps>(
           onSelectTimeSlot({ from: slotTime, to: endTime });
         }
       },
-      [isSlotDisabled, onSelectTimeSlot, config.timeSlotInterval]
+      [isSlotDisabled, onSelectTimeSlot, config.timeSlotInterval],
     );
 
     const handleResizeSelectedSlot = useCallback(
@@ -251,14 +251,14 @@ export const DayScheduler = forwardRef<DaySchedulerRef, DaySchedulerProps>(
         if (selectedTimeSlot?.from && onSelectTimeSlot) {
           const newEndTime = addMinutes(
             selectedTimeSlot.from,
-            Math.round(parseInt(height) / config.pixelsPerMinute)
+            Math.round(parseInt(height) / config.pixelsPerMinute),
           );
           if (newEndTime > selectedTimeSlot.from) {
             onSelectTimeSlot({ from: selectedTimeSlot.from, to: newEndTime });
           }
         }
       },
-      [selectedTimeSlot, onSelectTimeSlot, config.pixelsPerMinute]
+      [selectedTimeSlot, onSelectTimeSlot, config.pixelsPerMinute],
     );
 
     if (!date) {
@@ -306,7 +306,7 @@ export const DayScheduler = forwardRef<DaySchedulerRef, DaySchedulerProps>(
         </div>
       </ScrollArea>
     );
-  }
+  },
 );
 
 DayScheduler.displayName = "DayScheduler";

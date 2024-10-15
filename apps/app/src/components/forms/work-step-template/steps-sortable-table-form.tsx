@@ -66,7 +66,7 @@ export function StepsSortableTableForm({
       {
         work_plan_template_id: work_plan_template_id,
       },
-      { initialData: initialData }
+      { initialData: initialData },
     );
   if (!work_step_template || !work_step_template.data) return notFound();
 
@@ -126,7 +126,7 @@ export function StepsSortableTableForm({
                   (field, index) => (
                     form.setValue(
                       `work_step_template.${index}.step_order`,
-                      index + 1
+                      index + 1,
                     ),
                     (
                       <SortableItem
@@ -196,7 +196,7 @@ export function StepsSortableTableForm({
                                 size: "icon",
                                 variant: "ghost",
                               }),
-                              "size-8 shrink-0"
+                              "size-8 shrink-0",
                             )}
                           >
                             <ChevronRightIcon
@@ -208,7 +208,7 @@ export function StepsSortableTableForm({
                         </div>
                       </SortableItem>
                     )
-                  )
+                  ),
                 )}
               </div>
             </Sortable>

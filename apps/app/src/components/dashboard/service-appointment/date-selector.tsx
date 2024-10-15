@@ -24,7 +24,7 @@ export default function DateSelector({
           <CalendarIcon className="mr-2 h-4 w-4 text-muted-foreground" />
           {formatDateRange(
             startOfWeek(selectedDate, { weekStartsOn: 1 }),
-            endOfWeek(selectedDate, { weekStartsOn: 1 })
+            endOfWeek(selectedDate, { weekStartsOn: 1 }),
           )}
         </Button>
       </PopoverTrigger>

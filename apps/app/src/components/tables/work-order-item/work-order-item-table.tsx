@@ -132,17 +132,17 @@ export function WorkOrderItemTable({ data, rowCount }: AssetTableProps) {
 
       return newSearchParams.toString();
     },
-    [searchParams]
+    [searchParams],
   );
 
   const initialColumnFilters: ColumnFiltersState = React.useMemo(() => {
     return Array.from(searchParams.entries()).reduce<ColumnFiltersState>(
       (filters, [key, value]) => {
         const filterableColumn = filterableColumns.find(
-          (column) => column.value === key
+          (column) => column.value === key,
         );
         const searchableColumn = searchableColumns.find(
-          (column) => column.value === key
+          (column) => column.value === key,
         );
 
         if (filterableColumn) {
@@ -159,7 +159,7 @@ export function WorkOrderItemTable({ data, rowCount }: AssetTableProps) {
 
         return filters;
       },
-      []
+      [],
     );
   }, [filterableColumns, searchableColumns, searchParams]);
 

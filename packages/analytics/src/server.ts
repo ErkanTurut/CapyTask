@@ -23,7 +23,7 @@ export const setupAnalytics = async (options?: Props) => {
         profileId: userId,
         firstName,
         lastName,
-      })
+      }),
     );
   }
 

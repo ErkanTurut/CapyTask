@@ -51,7 +51,7 @@ export const ZUpdateWorkOrderItemSchema = z
   .merge(
     z.object({
       work_order_item_id: z.string(),
-    })
+    }),
   );
 
 export type TUpdateWorkOrderItemSchema = z.infer<

@@ -29,7 +29,7 @@ export default function RootLayout({
       <body
         className={cn(
           `${GeistSans.variable} ${GeistMono.variable}`,
-          "antialiased   font-sans        min-h-screen bg-background"
+          "antialiased   font-sans        min-h-screen bg-background",
         )}
       >
         <Providers headers={headers()}>{children}</Providers>

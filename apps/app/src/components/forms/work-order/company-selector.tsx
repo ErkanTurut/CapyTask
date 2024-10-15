@@ -20,7 +20,7 @@ interface CompanySelectorProps {
   onSelect: (
     serviceResource: NonNullable<
       RouterOutput["db"]["company"]["get"]["textSearch"]["data"]
-    >[number]
+    >[number],
   ) => void;
   selectedValue?: NonNullable<
     RouterOutput["db"]["company"]["get"]["textSearch"]["data"]
@@ -41,7 +41,7 @@ export function CompanySelector({
     {
       refetchOnMount: false,
       enabled: Boolean(searchValue),
-    }
+    },
   );
 
   const handleOnSearchChange = useDebouncedCallback(async (e: string) => {
@@ -105,7 +105,7 @@ export function CompanySelector({
                         "mr-2 h-4 w-4",
                         selectedValue && selectedValue.id === company.id
                           ? "opacity-100"
-                          : "opacity-0"
+                          : "opacity-0",
                       )}
                     />
                     <span>{company.name}</span>

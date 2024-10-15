@@ -59,29 +59,24 @@ export const service_appointment = router({
     withItems: protectedProcedure
       .input(ZCreateServiceAppointmentWithItemsSchema)
       .mutation(async ({ ctx, input }) => {
-        const {data: service_appointment}= await createServiceAppointment({
+        const { data: service_appointment } = await createServiceAppointment({
           db: ctx.db,
-          input : ZCreateServiceAppointmentSchema.parse(input)
+          input: ZCreateServiceAppointmentSchema.parse(input),
         });
-        if (input.service_resources){
+        if (input.service_resources) {
           await createAssignedResourceMany({
             db: ctx.db,
-            input: input.service_resources.service_resource_id.map((service_resource_id) => ({
-              service_appointment_id: service_appointment.id,
-              service_resource_id,
-            })),
-          })
+            input: input.service_resources.service_resource_id.map(
+              (service_resource_id) => ({
+                service_appointment_id: service_appointment.id,
+                service_resource_id,
+              }),
+            ),
+          });
         }
 
-        return {data: service_appointment };
-
-
-
-
-
-
+        return { data: service_appointment };
       }),
-
   },
 
   delete: {

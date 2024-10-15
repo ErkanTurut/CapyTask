@@ -52,7 +52,7 @@ export function WorkStepTemplateForm({
   const { data: work_step_template, refetch } =
     api.db.work_step_template.get.byId.useQuery(
       { id: work_step_template_id },
-      { initialData: initialData }
+      { initialData: initialData },
     );
   if (!work_step_template || !work_step_template.data) return null;
 

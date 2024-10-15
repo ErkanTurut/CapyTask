@@ -73,7 +73,7 @@ export const ZUpdateWorkOrderSchema = z
   .merge(
     z.object({
       work_order_id: z.string(),
-    })
+    }),
   );
 
 export type TUpdateWorkOrderSchema = z.infer<typeof ZUpdateWorkOrderSchema>;

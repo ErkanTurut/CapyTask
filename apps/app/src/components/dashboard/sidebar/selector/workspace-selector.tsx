@@ -16,7 +16,7 @@ export default async function WorkspaceSelector({
     redirect("/create");
   }
   const workspace = workspaces.find(
-    (workspace) => workspace.url_key === params.url_key
+    (workspace) => workspace.url_key === params.url_key,
   );
 
   if (!workspace) {
