@@ -116,17 +116,17 @@ export function WorkOrderTable({ initialData }: WorkOrderTableProps) {
 
       return newSearchParams.toString();
     },
-    [searchParams]
+    [searchParams],
   );
 
   const initialColumnFilters: ColumnFiltersState = useMemo(() => {
     return Array.from(searchParams.entries()).reduce<ColumnFiltersState>(
       (filters, [key, value]) => {
         const filterableColumn = filterableColumns.find(
-          (column) => column.value === key
+          (column) => column.value === key,
         );
         const searchableColumn = searchableColumns.find(
-          (column) => column.value === key
+          (column) => column.value === key,
         );
 
         if (filterableColumn) {
@@ -143,7 +143,7 @@ export function WorkOrderTable({ initialData }: WorkOrderTableProps) {
 
         return filters;
       },
-      []
+      [],
     );
   }, [filterableColumns, searchableColumns, searchParams]);
 
@@ -167,7 +167,7 @@ export function WorkOrderTable({ initialData }: WorkOrderTableProps) {
       initialData: use(initialData),
       refetchOnMount: false,
       staleTime: 1000 * 60,
-    }
+    },
   );
 
   const { table } = useDataTable({

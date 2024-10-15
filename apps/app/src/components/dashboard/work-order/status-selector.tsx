@@ -13,7 +13,7 @@ interface StatusSelectorProps {
 export function StatusSelector({ status }: StatusSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const initialStatus = statusConfig.find(
-    (_status) => _status.value === status
+    (_status) => _status.value === status,
   );
   const [selectedStatus, setSelectedStatus] = useState<
     StatusConfig | undefined

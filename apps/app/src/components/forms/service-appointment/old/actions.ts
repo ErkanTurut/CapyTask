@@ -20,7 +20,7 @@ const aiRecommendationSchema = z.object({
   reasons: z
     .array(recommendationReasonEnum)
     .describe(
-      "The reasons why the recommendation was made. Max 3 reasons. The reasons should be a list of strings."
+      "The reasons why the recommendation was made. Max 3 reasons. The reasons should be a list of strings.",
     ),
   insight: z.string().describe("The insight of the recommendation"),
 });

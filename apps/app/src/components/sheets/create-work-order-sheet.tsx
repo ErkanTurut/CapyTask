@@ -20,7 +20,7 @@ export function CreateWorkOrderSheet() {
   const params = useParams() as { team_identity: string };
   const [open, setOpen] = useQueryState(
     "create",
-    parseAsBoolean.withDefault(false)
+    parseAsBoolean.withDefault(false),
   );
   const utils = api.useUtils();
   const isDesktop = useMediaQuery("(min-width: 768px)");

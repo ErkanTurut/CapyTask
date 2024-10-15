@@ -47,7 +47,7 @@ export async function deleteWorkStepTemplate(
   db: Client,
   input: {
     work_step_template_id: string[];
-  }
+  },
 ) {
   const { status } = await db
     .from("work_step_template")

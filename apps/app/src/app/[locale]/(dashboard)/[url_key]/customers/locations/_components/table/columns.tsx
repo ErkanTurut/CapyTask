@@ -49,7 +49,7 @@ export const columns: ColumnDef<
           href={{ pathname: `locations/${row.original.id}` }}
           className={cn(
             buttonVariants({ variant: "link", size: "sm" }),
-            "underline"
+            "underline",
           )}
         >
           {row.original.name}

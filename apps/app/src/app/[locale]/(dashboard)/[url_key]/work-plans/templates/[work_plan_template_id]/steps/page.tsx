@@ -31,7 +31,7 @@ export default async function Page({ searchParams, params }: PageProps) {
     <div
       className={cn(
         "grid flex-1 grid-cols-1 items-start gap-2 md:gap-4",
-        searchParams.step_id && "grid-cols-2"
+        searchParams.step_id && "grid-cols-2",
       )}
     >
       <div>

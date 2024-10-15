@@ -40,7 +40,7 @@ export default function DayCalendar({
   date,
 }: DayCalendarProps) {
   const [timeFormat, setTimeFormat] = React.useState<"24h" | "12h">(
-    initialTimeFormat
+    initialTimeFormat,
   );
   const hours = Array.from({ length: 24 }, (_, i) => i);
 
@@ -70,13 +70,13 @@ export default function DayCalendar({
   const isTimeDisabled = (slotDate: Date) => {
     return (
       disabledTimeRanges.some((range) =>
-        isWithinInterval(slotDate, { start: range.start, end: range.end })
+        isWithinInterval(slotDate, { start: range.start, end: range.end }),
       ) ||
       disabledSlots.some(
         (disabledSlot) =>
           isSameDay(slotDate, disabledSlot) &&
           slotDate.getHours() === disabledSlot.getHours() &&
-          slotDate.getMinutes() === disabledSlot.getMinutes()
+          slotDate.getMinutes() === disabledSlot.getMinutes(),
       )
     );
   };
@@ -91,8 +91,8 @@ export default function DayCalendar({
     console.log(
       `Selected time range: ${format(slotDate, "PPpp")} - ${format(
         endDate,
-        "PPpp"
-      )}`
+        "PPpp",
+      )}`,
     );
   };
 
@@ -138,7 +138,7 @@ export default function DayCalendar({
                     {[0, 30].map((minute) => {
                       const slotDate = addMinutes(
                         startOfDay(date),
-                        hour * 60 + minute
+                        hour * 60 + minute,
                       );
                       return (
                         <li
@@ -157,7 +157,7 @@ export default function DayCalendar({
                             disabled={isTimeDisabled(slotDate)}
                             aria-label={`Select time slot ${formatHour(
                               hour,
-                              minute
+                              minute,
                             )}`}
                           />
                         </li>

@@ -59,7 +59,7 @@ export function DataTableToolbar<TData>({
     DataTableFilterOption<TData>[]
   >(initialSelectedOptions);
   const [openFilterBuilder, setOpenFilterBuilder] = React.useState(
-    initialSelectedOptions.length > 0 || false
+    initialSelectedOptions.length > 0 || false,
   );
   const [openCombobox, setOpenCombobox] = React.useState(false);
 
@@ -72,7 +72,7 @@ export function DataTableToolbar<TData>({
     <div
       className={cn(
         "flex w-full flex-col space-y-2.5 overflow-auto",
-        className
+        className,
       )}
       {...props}
     >
@@ -108,8 +108,8 @@ export function DataTableToolbar<TData>({
             options={options.filter(
               (option) =>
                 !selectedOptions.some(
-                  (selectedOption) => selectedOption.value === option.value
-                )
+                  (selectedOption) => selectedOption.value === option.value,
+                ),
             )}
             selectedOptions={selectedOptions}
             setSelectedOptions={setSelectedOptions}
@@ -121,7 +121,7 @@ export function DataTableToolbar<TData>({
       <div
         className={cn(
           "flex items-center gap-2",
-          !openFilterBuilder && "hidden"
+          !openFilterBuilder && "hidden",
         )}
       >
         {selectedOptions

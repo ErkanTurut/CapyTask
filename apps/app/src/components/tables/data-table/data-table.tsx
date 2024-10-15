@@ -36,8 +36,8 @@ export function getCommonPinningStyles<TData>({
     boxShadow: isLastLeftPinnedColumn
       ? "-5px 0 5px -5px hsl(var(--border)) inset"
       : isFirstRightPinnedColumn
-      ? "5px 0 5px -5px hsl(var(--border)) inset"
-      : undefined,
+        ? "5px 0 5px -5px hsl(var(--border)) inset"
+        : undefined,
     left: isPinned === "left" ? `${column.getStart("left")}px` : undefined,
     right: isPinned === "right" ? `${column.getAfter("right")}px` : undefined,
     opacity: isPinned ? 0.97 : 1,
@@ -72,7 +72,7 @@ export function DataTable<TData>({
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -91,7 +91,7 @@ export function DataTable<TData>({
                     <TableCell className="text-xs" key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}

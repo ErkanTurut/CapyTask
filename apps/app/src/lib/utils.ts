@@ -45,7 +45,7 @@ export const getBlurDataURL = async (url: string | null) => {
   }
   try {
     const response = await fetch(
-      `https://wsrv.nl/?url=${url}&w=50&h=50&blur=5`
+      `https://wsrv.nl/?url=${url}&w=50&h=50&blur=5`,
     );
     const buffer = await response.arrayBuffer();
     const base64 = Buffer.from(buffer).toString("base64");
@@ -189,9 +189,8 @@ export function generateAvatar({
     } else {
       // Multi-word name
 
-      
       initials =
-      // @ts-ignore
+        // @ts-ignore
         `${nameParts[0].charAt(0) ?? ""}` +
         // @ts-ignore
         `${nameParts[1].charAt(0) ?? ""}`.toUpperCase();
@@ -267,7 +266,7 @@ type GetValidNumberConfig = { max: number; min?: number; loop?: boolean };
 
 export function getValidNumber(
   value: string,
-  { max, min = 0, loop = false }: GetValidNumberConfig
+  { max, min = 0, loop = false }: GetValidNumberConfig,
 ) {
   let numericValue = parseInt(value, 10);
 
@@ -308,7 +307,7 @@ type GetValidArrowNumberConfig = {
 
 export function getValidArrowNumber(
   value: string,
-  { min, max, step }: GetValidArrowNumberConfig
+  { min, max, step }: GetValidArrowNumberConfig,
 ) {
   let numericValue = parseInt(value, 10);
   if (!isNaN(numericValue)) {
@@ -362,7 +361,7 @@ export function setDateByType(
   date: Date,
   value: string,
   type: TimePickerType,
-  period?: Period
+  period?: Period,
 ) {
   switch (type) {
     case "minutes":
@@ -399,7 +398,7 @@ export function getDateByType(date: Date, type: TimePickerType) {
 export function getArrowByType(
   value: string,
   step: number,
-  type: TimePickerType
+  type: TimePickerType,
 ) {
   switch (type) {
     case "minutes":

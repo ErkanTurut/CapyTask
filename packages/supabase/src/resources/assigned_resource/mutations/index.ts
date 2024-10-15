@@ -23,7 +23,6 @@ export async function createAssignedResource({
   return { data };
 }
 
-
 export async function createAssignedResourceMany({
   db,
   input,
@@ -33,8 +32,7 @@ export async function createAssignedResourceMany({
 }) {
   const { data, error } = await db
     .from("assigned_resource")
-    .upsert(input, {        onConflict: "service_appointment_id,service_resource_id",
-    })
+    .upsert(input, { onConflict: "service_appointment_id,service_resource_id" })
     .select("*")
     .throwOnError();
 

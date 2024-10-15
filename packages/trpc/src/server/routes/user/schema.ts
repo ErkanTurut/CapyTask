@@ -29,7 +29,7 @@ export const ZUpdateUserSchema = z
   .merge(
     z.object({
       user_id: z.string(),
-    })
+    }),
   );
 
 export type TUpdateUserSchema = z.infer<typeof ZUpdateUserSchema>;

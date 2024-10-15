@@ -34,7 +34,7 @@ export const PrioritySelector = ({
   status: Database["public"]["Enums"]["Priority"];
 }) => {
   const initialStatus = statusConfig.find(
-    (_status) => _status.value === status
+    (_status) => _status.value === status,
   );
   if (!initialStatus) {
     return null;

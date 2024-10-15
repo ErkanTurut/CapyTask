@@ -46,5 +46,5 @@ export const trpc = createCallerFactory(appRouter)(
       },
       db: createClient(),
     };
-  })
+  }),
 );

@@ -4,7 +4,7 @@ import type {
   Database,
   TablesInsert,
   TablesUpdate,
-  Tables
+  Tables,
 } from "../../../types";
 
 export async function createServiceAppointment({
@@ -27,8 +27,6 @@ export async function createServiceAppointment({
 
   return { data };
 }
-
-
 
 export async function updateServiceAppointment({
   db,

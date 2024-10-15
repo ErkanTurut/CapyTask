@@ -28,7 +28,7 @@ export function findAvailableRanges({
   unavailableSlots: TimeSlot[];
 }): TimeSlot[] {
   const sortedSlots = unavailableSlots.sort(
-    (a, b) => new Date(a.from).getTime() - new Date(b.from).getTime()
+    (a, b) => new Date(a.from).getTime() - new Date(b.from).getTime(),
   );
   const availableRanges: TimeSlot[] = [];
   let currentFrom = new Date(scheduleRange.from);
@@ -83,7 +83,7 @@ export function generateTimeSlots({
     timeSlots.push({
       from: currentTime.toISOString(),
       to: new Date(
-        Math.min(currentTime.getTime() + durationMs, scheduleEnd.getTime())
+        Math.min(currentTime.getTime() + durationMs, scheduleEnd.getTime()),
       ).toISOString(),
     });
   }
@@ -97,20 +97,23 @@ export function generateTimeSlots({
  * @returns {Record<string, TimeSlot[]>} Object with dates as keys and arrays of time slots as values
  */
 export function groupTimeSlotsByDay(
-  timeSlots: TimeSlot[]
+  timeSlots: TimeSlot[],
 ): Record<string, TimeSlot[]> {
-  return timeSlots.reduce((grouped, slot) => {
-    const slotDate =
-      new Date(slot.from).toISOString().split("T")[0] || "unknown";
-    (grouped[slotDate] = grouped[slotDate] || []).push(slot);
-    return grouped;
-  }, {} as Record<string, TimeSlot[]>);
+  return timeSlots.reduce(
+    (grouped, slot) => {
+      const slotDate =
+        new Date(slot.from).toISOString().split("T")[0] || "unknown";
+      (grouped[slotDate] = grouped[slotDate] || []).push(slot);
+      return grouped;
+    },
+    {} as Record<string, TimeSlot[]>,
+  );
 }
 
 export function getWorkShiftsFromDateRange(
   startDate: Date,
   endDate: Date,
-  shift: Shift
+  shift: Shift,
 ): { date: Date; start: Date; end: Date }[] {
   const workShifts: { date: Date; start: Date; end: Date }[] = [];
   let currentDate = startOfDay(startDate);
@@ -124,11 +127,11 @@ export function getWorkShiftsFromDateRange(
     if (shift.days.includes(dayOfWeek)) {
       const currentShiftStart = setMinutes(
         setHours(currentDate, shiftStart.getHours()),
-        shiftStart.getMinutes()
+        shiftStart.getMinutes(),
       );
       const currentShiftEnd = setMinutes(
         setHours(currentDate, shiftEnd.getHours()),
-        shiftEnd.getMinutes()
+        shiftEnd.getMinutes(),
       );
 
       workShifts.push({

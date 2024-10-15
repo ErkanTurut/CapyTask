@@ -72,8 +72,8 @@ export function DataTableFilterCombobox<TData>({
                 .filter(
                   (option) =>
                     !selectedOptions.some(
-                      (selectedOption) => selectedOption.value === option.value
-                    )
+                      (selectedOption) => selectedOption.value === option.value,
+                    ),
                 )
                 .map((option) => (
                   <CommandItem

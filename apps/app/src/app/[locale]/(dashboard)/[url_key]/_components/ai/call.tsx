@@ -29,7 +29,7 @@ export function VoiceAgent() {
   const aat = tracks.find(
     (trackRef) =>
       trackRef.publication.kind === Track.Kind.Audio &&
-      trackRef.participant.isAgent
+      trackRef.participant.isAgent,
   );
   if (aat) {
     agentAudioTrack = aat;
@@ -42,7 +42,7 @@ export function VoiceAgent() {
 
   const subscribedVolumes = useMultibandTrackVolume(
     agentAudioTrack?.publication?.track,
-    5
+    5,
   );
 
   const AudioTileContent = useMemo(() => {
@@ -108,7 +108,7 @@ export function VoiceAgent() {
           <Button
             onClick={async () => {
               const { accessToken, url } = await fetch("/api/token").then(
-                (res) => res.json()
+                (res) => res.json(),
               );
 
               await Room?.connect(url, accessToken, {

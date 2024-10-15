@@ -30,7 +30,7 @@ export function TableData({
         to: (searchParams.page - 1) * searchParams.limit + searchParams.limit,
       },
     },
-    { initialData }
+    { initialData },
   );
   return (
     <DataTable

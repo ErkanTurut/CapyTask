@@ -39,7 +39,7 @@ export function TableData({
       initialData: use(initialData),
       refetchOnMount: false,
       staleTime: 1000 * 60,
-    }
+    },
   );
   return (
     <>

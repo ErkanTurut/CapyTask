@@ -1,4 +1,3 @@
-
 import { trpc } from "@gembuddy/trpc/server";
 import { notFound } from "next/navigation";
 

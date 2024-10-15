@@ -47,7 +47,7 @@ export function DataTableToolbar<TDataRow, TData, TError>({
         <Icons.spinner
           className={cn(
             "h-4 w-4",
-            isFetching && "animate-spin duration-700 ease-in-out"
+            isFetching && "animate-spin duration-700 ease-in-out",
           )}
         />
       </Button>

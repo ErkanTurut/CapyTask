@@ -35,7 +35,7 @@ export function NavLink({ children, item }: navLinkProps) {
       className={cn(
         "border-transparent text-sm text-muted-foreground hover:text-accent-foreground",
         pathname === item.href &&
-          "border-b-2 border-primary font-medium text-primary hover:text-primary"
+          "border-b-2 border-primary font-medium text-primary hover:text-primary",
       )}
       href={item.href || "#"}
     >

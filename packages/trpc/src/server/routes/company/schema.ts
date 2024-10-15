@@ -37,7 +37,7 @@ export const ZUpdateCompanySchema = z
   .merge(
     z.object({
       company_id: z.string(),
-    })
+    }),
   );
 
 export type TUpdateCompanySchema = z.infer<typeof ZUpdateCompanySchema>;

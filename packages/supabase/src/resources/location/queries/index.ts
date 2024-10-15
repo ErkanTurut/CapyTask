@@ -63,7 +63,7 @@ export async function getLocationByWorkOrderItem({
       "*, work_order_item(work_order_id), location!inner(*), address(*)",
       {
         count: "exact",
-      }
+      },
     )
     .eq("work_order_item.work_order_id", input.work_order_id)
     .throwOnError();
@@ -88,5 +88,5 @@ export async function searchLocation({
     })
     .throwOnError();
 
-  return {data};
+  return { data };
 }

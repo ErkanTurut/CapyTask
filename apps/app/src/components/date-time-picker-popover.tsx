@@ -29,7 +29,7 @@ export function DateTimePickerPopover({
           variant={"outline"}
           className={cn(
             "w-[230px] justify-start text-left font-normal",
-            !date && "text-muted-foreground"
+            !date && "text-muted-foreground",
           )}
           type="button"
         >
