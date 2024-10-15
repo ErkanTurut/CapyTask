@@ -1,4 +1,3 @@
-"use client";
 
 import DayCalendar from "@/components/calendar/day-calendar";
 import { Event } from "@/components/calendar/types";
@@ -27,7 +26,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { experimental_useObject as useObject } from "ai/react";
 import { endOfDay, startOfDay } from "date-fns";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DateRange } from "react-day-picker";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -36,6 +35,9 @@ import { z } from "zod";
 import { WorkItemSelector } from "./work-item-selector";
 import ServiceResourceSelector from "./service-resource-selector";
 import { LocationSelector } from "./location-selector";
+import { Label } from "@gembuddy/ui/label";
+import { TimePickerInput } from "@/components/time-picker-input";
+import TimeSelector from "./time-selector";
 
 interface ServiceAppointmentCreateFormProps
   extends React.HTMLAttributes<HTMLFormElement> {
@@ -71,6 +73,9 @@ export function ServiceAppointmentCreateForm({
     | undefined
   >(undefined);
 
+  const startDateMinuteRef = useRef<HTMLInputElement>(null);
+  const startDateHourRef = useRef<HTMLInputElement>(null);
+
   const utils = api.useUtils();
   const { mutate, isPending } = api.db.service_appointment.create.withItems.useMutation({
     onSuccess: (data) => {
@@ -92,13 +97,9 @@ export function ServiceAppointmentCreateForm({
       work_order_id,
       start_date: dateRange.from?.toISOString(),
       end_date: dateRange.to?.toISOString(),
-      // date_range: {
-      //   from: dateRange.from?.toISOString(),
-      //   to: dateRange.to?.toISOString(),
-      // },
+
       work_order_item_id: undefined,
-      // service_resource: [],
-      // location_id: undefined,
+
       service_resources: {
         service_resource_id: [],
       },
@@ -162,17 +163,14 @@ export function ServiceAppointmentCreateForm({
       );
       form.setValue(
         "service_resources",
-        { service_resource_id: selectedServiceResources
-          ?.data?.filter((sr) => sr.id !== serviceResource)
-          .map((sr) => sr.id) ?? [] }
+        { service_resource_id: assignedResources }
       );
     } else {
       setAssignedResources((prev) => [...prev, serviceResource]);
       form.setValue(
         "service_resources",
-        { service_resource_id: selectedServiceResources
-          ?.data?.map((sr) => sr.id)
-          .filter((sr) => sr !== serviceResource) ?? [] }
+        { service_resource_id: assignedResources }
+
       );
     }
   };
@@ -199,6 +197,8 @@ export function ServiceAppointmentCreateForm({
         ) ?? []
     ) ?? [];
 
+    console.log( form.getValues(
+      "service_resources"));
   const handleLocationSelect = (
     location: NonNullable<RouterOutput["db"]["location"]["get"]["textSearch"]["data"]>[number]
   ) => {
@@ -244,25 +244,25 @@ export function ServiceAppointmentCreateForm({
   //   { enabled: Boolean(dateRange.from) && Boolean(dateRange.to) }
   // );
 
-  const { object, submit, isLoading } = useObject({
-    api: "/api/ai/service-resource",
-    schema: z.object({
-      recommendations: z.array(
-        z.object({
-          id: z.string(),
-          is_active: z.boolean(),
-          availableSlots: z.array(
-            z.object({
-              start: z.string(),
-              end: z.string(),
-            })
-          ),
-          first_name: z.string(),
-          last_name: z.string(),
-        })
-      ),
-    }),
-  });
+  // const { object, submit, isLoading } = useObject({
+  //   api: "/api/ai/service-resource",
+  //   schema: z.object({
+  //     recommendations: z.array(
+  //       z.object({
+  //         id: z.string(),
+  //         is_active: z.boolean(),
+  //         availableSlots: z.array(
+  //           z.object({
+  //             start: z.string(),
+  //             end: z.string(),
+  //           })
+  //         ),
+  //         first_name: z.string(),
+  //         last_name: z.string(),
+  //       })
+  //     ),
+  //   }),
+  // });
 
   const { data: work_order_item } =
     api.db.work_order_item.get.byWorkOrder.useQuery({
@@ -274,7 +274,7 @@ export function ServiceAppointmentCreateForm({
         onSubmit={form.handleSubmit((values) => mutate(values))}
         className="flex flex-col gap-4"
       >
-        <div className="grid h-full w-full gap-2 overflow-hidden border-b sm:grid-cols-[1fr,0.8fr]">
+        <div className="grid h-full w-full gap-2 overflow-hidden border-b sm:grid-cols-[1fr,0.8fr] pb-2">
           <div className="sm:border-r">
             <ScrollArea className="h-[28rem]">
               <div className="grid px-2">
@@ -289,35 +289,62 @@ export function ServiceAppointmentCreateForm({
                 />
               </div>
             </ScrollArea>
-            {/* <FormField
+            <div className="flex items-center justify-evenly">
+              <div className="flex items-center gap-2">
+                <Label htmlFor="start_date" className="text-xs font-mono pt-4">
+                  from :
+                </Label>
+            <FormField
               control={form.control}
-              name="date_range"
+              name="start_date"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
                     <TimeSelector
-                      dateRange={{
-                        from: dateRange.from,
-                        to: dateRange.to,
-                      }}
-                      onDateRangeChange={(dateRange) => {
-                        if (!dateRange.from || !dateRange.to) {
-                          return form.resetField("date_range");
-                        }
-                        form.setValue("date_range", {
-                          from: dateRange.from.toISOString(),
-                          to: dateRange.to.toISOString(),
-                        });
-                        onDateRangeChange(dateRange);
-                      }}
+                    date={new Date(field.value)}
+                    onDateRangeChange={(date) => {
+                      if(!date) {
+                        return form.resetField("start_date");
+                      }
+                      form.setValue("start_date", date?.toISOString());
+                    }}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
-            /> */}
+            />
+            </div>
+            <div className="flex items-center gap-2">
+            <Label htmlFor="start_date" className="text-xs font-mono pt-4">
+                  to :
+                </Label>
+            <FormField
+              control={form.control}
+              name="end_date"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <TimeSelector
+                    date={new Date(field.value)}
+                    onDateRangeChange={(date) => {
+                      if(!date) {
+                        return form.resetField("end_date");
+                      }
+                      form.setValue("end_date", date?.toISOString());
+                    }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            /> 
+            </div>
+
+            </div>
+
           </div>
-          <div className="flex h-full flex-col items-center justify-between gap-2 overflow-hidden pb-2">
+          <div className="flex h-full flex-col items-center justify-between gap-2 overflow-hidden">
             <div className="flex h-full flex-col gap-2 overflow-hidden">
               <FormField
                 control={form.control}
@@ -341,9 +368,9 @@ export function ServiceAppointmentCreateForm({
                 onClick={() => {
                   // submit(JSON.stringify(data));
                 }}
-                className={`shrink-0 text-muted-foreground hover:bg-transparent ${
-                  isLoading && "animate-pulse text-primary hover:text-primary"
-                } `}
+                className={`shrink-0 text-muted-foreground hover:bg-transparent 
+                  ${true && "animate-pulse text-primary hover:text-primary"} 
+                  `}
               >
                 <Icons.sparkles className="mr-2 size-4" />
                 <span className="text-xs font-medium">Recommend</span>
