@@ -11,6 +11,7 @@ import { Breadcrumb
 
 , BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator
  } from "@gembuddy/ui/breadcrumb";
+import { Suspense } from "react";
 
 
 interface DashboardLayoutProps {
@@ -24,15 +25,9 @@ export default async function Layout({
   children,
   params,
 }: DashboardLayoutProps) {
-  const layout = cookies().get("react-resizable-panels:layout");
-  const collapsed = cookies().get("react-resizable-panels:collapsed");
 
-  const defaultCollapsed = collapsed
-    ? (JSON.parse(collapsed.value) as boolean)
-    : undefined;
-  const defaultLayout = layout
-    ? (JSON.parse(layout.value) as number[])
-    : undefined;
+  const sidebarState = await cookies().get("sidebar:state")?.value as boolean | undefined
+
 
   const { data } = await trpc.db.workspace.get.byUrlKey({
     url_key: params.url_key,
@@ -43,8 +38,15 @@ export default async function Layout({
   }
 
   return (
-      <SidebarProvider>
-        <AppSidebar />
+      <SidebarProvider defaultOpen={sidebarState} className="h-dvh"
+      style={{
+        "--sidebar-width": "13rem"
+      } as React.CSSProperties}
+      > 
+      <Suspense>
+                <AppSidebar params={params}  />
+
+      </Suspense>
             {/* <main className="flex w-full flex-col rounded-md border bg-background">
               <Header />
               
@@ -52,15 +54,19 @@ export default async function Layout({
             </main> */}
 
 
-            <SidebarInset  >
+            <SidebarInset className="overflow-y-hidden" >
 
    
             <Header />
 
-        <div className="flex flex-1 overflow-hidden">
+                    <div className="flex flex-1 overflow-hidden">
               {children}
-        </div>
+
+              </div>
+
     
+
+
         </SidebarInset>
       </SidebarProvider>
 
