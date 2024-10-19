@@ -20,6 +20,7 @@ import {
   SidebarRail
 } from "@gembuddy/ui/sidebar"
 import { BadgeCheck, Bell, ChevronRight, ChevronsUpDown, Command, CreditCard, LogOut, Sparkles } from "lucide-react"
+import Link from "next/link"
 import React, { Suspense } from 'react'
 
 // Components
@@ -29,7 +30,7 @@ const NavMenuItem: React.FC<NavItem> = ({ title, url, icon, isActive, items, dis
     <Collapsible key={title} asChild defaultOpen={isActive}>
       <SidebarMenuItem>
         <SidebarMenuButton size="sm" asChild tooltip={title} disabled={disabled}>
-          <div>
+          <Link href={url}>
             {
               image_url ? (
                 <Avatar className="h-4 w-4 rounded-md">
@@ -40,7 +41,7 @@ const NavMenuItem: React.FC<NavItem> = ({ title, url, icon, isActive, items, dis
             }
            
             <span>{title}</span>
-          </div>
+          </Link>
 
         </SidebarMenuButton>
         {items?.length ? (
