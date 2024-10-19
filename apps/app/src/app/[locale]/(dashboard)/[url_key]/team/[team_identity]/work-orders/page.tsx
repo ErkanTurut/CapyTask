@@ -29,7 +29,6 @@ export default function Page({ searchParams, params }: PageProps) {
     ? parseInt(searchParams["limit"] as string)
     : 10;
   return (
-    <ScrollArea className="h-full">
       <Shell>
         <PageHeader
           id="account-header"
@@ -48,6 +47,5 @@ export default function Page({ searchParams, params }: PageProps) {
           <TableContainer params={params} searchParams={searchParams} />
         </Suspense>
       </Shell>
-    </ScrollArea>
   );
 }
