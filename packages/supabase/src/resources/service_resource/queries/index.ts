@@ -38,7 +38,9 @@ export async function searchServiceResource({
   const { data } = await db
     .from("service_resource")
     .select("*, assigned_resource(service_appointment(*))")
-    .textSearch("full_name", input.search.replace(/ /g, "%"), {type: "websearch"})
+    .textSearch("full_name", input.search.replace(/ /g, "%"), {
+      type: "websearch",
+    })
     .throwOnError();
 
   return { data };

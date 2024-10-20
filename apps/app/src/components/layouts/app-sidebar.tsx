@@ -1,9 +1,21 @@
-import { trpc } from "@gembuddy/trpc/server"
-import { Avatar, AvatarFallback, AvatarImage } from "@gembuddy/ui/avatar"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@gembuddy/ui/collapsible"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@gembuddy/ui/dropdown-menu"
-import { Icons, IconType } from "@gembuddy/ui/icons"
-import { Separator } from "@gembuddy/ui/separator"
+import { trpc } from "@gembuddy/trpc/server";
+import { Avatar, AvatarFallback, AvatarImage } from "@gembuddy/ui/avatar";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@gembuddy/ui/collapsible";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@gembuddy/ui/dropdown-menu";
+import { Icons, IconType } from "@gembuddy/ui/icons";
+import { Separator } from "@gembuddy/ui/separator";
 import {
   Sidebar,
   SidebarContent,
@@ -17,32 +29,55 @@ import {
   SidebarMenuItem,
   SidebarMenuSkeleton,
   SidebarMenuSub,
-  SidebarRail
-} from "@gembuddy/ui/sidebar"
-import { BadgeCheck, Bell, ChevronRight, ChevronsUpDown, Command, CreditCard, LogOut, Sparkles } from "lucide-react"
-import Link from "next/link"
-import React, { Suspense } from 'react'
+  SidebarRail,
+} from "@gembuddy/ui/sidebar";
+import {
+  BadgeCheck,
+  Bell,
+  ChevronRight,
+  ChevronsUpDown,
+  Command,
+  CreditCard,
+  LogOut,
+  Sparkles,
+} from "lucide-react";
+import Link from "next/link";
+import React, { Suspense } from "react";
 
 // Components
-const NavMenuItem: React.FC<NavItem> = ({ title, url, icon, isActive, items, disabled,image_url }) => {
-  const Icon = icon ? Icons[icon] : null
+const NavMenuItem: React.FC<NavItem> = ({
+  title,
+  url,
+  icon,
+  isActive,
+  items,
+  disabled,
+  image_url,
+}) => {
+  const Icon = icon ? Icons[icon] : null;
   return (
     <Collapsible key={title} asChild defaultOpen={isActive}>
       <SidebarMenuItem>
-        <SidebarMenuButton size="sm" asChild tooltip={title} disabled={disabled}>
+        <SidebarMenuButton
+          size="sm"
+          asChild
+          tooltip={title}
+          disabled={disabled}
+        >
           <Link href={url}>
-            {
-              image_url ? (
-                <Avatar className="h-4 w-4 rounded-md">
-                  <AvatarImage src={image_url} alt={title} />
-                  <AvatarFallback className="rounded-lg">{title.slice(0, 2).toUpperCase()}</AvatarFallback>
-                </Avatar>
-              ) : ( icon && Icon ? <Icon /> : null )
-            }
-           
+            {image_url ? (
+              <Avatar className="h-4 w-4 rounded-md">
+                <AvatarImage src={image_url} alt={title} />
+                <AvatarFallback className="rounded-lg">
+                  {title.slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            ) : icon && Icon ? (
+              <Icon />
+            ) : null}
+
             <span>{title}</span>
           </Link>
-
         </SidebarMenuButton>
         {items?.length ? (
           <>
@@ -63,29 +98,25 @@ const NavMenuItem: React.FC<NavItem> = ({ title, url, icon, isActive, items, dis
         ) : null}
       </SidebarMenuItem>
     </Collapsible>
-)}
-
-
-
-
+  );
+};
 
 // Types
 type NavItem = {
-  title: string
-  url: string
-  icon?: IconType
-  isActive?: boolean
-  items?: NavItem[]
-  image_url?: string
-  disabled?: boolean
-}
-
+  title: string;
+  url: string;
+  icon?: IconType;
+  isActive?: boolean;
+  items?: NavItem[];
+  image_url?: string;
+  disabled?: boolean;
+};
 
 type AppSidebarProps = {
   params: {
-    url_key: string
-  }
-}
+    url_key: string;
+  };
+};
 
 const mainNav: NavItem[] = [
   {
@@ -115,7 +146,7 @@ const mainNav: NavItem[] = [
     icon: "dashboard",
     url: "/work-plans/templates",
   },
-]
+];
 
 const headerNav: NavItem[] = [
   {
@@ -130,7 +161,7 @@ const headerNav: NavItem[] = [
     icon: "gear",
     disabled: true,
   },
-]
+];
 
 const teamNav: NavItem[] = [
   {
@@ -144,15 +175,12 @@ const teamNav: NavItem[] = [
     url: "/service-contracts",
     disabled: true,
   },
-]
+];
 
 export async function AppSidebar({ params }: AppSidebarProps) {
   // const { data: teams } = await trpc.db.team.get.byUrlKey({
   //   url_key: params.url_key,
   // })
-
-
-
 
   return (
     <Sidebar variant="inset" className="p-0">
@@ -186,8 +214,8 @@ export async function AppSidebar({ params }: AppSidebarProps) {
         <SidebarGroup>
           <SidebarGroupLabel>Teams</SidebarGroupLabel>
           <SidebarMenu>
-            <Suspense fallback={<SidebarMenuSkeleton/>}>
-    <TeamNav items={teamNav} params={params} />
+            <Suspense fallback={<SidebarMenuSkeleton />}>
+              <TeamNav items={teamNav} params={params} />
             </Suspense>
           </SidebarMenu>
         </SidebarGroup>
@@ -195,19 +223,22 @@ export async function AppSidebar({ params }: AppSidebarProps) {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <Suspense fallback={<SidebarMenuSkeleton/>}>
-              <UserDropdown  />
+            <Suspense fallback={<SidebarMenuSkeleton />}>
+              <UserDropdown />
             </Suspense>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }
 
 // New components to handle the navigation menu
-function NavMenu({ items, params }: { items: NavItem[], params: { url_key: string } }) {
+function NavMenu({
+  items,
+  params,
+}: { items: NavItem[]; params: { url_key: string } }) {
   return (
     <>
       {items.map((item) => (
@@ -222,106 +253,120 @@ function NavMenu({ items, params }: { items: NavItem[], params: { url_key: strin
         />
       ))}
     </>
-  )
+  );
 }
 
-async function TeamNav({ items, params }: { items: NavItem[], params: { url_key: string } })  {
-  const {data: teams} =await trpc.db.team.get.byUrlKey({
+async function TeamNav({
+  items,
+  params,
+}: { items: NavItem[]; params: { url_key: string } }) {
+  const { data: teams } = await trpc.db.team.get.byUrlKey({
     url_key: params.url_key,
-  })
+  });
 
   return (
     <NavMenu
-    items={
-      teams?.map((team) => ({
-        title: team.name,
-        url: `/team/${team.identity}`,
-        icon: "user",
-        image_url: team.image_uri ?? `https://avatar.vercel.sh/${team.name}.svg`,
-        items: teamNav,
-      })) || []
-    }
-    params={params}
-  />
-  )
+      items={
+        teams?.map((team) => ({
+          title: team.name,
+          url: `/team/${team.identity}`,
+          icon: "user",
+          image_url:
+            team.image_uri ?? `https://avatar.vercel.sh/${team.name}.svg`,
+          items: teamNav,
+        })) || []
+      }
+      params={params}
+    />
+  );
 }
 
 async function UserDropdown() {
-
-  const {data: user} =await trpc.db.user.get.currentUser()
+  const { data: user } = await trpc.db.user.get.currentUser();
 
   if (!user) {
-    return null
+    return null;
   }
-  
-  const avatar_url = user.image_uri ?? `https://avatar.vercel.sh/${user.first_name||user.last_name||user.email}.svg`
+
+  const avatar_url =
+    user.image_uri ??
+    `https://avatar.vercel.sh/${user.first_name || user.last_name || user.email}.svg`;
 
   return (
-  <DropdownMenu>
-    <DropdownMenuTrigger asChild>
-      <SidebarMenuButton
-        variant="outline"
-        className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground rounded-md"
-      >
-        <Avatar className="h-6 w-6 rounded-full">
-          <AvatarImage src={avatar_url} alt={user.email} />
-          <AvatarFallback className="rounded-lg">{user.first_name?.slice(0, 2).toUpperCase()}</AvatarFallback>
-        </Avatar>
-        <div className="grid flex-1 text-left text-xs leading-tight">
-          <span className="truncate font-semibold">{user.first_name} {user.last_name}</span>
-          <span className="truncate text-xs">{user.email}</span>
-        </div>
-        <ChevronsUpDown className="ml-auto size-4" />
-      </SidebarMenuButton>
-    </DropdownMenuTrigger>
-    <DropdownMenuContent
-      className="w-[--radix-dropdown-menu-trigger-width] min-w-56"
-      side="top"
-      align="start"
-      sideOffset={4}
-    >
-      <DropdownMenuLabel className="p-0 font-normal">
-        <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-          <Avatar className="h-8 w-8 rounded-lg">
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <SidebarMenuButton
+          variant="outline"
+          className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground rounded-md"
+        >
+          <Avatar className="h-6 w-6 rounded-full">
             <AvatarImage src={avatar_url} alt={user.email} />
-            <AvatarFallback className="rounded-lg">{user.first_name?.slice(0, 2).toUpperCase()}</AvatarFallback>
+            <AvatarFallback className="rounded-lg">
+              {user.first_name?.slice(0, 2).toUpperCase()}
+            </AvatarFallback>
           </Avatar>
-          <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate font-semibold">{user.first_name} {user.last_name}</span>
+          <div className="grid flex-1 text-left text-xs leading-tight">
+            <span className="truncate font-semibold">
+              {user.first_name} {user.last_name}
+            </span>
             <span className="truncate text-xs">{user.email}</span>
           </div>
-        </div>
-      </DropdownMenuLabel>
-      <DropdownMenuSeparator />
-      <DropdownMenuGroup>
+          <ChevronsUpDown className="ml-auto size-4" />
+        </SidebarMenuButton>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        className="w-[--radix-dropdown-menu-trigger-width] min-w-56"
+        side="top"
+        align="start"
+        sideOffset={4}
+      >
+        <DropdownMenuLabel className="p-0 font-normal">
+          <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+            <Avatar className="h-8 w-8 rounded-lg">
+              <AvatarImage src={avatar_url} alt={user.email} />
+              <AvatarFallback className="rounded-lg">
+                {user.first_name?.slice(0, 2).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <div className="grid flex-1 text-left text-sm leading-tight">
+              <span className="truncate font-semibold">
+                {user.first_name} {user.last_name}
+              </span>
+              <span className="truncate text-xs">{user.email}</span>
+            </div>
+          </div>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem>
+            <Sparkles />
+            Upgrade to Pro
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem>
+            <BadgeCheck />
+            Account
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <CreditCard />
+            Billing
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Bell />
+            Notifications
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
         <DropdownMenuItem>
-          <Sparkles />
-          Upgrade to Pro
+          <LogOut />
+          Log out
         </DropdownMenuItem>
-      </DropdownMenuGroup>
-      <DropdownMenuSeparator />
-      <DropdownMenuGroup>
-        <DropdownMenuItem>
-          <BadgeCheck />
-          Account
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <CreditCard />
-          Billing
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Bell />
-          Notifications
-        </DropdownMenuItem>
-      </DropdownMenuGroup>
-      <DropdownMenuSeparator />
-      <DropdownMenuItem>
-        <LogOut />
-        Log out
-      </DropdownMenuItem>
-    </DropdownMenuContent>
-  </DropdownMenu>
-)}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
 
 // You'll need to implement this component
 function WorkspaceSelector({ params }: { params: { url_key: string } }) {
@@ -338,5 +383,5 @@ function WorkspaceSelector({ params }: { params: { url_key: string } }) {
         </div>
       </a>
     </SidebarMenuButton>
-  )
+  );
 }

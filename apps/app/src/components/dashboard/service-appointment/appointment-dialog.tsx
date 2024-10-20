@@ -1,5 +1,3 @@
-"use client";
-
 import { Event } from "@/components/calendar/types";
 import { ServiceAppointmentCreateForm } from "@/components/forms/service-appointment/service-appointment-create-form";
 import { Dialog, DialogContent, DialogTitle } from "@gembuddy/ui/dialog";
@@ -15,7 +13,7 @@ interface AppointmentDialogProps {
   team_identity: string;
 }
 
-export default function AppointmentDialog({
+export function AppointmentDialog({
   open,
   onOpenChange,
   dateRange,

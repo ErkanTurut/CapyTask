@@ -1,10 +1,17 @@
-
 import DayCalendar from "@/components/calendar/day-calendar";
 import { Event } from "@/components/calendar/types";
 import { Icons } from "@/components/icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@gembuddy/ui/avatar";
 import { Button } from "@gembuddy/ui/button";
 
+import { Shift } from "@/lib/types";
+import { cn } from "@/lib/utils";
+import { getWorkShiftsFromDateRange } from "@gembuddy/lib/utils";
+import { api, RouterOutput } from "@gembuddy/trpc/client";
+import {
+  TCreateServiceAppointmentWithItemsSchema,
+  ZCreateServiceAppointmentWithItemsSchema,
+} from "@gembuddy/trpc/schema/service_appointment";
 import {
   Form,
   FormControl,
@@ -13,31 +20,18 @@ import {
   FormMessage,
 } from "@gembuddy/ui/form";
 import { ScrollArea } from "@gembuddy/ui/scroll-area";
-import { getWorkShiftsFromDateRange } from "@gembuddy/lib/utils";
-import { Shift } from "@/lib/types";
-import { cn } from "@/lib/utils";
-import { api, RouterOutput } from "@gembuddy/trpc/client";
-import {
-  ZCreateServiceAppointmentSchema,
-  TCreateServiceAppointmentSchema,
-  TCreateServiceAppointmentWithItemsSchema,
-  ZCreateServiceAppointmentWithItemsSchema,
-} from "@gembuddy/trpc/schema/service_appointment";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { experimental_useObject as useObject } from "ai/react";
 import { endOfDay, startOfDay } from "date-fns";
 import { useEffect, useRef, useState } from "react";
 import { DateRange } from "react-day-picker";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
 
-import { WorkItemSelector } from "./work-item-selector";
-import ServiceResourceSelector from "./service-resource-selector";
-import { LocationSelector } from "./location-selector";
 import { Label } from "@gembuddy/ui/label";
-import { TimePickerInput } from "@/components/time-picker-input";
+import { LocationSelector } from "../location-selector";
+import ServiceResourceSelector from "./service-resource-selector";
 import TimeSelector from "./time-selector";
+import { WorkItemSelector } from "./work-item-selector";
 
 interface ServiceAppointmentCreateFormProps
   extends React.HTMLAttributes<HTMLFormElement> {
@@ -47,7 +41,9 @@ interface ServiceAppointmentCreateFormProps
   work_order_id: string;
   team_identity: string;
   onFinish?: (
-    data: RouterOutput["db"]["service_appointment"]["create"]["withItems"] | undefined
+    data:
+      | RouterOutput["db"]["service_appointment"]["create"]["withItems"]
+      | undefined,
   ) => void;
 }
 
@@ -61,15 +57,20 @@ export function ServiceAppointmentCreateForm({
   onFinish,
 }: ServiceAppointmentCreateFormProps) {
   const [selectedServiceResources, setSelectedServiceResources] = useState<
-    NonNullable<RouterOutput["db"]["service_resource"]["get"]["textSearch"]> | undefined
+    | NonNullable<RouterOutput["db"]["service_resource"]["get"]["textSearch"]>
+    | undefined
   >(undefined);
   const [assignedResources, setAssignedResources] = useState<string[]>([]);
   const [selectedLocation, setSelectedLocations] = useState<
-    | NonNullable<RouterOutput["db"]["location"]["get"]["textSearch"]["data"]>[number]
+    | NonNullable<
+        RouterOutput["db"]["location"]["get"]["textSearch"]["data"]
+      >[number]
     | undefined
   >(undefined);
   const [selectedWorkItem, setSelectedWorkItem] = useState<
-    | NonNullable<RouterOutput["db"]["work_order_item"]["get"]["textSearch"]["data"]>[number]
+    | NonNullable<
+        RouterOutput["db"]["work_order_item"]["get"]["textSearch"]["data"]
+      >[number]
     | undefined
   >(undefined);
 
@@ -77,19 +78,20 @@ export function ServiceAppointmentCreateForm({
   const startDateHourRef = useRef<HTMLInputElement>(null);
 
   const utils = api.useUtils();
-  const { mutate, isPending } = api.db.service_appointment.create.withItems.useMutation({
-    onSuccess: (data) => {
-      toast.success("Appointment created");
-      onFinish?.(data);
-      utils.db.service_appointment.get.byWorkOrder.invalidate({
-        work_order_id,
-      });
-      form.reset();
-    },
-    onError: (error) => {
-      toast.error("Failed to create appointment");
-    },
-  });
+  const { mutate, isPending } =
+    api.db.service_appointment.create.withItems.useMutation({
+      onSuccess: (data) => {
+        toast.success("Appointment created");
+        onFinish?.(data);
+        utils.db.service_appointment.get.byWorkOrder.invalidate({
+          work_order_id,
+        });
+        form.reset();
+      },
+      onError: (error) => {
+        toast.error("Failed to create appointment");
+      },
+    });
 
   const form = useForm<TCreateServiceAppointmentWithItemsSchema>({
     resolver: zodResolver(ZCreateServiceAppointmentWithItemsSchema),
@@ -104,8 +106,6 @@ export function ServiceAppointmentCreateForm({
         service_resource_id: [],
       },
       location_id: undefined,
-
-
     },
   });
   const placeHolderEvent: Event | null =
@@ -138,20 +138,22 @@ export function ServiceAppointmentCreateForm({
   }, [dateRange.from, dateRange.to, work_order_id]);
 
   const handleServiceResourceSelect = (
-    serviceResource: NonNullable<RouterOutput["db"]["service_resource"]["get"]["textSearch"]["data"]>[number]
+    serviceResource: NonNullable<
+      RouterOutput["db"]["service_resource"]["get"]["textSearch"]["data"]
+    >[number],
   ) => {
-    if (selectedServiceResources?.data?.some((sr) => sr.id === serviceResource.id)) {
-      setSelectedServiceResources(
-        (prev) => ({
-          data: prev?.data?.filter((sr) => sr.id !== serviceResource.id) ?? []
-        })
-      );
+    if (
+      selectedServiceResources?.data?.some((sr) => sr.id === serviceResource.id)
+    ) {
+      setSelectedServiceResources((prev) => ({
+        data: prev?.data?.filter((sr) => sr.id !== serviceResource.id) ?? [],
+      }));
       setAssignedResources((prev) =>
-        prev.filter((resource) => resource !== serviceResource.id)
+        prev.filter((resource) => resource !== serviceResource.id),
       );
     } else {
       setSelectedServiceResources((prev) => ({
-        data: [...(prev?.data ?? []), serviceResource]
+        data: [...(prev?.data ?? []), serviceResource],
       }));
     }
   };
@@ -159,23 +161,20 @@ export function ServiceAppointmentCreateForm({
   const handleAssignResource = (serviceResource: string) => {
     if (assignedResources.includes(serviceResource)) {
       setAssignedResources((prev) =>
-        prev.filter((resource) => resource !== serviceResource)
+        prev.filter((resource) => resource !== serviceResource),
       );
-      form.setValue(
-        "service_resources",
-        { service_resource_id: assignedResources }
-      );
+      form.setValue("service_resources", {
+        service_resource_id: assignedResources,
+      });
     } else {
       setAssignedResources((prev) => [...prev, serviceResource]);
-      form.setValue(
-        "service_resources",
-        { service_resource_id: assignedResources }
-
-      );
+      form.setValue("service_resources", {
+        service_resource_id: assignedResources,
+      });
     }
   };
 
-  const selectedServiceResourcesEvents: Event[] = 
+  const selectedServiceResourcesEvents: Event[] =
     selectedServiceResources?.data?.flatMap(
       (selectedServiceResource) =>
         selectedServiceResource.assigned_resource?.flatMap(
@@ -193,14 +192,14 @@ export function ServiceAppointmentCreateForm({
               color: "blue",
               id: assignedResource.service_appointment.id,
             };
-          }
-        ) ?? []
+          },
+        ) ?? [],
     ) ?? [];
 
-    console.log( form.getValues(
-      "service_resources"));
   const handleLocationSelect = (
-    location: NonNullable<RouterOutput["db"]["location"]["get"]["textSearch"]["data"]>[number]
+    location: NonNullable<
+      RouterOutput["db"]["location"]["get"]["textSearch"]["data"]
+    >[number],
   ) => {
     if (selectedLocation?.id === location.id) {
       setSelectedLocations(undefined);
@@ -212,7 +211,9 @@ export function ServiceAppointmentCreateForm({
   };
 
   const handleWorkItemSelect = (
-    workItem: NonNullable<RouterOutput["db"]["work_order_item"]["get"]["byWorkOrder"]["data"]>[number]
+    workItem: NonNullable<
+      RouterOutput["db"]["work_order_item"]["get"]["byWorkOrder"]["data"]
+    >[number],
   ) => {
     if (selectedWorkItem?.id === workItem.id) {
       setSelectedWorkItem(undefined);
@@ -232,7 +233,7 @@ export function ServiceAppointmentCreateForm({
   const workShit = getWorkShiftsFromDateRange(
     startOfDay(date),
     endOfDay(date),
-    shift
+    shift,
   );
 
   // const { data } = api.db.service_resource.get.recommendation.useQuery(
@@ -294,55 +295,53 @@ export function ServiceAppointmentCreateForm({
                 <Label htmlFor="start_date" className="text-xs font-mono pt-4">
                   from :
                 </Label>
-            <FormField
-              control={form.control}
-              name="start_date"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <TimeSelector
-                    date={new Date(field.value)}
-                    onDateRangeChange={(date) => {
-                      if(!date) {
-                        return form.resetField("start_date");
-                      }
-                      form.setValue("start_date", date?.toISOString());
-                    }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            </div>
-            <div className="flex items-center gap-2">
-            <Label htmlFor="start_date" className="text-xs font-mono pt-4">
+                <FormField
+                  control={form.control}
+                  name="start_date"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <TimeSelector
+                          date={new Date(field.value)}
+                          onDateRangeChange={(date) => {
+                            if (!date) {
+                              return form.resetField("start_date");
+                            }
+                            form.setValue("start_date", date?.toISOString());
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <Label htmlFor="start_date" className="text-xs font-mono pt-4">
                   to :
                 </Label>
-            <FormField
-              control={form.control}
-              name="end_date"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <TimeSelector
-                    date={new Date(field.value)}
-                    onDateRangeChange={(date) => {
-                      if(!date) {
-                        return form.resetField("end_date");
-                      }
-                      form.setValue("end_date", date?.toISOString());
-                    }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            /> 
+                <FormField
+                  control={form.control}
+                  name="end_date"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <TimeSelector
+                          date={new Date(field.value)}
+                          onDateRangeChange={(date) => {
+                            if (!date) {
+                              return form.resetField("end_date");
+                            }
+                            form.setValue("end_date", date?.toISOString());
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
-
-            </div>
-
           </div>
           <div className="flex h-full flex-col items-center justify-between gap-2 overflow-hidden">
             <div className="flex h-full flex-col gap-2 overflow-hidden">
@@ -378,21 +377,23 @@ export function ServiceAppointmentCreateForm({
 
               <ScrollArea className="grid h-full overflow-hidden">
                 <div className="flex flex-col gap-1">
-                  {selectedServiceResources?.data?.map((selectedServiceResource) => {
-                    return ServiceRessourceItem(
-                      {
-                        id: selectedServiceResource.id,
-                        is_assigned: assignedResources.includes(
-                          selectedServiceResource.id
-                        ),
-                        first_name:
-                          selectedServiceResource.first_name || undefined,
-                        last_name:
-                          selectedServiceResource.last_name || undefined,
-                      },
-                      handleAssignResource
-                    );
-                  })}
+                  {selectedServiceResources?.data?.map(
+                    (selectedServiceResource) => {
+                      return ServiceRessourceItem(
+                        {
+                          id: selectedServiceResource.id,
+                          is_assigned: assignedResources.includes(
+                            selectedServiceResource.id,
+                          ),
+                          first_name:
+                            selectedServiceResource.first_name || undefined,
+                          last_name:
+                            selectedServiceResource.last_name || undefined,
+                        },
+                        handleAssignResource,
+                      );
+                    },
+                  )}
                 </div>
               </ScrollArea>
             </div>
@@ -456,7 +457,7 @@ function ServiceRessourceItem(
     image_uri?: string;
   },
   onAssign: (id: string) => void,
-  is_recommended?: boolean
+  is_recommended?: boolean,
 ) {
   const initials = `${serviceResource.first_name?.[0] ?? ""}${
     serviceResource.last_name?.[0] ?? ""
@@ -469,7 +470,7 @@ function ServiceRessourceItem(
         "flex w-80 items-center justify-between rounded-md border border-transparent bg-secondary px-2 py-1",
         {
           "border-dashed border-border": is_recommended,
-        }
+        },
       )}
     >
       <div className="flex items-center justify-between gap-2">

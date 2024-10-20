@@ -63,12 +63,13 @@
     "./toaster": "./src/components/toaster.tsx",
     "./toggle": "./src/components/toggle.tsx",
     "./tooltip": "./src/components/tooltip.tsx",
-    "./use-toast": "./src/components/use-toast.ts",
+    "./use-toast": "./src/hooks/use-toast.ts",
     "./vizually-hidden": "./src/components/visually-hidden.tsx",
     "./utils": "./src/utils/index.ts",
     "./hooks": "./src/hooks/index.ts",
     "./sidebar": "./src/components/sidebar.tsx",
     "./collapsible": "./src/components/collapsible.tsx"
+    
   },
   "dependencies": {
     "@dnd-kit/core": "^6.1.0",
