@@ -119,17 +119,16 @@ export function DataTableToolbar<TData>({
           />
         )}
         <DataTableViewOptions table={table} />
-        <Link className={
-          buttonVariants({size:"sm"})
-        } href={
-          {
+        <Link
+          className={buttonVariants({ size: "sm" })}
+          href={{
             query: {
-              create: "work-order-item"
-            }
-          }
-        }>
+              create: true,
+            },
+          }}
+        >
           <Icons.plusCircled className="mr-2 size-4" aria-hidden="true" />
-        Create
+          Create
         </Link>
       </div>
       <div

@@ -24,7 +24,7 @@ import WeekCalendar from "@/components/calendar/week-calendar";
 import { api, RouterOutput } from "@gembuddy/trpc/client";
 import DateSelector from "./date-selector";
 import WeekNavigator from "@/components/calendar/week-navigation";
-import AppointmentDialog from "./appointment-dialog";
+import { AppointmentDialog } from "./appointment-dialog";
 import { notFound } from "next/navigation";
 import { Shift } from "@/lib/types";
 import { getWorkShiftsFromDateRange } from "@gembuddy/lib/utils";
