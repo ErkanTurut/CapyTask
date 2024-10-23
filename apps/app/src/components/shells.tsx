@@ -1,6 +1,6 @@
-import * as React from "react";
-import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
+import { type VariantProps, cva } from "class-variance-authority";
+import type * as React from "react";
 
 const shellVariants = cva("grid gap-6 pb-8 pt-6 px-4", {
   variants: {

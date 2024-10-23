@@ -60,7 +60,7 @@ export async function deleteServiceAppointments({
   const { status } = await db
     .from("service_appointment")
     .delete()
-    .in("service_appointment_id", input.service_appointment_id)
+    .in("id", input.service_appointment_id)
     .throwOnError();
 
   return { status };

@@ -1,13 +1,14 @@
 "use client";
-import { useState } from "react";
 import { Icons } from "@/components/icons";
 import { PopoverComboBox } from "@/components/popoverCombobox";
+import type { Database } from "@gembuddy/supabase/types";
+import { useState } from "react";
 import { StatusChangeModal } from "./status-change-modal";
-import { StatusConfig, statusConfig } from "./status-config";
-import { Database } from "@gembuddy/supabase/types";
+import { type StatusConfig, statusConfig } from "./status-config";
 
 interface StatusSelectorProps {
   status: Database["public"]["Enums"]["Status"];
+  onChange?: (status: Database["public"]["Enums"]["Status"]) => void;
 }
 
 export function StatusSelector({ status }: StatusSelectorProps) {

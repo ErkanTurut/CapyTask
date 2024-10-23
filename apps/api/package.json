@@ -7,9 +7,11 @@
     "migrate": "supabase migration up",
     "seed": "supabase db seed generate && supabase db seed run",
     "reset": "supabase db reset",
-    "generate": "supabase gen types --lang=typescript --project-id igidoujvlaqxflfjjlps --schema public > ../../packages/supabase/src/types/db.ts"
+    "generate": "supabase gen types --lang=typescript --project-id igidoujvlaqxflfjjlps --schema public > ../../packages/supabase/src/types/db.ts",
+    "push": "bunx prisma db push"
   },
   "dependencies": {
+    "prisma": "^5.21.1",
     "supabase": "^1.191.3"
   }
 }

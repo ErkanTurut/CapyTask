@@ -58,7 +58,7 @@ export async function getServiceAppointmentByServiceResources({
 }) {
   const { data } = await db
     .from("service_appointment")
-    .select()
+    .select("*, assigned_resource(service_resource_id), work_order_item(*)")
     .in("assigned_resource.service_resource_id", input.service_resource_id)
     .gte("start_date", input.date_range.from)
     .lte("end_date", input.date_range.to)

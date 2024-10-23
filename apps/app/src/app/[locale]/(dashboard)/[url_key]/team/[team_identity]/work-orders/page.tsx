@@ -6,10 +6,10 @@ import {
   PageHeaderHeading,
 } from "@/components/page-header";
 import TableSkeleton from "@/components/skeletons/table-skeleton";
-import { Suspense } from "react";
 import TableContainer from "@/components/tables/work-order/TableContainer";
 import { ScrollArea } from "@gembuddy/ui/scroll-area";
 import { Separator } from "@gembuddy/ui/separator";
+import { Suspense } from "react";
 interface PageProps {
   // searchParams: { [key: string]: string | string[] | undefined };
   searchParams: {
@@ -22,12 +22,6 @@ interface PageProps {
 }
 
 export default function Page({ searchParams, params }: PageProps) {
-  const page = searchParams["page"]
-    ? parseInt(searchParams["page"] as string)
-    : 1;
-  const limit = searchParams["limit"]
-    ? parseInt(searchParams["limit"] as string)
-    : 10;
   return (
     <Shell>
       <PageHeader id="account-header" aria-labelledby="account-header-heading">

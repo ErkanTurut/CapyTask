@@ -1,14 +1,15 @@
 import "server-only";
 
-import { protectedProcedure, router } from "../../trpc";
+import { createAssignedResourceMany } from "@gembuddy/supabase/resources";
 import {
-  getServiceAppointmentByWorkOrder,
   createServiceAppointment,
   deleteServiceAppointments,
   getServiceAppointmentById,
   getServiceAppointmentByServiceResources,
+  getServiceAppointmentByWorkOrder,
   updateServiceAppointment,
 } from "@gembuddy/supabase/resources/service_appointment";
+import { protectedProcedure, router } from "../../trpc";
 import {
   ZCreateServiceAppointmentSchema,
   ZCreateServiceAppointmentWithItemsSchema,
@@ -18,7 +19,6 @@ import {
   ZGetServiceAppointmentSchema,
   ZUpdateServiceAppointmentSchema,
 } from "./schema";
-import { createAssignedResourceMany } from "@gembuddy/supabase/resources";
 
 export const service_appointment = router({
   get: {

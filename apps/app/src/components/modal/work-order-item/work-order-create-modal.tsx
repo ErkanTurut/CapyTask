@@ -15,7 +15,7 @@ export  function WorkOrderItemCreateModal({
   return (
     <Dialog
       open={open}
-      onOpenChange={setOpen}
+      onOpenChange={(open)=> {open ? setOpen(true) : setOpen(null)}}
     >
       <DialogContent className="overflow-hidden sm:max-w-lg">
         <DialogTitle>Create Service Appointment</DialogTitle>
