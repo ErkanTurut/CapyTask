@@ -2,7 +2,7 @@ import { GoogleSignin } from "@/components/google-signin";
 import Image from "next/image";
 
 export const metadata = {
-  title: "Login",
+  title: "Login"
 };
 
 export default function Page() {

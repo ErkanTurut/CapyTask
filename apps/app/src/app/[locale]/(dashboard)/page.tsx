@@ -3,7 +3,7 @@ import { getI18n } from "@/locales/server";
 import { trpc } from "@gembuddy/trpc/server";
 
 export const metadata = {
-  title: "Home",
+  title: "Home"
 };
 
 export default async function Page() {

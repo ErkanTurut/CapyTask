@@ -9,7 +9,7 @@ import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "Gembuddy",
-  description: "You Lead. Buddy’s Got Your Back.",
+  description: "You Lead. Buddy’s Got Your Back."
 };
 
 export const viewport = {
