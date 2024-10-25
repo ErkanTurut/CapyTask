@@ -7,17 +7,19 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 interface PageProps {
-  searchParams: {
+  searchParams: Promise<{
     step_id: string | null;
-  };
-  params: {
+  }>;
+  params: Promise<{
     url_key: string;
     team_identity: string;
     work_plan_template_id: string;
-  };
+  }>;
 }
 
-export default async function Page({ searchParams, params }: PageProps) {
+export default async function Page(props: PageProps) {
+  const params = await props.params;
+  const searchParams = await props.searchParams;
   const work_step_templates =
     await trpc.db.work_step_template.get.byWorkPlanTemplate({
       work_plan_template_id: params.work_plan_template_id,

@@ -23,16 +23,19 @@ import { Suspense } from "react";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
-  params: {
+  params: Promise<{
     url_key: string;
-  };
+  }>;
 }
 
-export default async function Layout({
-  children,
-  params,
-}: DashboardLayoutProps) {
-  const sidebarState = (await cookies().get("sidebar:state")?.value) as
+export default async function Layout(props: DashboardLayoutProps) {
+  const params = await props.params;
+
+  const {
+    children
+  } = props;
+
+  const sidebarState = (await (await cookies()).get("sidebar:state")?.value) as
     | boolean
     | undefined;
 

@@ -8,15 +8,16 @@ import TableSkeleton from "@/components/skeletons/table-skeleton";
 import { Icons } from "@/components/icons";
 
 interface PageProps {
-  params: {
+  params: Promise<{
     url_key: string;
     team_identity: string;
     work_order_id: string;
-  };
-  searchParams: Record<string, string>;
+  }>;
+  searchParams: Promise<Record<string, string>>;
 }
 
-export default async function Page({ params, searchParams }: PageProps) {
+export default async function Page(props: PageProps) {
+  const params = await props.params;
   const initialData = trpc.db.service_appointment.get.byWorkOrder({
     work_order_id: params.work_order_id,
   });

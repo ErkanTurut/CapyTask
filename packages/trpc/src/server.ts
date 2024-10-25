@@ -41,7 +41,7 @@ export const trpc = createCallerFactory(appRouter)(
     return {
       session: (await getSession()).data.session,
       headers: {
-        cookie: cookies().toString(),
+        cookie: (await cookies()).toString(),
         "x-trpc-source": "rsc-invoke",
       },
       db: createClient(),

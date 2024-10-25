@@ -10,16 +10,15 @@ import { Suspense } from "react";
 import { TableContainer } from "./_components/table/TableContainer";
 
 interface DashboardLayoutProps {
-  params: {
+  params: Promise<{
     url_key: string;
-  };
-  searchParams: { [key: string]: string | string[] | undefined };
+  }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function DashboardPage({
-  params,
-  searchParams,
-}: DashboardLayoutProps) {
+export default async function DashboardPage(props: DashboardLayoutProps) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const page = searchParams["page"]
     ? parseInt(searchParams["page"] as string)
     : 1;

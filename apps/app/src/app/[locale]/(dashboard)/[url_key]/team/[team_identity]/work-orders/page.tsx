@@ -12,16 +12,18 @@ import { Separator } from "@gembuddy/ui/separator";
 import { Suspense } from "react";
 interface PageProps {
   // searchParams: { [key: string]: string | string[] | undefined };
-  searchParams: {
+  searchParams: Promise<{
     limit: string;
     page: string;
-  };
-  params: {
+  }>;
+  params: Promise<{
     team_identity: string;
-  };
+  }>;
 }
 
-export default function Page({ searchParams, params }: PageProps) {
+export default async function Page(props: PageProps) {
+  const params = await props.params;
+  const searchParams = await props.searchParams;
   return (
     <Shell>
       <PageHeader id="account-header" aria-labelledby="account-header-heading">

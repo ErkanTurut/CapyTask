@@ -4,13 +4,15 @@ import { Suspense } from "react";
 import TableSkeleton from "@/components/skeletons/table-skeleton";
 
 interface PageProps {
-  searchParams: { [key: string]: string | string[] | undefined };
-  params: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  params: Promise<{
     team_identity: string;
-  };
+  }>;
 }
 
-export default function Page({ params, searchParams }: PageProps) {
+export default async function Page(props: PageProps) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const page = searchParams["page"]
     ? parseInt(searchParams["page"] as string)
     : 1;

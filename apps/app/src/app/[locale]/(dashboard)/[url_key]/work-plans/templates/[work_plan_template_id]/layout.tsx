@@ -21,14 +21,20 @@ import { Suspense } from "react";
 
 interface layoutProps {
   children: React.ReactNode;
-  params: {
+  params: Promise<{
     url_key: string;
     team_identity: string;
     work_plan_template_id: string;
-  };
+  }>;
 }
 
-export default async function layoutPage({ children, params }: layoutProps) {
+export default async function layoutPage(props: layoutProps) {
+  const params = await props.params;
+
+  const {
+    children
+  } = props;
+
   const { data: work_plan_template } =
     await trpc.db.work_plan_template.get.byId({
       id: params.work_plan_template_id,

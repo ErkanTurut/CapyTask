@@ -12,13 +12,14 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 interface createPageProps {
-  params: {
+  params: Promise<{
     team_identity: string;
     url_key: string;
-  };
+  }>;
 }
 
-export default async function createPage({ params }: createPageProps) {
+export default async function createPage(props: createPageProps) {
+  const params = await props.params;
   const { data } = await trpc.db.workspace.get.byUrlKey({
     url_key: params.url_key,
   });

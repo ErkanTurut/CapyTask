@@ -4,14 +4,15 @@ import { WorkOrderItemTable } from "@/components/tables/work-order-item/work-ord
 import { trpc } from "@gembuddy/trpc/server";
 
 interface PageProps {
-  params: {
+  params: Promise<{
     url_key: string;
     team_identity: string;
     work_order_id: string;
-  };
+  }>;
 }
 
-export default async function Page({ params }: PageProps) {
+export default async function Page(props: PageProps) {
+  const params = await props.params;
   const { data: work_order_item, count } =
     await trpc.db.work_order_item.get.byWorkOrder({
       work_order_id: params.work_order_id,

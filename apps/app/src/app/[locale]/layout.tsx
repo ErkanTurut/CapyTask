@@ -19,21 +19,23 @@ export const viewport = {
   ],
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default async function RootLayout(
+  {
+    children,
+  }: Readonly<{
+    children: React.ReactNode;
+  }>
+) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    (<html lang="en" suppressHydrationWarning>
       <body
         className={cn(
           `${GeistSans.variable} ${GeistMono.variable}`,
           "antialiased   font-sans        min-h-screen bg-background",
         )}
       >
-        <Providers headers={headers()}>{children}</Providers>
+        <Providers headers={await headers()}>{children}</Providers>
       </body>
-    </html>
+    </html>)
   );
 }

@@ -1,9 +1,10 @@
 interface PageProps {
-  params: {
+  params: Promise<{
     location_id: string;
-  };
+  }>;
 }
 
-export default function Page({ params }: PageProps) {
+export default async function Page(props: PageProps) {
+  const params = await props.params;
   return <div> {params.location_id} </div>;
 }

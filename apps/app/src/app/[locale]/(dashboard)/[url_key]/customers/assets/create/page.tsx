@@ -18,13 +18,14 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 interface createTeamProps {
-  params: {
+  params: Promise<{
     url_key: string;
     team_identity: string;
-  };
+  }>;
 }
 
-export default async function createTeam({ params }: createTeamProps) {
+export default async function createTeam(props: createTeamProps) {
+  const params = await props.params;
   const { data: workspace } = await trpc.db.workspace.get.byUrlKey({
     url_key: params.url_key,
   });

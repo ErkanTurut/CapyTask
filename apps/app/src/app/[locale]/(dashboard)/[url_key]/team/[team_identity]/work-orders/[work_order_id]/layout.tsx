@@ -10,14 +10,20 @@ import { ScrollArea } from "@gembuddy/ui/scroll-area";
 
 interface LayoutProps {
   children: React.ReactNode;
-  params: {
+  params: Promise<{
     url_key: string;
     team_identity: string;
     work_order_id: string;
-  };
+  }>;
 }
 
-export default async function Layout({ children, params }: LayoutProps) {
+export default async function Layout(props: LayoutProps) {
+  const params = await props.params;
+
+  const {
+    children
+  } = props;
+
   const work_order = await trpc.db.work_order.get.byId({
     id: params.work_order_id,
   });
