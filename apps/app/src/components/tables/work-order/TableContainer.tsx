@@ -47,15 +47,15 @@ const TableContainer: FC<TableProps> = async ({ searchParams, params }) => {
   });
 
   return (
-    <TableData
+    // <WorkOrderTable initialData={initialData} />
+    (<TableData
       initialData={initialData}
       params={params}
       searchParams={{
         page: page,
         limit: limit,
       }}
-    />
-    // <WorkOrderTable initialData={initialData} />
+    />)
   );
 };
 
