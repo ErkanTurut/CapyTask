@@ -71,12 +71,13 @@ export const searchAsset = async ({
   input: { search: string };
   db: Client;
 }) => {
-  const {data}= await db
+  const { data } = await db
     .from("asset")
     .select("*, location(*)")
     .textSearch("name", input.search.replace(/ /g, "%"), {
       type: "websearch",
-    }).throwOnError();
+    })
+    .throwOnError();
 
-  return { data};
+  return { data };
 };

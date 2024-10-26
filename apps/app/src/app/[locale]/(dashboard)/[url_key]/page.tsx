@@ -31,7 +31,6 @@ export default function Page({}: PageProps) {
       <PageHeader>
         <PageHeaderHeading>Service Appointments</PageHeaderHeading>
       </PageHeader>
-
     </Shell>
   );
 }

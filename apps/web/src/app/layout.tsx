@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   title: "Create v1",
 
   description:
-    "A free, open-source starter kit for your next project, built with insights from Midday."
+    "A free, open-source starter kit for your next project, built with insights from Midday.",
 };
 
 export default function RootLayout({

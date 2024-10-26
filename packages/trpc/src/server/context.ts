@@ -31,7 +31,7 @@ export const createContext = async (opts?: FetchCreateContextFnOptions) => {
   return {
     session,
     headers: opts && Object.fromEntries(opts.req.headers),
-    db: (await createClient()),
+    db: await createClient(),
   };
 };
 

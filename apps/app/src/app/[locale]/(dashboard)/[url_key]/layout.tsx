@@ -31,9 +31,7 @@ interface DashboardLayoutProps {
 export default async function Layout(props: DashboardLayoutProps) {
   const params = await props.params;
 
-  const {
-    children
-  } = props;
+  const { children } = props;
 
   const sidebarState = (await (await cookies()).get("sidebar:state")?.value) as
     | boolean

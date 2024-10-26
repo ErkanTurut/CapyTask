@@ -49,7 +49,7 @@ export default function Header({}: headerProps) {
     //   </div>
     // </div>
 
-    (<header className="flex h-11 shrink-0 items-center gap-2 w-full border-b sticky top-0 z-50">
+    <header className="flex h-11 shrink-0 items-center gap-2 w-full border-b sticky top-0 z-50">
       <div className="flex items-center gap-2 px-4 w-full">
         <SidebarTrigger className="-ml-1" />
         <Separator orientation="vertical" className="mr-2 h-4" />
@@ -76,6 +76,6 @@ export default function Header({}: headerProps) {
           </Button>
         </div>
       </div>
-    </header>)
+    </header>
   );
 }

@@ -9,7 +9,7 @@ import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "Gembuddy",
-  description: "You Lead. Buddy’s Got Your Back."
+  description: "You Lead. Buddy’s Got Your Back.",
 };
 
 export const viewport = {
@@ -19,15 +19,13 @@ export const viewport = {
   ],
 };
 
-export default async function RootLayout(
-  {
-    children,
-  }: Readonly<{
-    children: React.ReactNode;
-  }>
-) {
+export default async function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    (<html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
           `${GeistSans.variable} ${GeistMono.variable}`,
@@ -36,6 +34,6 @@ export default async function RootLayout(
       >
         <Providers headers={await headers()}>{children}</Providers>
       </body>
-    </html>)
+    </html>
   );
 }

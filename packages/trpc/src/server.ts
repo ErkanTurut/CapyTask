@@ -30,8 +30,6 @@ const getSession = cache(async () => {
 //   };
 // });
 
-
-
 export const trpc = createCallerFactory(appRouter)(
   cache(async () => {
     loggerLink({
@@ -46,7 +44,7 @@ export const trpc = createCallerFactory(appRouter)(
         cookie: (await cookies()).toString(),
         "x-trpc-source": "rsc-invoke",
       },
-      db: (await createClient()),
+      db: await createClient(),
     };
   }),
 );

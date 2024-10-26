@@ -31,9 +31,7 @@ interface layoutProps {
 export default async function layoutPage(props: layoutProps) {
   const params = await props.params;
 
-  const {
-    children
-  } = props;
+  const { children } = props;
 
   const { data: work_plan_template } =
     await trpc.db.work_plan_template.get.byId({

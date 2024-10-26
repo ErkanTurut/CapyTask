@@ -26,24 +26,20 @@ interface AssetSelectorProps {
   >[number];
 }
 
-export function AssetSelector({
-  onSelect,
-  selectedValue,
-}: AssetSelectorProps) {
+export function AssetSelector({ onSelect, selectedValue }: AssetSelectorProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [searchValue, setSearchValue] = useState("");
   const [open, setOpen] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
 
-  const { data: assets, isFetching } =
-    api.db.asset.get.textSearch.useQuery(
-      { search: searchValue },
-      {
-        refetchOnMount: false,
-        initialData: selectedValue && { data: [selectedValue] },
-        enabled: Boolean(searchValue),
-      },
-    );
+  const { data: assets, isFetching } = api.db.asset.get.textSearch.useQuery(
+    { search: searchValue },
+    {
+      refetchOnMount: false,
+      initialData: selectedValue && { data: [selectedValue] },
+      enabled: Boolean(searchValue),
+    },
+  );
 
   const handleOnSearchChange = useDebouncedCallback(async (e: string) => {
     setIsTyping(false);
@@ -136,4 +132,3 @@ export function AssetSelector({
     </Popover>
   );
 }
-

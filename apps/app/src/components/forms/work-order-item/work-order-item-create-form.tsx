@@ -50,13 +50,13 @@ export function WorkOrderItemCreateForm({
   >(undefined);
 
   const [selectedAsset, setSelectedAsset] = useState<
-  | NonNullable<
-      RouterOutput["db"]["asset"]["get"]["textSearch"]["data"]
-    >[number]
-  | undefined
->(undefined);
+    | NonNullable<
+        RouterOutput["db"]["asset"]["get"]["textSearch"]["data"]
+      >[number]
+    | undefined
+  >(undefined);
 
-const utils = api.useUtils()
+  const utils = api.useUtils();
 
   const { mutate, isPending } = api.db.work_order_item.create.useMutation({
     onSuccess(data) {
@@ -65,7 +65,7 @@ const utils = api.useUtils()
       if (data) {
         onCreated?.(data);
       }
-      toast.success('Work order item created successfully');
+      toast.success("Work order item created successfully");
       utils.db.work_order_item.get.byWorkOrder.invalidate({ work_order_id });
     },
     onError(err) {
@@ -101,18 +101,16 @@ const utils = api.useUtils()
     }
   };
 
-
-
   const handleAssetSelect = (
     asset: NonNullable<
       RouterOutput["db"]["asset"]["get"]["textSearch"]["data"]
     >[number],
   ) => {
     if (selectedAsset?.id === asset.id) {
-        setSelectedAsset(undefined);
+      setSelectedAsset(undefined);
       form.resetField("asset_id");
     } else {
-        setSelectedAsset(asset);
+      setSelectedAsset(asset);
       form.setValue("asset_id", asset.id);
     }
   };
