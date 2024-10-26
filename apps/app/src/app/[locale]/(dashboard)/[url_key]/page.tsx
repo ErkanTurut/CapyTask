@@ -32,11 +32,6 @@ export default function Page({}: PageProps) {
         <PageHeaderHeading>Service Appointments</PageHeaderHeading>
       </PageHeader>
 
-      <div className="flex flex-1">
-        <ServiceAppointmentList
-          serviceAppointmentQuery={serviceAppointmentQuery}
-        />
-      </div>
     </Shell>
   );
 }

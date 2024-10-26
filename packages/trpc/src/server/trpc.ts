@@ -1,15 +1,11 @@
-import {
-  TRPCError,
-  inferRouterInputs,
-  inferRouterOutputs,
-  initTRPC,
-} from "@trpc/server";
+import { TRPCError, initTRPC } from "@trpc/server";
+import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 
 // @ts-ignore
 import superjson from "superjson";
-import { Context } from "./context";
+import type { Context } from "./context";
 import { ZodError } from "zod";
-import { AppRouter } from "./routes/_app";
+import type { AppRouter } from "./routes/_app";
 
 const tRPCContext = initTRPC.context<Context>().create({
   transformer: superjson,

@@ -17,6 +17,7 @@ import {
   ZGetWorkOrderByTeamSchema,
   ZSearchWorkOrderSchema,
   ZUpdateWorkOrderSchema,
+  ZUpdateWorkOrderWithNoteSchema,
 } from "./schema";
 export const work_order = router({
   get: {
@@ -57,14 +58,27 @@ export const work_order = router({
       }),
   },
   update: {
-    status: protectedProcedure
-      .input(ZUpdateWorkOrderSchema)
+    statusWithNote: protectedProcedure
+      .input(ZUpdateWorkOrderWithNoteSchema)
       .mutation(async ({ ctx, input }) => {
-        return await updateWorkOrder({
+        const { data } = await updateWorkOrder({
           db: ctx.db,
-          input,
+          input: ZUpdateWorkOrderSchema.parse(input),
           id: input.work_order_id,
         });
+
+        if (input.note) {
+          await ctx.db
+            .from("note")
+            .insert({
+              content: input.note,
+              type: "STATUS_CHANGE",
+              created_by_id: ctx.session.user.id,
+              work_order_id: input.work_order_id,
+            })
+            .throwOnError();
+        }
+        return data;
       }),
   },
 

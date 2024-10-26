@@ -1,5 +1,7 @@
 "use client";
-import { api } from "@gembuddy/trpc/client";
+import { Icons } from "@/components/icons";
+import { PopoverComboBox } from "@/components/popoverCombobox";
+import { type RouterOutput, api } from "@gembuddy/trpc/client";
 import {
   type TUpdateWorkOrderWithNoteSchema,
   ZUpdateWorkOrderWithNoteSchema,
@@ -10,7 +12,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@gembuddy/ui/dialog";
 import {
   Form,
@@ -23,9 +24,73 @@ import { Label } from "@gembuddy/ui/label";
 import { Textarea } from "@gembuddy/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import type { StatusConfig } from "./status-config";
+import { type StatusConfig, statusConfig } from "./status-config";
+
+interface StatusSelectorProps {
+  workOrderQuery: RouterOutput["db"]["work_order"]["get"]["byId"];
+}
+
+export function WorkOrderStatus({ workOrderQuery }: StatusSelectorProps) {
+  const params = useParams() as { work_order_id: string };
+  const {
+    data: { data: work_order },
+  } = api.db.work_order.get.byId.useQuery(
+    {
+      id: params.work_order_id,
+    },
+    {
+      initialData: workOrderQuery,
+    },
+  );
+
+  if (!work_order) {
+    return null;
+  }
+  const [isOpen, setIsOpen] = useState(false);
+  const initialStatus = statusConfig.find(
+    (_status) => _status.value === work_order.status,
+  );
+
+  const [selectedStatus, setSelectedStatus] = useState<
+    StatusConfig | undefined
+  >(undefined);
+
+  if (!initialStatus) return null;
+
+  const handleSelect = (status: StatusConfig) => {
+    if (status.value === initialStatus.value) return;
+    setSelectedStatus(status);
+    setIsOpen(true);
+  };
+
+  const Icon = initialStatus.icon ? Icons[initialStatus.icon] : null;
+
+  return (
+    <>
+      <StatusChangeModal
+        prevStatus={initialStatus}
+        selectedStatus={selectedStatus}
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+      />
+      <PopoverComboBox
+        className="w-[10rem]"
+        options={statusConfig}
+        onSelect={handleSelect}
+        selected={initialStatus}
+      >
+        <div className="inline-flex cursor-pointer items-center gap-2 rounded-full border bg-opacity-65 px-2.5 py-1 text-xs font-semibold transition-colors">
+          {Icon && <Icon className="size-4 text-muted-foreground" />}
+          {initialStatus.label}
+          <Icons.caretSort className="size-4 text-muted-foreground group-hover:text-accent-foreground" />
+        </div>
+      </PopoverComboBox>
+    </>
+  );
+}
 
 interface StatusChangeModalProps {
   isOpen?: boolean;
@@ -57,11 +122,11 @@ export function StatusChangeModal({
     resolver: zodResolver(ZUpdateWorkOrderWithNoteSchema),
     defaultValues: {
       note: undefined,
-      status: selectedStatus?.value,
-      id: params.work_order_id,
-      work_order_id: params.work_order_id,
     },
     values: {
+      id: params.work_order_id,
+      status: selectedStatus?.value,
+
       work_order_id: params.work_order_id,
     },
   });

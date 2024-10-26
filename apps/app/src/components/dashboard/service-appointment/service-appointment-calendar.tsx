@@ -1,6 +1,5 @@
 "use client";
 
-import { use, useEffect, useMemo, useState } from "react";
 import {
   addDays,
   addHours,
@@ -18,16 +17,17 @@ import {
   useQueryState,
   useQueryStates,
 } from "nuqs";
+import { use, useEffect, useMemo, useState } from "react";
 
-import { Event } from "@/components/calendar/types";
+import type { Event } from "@/components/calendar/types";
 import WeekCalendar from "@/components/calendar/week-calendar";
-import { api, RouterOutput } from "@gembuddy/trpc/client";
-import DateSelector from "./date-selector";
 import WeekNavigator from "@/components/calendar/week-navigation";
-import { AppointmentDialog } from "./appointment-dialog";
-import { notFound } from "next/navigation";
-import { Shift } from "@/lib/types";
+import type { Shift } from "@/lib/types";
 import { getWorkShiftsFromDateRange } from "@gembuddy/lib/utils";
+import { type RouterOutput, api } from "@gembuddy/trpc/client";
+import { notFound } from "next/navigation";
+import { AppointmentDialog } from "./appointment-dialog";
+import DateSelector from "./date-selector";
 
 interface ServiceAppointmentCalendarProps {
   work_order_id: string;

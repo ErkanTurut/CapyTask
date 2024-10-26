@@ -1,4 +1,3 @@
-"use client";
 import {
   PageHeader,
   PageHeaderDescription,
@@ -6,30 +5,18 @@ import {
 } from "@/components/page-header";
 
 import { WorkOrderTabs } from "@/components/dashboard/work-order/work-order-tabs";
-import { RouterOutput } from "@gembuddy/trpc/client";
+import type { RouterOutput } from "@gembuddy/trpc/client";
+import { api } from "@gembuddy/trpc/client";
 import { PrioritySelector } from "./priority-selector";
 import { StatusSelector } from "./status-selector";
-import { api } from "@gembuddy/trpc/client";
+import { WorkOrderStatus } from "./work-order-status";
 
 interface WorkOrderHeaderProps {
-  initial_work_order: NonNullable<
-    RouterOutput["db"]["work_order"]["get"]["byId"]
-  >;
+  workOrder: NonNullable<RouterOutput["db"]["work_order"]["get"]["byId"]>;
 }
 
-export function WorkOrderHeader({ initial_work_order }: WorkOrderHeaderProps) {
-  const {
-    data: { data: work_order },
-  } = api.db.work_order.get.byId.useQuery(
-    {
-      id: initial_work_order.data!.id,
-    },
-    {
-      initialData: initial_work_order,
-    },
-  );
-
-  if (!work_order) {
+export async function WorkOrderHeader({ workOrder }: WorkOrderHeaderProps) {
+  if (!workOrder.data) {
     return null;
   }
 
@@ -40,14 +27,14 @@ export function WorkOrderHeader({ initial_work_order }: WorkOrderHeaderProps) {
         aria-labelledby="work-order-header-heading"
         as="header"
       >
-        <PageHeaderHeading size="xs">{work_order.name}</PageHeaderHeading>
+        <PageHeaderHeading size="xs">{workOrder.data.name}</PageHeaderHeading>
         <PageHeaderDescription size="xs">
-          {work_order.description}
+          {workOrder.data.description}
         </PageHeaderDescription>
       </PageHeader>
       <section className="flex items-center gap-2 rounded-sm">
-        <StatusSelector status={work_order.status} />
-        <PrioritySelector status={work_order.priority} />
+        <WorkOrderStatus workOrderQuery={workOrder} />
+        {/* <PrioritySelector status={work_order.priority} /> */}
       </section>
       <WorkOrderTabs className="col-span-full" />
     </div>

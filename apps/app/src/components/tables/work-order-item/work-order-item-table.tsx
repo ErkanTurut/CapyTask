@@ -2,8 +2,8 @@
 
 import {
   type ColumnFiltersState,
-  SortingState,
-  VisibilityState,
+  type SortingState,
+  type VisibilityState,
   getCoreRowModel,
   getFacetedRowModel,
   getFacetedUniqueValues,
@@ -15,8 +15,8 @@ import {
 import * as React from "react";
 
 import { DataTable } from "@/components/tables/data-table/data-table";
-import { RouterOutput } from "@gembuddy/trpc/client";
-import { Database } from "@gembuddy/supabase/types";
+import type { Database } from "@gembuddy/supabase/types";
+import type { RouterOutput } from "@gembuddy/trpc/client";
 import {
   CheckCircledIcon,
   CircleIcon,
@@ -24,10 +24,10 @@ import {
   QuestionMarkCircledIcon,
   StopwatchIcon,
 } from "@radix-ui/react-icons";
+import { usePathname, useSearchParams } from "next/navigation";
+import type { DataTableFilterField } from "../types";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { getColumns } from "./work-order-item-columns";
-import { usePathname, useSearchParams } from "next/navigation";
-import { DataTableFilterField } from "../types";
 
 interface AssetTableProps {
   data: NonNullable<

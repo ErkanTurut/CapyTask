@@ -1,5 +1,5 @@
-import { IconType } from "@/components/icons";
-import { Database } from "@gembuddy/supabase/types";
+import type { IconType } from "@/components/icons";
+import type { Database } from "@gembuddy/supabase/types";
 
 export interface StatusConfig {
   value: Database["public"]["Enums"]["Status"];

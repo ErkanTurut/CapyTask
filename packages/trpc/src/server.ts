@@ -1,15 +1,15 @@
 import "server-only";
-// src/trpc/server.ts
-import { appRouter } from "./";
 import { loggerLink } from "@trpc/client";
 import { cookies } from "next/headers";
+// src/trpc/server.ts
+import { appRouter } from "./";
 
 import { createClient } from "@gembuddy/supabase/server";
 import { cache } from "react";
 import { createCallerFactory } from "./server/trpc";
 
 const getSession = cache(async () => {
-  return await createClient().auth.getSession();
+  return (await createClient()).auth.getSession();
 });
 
 // export const trpc =
@@ -30,6 +30,8 @@ const getSession = cache(async () => {
 //   };
 // });
 
+
+
 export const trpc = createCallerFactory(appRouter)(
   cache(async () => {
     loggerLink({
@@ -44,7 +46,7 @@ export const trpc = createCallerFactory(appRouter)(
         cookie: (await cookies()).toString(),
         "x-trpc-source": "rsc-invoke",
       },
-      db: createClient(),
+      db: (await createClient()),
     };
   }),
 );
