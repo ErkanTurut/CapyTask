@@ -7,8 +7,10 @@ import {
 import { WorkOrderTabs } from "@/components/dashboard/work-order/work-order-tabs";
 import type { RouterOutput } from "@gembuddy/trpc/client";
 import { api } from "@gembuddy/trpc/client";
-import { PrioritySelector } from "./priority-selector";
-import { StatusSelector } from "./status-selector";
+
+import { Skeleton } from "@gembuddy/ui/skeleton";
+import { Suspense } from "react";
+import { WorkOrderActions } from "./work-order-actions";
 import { WorkOrderStatus } from "./work-order-status";
 
 interface WorkOrderHeaderProps {
@@ -32,10 +34,10 @@ export async function WorkOrderHeader({ workOrder }: WorkOrderHeaderProps) {
           {workOrder.data.description}
         </PageHeaderDescription>
       </PageHeader>
-      <section className="flex items-center gap-2 rounded-sm">
-        <WorkOrderStatus workOrderQuery={workOrder} />
-        {/* <PrioritySelector status={work_order.priority} /> */}
-      </section>
+
+      <Suspense>
+        <WorkOrderActions workOrderQuery={workOrder} />
+      </Suspense>
       <WorkOrderTabs className="col-span-full" />
     </div>
   );

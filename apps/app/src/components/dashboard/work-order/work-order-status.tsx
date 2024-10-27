@@ -13,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@gembuddy/ui/dialog";
+import { Editor } from "@gembuddy/ui/editor";
 import {
   Form,
   FormControl,
@@ -28,30 +29,16 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { type StatusConfig, statusConfig } from "./status-config";
-
 interface StatusSelectorProps {
-  workOrderQuery: RouterOutput["db"]["work_order"]["get"]["byId"];
+  workOrder: NonNullable<
+    RouterOutput["db"]["work_order"]["get"]["byId"]["data"]
+  >;
 }
 
-export function WorkOrderStatus({ workOrderQuery }: StatusSelectorProps) {
-  const params = useParams() as { work_order_id: string };
-  const {
-    data: { data: work_order },
-  } = api.db.work_order.get.byId.useQuery(
-    {
-      id: params.work_order_id,
-    },
-    {
-      initialData: workOrderQuery,
-    },
-  );
-
-  if (!work_order) {
-    return null;
-  }
+export function WorkOrderStatus({ workOrder }: StatusSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const initialStatus = statusConfig.find(
-    (_status) => _status.value === work_order.status,
+    (_status) => _status.value === workOrder.status,
   );
 
   const [selectedStatus, setSelectedStatus] = useState<
@@ -139,7 +126,6 @@ export function StatusChangeModal({
       note: data.note,
     });
   });
-
   return (
     <Dialog
       open={isOpen}
@@ -155,13 +141,13 @@ export function StatusChangeModal({
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="flex flex-col text-sm font-normal text-muted-foreground">
               <span>Are you sure you want to change the status?</span>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 text-foreground">
                 <span>From</span>
-                <span className="rounded-full border px-1 font-medium text-foreground">
+                <span className="rounded-full border px-1 font-mono bg-secondary text-muted-foreground border-dashed">
                   {prevStatus?.label}
                 </span>
                 <span>To</span>
-                <span className="rounded-full border px-1 font-medium text-foreground">
+                <span className="rounded-full border px-1 text-foreground   font-mono">
                   {selectedStatus?.label}
                 </span>
               </div>
