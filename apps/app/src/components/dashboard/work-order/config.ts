@@ -1,11 +1,11 @@
-import { IconType } from "@gembuddy/ui/icons";
+import type { IconType } from "@gembuddy/ui/icons";
 
 export type Page = {
   title: string;
   subtitle?: string;
   description: string;
   href: string;
-  icon: IconType;
+  icon?: IconType;
   disabled?: boolean;
   segment: string | null;
   children?: Page[];
@@ -13,31 +13,23 @@ export type Page = {
 export const workOrderPagesConfig: Page[] = [
   {
     title: "Overview",
-    description: "All assets.",
+    description: "All work order items.",
     href: "/",
-    icon: "lightning",
+
     segment: null,
   },
   {
-    title: "Locations",
-    description: "All assets.",
-    href: "/locations",
-    icon: "lightning",
-    segment: "locations",
-  },
-  {
     title: "Appointments",
-    description: "All assets.",
+    description: "All appointments.",
     href: "/appointments",
-    icon: "lightning",
+
     segment: "appointments",
   },
   {
-    title: "Resources",
-    description: "All assets.",
-    href: "/resources",
-    icon: "lightning",
+    title: "Knowledge",
+    description: "Knowledge base",
+    href: "/knowledge",
+    icon: "sparkles",
     segment: "resources",
-    disabled: true,
   },
 ];

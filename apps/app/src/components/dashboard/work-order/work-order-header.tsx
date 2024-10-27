@@ -6,12 +6,9 @@ import {
 
 import { WorkOrderTabs } from "@/components/dashboard/work-order/work-order-tabs";
 import type { RouterOutput } from "@gembuddy/trpc/client";
-import { api } from "@gembuddy/trpc/client";
 
-import { Skeleton } from "@gembuddy/ui/skeleton";
 import { Suspense } from "react";
 import { WorkOrderActions } from "./work-order-actions";
-import { WorkOrderStatus } from "./work-order-status";
 
 interface WorkOrderHeaderProps {
   workOrder: NonNullable<RouterOutput["db"]["work_order"]["get"]["byId"]>;
@@ -38,7 +35,9 @@ export async function WorkOrderHeader({ workOrder }: WorkOrderHeaderProps) {
       <Suspense>
         <WorkOrderActions workOrderQuery={workOrder} />
       </Suspense>
-      <WorkOrderTabs className="col-span-full" />
+      <Suspense>
+        <WorkOrderTabs className="col-span-full" />
+      </Suspense>
     </div>
   );
 }

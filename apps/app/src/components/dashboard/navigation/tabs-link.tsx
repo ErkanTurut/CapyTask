@@ -66,7 +66,7 @@ export function TabsLink({
     >
       <Link
         className={cn(
-          "rounded-md text-sm font-medium text-muted-foreground hover:text-foreground",
+          "rounded-md text-sm font-medium text-muted-foreground hover:text-foreground flex items-center",
           {
             "text-primary hover:text-primary": active,
             "px-4 py-1": direction === "horizontal",
