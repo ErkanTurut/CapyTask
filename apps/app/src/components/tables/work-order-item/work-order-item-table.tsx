@@ -14,9 +14,12 @@ import {
 } from "@tanstack/react-table";
 import * as React from "react";
 
-import { DataTable } from "@/components/tables/data-table/data-table";
 import type { Database } from "@gembuddy/supabase/types";
-import type { RouterOutput } from "@gembuddy/trpc/client";
+import { type RouterOutput, api } from "@gembuddy/trpc/client";
+import type { trpc } from "@gembuddy/trpc/server";
+// import { DataTable } from "@/components/tables/data-table/data-table";
+import { DataTable } from "@gembuddy/ui/table/data-table";
+import type { DataTableFilterField } from "@gembuddy/ui/types";
 import {
   CheckCircledIcon,
   CircleIcon,
@@ -25,15 +28,14 @@ import {
   StopwatchIcon,
 } from "@radix-ui/react-icons";
 import { usePathname, useSearchParams } from "next/navigation";
-import type { DataTableFilterField } from "../types";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { getColumns } from "./work-order-item-columns";
 
-interface AssetTableProps {
-  data: NonNullable<
-    RouterOutput["db"]["work_order_item"]["get"]["byWorkOrder"]["data"]
+interface WorkOrderItemTableProps {
+  asyncWorkOrderItemQuery: ReturnType<
+    typeof trpc.db.work_order_item.get.byWorkOrder
   >;
-  rowCount: number;
+  work_order_id: string;
 }
 
 export const statuses: {
@@ -74,41 +76,38 @@ export const statuses: {
   },
 ];
 
-export function WorkOrderItemTable({ data, rowCount }: AssetTableProps) {
+export function WorkOrderItemTable({
+  asyncWorkOrderItemQuery,
+  work_order_id,
+}: WorkOrderItemTableProps) {
+  const {
+    data: { data: workOrderItem, count: rowCount },
+  } = api.db.work_order_item.get.byWorkOrder.useQuery(
+    {
+      work_order_id: work_order_id,
+    },
+    {
+      initialData: React.use(asyncWorkOrderItemQuery),
+    },
+  );
+
+  if (!workOrderItem || !rowCount) {
+    return null;
+  }
+
   const searchParams = useSearchParams();
-
   const columns = React.useMemo(() => getColumns(), []);
-
-  const filterFields: DataTableFilterField<AssetTableProps["data"][number]>[] =
-    [
-      {
-        label: "Status",
-        value: "status",
-        options: statuses,
-      },
-      {
-        label: "Location",
-        value: "location_id",
-        options: data
-          .flatMap((work_order_item) => work_order_item.location)
-          .map((location) => ({
-            label: location?.name || "",
-            value: location?.id || "",
-          })),
-      },
-
-      {
-        label: "Location type",
-        value: "location.location_type",
-        options: data
-          .flatMap((work_order_item) => work_order_item.location)
-          .map((location) => ({
-            label: location?.location_type || "",
-            value: location?.location_type || "",
-          })),
-      },
-    ];
-
+  const filterFields: DataTableFilterField<
+    NonNullable<
+      RouterOutput["db"]["work_order_item"]["get"]["byWorkOrder"]["data"]
+    >[number]
+  >[] = [
+    {
+      label: "Status",
+      value: "status",
+      options: statuses,
+    },
+  ];
   // Memoize computation of searchableColumns and filterableColumns
   const { searchableColumns, filterableColumns } = React.useMemo(() => {
     return {
@@ -173,7 +172,7 @@ export function WorkOrderItemTable({ data, rowCount }: AssetTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
   const table = useReactTable({
-    data,
+    data: workOrderItem,
     columns,
     state: {
       sorting,

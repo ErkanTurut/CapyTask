@@ -1,16 +1,8 @@
 import z from "zod";
 
-/*
-   asset_id?: string | null;
-    created_at?: string;
-    id?: string;
-    location_id?: string | null;
-    status?: Database["public"]["Enums"]["Status"];
-    updated_at?: string;
-    work_order_id: string;
-*/
-
 export const ZCreateWorkOrderItemSchema = z.object({
+  name: z.string().min(1).max(255),
+  description: z.string().min(1).max(255).optional(),
   asset_id: z.string().nullable().optional(),
   created_at: z.string().optional(),
   id: z.string().optional(),
@@ -25,16 +17,6 @@ export const ZCreateWorkOrderItemSchema = z.object({
 export type TCreateWorkOrderItemSchema = z.infer<
   typeof ZCreateWorkOrderItemSchema
 >;
-
-/**
- *    asset_id?: string | null;
-    created_at?: string;
-    id?: string;
-    location_id?: string | null;
-    status?: Database["public"]["Enums"]["Status"];
-    updated_at?: string;
-    work_order_id?: string;
- */
 
 export const ZUpdateWorkOrderItemSchema = z
   .object({

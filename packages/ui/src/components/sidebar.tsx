@@ -1,15 +1,16 @@
 "use client";
 
-import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
-import { VariantProps, cva } from "class-variance-authority";
+import { type VariantProps, cva } from "class-variance-authority";
+import * as React from "react";
 
+import { ViewVerticalIcon } from "@radix-ui/react-icons";
 import { useIsMobile } from "../hooks/use-mobile";
 import { cn } from "../utils";
 import { Button } from "./button";
 import { Input } from "./input";
 import { Separator } from "./separator";
-import { Sheet, SheetContent } from "./sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "./sheet";
 import { Skeleton } from "./skeleton";
 import {
   Tooltip,
@@ -17,7 +18,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./tooltip";
-import { ViewVerticalIcon } from "@radix-ui/react-icons";
+import { VisuallyHidden } from "./vizually-hidden";
 
 const SIDEBAR_COOKIE_NAME = "sidebar:state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -215,6 +216,11 @@ const Sidebar = React.forwardRef<
             }
             side={side}
           >
+            <VisuallyHidden>
+              <SheetHeader>
+                <SheetTitle>Main Sidebar</SheetTitle>
+              </SheetHeader>
+            </VisuallyHidden>
             <div className="flex h-full w-full flex-col">{children}</div>
           </SheetContent>
         </Sheet>

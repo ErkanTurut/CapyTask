@@ -2,16 +2,16 @@
 
 import { Checkbox } from "@gembuddy/ui/checkbox";
 import {
-  ColumnDef,
   AccessorColumnDef,
-  RowData,
+  type ColumnDef,
   ColumnDefBase,
+  type RowData,
 } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../data-table/data-table-column-header";
 
-import { RouterOutput } from "@gembuddy/trpc/client";
+import type { RouterOutput } from "@gembuddy/trpc/client";
+import type { Leaves } from "../types";
 import { statuses } from "./work-order-item-table";
-import { Leaves } from "../types";
 
 interface ColumnType<TData extends RowData, TValue = unknown>
   extends Omit<ColumnDef<TData, TValue>, "accessoryKey"> {
@@ -48,22 +48,33 @@ export function getColumns(): ColumnType<
       enableHiding: false,
     },
     {
-      accessorKey: "asset.name",
-      header: ({ column }) => {
-        return <DataTableColumnHeader column={column} title="Asset" />;
-      },
+      accessorKey: "name",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Name" />
+      ),
       cell: ({ row }) => {
         return (
           <div className="flex space-x-2">
-            <span className="max-w-[11.25rem] truncate font-medium">
-              {row.original.asset?.name}
+            <span className="max-w-[8.25rem] truncate">
+              {row.original.name}
             </span>
           </div>
         );
       },
-      enableHiding: false,
-      filterFn: (row, id, value) => {
-        return value.includes(row.original.asset?.name);
+    },
+    {
+      accessorKey: "description",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Description" />
+      ),
+      cell: ({ row }) => {
+        return (
+          <div className="flex space-x-2">
+            <span className="max-w-[8.25rem] truncate">
+              {row.original.description}
+            </span>
+          </div>
+        );
       },
     },
     {
@@ -92,22 +103,6 @@ export function getColumns(): ColumnType<
       filterFn: (row, id, value) => {
         return value.includes(row.getValue(id));
       },
-    },
-    {
-      accessorKey: "asset.id",
-      header: ({ column }) => {
-        return <DataTableColumnHeader column={column} title="Description" />;
-      },
-      cell: ({ row }) => {
-        return (
-          <div className="flex space-x-2">
-            <span className="max-w-[21.25rem] truncate font-medium">
-              {row.original.asset?.description}
-            </span>
-          </div>
-        );
-      },
-      enableSorting: false,
     },
     {
       accessorKey: "location_id",

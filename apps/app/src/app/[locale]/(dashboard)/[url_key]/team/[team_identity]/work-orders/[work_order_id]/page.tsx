@@ -1,7 +1,9 @@
-import { WorkOrderItemCreateModal } from "@/components/modal/work-order-item/work-order-create-modal";
+import { WorkOrderItemCreateSheet } from "@/components/sheets/work-order-item/work-ordre-item-create-scheet";
 import { Shell } from "@/components/shells";
+import TableSkeleton from "@/components/skeletons/table-skeleton";
 import { WorkOrderItemTable } from "@/components/tables/work-order-item/work-order-item-table";
 import { trpc } from "@gembuddy/trpc/server";
+import { Suspense } from "react";
 
 interface PageProps {
   params: Promise<{
@@ -13,18 +15,18 @@ interface PageProps {
 
 export default async function Page(props: PageProps) {
   const params = await props.params;
-  const { data: work_order_item, count } =
-    await trpc.db.work_order_item.get.byWorkOrder({
-      work_order_id: params.work_order_id,
-    });
-
-  if (!work_order_item) {
-    return null;
-  }
+  const asyncWorkOrderItemQuery = trpc.db.work_order_item.get.byWorkOrder({
+    work_order_id: params.work_order_id,
+  });
   return (
     <Shell>
-      <WorkOrderItemCreateModal work_order_id={params.work_order_id} />
-      <WorkOrderItemTable data={work_order_item} rowCount={count ?? 0} />
+      <WorkOrderItemCreateSheet work_order_id={params.work_order_id} />
+      <Suspense fallback={<TableSkeleton />}>
+        <WorkOrderItemTable
+          work_order_id={params.work_order_id}
+          asyncWorkOrderItemQuery={asyncWorkOrderItemQuery}
+        />
+      </Suspense>
     </Shell>
   );
 }

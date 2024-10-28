@@ -1,10 +1,5 @@
 import "server-only";
-import type {
-  Client,
-  Database,
-  TablesInsert,
-  TablesUpdate,
-} from "../../../types";
+import type { Client } from "../../../types";
 
 export async function getWorkOrdersByTeam({
   db,

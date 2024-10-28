@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -19,16 +20,16 @@ import { catchError, cn } from "@/lib/utils";
 
 import { Button } from "@gembuddy/ui/button";
 
-import { api, RouterOutput } from "@gembuddy/trpc/client";
+import { type RouterOutput, api } from "@gembuddy/trpc/client";
 
 import {
-  TCreateWorkOrderItemSchema,
+  type TCreateWorkOrderItemSchema,
   ZCreateWorkOrderItemSchema,
 } from "@gembuddy/trpc/schema/work_order_item";
 import { Textarea } from "@gembuddy/ui/textarea";
-import { LocationSelector } from "../location-selector";
-import { AssetSelector } from "../asset-selector";
 import { toast } from "sonner";
+import { AssetSelector } from "../asset-selector";
+import { LocationSelector } from "../location-selector";
 interface WorkOrderItemCreateFormProps
   extends React.HTMLAttributes<HTMLFormElement> {
   work_order_id: string;
@@ -80,6 +81,8 @@ export function WorkOrderItemCreateForm({
       location_id: undefined,
       asset_id: undefined,
       work_order_id,
+      name: "",
+      description: "",
     },
   });
 
@@ -121,7 +124,7 @@ export function WorkOrderItemCreateForm({
         className={cn("grid gap-4", className)}
         onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
       >
-        {/* <FormField
+        <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
@@ -150,9 +153,9 @@ export function WorkOrderItemCreateForm({
               <FormMessage />
             </FormItem>
           )}
-        /> */}
+        />
 
-        <FormField
+        {/* <FormField
           control={form.control}
           name="location_id"
           render={({ field }) => (
@@ -166,7 +169,7 @@ export function WorkOrderItemCreateForm({
               </FormControl>
             </FormItem>
           )}
-        />
+        /> */}
         <FormField
           control={form.control}
           name="asset_id"

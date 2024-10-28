@@ -14,7 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@gembuddy/ui/dropdown-menu";
-import { Icons, IconType } from "@gembuddy/ui/icons";
+import { type IconType, Icons } from "@gembuddy/ui/icons";
 import { Separator } from "@gembuddy/ui/separator";
 import {
   Sidebar,
@@ -42,7 +42,8 @@ import {
   Sparkles,
 } from "lucide-react";
 import Link from "next/link";
-import React, { Suspense } from "react";
+import type React from "react";
+import { Suspense } from "react";
 
 // Components
 const NavMenuItem: React.FC<NavItem> = ({
@@ -178,10 +179,6 @@ const teamNav: NavItem[] = [
 ];
 
 export async function AppSidebar({ params }: AppSidebarProps) {
-  // const { data: teams } = await trpc.db.team.get.byUrlKey({
-  //   url_key: params.url_key,
-  // })
-
   return (
     <Sidebar variant="inset" className="p-0">
       <SidebarHeader>

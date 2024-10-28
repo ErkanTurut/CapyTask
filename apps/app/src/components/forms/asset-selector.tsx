@@ -1,6 +1,6 @@
 import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
-import { api, RouterOutput } from "@gembuddy/trpc/client";
+import { type RouterOutput, api } from "@gembuddy/trpc/client";
 import { Button } from "@gembuddy/ui/button";
 import {
   Command,
@@ -64,7 +64,7 @@ export function AssetSelector({ onSelect, selectedValue }: AssetSelectorProps) {
       <PopoverTrigger asChild>
         <Button
           isLoading={isFetching}
-          className="w-72 justify-start font-normal sm:w-60 md:w-80"
+          className="w-full justify-start font-normal "
           variant={"outline"}
           type="button"
         >
@@ -73,7 +73,7 @@ export function AssetSelector({ onSelect, selectedValue }: AssetSelectorProps) {
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className={cn("w-72 p-0 sm:w-60 md:w-80")}
+        className={cn("w-96 p-0 ")}
         align="center"
         onCloseAutoFocus={(e) => e.preventDefault()}
         sideOffset={6}

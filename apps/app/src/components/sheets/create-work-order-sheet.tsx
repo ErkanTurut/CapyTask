@@ -1,5 +1,13 @@
 "use client";
+import { useMediaQuery } from "@/lib/hooks/use-media-query";
+import { api } from "@gembuddy/trpc/client";
 import { Button } from "@gembuddy/ui/button";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from "@gembuddy/ui/drawer";
 import { Input } from "@gembuddy/ui/input";
 import { Label } from "@gembuddy/ui/label";
 import {
@@ -9,12 +17,9 @@ import {
   SheetTitle,
 } from "@gembuddy/ui/sheet";
 import { Textarea } from "@gembuddy/ui/textarea";
-import { useMediaQuery } from "@/lib/hooks/use-media-query";
-import { Drawer, DrawerContent, DrawerHeader } from "@gembuddy/ui/drawer";
-import { useQueryState, parseAsBoolean } from "nuqs";
-import { WorkOrderCreateForm } from "../forms/work-order/work-order-create-form";
-import { api } from "@gembuddy/trpc/client";
 import { useParams, useRouter } from "next/navigation";
+import { parseAsBoolean, useQueryState } from "nuqs";
+import { WorkOrderCreateForm } from "../forms/work-order/work-order-create-form";
 
 export function CreateWorkOrderSheet() {
   const params = useParams() as { team_identity: string };
@@ -61,11 +66,22 @@ export function CreateWorkOrderSheet() {
   }
 
   return (
-    <Drawer open>
+    <Drawer open={open} onOpenChange={() => setOpen(null)}>
       <DrawerContent className="p-6">
-        <DrawerHeader className="mb-8 flex flex-row items-center justify-between">
-          <h2 className="text-xl">Create Project</h2>
+        <DrawerHeader>
+          <DrawerTitle>Create Work Order Item</DrawerTitle>
         </DrawerHeader>
+        <WorkOrderCreateForm
+          team_id={team.data.id}
+          workspace_id={team.data.workspace_id}
+          onCreated={async (value) => {
+            utils.db.work_order.get.byTeam.invalidate();
+
+            await setOpen(null);
+
+            router.push(`./work-orders/${value.data?.id}`);
+          }}
+        />
       </DrawerContent>
     </Drawer>
   );

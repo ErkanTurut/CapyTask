@@ -1,7 +1,7 @@
 "use client";
 
 import { CaretSortIcon, PlusIcon } from "@radix-ui/react-icons";
-import { Table } from "@tanstack/react-table";
+import type { Table } from "@tanstack/react-table";
 
 import { DataTableViewOptions } from "@/components/tables/data-table/data-table-view-options";
 import { Button, buttonVariants } from "@gembuddy/ui/button";
@@ -10,11 +10,11 @@ import { Input } from "@gembuddy/ui/input";
 import { DataTableFilterCombobox } from "@/components/tables/data-table/data-table-filter-combobox";
 import { DataTableFilterItem } from "@/components/tables/data-table/data-table-filter-item";
 import { cn } from "@/lib/utils";
-import type { DataTableFilterField, DataTableFilterOption } from "../types";
+import { Icons } from "@gembuddy/ui/icons";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import React from "react";
-import Link from "next/link";
-import { Icons } from "@gembuddy/ui/icons";
+import type { DataTableFilterField, DataTableFilterOption } from "../types";
 
 interface DataTableToolbarProps<TData>
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -82,11 +82,9 @@ export function DataTableToolbar<TData>({
         <div className="flex flex-1 items-center space-x-2">
           <Input
             placeholder="Filter name..."
-            value={
-              (table.getColumn("asset_name")?.getFilterValue() as string) ?? ""
-            }
+            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
-              table.getColumn("asset_name")?.setFilterValue(event.target.value)
+              table.getColumn("name")?.setFilterValue(event.target.value)
             }
             className="h-8 w-[250px] focus-visible:ring-0 lg:w-[350px]"
           />
