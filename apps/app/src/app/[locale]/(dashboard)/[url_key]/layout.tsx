@@ -1,25 +1,10 @@
 import { cookies } from "next/headers";
 
-import { Sidebar } from "@/components/dashboard/sidebar/sidebar";
 import { AppSidebar } from "@/components/layouts/app-sidebar";
 import Header from "@/components/layouts/dashboard/header";
 import { trpc } from "@gembuddy/trpc/server";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@gembuddy/ui/breadcrumb";
-import { Separator } from "@gembuddy/ui/separator";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@gembuddy/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@gembuddy/ui/sidebar";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -56,15 +41,8 @@ export default async function Layout(props: DashboardLayoutProps) {
       }
     >
       <AppSidebar params={params} />
-      {/* <main className="flex w-full flex-col rounded-md border bg-background">
-              <Header />
-              
-              <div className="flex-1 overflow-hidden">{children}</div>
-            </main> */}
-
       <SidebarInset className="overflow-y-hidden">
         <Header />
-
         <div className="flex flex-1 overflow-hidden">{children}</div>
       </SidebarInset>
     </SidebarProvider>

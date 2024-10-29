@@ -11,6 +11,9 @@ interface PageProps {
     team_identity: string;
     work_order_id: string;
   }>;
+  searchParams: Promise<{
+    wo_item: string;
+  }>;
 }
 
 export default async function Page(props: PageProps) {

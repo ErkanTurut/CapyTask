@@ -9,7 +9,10 @@ import {
 } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../data-table/data-table-column-header";
 
-import type { RouterOutput } from "@gembuddy/trpc/client";
+import { WorkOrderItemStatus } from "@/components/dashboard/work-order-item/work-order-item-status";
+import { type RouterOutput, api } from "@gembuddy/trpc/client";
+import Link from "next/link";
+import { toast } from "sonner";
 import type { Leaves } from "../types";
 import { statuses } from "./work-order-item-table";
 
@@ -55,9 +58,11 @@ export function getColumns(): ColumnType<
       cell: ({ row }) => {
         return (
           <div className="flex space-x-2">
-            <span className="max-w-[8.25rem] truncate">
-              {row.original.name}
-            </span>
+            <Link href={`./${row.original.work_order_id}/${row.original.id}`}>
+              <span className="max-w-[8.25rem] truncate text-primary underline-offset-2 underline">
+                {row.original.name}
+              </span>
+            </Link>
           </div>
         );
       },
@@ -90,13 +95,26 @@ export function getColumns(): ColumnType<
         if (!status) {
           return null;
         }
+        const utils = api.useUtils();
+        const { mutate, isPending } =
+          api.db.work_order_item.update.withNote.useMutation({
+            onSuccess: () => {
+              toast.success("Status updated successfully");
+              utils.db.work_order_item.get.byWorkOrder.invalidate();
+            },
+          });
 
         return (
           <div className="flex max-w-[6.25rem] items-center">
-            {status.icon && (
-              <status.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-            )}
-            <span>{status.label}</span>
+            {row.original.status}
+            {/* <WorkOrderItemStatus workOrderItem={row.original} statusConfig={} onStatusChange={(newStatus, note)=> {mutate(
+              {
+                id: row.original.id,
+                status: newStatus,
+                work_order_item_id:  row.original.id,
+                note: note,
+              }
+            )} } /> */}
           </div>
         );
       },

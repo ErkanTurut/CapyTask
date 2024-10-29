@@ -75,9 +75,6 @@ export type TUpdateWorkOrderSchema = z.infer<typeof ZUpdateWorkOrderSchema>;
 export const ZUpdateWorkOrderWithNoteSchema = ZUpdateWorkOrderSchema.merge(
   z.object({
     note: z.string().optional(),
-  }),
-).merge(
-  z.object({
     work_order_id: z.string(),
   }),
 );
