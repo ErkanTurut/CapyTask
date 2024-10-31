@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -22,19 +23,19 @@ import {
 } from "@gembuddy/ui/form";
 import { Input } from "@gembuddy/ui/input";
 
-import { toast } from "sonner";
 import { catchError, cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 import { Button } from "@gembuddy/ui/button";
 
-import { api, RouterOutput } from "@gembuddy/trpc/client";
+import { type RouterOutput, api } from "@gembuddy/trpc/client";
 import { useRouter } from "next/navigation";
 
-import { Textarea } from "@gembuddy/ui/textarea";
 import {
-  TCreateWorkOrderSchema,
+  type TCreateWorkOrderSchema,
   ZCreateWorkOrderSchema,
 } from "@gembuddy/trpc/schema/work_order";
+import { Textarea } from "@gembuddy/ui/textarea";
 import { CompanySelector } from "./company-selector";
 
 interface WorkOrderCreateFormProps
