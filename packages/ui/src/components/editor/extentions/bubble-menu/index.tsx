@@ -1,3 +1,4 @@
+// @ts-ignore
 import { type Editor, BubbleMenu as TiptapBubbleMenu } from "@tiptap/react";
 import { useState } from "react";
 
@@ -14,7 +15,7 @@ export function BubbleMenu({
   editor,
   tippyOptions,
 }: {
-  editor: Editor;
+  editor: Editor | null;
   tippyOptions?: TippyOptions;
 }) {
   const [showAI, setShowAI] = useState(false);

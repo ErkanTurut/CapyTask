@@ -111,16 +111,16 @@ model location {
 }
 
 model note {
-  content       String
-  type          NoteType
   metadata      Json?
-  id            String     @id @default(dbgenerated("nanoid(17)"))
+  id            String                @id @default(dbgenerated("nanoid(17)"))
   work_order_id String
-  created_by_id String     @db.Uuid
-  created_at    DateTime   @default(now()) @db.Timestamptz(6)
-  updated_at    DateTime   @default(now()) @db.Timestamptz(6)
-  user          user       @relation(fields: [created_by_id], references: [id])
-  work_order    work_order @relation(fields: [work_order_id], references: [id])
+  created_by_id String                @db.Uuid
+  created_at    DateTime              @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime              @default(now()) @db.Timestamptz(6)
+  content       Json
+  embedding     Unsupported("vector")
+  user          user                  @relation(fields: [created_by_id], references: [id])
+  work_order    work_order            @relation(fields: [work_order_id], references: [id])
 
   @@index([created_by_id])
   @@index([work_order_id])
@@ -316,14 +316,14 @@ model work_order {
 
 model work_order_item {
   id                  String                @id @default(dbgenerated("nanoid(10)"))
-  name                String
-  description         String?
   work_order_id       String
   asset_id            String?
   location_id         String?
   created_at          DateTime              @default(now()) @db.Timestamptz(6)
   updated_at          DateTime              @default(now()) @db.Timestamptz(6)
   status              Status                @default(OPEN)
+  description         String?
+  name                String
   service_appointment service_appointment[]
   asset               asset?                @relation(fields: [asset_id], references: [id])
   location            location?             @relation(fields: [location_id], references: [id])
@@ -459,15 +459,6 @@ enum LocationType {
   ROOM
   AREA
   OTHER
-}
-
-enum NoteType {
-  STATUS_CHANGE
-  COMMENT
-  DELAY_NOTIFICATION
-  RESOURCE_REQUEST
-  CUSTOMER_COMMUNICATION
-  INTERNAL_COMMUNICATION
 }
 
 enum Permission {

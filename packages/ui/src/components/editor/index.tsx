@@ -2,13 +2,22 @@
 
 import "./styles.css";
 
-import { EditorContent, type JSONContent, useEditor } from "@tiptap/react";
+import {
+  type Content,
+  EditorContent,
+  type JSONContent,
+  useEditor,
+  // @ts-ignore
+} from "@tiptap/react";
 import { BubbleMenu } from "./extentions/bubble-menu";
 import { extensions } from "./extentions/register";
 
 type EditorProps = {
-  content?: string;
-  onChange?: (content: JSONContent) => void;
+  content?: Content;
+  onChange?: ({
+    content,
+    text,
+  }: { content: JSONContent; text: string }) => void;
 };
 
 export function Editor({ content, onChange }: EditorProps) {
@@ -16,7 +25,7 @@ export function Editor({ content, onChange }: EditorProps) {
     extensions,
     content,
     onUpdate: ({ editor }) => {
-      onChange?.(editor.getJSON());
+      onChange?.({ content: editor.getJSON(), text: editor.getText() });
     },
   });
 
@@ -27,3 +36,5 @@ export function Editor({ content, onChange }: EditorProps) {
     </>
   );
 }
+// @ts-ignore
+export { type Content } from "@tiptap/react";

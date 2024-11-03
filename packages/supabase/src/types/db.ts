@@ -309,32 +309,32 @@ export type Database = {
       }
       note: {
         Row: {
-          content: string
+          content: Json
           created_at: string
           created_by_id: string
+          embedding: string
           id: string
           metadata: Json | null
-          type: Database["public"]["Enums"]["NoteType"]
           updated_at: string
           work_order_id: string
         }
         Insert: {
-          content: string
+          content: Json
           created_at?: string
           created_by_id: string
+          embedding: string
           id?: string
           metadata?: Json | null
-          type: Database["public"]["Enums"]["NoteType"]
           updated_at?: string
           work_order_id: string
         }
         Update: {
-          content?: string
+          content?: Json
           created_at?: string
           created_by_id?: string
+          embedding?: string
           id?: string
           metadata?: Json | null
-          type?: Database["public"]["Enums"]["NoteType"]
           updated_at?: string
           work_order_id?: string
         }
@@ -1297,13 +1297,6 @@ export type Database = {
     }
     Enums: {
       LocationType: "BUILDING" | "FLOOR" | "ROOM" | "AREA" | "OTHER"
-      NoteType:
-        | "STATUS_CHANGE"
-        | "COMMENT"
-        | "DELAY_NOTIFICATION"
-        | "RESOURCE_REQUEST"
-        | "CUSTOMER_COMMUNICATION"
-        | "INTERNAL_COMMUNICATION"
       Permission: "CREATE" | "READ" | "UPDATE" | "DELETE"
       Priority: "LOW" | "MEDIUM" | "HIGH"
       role:

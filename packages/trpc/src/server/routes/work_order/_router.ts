@@ -1,7 +1,6 @@
 import "server-only";
 
-import { protectedProcedure, router } from "../../trpc";
-
+import { openai } from "@ai-sdk/openai";
 import {
   createWorkOrder,
   deleteWorkOrders,
@@ -10,6 +9,8 @@ import {
   searchWorkOrder,
   updateWorkOrder,
 } from "@gembuddy/supabase/resources/work_order";
+import { embed } from "ai";
+import { protectedProcedure, router } from "../../trpc";
 import {
   ZCreateWorkOrderSchema,
   ZDeleteWorkOrderManySchema,
@@ -67,12 +68,16 @@ export const work_order = router({
           id: input.work_order_id,
         });
 
-        if (input.note) {
+        if (input.content) {
+          const { embedding } = await embed({
+            model: openai.embedding("text-embedding-3-small"),
+            value: input.text,
+          });
           await ctx.db
             .from("note")
             .insert({
-              content: input.note,
-              type: "STATUS_CHANGE",
+              embedding: embedding,
+              content: JSON.parse(input.content),
               created_by_id: ctx.session.user.id,
               work_order_id: input.work_order_id,
             })

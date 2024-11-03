@@ -64,7 +64,7 @@ export const ZUpdateWorkOrderSchema = z.object({
     .enum(["OPEN", "IN_PROGRESS", "COMPLETED", "ON_HOLD", "CANCELED"])
     .optional(),
   team_id: z.string().optional(),
-  type: z.enum(["INSPECTION", "MAINTENANCE", "OTHER"]).optional(),
+  // type: z.enum(["INSPECTION", "MAINTENANCE", "OTHER"]).optional(),
   updated_at: z.string().optional(),
   work_plan_id: z.string().nullable().optional(),
   workspace_id: z.string().optional(),
@@ -74,7 +74,8 @@ export type TUpdateWorkOrderSchema = z.infer<typeof ZUpdateWorkOrderSchema>;
 
 export const ZUpdateWorkOrderWithNoteSchema = ZUpdateWorkOrderSchema.merge(
   z.object({
-    note: z.string().optional(),
+    content: z.string().optional(),
+    text: z.string().optional(),
     work_order_id: z.string(),
   }),
 );

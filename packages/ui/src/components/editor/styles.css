@@ -17,7 +17,7 @@
   }
   
   .tiptap p.is-empty::before {
-    color: #404040;
+    color:var(--color-gray-400);
     content: attr(data-placeholder);
     float: left;
     height: 0;

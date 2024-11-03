@@ -9,12 +9,14 @@ import type { RouterOutput } from "@gembuddy/trpc/client";
 
 import { Suspense } from "react";
 import { WorkOrderActions } from "./work-order-actions";
-
-interface WorkOrderHeaderProps {
+interface WorkOrderHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   workOrder: NonNullable<RouterOutput["db"]["work_order"]["get"]["byId"]>;
 }
 
-export async function WorkOrderHeader({ workOrder }: WorkOrderHeaderProps) {
+export async function WorkOrderHeader({
+  workOrder,
+  children,
+}: WorkOrderHeaderProps) {
   if (!workOrder.data) {
     return null;
   }
@@ -26,7 +28,9 @@ export async function WorkOrderHeader({ workOrder }: WorkOrderHeaderProps) {
         aria-labelledby="work-order-header-heading"
         as="header"
       >
-        <PageHeaderHeading size="xs">{workOrder.data.name}</PageHeaderHeading>
+        <PageHeaderHeading size="xs">
+          {workOrder.data.name}/{children}
+        </PageHeaderHeading>
         <PageHeaderDescription size="xs">
           {workOrder.data.description}
         </PageHeaderDescription>

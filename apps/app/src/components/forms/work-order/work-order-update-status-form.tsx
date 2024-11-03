@@ -1,6 +1,6 @@
 "use client";
 
-import type React from "react";
+import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -19,12 +19,15 @@ import { toast } from "sonner";
 
 import { Button } from "@gembuddy/ui/button";
 
+import { type Content, Editor } from "@gembuddy/ui/editor";
+
 import { type RouterOutput, api } from "@gembuddy/trpc/client";
 
 import {
   type TUpdateWorkOrderWithNoteSchema,
   ZUpdateWorkOrderWithNoteSchema,
 } from "@gembuddy/trpc/schema/work_order";
+import { ScrollArea } from "@gembuddy/ui/scroll-area";
 import { Textarea } from "@gembuddy/ui/textarea";
 import type { StatusConfig } from "../../config/status.config";
 
@@ -57,7 +60,8 @@ export function WorkOrderStatusUpdateForm({
   const form = useForm<TUpdateWorkOrderWithNoteSchema>({
     resolver: zodResolver(ZUpdateWorkOrderWithNoteSchema),
     defaultValues: {
-      note: undefined,
+      content: undefined,
+      text: undefined,
     },
     values: {
       work_order_id,
@@ -68,8 +72,12 @@ export function WorkOrderStatusUpdateForm({
     mutate({
       work_order_id: data.work_order_id,
       status: newStatus.value,
+      content: data.content?.toString(),
+      text: data.text,
     });
   });
+
+  const [editorContent, setEditorContent] = React.useState<Content>(null);
 
   return (
     <Form {...form}>
@@ -89,18 +97,29 @@ export function WorkOrderStatusUpdateForm({
         </div>
         <FormField
           control={form.control}
-          name="note"
+          name="content"
           render={({ field }) => (
             <FormItem>
               <FormLabel htmlFor="note" className="text-left font-semibold">
                 Note
               </FormLabel>
               <FormControl>
-                <Textarea
+                <ScrollArea className="h-32 max-h-32 border rounded-md">
+                  <Editor
+                    content={editorContent}
+                    onChange={(content) => {
+                      setEditorContent(content.content);
+                      form.setValue("content", JSON.stringify(content.content));
+                      form.setValue("text", content.text);
+                    }}
+                  />
+                </ScrollArea>
+
+                {/* <Textarea
                   placeholder="Add note"
                   className="h-24 max-h-24 shadow-none"
                   {...field}
-                />
+                /> */}
               </FormControl>
               <FormMessage />
             </FormItem>
