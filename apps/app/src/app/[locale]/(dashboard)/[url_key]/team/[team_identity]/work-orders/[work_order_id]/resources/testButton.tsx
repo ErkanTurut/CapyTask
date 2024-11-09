@@ -4,7 +4,7 @@
 
 // import { generate } from "./actions";
 // import { readStreamableValue } from "ai/rsc";
-// import { Icons } from "@/components/icons";
+// import { Icons } from "@gembuddy/ui/icons";
 // import { Button } from "@gembuddy/ui/button";
 // import { Input } from "@gembuddy/ui/input";
 // import {

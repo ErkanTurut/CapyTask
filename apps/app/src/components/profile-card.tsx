@@ -1,9 +1,9 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@gembuddy/ui/avatar";
 
-import * as React from "react";
+import type * as React from "react";
 
-import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
+import { Icons } from "@gembuddy/ui/icons";
 
 interface ProfileCardProps extends React.HTMLAttributes<HTMLDivElement> {
   name: string;

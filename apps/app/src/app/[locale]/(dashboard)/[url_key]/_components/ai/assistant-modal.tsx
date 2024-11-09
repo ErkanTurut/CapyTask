@@ -11,7 +11,7 @@
 // } from "@livekit/components-react";
 
 // // import { Thread } from "@gembuddy/ui/assistant-ui/thread";
-// import { Icons } from "@/components/icons";
+// import { Icons } from "@gembuddy/ui/icons";
 // import { Button, buttonVariants } from "@gembuddy/ui/button";
 // import { cn } from "@/lib/utils";
 // import { Tooltip, TooltipContent, TooltipTrigger } from "@gembuddy/ui/tooltip";

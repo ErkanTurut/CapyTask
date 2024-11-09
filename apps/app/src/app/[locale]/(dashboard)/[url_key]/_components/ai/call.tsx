@@ -1,9 +1,9 @@
 "use client";
-import { Icons } from "@/components/icons";
 import { useMultibandTrackVolume } from "@/lib/hooks/use-track-volume";
 import { Button } from "@gembuddy/ui/button";
+import { Icons } from "@gembuddy/ui/icons";
 import {
-  TrackReferenceOrPlaceholder,
+  type TrackReferenceOrPlaceholder,
   useConnectionState,
   useLocalParticipant,
   useRemoteParticipants,

@@ -2,9 +2,9 @@
 
 import { useTheme } from "next-themes";
 
-import { Button, buttonVariants } from "@gembuddy/ui/button";
-import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
+import { Button, buttonVariants } from "@gembuddy/ui/button";
+import { Icons } from "@gembuddy/ui/icons";
 
 import {
   Select,

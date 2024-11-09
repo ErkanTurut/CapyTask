@@ -1,11 +1,11 @@
 import ServiceAppointmentCalendar from "@/components/dashboard/service-appointment/service-appointment-calendar";
 import { Shell } from "@/components/shells";
+import TableSkeleton from "@/components/skeletons/table-skeleton";
 import { ServiceAppointmentTable } from "@/components/tables/service-appointment/service-appointment-table";
 import { trpc } from "@gembuddy/trpc/server";
-import { Suspense } from "react";
+import { Icons } from "@gembuddy/ui/icons";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@gembuddy/ui/tabs";
-import TableSkeleton from "@/components/skeletons/table-skeleton";
-import { Icons } from "@/components/icons";
+import { Suspense } from "react";
 
 interface PageProps {
   params: Promise<{

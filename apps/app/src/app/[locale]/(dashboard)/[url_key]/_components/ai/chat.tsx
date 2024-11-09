@@ -1,7 +1,7 @@
 // "use client";
 
 // // import { Thread } from "@gembuddy/ui/assistant-ui/thread";
-// import { Icons } from "@/components/icons";
+// import { Icons } from "@gembuddy/ui/icons";
 // import { Button } from "@gembuddy/ui/button";
 // import { Input } from "@gembuddy/ui/input";
 
