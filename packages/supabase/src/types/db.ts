@@ -824,6 +824,41 @@ export type Database = {
           },
         ]
       }
+      work_order_history: {
+        Row: {
+          created_at: string
+          field: string
+          id: number
+          new_value: string
+          old_value: string
+          work_order_id: string
+        }
+        Insert: {
+          created_at?: string
+          field: string
+          id?: number
+          new_value: string
+          old_value: string
+          work_order_id: string
+        }
+        Update: {
+          created_at?: string
+          field?: string
+          id?: number
+          new_value?: string
+          old_value?: string
+          work_order_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "work_order_history_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "work_order"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       work_order_item: {
         Row: {
           asset_id: string | null

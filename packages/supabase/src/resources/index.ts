@@ -8,6 +8,7 @@ export * from "./service_resource";
 export * from "./team";
 export * from "./user";
 export * from "./work_order";
+export * from "./work_order_history";
 export * from "./work_order_item";
 export * from "./work_plan";
 export * from "./work_step";

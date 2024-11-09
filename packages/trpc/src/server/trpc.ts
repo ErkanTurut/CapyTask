@@ -1,10 +1,10 @@
-import { TRPCError, initTRPC } from "@trpc/server";
 import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
+import { TRPCError, initTRPC } from "@trpc/server";
 
 // @ts-ignore
 import superjson from "superjson";
-import type { Context } from "./context";
 import { ZodError } from "zod";
+import type { Context } from "./context";
 import type { AppRouter } from "./routes/_app";
 
 const tRPCContext = initTRPC.context<Context>().create({
@@ -28,9 +28,6 @@ export const router = tRPCContext.router;
 export const publicProcedure = tRPCContext.procedure;
 export const createCallerFactory = tRPCContext.createCallerFactory;
 
-export type RouterOutput = inferRouterOutputs<AppRouter>;
-export type RouterInput = inferRouterInputs<AppRouter>;
-
 export const protectedProcedure = publicProcedure.use((opts) => {
   const { session } = opts.ctx;
   if (!session || !session.user) {
@@ -40,3 +37,7 @@ export const protectedProcedure = publicProcedure.use((opts) => {
   }
   return opts.next({ ctx: { session } });
 });
+
+export type RouterOutput = inferRouterOutputs<AppRouter>;
+export type RouterInput = inferRouterInputs<AppRouter>;
+export type AsyncRouterOutput = Promise<inferRouterOutputs<AppRouter>>;
