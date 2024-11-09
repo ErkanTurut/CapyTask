@@ -1,6 +1,6 @@
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { type ClassValue, clsx } from "clsx";
 import * as React from "react";
+import { twMerge } from "tailwind-merge";
 
 import { formatDistanceToNowStrict } from "date-fns";
 import locale from "date-fns/locale/en-US";
@@ -8,11 +8,11 @@ import dayjs from "dayjs";
 import { z } from "zod";
 import "dayjs/locale/nl-be";
 import "dayjs/locale/fr";
+import { addHours, isBefore } from "date-fns";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { toast } from "sonner";
-import { addHours, isBefore } from "date-fns";
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -179,7 +179,7 @@ export function generateAvatar({
 }) {
   let initials = "";
 
-  let input = name || first_name || last_name || email || randomString(5);
+  const input = name || first_name || last_name || email || randomString(5);
 
   if (name) {
     const nameParts = name.split(" ");
@@ -201,7 +201,7 @@ export function generateAvatar({
     initials = `${first_name.charAt(0) ?? ""}${last_name.charAt(0) ?? ""}`;
   }
 
-  let image_url = `https://avatar.vercel.sh/${input}.svg${
+  const image_url = `https://avatar.vercel.sh/${input}.svg${
     withFallback ? `?text=${initials}` : ""
   }${size ? `&size=${size}` : ""}`;
 
@@ -268,7 +268,7 @@ export function getValidNumber(
   value: string,
   { max, min = 0, loop = false }: GetValidNumberConfig,
 ) {
-  let numericValue = parseInt(value, 10);
+  let numericValue = Number.parseInt(value, 10);
 
   if (!isNaN(numericValue)) {
     if (!loop) {
@@ -309,7 +309,7 @@ export function getValidArrowNumber(
   value: string,
   { min, max, step }: GetValidArrowNumberConfig,
 ) {
-  let numericValue = parseInt(value, 10);
+  let numericValue = Number.parseInt(value, 10);
   if (!isNaN(numericValue)) {
     numericValue += step;
     return getValidNumber(String(numericValue), { min, max, loop: true });
@@ -331,24 +331,24 @@ export function getValidArrowMinuteOrSecond(value: string, step: number) {
 
 export function setMinutes(date: Date, value: string) {
   const minutes = getValidMinuteOrSecond(value);
-  date.setMinutes(parseInt(minutes, 10));
+  date.setMinutes(Number.parseInt(minutes, 10));
   return date;
 }
 
 export function setSeconds(date: Date, value: string) {
   const seconds = getValidMinuteOrSecond(value);
-  date.setSeconds(parseInt(seconds, 10));
+  date.setSeconds(Number.parseInt(seconds, 10));
   return date;
 }
 
 export function setHours(date: Date, value: string) {
   const hours = getValidHour(value);
-  date.setHours(parseInt(hours, 10));
+  date.setHours(Number.parseInt(hours, 10));
   return date;
 }
 
 export function set12Hours(date: Date, value: string, period: Period) {
-  const hours = parseInt(getValid12Hour(value), 10);
+  const hours = Number.parseInt(getValid12Hour(value), 10);
   const convertedHours = convert12HourTo24Hour(hours, period);
   date.setHours(convertedHours);
   return date;
