@@ -26,10 +26,17 @@ export const workOrderPagesConfig: Page[] = [
     segment: "appointments",
   },
   {
+    title: "Timeline",
+    description: "Timeline",
+    href: "/timeline",
+    icon: "timeline",
+    segment: "timeline",
+  },
+  {
     title: "Knowledge",
     description: "Knowledge base",
     href: "/knowledge",
     icon: "sparkles",
-    segment: "resources",
+    segment: "knowledge",
   },
 ];

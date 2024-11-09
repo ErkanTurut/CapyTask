@@ -1,7 +1,7 @@
 "use client";
 
 import { CaretSortIcon, PlusIcon } from "@radix-ui/react-icons";
-import { Table } from "@tanstack/react-table";
+import type { Table } from "@tanstack/react-table";
 
 import { DataTableViewOptions } from "@/components/tables/data-table/data-table-view-options";
 import { Button, buttonVariants } from "@gembuddy/ui/button";
@@ -10,13 +10,13 @@ import { Input } from "@gembuddy/ui/input";
 import { DataTableFilterCombobox } from "@/components/tables/data-table/data-table-filter-combobox";
 import { DataTableFilterItem } from "@/components/tables/data-table/data-table-filter-item";
 import { cn } from "@/lib/utils";
-import type { DataTableFilterField, DataTableFilterOption } from "../types";
+import { type RouterOutput, api } from "@gembuddy/trpc/client";
+import { Icons } from "@gembuddy/ui/icons";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import React from "react";
-import Link from "next/link";
-import { Icons } from "@/components/icons";
-import { api, RouterOutput } from "@gembuddy/trpc/client";
 import { toast } from "sonner";
+import type { DataTableFilterField, DataTableFilterOption } from "../types";
 
 interface DataTableToolbarProps extends React.HTMLAttributes<HTMLDivElement> {
   table: Table<

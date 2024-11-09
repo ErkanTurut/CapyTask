@@ -1,10 +1,10 @@
 "use client";
-import { FC } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@gembuddy/ui/button";
-import { Icons } from "@/components/icons";
+import { Icons } from "@gembuddy/ui/icons";
+import { useRouter } from "next/navigation";
+import type { FC } from "react";
 
-interface backButtonProps {}
+type backButtonProps = {};
 
 const BackButton: FC<backButtonProps> = ({}) => {
   const router = useRouter();

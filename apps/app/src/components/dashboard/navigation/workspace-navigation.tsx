@@ -1,11 +1,11 @@
 "use client";
-import React, { FC, useState } from "react";
+import type React from "react";
+import { type FC, useState } from "react";
 
-import { cn, generateAvatar } from "@gembuddy/ui/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@gembuddy/ui/avatar";
 import { Button } from "@gembuddy/ui/button";
+import { cn, generateAvatar } from "@gembuddy/ui/utils";
 
-import { Icons } from "@/components/icons";
 import {
   Command,
   CommandEmpty,
@@ -15,9 +15,10 @@ import {
   CommandList,
   CommandSeparator,
 } from "@gembuddy/ui/command";
+import { Icons } from "@gembuddy/ui/icons";
 import { Popover, PopoverContent, PopoverTrigger } from "@gembuddy/ui/popover";
 
-import { Database } from "@gembuddy/supabase/types";
+import type { Database } from "@gembuddy/supabase/types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 

@@ -1,15 +1,15 @@
 import DayCalendar from "@/components/calendar/day-calendar";
-import { Event } from "@/components/calendar/types";
-import { Icons } from "@/components/icons";
+import type { Event } from "@/components/calendar/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@gembuddy/ui/avatar";
 import { Button } from "@gembuddy/ui/button";
+import { Icons } from "@gembuddy/ui/icons";
 
-import { Shift } from "@/lib/types";
+import type { Shift } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { getWorkShiftsFromDateRange } from "@gembuddy/lib/utils";
-import { api, RouterOutput } from "@gembuddy/trpc/client";
+import { type RouterOutput, api } from "@gembuddy/trpc/client";
 import {
-  TCreateServiceAppointmentWithItemsSchema,
+  type TCreateServiceAppointmentWithItemsSchema,
   ZCreateServiceAppointmentWithItemsSchema,
 } from "@gembuddy/trpc/schema/service_appointment";
 import {
@@ -23,7 +23,7 @@ import { ScrollArea } from "@gembuddy/ui/scroll-area";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { endOfDay, startOfDay } from "date-fns";
 import { useEffect, useRef, useState } from "react";
-import { DateRange } from "react-day-picker";
+import type { DateRange } from "react-day-picker";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 

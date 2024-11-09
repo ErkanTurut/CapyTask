@@ -1,7 +1,7 @@
 "use client";
-import { type IconType, Icons } from "@/components/icons";
 import { PopoverComboBox } from "@/components/popoverCombobox";
 import type { Database } from "@gembuddy/supabase/types";
+import { type IconType, Icons } from "@gembuddy/ui/icons";
 import { useState } from "react";
 
 export interface StatusConfig {

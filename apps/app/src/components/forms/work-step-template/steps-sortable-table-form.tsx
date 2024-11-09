@@ -8,15 +8,20 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem } from "@gembuddy/ui/form";
 import { Input } from "@gembuddy/ui/input";
 
+import { catchError, cn } from "@/lib/utils";
 import { Button, buttonVariants } from "@gembuddy/ui/button";
 import {
   Sortable,
   SortableDragHandle,
   SortableItem,
 } from "@gembuddy/ui/sortable";
-import { catchError, cn } from "@/lib/utils";
 import { toast } from "sonner";
 
+import { type RouterOutput, api } from "@gembuddy/trpc/client";
+import {
+  type TUpsertWorkStepTemplateSchema,
+  ZUpsertWorkStepTemplateSchema,
+} from "@gembuddy/trpc/schema/work_step_template";
 import {
   Card,
   CardContent,
@@ -24,11 +29,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@gembuddy/ui/card";
-import { api, RouterOutput } from "@gembuddy/trpc/client";
-import {
-  TUpsertWorkStepTemplateSchema,
-  ZUpsertWorkStepTemplateSchema,
-} from "@gembuddy/trpc/schema/work_step_template";
+import { Icons } from "@gembuddy/ui/icons";
 import {
   ChevronRightIcon,
   DragHandleDots2Icon,
@@ -36,7 +37,6 @@ import {
 } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Icons } from "@/components/icons";
 interface StepsSortableTableFormProps
   extends React.HTMLAttributes<HTMLFormElement> {
   initialData: NonNullable<

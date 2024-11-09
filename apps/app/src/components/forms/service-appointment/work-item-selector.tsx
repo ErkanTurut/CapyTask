@@ -1,20 +1,20 @@
 "use client";
-import { useRef, useState } from "react";
-import { useDebouncedCallback } from "use-debounce";
 import { cn } from "@/lib/utils";
-import { api, RouterOutput } from "@gembuddy/trpc/client";
+import { type RouterOutput, api } from "@gembuddy/trpc/client";
 import { Button } from "@gembuddy/ui/button";
-import { ScrollArea } from "@gembuddy/ui/scroll-area";
-import { Popover, PopoverContent, PopoverTrigger } from "@gembuddy/ui/popover";
 import {
   Command,
-  CommandInput,
-  CommandList,
-  CommandGroup,
-  CommandItem,
   CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
 } from "@gembuddy/ui/command";
-import { Icons } from "@/components/icons";
+import { Icons } from "@gembuddy/ui/icons";
+import { Popover, PopoverContent, PopoverTrigger } from "@gembuddy/ui/popover";
+import { ScrollArea } from "@gembuddy/ui/scroll-area";
+import { useRef, useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
 
 interface WorkItemSelectorProps {
   onSelect: (

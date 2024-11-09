@@ -1,6 +1,7 @@
 "use client";
 import { api } from "@gembuddy/trpc/client";
 import type { trpc } from "@gembuddy/trpc/server";
+import { Editor } from "@gembuddy/ui/editor";
 import { use } from "react";
 
 interface NoteListProps {
@@ -22,13 +23,13 @@ export function NoteList({ noteAsync, work_order_id }: NoteListProps) {
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 ">
       {notes.map((note) => (
         <div
           className="p-2 border bg-muted rounded-md flex flex-col items-start gap-2"
           key={note.id}
         >
-          {note.content}
+          <Editor content={note.content} />
         </div>
       ))}
     </div>

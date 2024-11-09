@@ -1,5 +1,7 @@
 "use client";
-import { FC } from "react";
+import ThemeToggle from "@/components/theme-toggle";
+import { Avatar, AvatarFallback, AvatarImage } from "@gembuddy/ui/avatar";
+import { Button } from "@gembuddy/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,15 +12,13 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@gembuddy/ui/dropdown-menu";
+import { Icons } from "@gembuddy/ui/icons";
 import Link from "next/link";
-import { Button } from "@gembuddy/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@gembuddy/ui/avatar";
-import { Icons } from "@/components/icons";
-import ThemeToggle from "@/components/theme-toggle";
+import type { FC } from "react";
 
 import { cn, generateAvatar } from "@/lib/utils";
 
-import { Database } from "@gembuddy/supabase/types";
+import type { Database } from "@gembuddy/supabase/types";
 import { useParams } from "next/navigation";
 
 interface UserAccountNavProps

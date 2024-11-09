@@ -28,9 +28,7 @@ export async function WorkOrderHeader({
         aria-labelledby="work-order-header-heading"
         as="header"
       >
-        <PageHeaderHeading size="xs">
-          {workOrder.data.name}/{children}
-        </PageHeaderHeading>
+        <PageHeaderHeading size="xs">{workOrder.data.name}</PageHeaderHeading>
         <PageHeaderDescription size="xs">
           {workOrder.data.description}
         </PageHeaderDescription>

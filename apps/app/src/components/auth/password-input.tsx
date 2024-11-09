@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, forwardRef } from "react";
+import { forwardRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@gembuddy/ui/button";
+import { Icons } from "@gembuddy/ui/icons";
 import { Input, type InputProps } from "@gembuddy/ui/input";
-import { Icons } from "@/components/icons";
 
 const PasswordInput = forwardRef<HTMLInputElement, InputProps>(
   ({ className, ...props }, ref) => {

@@ -1,8 +1,8 @@
 "use client";
-import { Icons } from "@/components/icons";
 import { StatusChangeModal } from "@/components/modal/work-order/work-order-status-update-modal";
 import { PopoverComboBox } from "@/components/popoverCombobox";
 import type { RouterOutput } from "@gembuddy/trpc/client";
+import { Icons } from "@gembuddy/ui/icons";
 import { useState } from "react";
 import { type StatusConfig, statusConfig } from "../../config/status.config";
 interface StatusSelectorProps {

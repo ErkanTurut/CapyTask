@@ -1,10 +1,10 @@
 "use client";
 
-import * as React from "react";
 import Link from "next/link";
+import * as React from "react";
 
-import { siteConfig, type MainNavItem } from "./site.config";
 import { cn } from "@/lib/utils";
+import { Icons } from "@gembuddy/ui/icons";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -14,7 +14,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@gembuddy/ui/navigation-menu";
-import { Icons } from "@/components/icons";
+import { type MainNavItem, siteConfig } from "./site.config";
 
 interface MainNavProps {
   items?: MainNavItem[];

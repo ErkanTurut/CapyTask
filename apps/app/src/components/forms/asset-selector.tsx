@@ -1,4 +1,3 @@
-import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import { type RouterOutput, api } from "@gembuddy/trpc/client";
 import { Button } from "@gembuddy/ui/button";
@@ -11,6 +10,7 @@ import {
   CommandList,
   CommandLoading,
 } from "@gembuddy/ui/command";
+import { Icons } from "@gembuddy/ui/icons";
 import { Popover, PopoverContent, PopoverTrigger } from "@gembuddy/ui/popover";
 import { useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";

@@ -1,4 +1,3 @@
-import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import {
   Breadcrumb,
@@ -9,6 +8,7 @@ import {
   BreadcrumbSeparator,
 } from "@gembuddy/ui/breadcrumb";
 import { Button } from "@gembuddy/ui/button";
+import { Icons } from "@gembuddy/ui/icons";
 import { Separator } from "@gembuddy/ui/separator";
 import { SidebarTrigger } from "@gembuddy/ui/sidebar";
 

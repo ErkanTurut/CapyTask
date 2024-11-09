@@ -2,11 +2,11 @@
 import * as React from "react";
 
 import { Button } from "@gembuddy/ui/button";
-import { Icons } from "@/components/icons";
+import { Icons } from "@gembuddy/ui/icons";
 
-import { Provider } from "@gembuddy/supabase/types";
 import { catchError } from "@/lib/utils";
 import { createClient } from "@gembuddy/supabase/client";
+import type { Provider } from "@gembuddy/supabase/types";
 
 const oauthProviders = [
   { name: "Google", provider: "google", icon: "google" },

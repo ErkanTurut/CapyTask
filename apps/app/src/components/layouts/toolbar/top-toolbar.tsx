@@ -14,10 +14,10 @@ import {
   MenubarTrigger,
 } from "@gembuddy/ui/menubar";
 
-import { FC } from "react";
-import BackButton from "../back-button";
-import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
+import { Icons } from "@gembuddy/ui/icons";
+import type { FC } from "react";
+import BackButton from "../back-button";
 
 interface toolbarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
