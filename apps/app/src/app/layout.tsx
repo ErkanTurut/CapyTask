@@ -3,6 +3,8 @@ import "@gembuddy/ui/globals.css";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import type { Metadata } from "next";
+import { headers } from "next/headers";
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "Gembuddy",
@@ -29,7 +31,7 @@ export default async function RootLayout({
           "antialiased   font-sans        min-h-screen bg-background",
         )}
       >
-        {children}
+        <Providers headers={await headers()}>{children}</Providers>
       </body>
     </html>
   );

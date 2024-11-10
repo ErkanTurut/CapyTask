@@ -1,14 +1,14 @@
 "use client";
 
 import { DataTableColumnHeader } from "@/components/tables/general/data-table-column-header";
+import { cn } from "@/lib/utils";
 import { Button, buttonVariants } from "@gembuddy/ui/button";
 import { Checkbox } from "@gembuddy/ui/checkbox";
-import { cn } from "@/lib/utils";
-import { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { DataTableRowActions } from "./DataTableRowActions";
 
-import { RouterOutput } from "@gembuddy/trpc/client";
+import type { RouterOutput } from "@gembuddy/trpc/client";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 
 export const columns: ColumnDef<
