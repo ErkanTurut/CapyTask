@@ -19,7 +19,7 @@ export default async function Page(props: PageProps) {
   return (
     <Shell>
       <Suspense>
-        <NoteList work_order_id={params.work_order_id} noteAsync={noteAsync} />
+        {/* <NoteList work_order_id={params.work_order_id} noteAsync={noteAsync} /> */}
       </Suspense>
     </Shell>
   );

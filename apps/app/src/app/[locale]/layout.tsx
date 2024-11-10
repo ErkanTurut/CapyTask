@@ -1,9 +1,8 @@
-import "@gembuddy/ui/globals.css";
 import { cn } from "@gembuddy/ui/cn";
+import "@gembuddy/ui/globals.css";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import type { Metadata } from "next";
-import { ThemeProvider } from "next-themes";
 import { headers } from "next/headers";
 import { Providers } from "./providers";
 

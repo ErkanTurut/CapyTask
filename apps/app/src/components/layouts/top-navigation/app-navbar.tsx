@@ -1,6 +1,6 @@
-import { siteConfig } from "./site.config";
 import Link from "next/link";
-import { FC } from "react";
+import type { FC } from "react";
+import { siteConfig } from "./site.config";
 
 import { buttonVariants } from "@gembuddy/ui/button";
 
@@ -8,9 +8,9 @@ import { MainNav } from "@/components/layouts/top-navigation/main-nav";
 
 import ThemeToggle from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
-import { Icons } from "../../icons";
+import { Icons } from "@gembuddy/ui/icons";
 
-interface NavbarProps {}
+type NavbarProps = {};
 
 const NavBar: FC<NavbarProps> = () => {
   // const scrolled = useScroll(80);
@@ -19,7 +19,7 @@ const NavBar: FC<NavbarProps> = () => {
   return (
     <header
       className={cn(
-        `sticky top-0 z-50 w-full border-b bg-background`,
+        "sticky top-0 z-50 w-full border-b bg-background",
         // {
         //   "translate-y-1 border border-border bg-background shadow-md  backdrop-blur-lg delay-100 ease-in-out":
         //     scrolled,

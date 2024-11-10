@@ -108,7 +108,7 @@ export default async function Page(props: PageProps) {
     <Shell>
       <div className="relative">
         <div className="flex flex-col gap-4 p-1">
-          {data.map((item) => (
+          {/* {data.map((item) => (
             <div key={item.id}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4 ">
@@ -123,7 +123,7 @@ export default async function Page(props: PageProps) {
                 </span>
               </div>
             </div>
-          ))}
+          ))} */}
         </div>
         {/* <div className="absolute w-0.5 h-full left-4 bottom-2 z-10 bg-border " /> */}
         <div className="absolute top-0 h-full  w-8 bg-muted border rounded-md shadow-inner flex justify-items-center items-center flex-col pb-1">

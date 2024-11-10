@@ -19,11 +19,9 @@ interface DashboardLayoutProps {
 export default async function DashboardPage(props: DashboardLayoutProps) {
   const searchParams = await props.searchParams;
   const params = await props.params;
-  const page = searchParams["page"]
-    ? parseInt(searchParams["page"] as string)
-    : 1;
-  const limit = searchParams["limit"]
-    ? parseInt(searchParams["limit"] as string)
+  const page = Number.parseInt(searchParams.page?.toString() ?? "1");
+  const limit = searchParams.limit
+    ? Number.parseInt(searchParams.limit as string)
     : 10;
 
   return (

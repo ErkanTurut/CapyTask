@@ -1,6 +1,8 @@
 import "server-only";
 
 import { openai } from "@ai-sdk/openai";
+import { createWorkOrderHistory } from "@gembuddy/supabase/resources";
+import { createNote } from "@gembuddy/supabase/resources/note";
 import {
   createWorkOrder,
   deleteWorkOrders,
@@ -59,7 +61,7 @@ export const work_order = router({
       }),
   },
   update: {
-    statusWithNote: protectedProcedure
+    withNote: protectedProcedure
       .input(ZUpdateWorkOrderWithNoteSchema)
       .mutation(async ({ ctx, input }) => {
         const { data } = await updateWorkOrder({
@@ -68,20 +70,31 @@ export const work_order = router({
           id: input.work_order_id,
         });
 
+        const keys = Object.keys(ZUpdateWorkOrderSchema.parse(input));
+        console.log("keys ====>", keys);
+
+        // createWorkOrderHistory({
+        //   db: ctx.db,
+        //   input: {
+        //     field: typeof input,
+        //   },
+        // });
+
         if (input.content) {
           const { embedding } = await embed({
             model: openai.embedding("text-embedding-3-small"),
             value: input.text,
           });
-          await ctx.db
-            .from("note")
-            .insert({
+          await createNote({
+            db: ctx.db,
+            input: {
+              // @ts-ignore
               embedding: embedding,
               content: JSON.parse(input.content),
               created_by_id: ctx.session.user.id,
               work_order_id: input.work_order_id,
-            })
-            .throwOnError();
+            },
+          });
         }
         return data;
       }),

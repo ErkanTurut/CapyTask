@@ -47,19 +47,14 @@ export function WorkOrderStatusUpdateForm({
   onFinish,
 }: WorkOrderStatusUpdateFormProps) {
   const utils = api.useUtils();
-  const { mutate, isPending } =
-    api.db.work_order.update.statusWithNote.useMutation({
-      onSuccess: (updatedOrder) => {
-        toast.success("Status updated successfully");
-        utils.db.work_order.get.byId.invalidate();
-        utils.db.note.get.byWorkOrder.invalidate();
-        form.reset();
-        onFinish?.();
-      },
-    });
-
-  const { mutate: createHistory } =
-    api.db.work_order_history.create.one.useMutation({});
+  const { mutate, isPending } = api.db.work_order.update.withNote.useMutation({
+    onSuccess: (updatedOrder) => {
+      toast.success("Status updated successfully");
+      utils.db.work_order.get.byId.invalidate();
+      form.reset();
+      onFinish?.();
+    },
+  });
 
   const form = useForm<TUpdateWorkOrderWithNoteSchema>({
     resolver: zodResolver(ZUpdateWorkOrderWithNoteSchema),
@@ -73,16 +68,10 @@ export function WorkOrderStatusUpdateForm({
   });
 
   const onSubmit = form.handleSubmit((data) => {
-    createHistory({
-      work_order_id: data.work_order_id,
-      field: "status",
-      new_value: newStatus.value,
-      old_value: initialStatus.value,
-      created_at: new Date().toISOString(),
-    });
     mutate({
       work_order_id: data.work_order_id,
       status: newStatus.value,
+      name: "test",
       content: data.content?.toString(),
       text: data.text,
     });

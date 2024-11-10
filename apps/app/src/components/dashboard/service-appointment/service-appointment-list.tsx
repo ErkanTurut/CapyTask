@@ -5,7 +5,6 @@ import type { trpc } from "@gembuddy/trpc/server";
 import { endOfWeek, startOfWeek } from "date-fns";
 import { formatDateRange } from "little-date";
 import { use } from "react";
-import { StatusSelector } from "../work-order/status-selector";
 type ServiceAppointmentListProps = {
   serviceAppointmentQuery: ReturnType<
     typeof trpc.db.service_appointment.get.byServiceResource
@@ -47,11 +46,11 @@ export function ServiceAppointmentList({
                 )}
               </p>
             </div>
-            {serviceAppointment.work_order_item && (
+            {/* {serviceAppointment.work_order_item && (
               <StatusSelector
                 status={serviceAppointment.work_order_item?.status}
               />
-            )}
+            )} */}
           </div>
         );
       })}

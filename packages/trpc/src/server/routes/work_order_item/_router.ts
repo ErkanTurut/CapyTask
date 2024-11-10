@@ -63,17 +63,6 @@ export const work_order_item = router({
           id: input.work_order_item_id,
         });
 
-        if (input.note) {
-          await ctx.db
-            .from("note")
-            .insert({
-              content: input.note,
-              type: "STATUS_CHANGE",
-              created_by_id: ctx.session.user.id,
-              work_order_id: input.work_order_id!,
-            })
-            .throwOnError();
-        }
         return data;
       }),
   },

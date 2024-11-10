@@ -1,10 +1,10 @@
 "use server";
 
-import { streamObject } from "ai";
 import { openai } from "@ai-sdk/openai";
+import { createClient } from "@gembuddy/supabase/server";
+import { streamObject } from "ai";
 import { createStreamableValue } from "ai/rsc";
 import { z } from "zod";
-import { createClient } from "@gembuddy/supabase/server";
 
 const recommendationReasonEnum = z.enum([
   "SKILL_MATCH",
@@ -29,7 +29,7 @@ type AIRecommendation = z.infer<typeof aiRecommendationSchema>;
 
 export async function generate(input: string) {
   "use server";
-  const db = createClient();
+  const db = await createClient();
   const { data, error } = await db
     .from("service_resource")
     .select("*, assigned_resource(*, service_appointment(*))")

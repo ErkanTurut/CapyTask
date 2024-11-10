@@ -23,9 +23,9 @@ export function CopyText({ value }: { value: string }) {
     >
       <span>{value}</span>
       {copied ? (
-        <Icons.Check className="size-3.5" />
+        <Icons.spinner className="size-3.5" />
       ) : (
-        <Icons.Copy className="size-3.5" />
+        <Icons.checkCircled className="size-3.5" />
       )}
     </button>
   );

@@ -1,4 +1,3 @@
-import { WorkOrderCreateForm } from "@/components/forms/work-order/work-order-create-form";
 import {
   PageHeader,
   PageHeaderDescription,
@@ -6,23 +5,15 @@ import {
 } from "@/components/page-header";
 import { Shell } from "@/components/shells";
 import CardSkeleton from "@/components/skeletons/card-skeleton";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@gembuddy/ui/card";
 import { ScrollArea } from "@gembuddy/ui/scroll-area";
 import { Separator } from "@gembuddy/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@gembuddy/ui/tabs";
 import { Suspense } from "react";
 
 interface createWorkOrderProps {
-  params: {
+  params: Promise<{
     url_key: string;
     team_identity: string;
-  };
+  }>;
 }
 
 export default async function createWorkOrder({

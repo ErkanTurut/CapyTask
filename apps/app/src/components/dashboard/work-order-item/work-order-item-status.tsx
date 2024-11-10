@@ -1,8 +1,7 @@
 "use client";
 
-import type { Icons } from "@/components/icons";
 import { PopoverComboBox } from "@/components/popoverCombobox";
-import { Enums, type Tables } from "@gembuddy/supabase/types";
+import type { Tables } from "@gembuddy/supabase/types";
 import {
   type TUpdateWorkOrderItemWithNoteSchema,
   ZUpdateWorkOrderItemWithNoteSchema,
@@ -21,45 +20,42 @@ import {
   FormItem,
   FormMessage,
 } from "@gembuddy/ui/form";
+import type { Icons } from "@gembuddy/ui/icons";
 import { Label } from "@gembuddy/ui/label";
 import { Textarea } from "@gembuddy/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
+import type { StatusConfig } from "./status-config";
 
-// Define the status configuration type with a generic parameter
-export type StatusConfig<T extends string> = {
-  value: T;
-  label: string;
-  icon?: keyof typeof Icons;
-};
-
-interface StatusSelectorProps<T extends string> {
+interface StatusSelectorProps {
   workOrderItem: Tables<"work_order_item">;
-  statusConfig: StatusConfig<T>[];
-  onStatusChange: (newStatus: T, note?: string) => Promise<void>;
+  statusConfig: StatusConfig[];
+  onStatusChange: (
+    newStatus: StatusConfig["value"],
+    note?: string,
+  ) => Promise<void>;
   children: React.ReactNode;
 }
 
-export function WorkOrderItemStatus<T extends string>({
+export function WorkOrderItemStatus({
   workOrderItem,
   statusConfig,
   onStatusChange,
   children,
-}: StatusSelectorProps<T>) {
+}: StatusSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const initialStatus = statusConfig.find(
     (_status) => _status.value === workOrderItem.status,
   );
   const [selectedStatus, setSelectedStatus] = useState<
     StatusConfig | undefined
-  >(undefined);
+  >(initialStatus);
 
   if (!initialStatus) return null;
 
-  const handleSelect = (status: StatusConfig<T>) => {
+  const handleSelect = (status: StatusConfig) => {
     if (status.value === initialStatus.value) return;
     setSelectedStatus(status);
     setIsOpen(true);
@@ -88,17 +84,20 @@ export function WorkOrderItemStatus<T extends string>({
   );
 }
 
-interface StatusChangeModalProps<T extends string> {
+interface StatusChangeModalProps {
   isOpen?: boolean;
   onClose?: () => void;
-  prevStatus?: StatusConfig<T>;
-  selectedStatus?: StatusConfig<T>;
+  prevStatus?: StatusConfig;
+  selectedStatus?: StatusConfig;
   work_order_item_id: string;
-  onStatusChange: (newStatus: T, note?: string) => Promise<void>;
-  statusConfig: StatusConfig<T>[];
+  onStatusChange: (
+    newStatus: StatusConfig["value"],
+    note?: string,
+  ) => Promise<void>;
+  statusConfig: StatusConfig[];
 }
 
-function StatusChangeModal<T extends string>({
+function StatusChangeModal({
   isOpen,
   onClose,
   prevStatus,
@@ -106,7 +105,7 @@ function StatusChangeModal<T extends string>({
   work_order_item_id,
   onStatusChange,
   statusConfig,
-}: StatusChangeModalProps<T>) {
+}: StatusChangeModalProps) {
   const [isPending, setIsPending] = useState(false);
 
   const form = useForm<TUpdateWorkOrderItemWithNoteSchema>({

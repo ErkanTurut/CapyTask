@@ -21,7 +21,6 @@ export function NoteList({ noteAsync, work_order_id }: NoteListProps) {
   if (!notes) {
     return <div>empty</div>;
   }
-
   return (
     <div className="flex flex-col gap-2 ">
       {notes.map((note) => (
@@ -29,7 +28,9 @@ export function NoteList({ noteAsync, work_order_id }: NoteListProps) {
           className="p-2 border bg-muted rounded-md flex flex-col items-start gap-2"
           key={note.id}
         >
-          <Editor content={note.content} />
+          <Editor // @ts-ignore
+            content={note.content}
+          />
         </div>
       ))}
     </div>
