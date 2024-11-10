@@ -5,8 +5,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   transpilePackages: ["@gembuddy/supabase"],
   experimental: {
-    ppr: "incremental",
-    reactCompiler: true,
+    // ppr: "incremental",
   },
 };
 

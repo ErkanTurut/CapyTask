@@ -34,15 +34,15 @@ export function Providers({
   const [trpcClient] = useState(() =>
     api.createClient({
       links: [
-        loggerLink({
-          colorMode: "css",
-          enabled: (opts) =>
-            process.env.NODE_ENV === "development" ||
-            (opts.direction === "down" && opts.result instanceof Error),
-        }),
+        // loggerLink({
+        //   colorMode: "css",
+        //   enabled: (opts) =>
+        //     process.env.NODE_ENV === "development" ||
+        //     (opts.direction === "down" && opts.result instanceof Error),
+        // }),
         unstable_httpBatchStreamLink({
           transformer: superjson,
-          url: `/api/trpc`,
+          url: "/api/trpc",
           headers() {
             const header = new Map(headers);
             header.set("x-trpc-source", "nextjs-react");
