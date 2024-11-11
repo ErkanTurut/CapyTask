@@ -36,47 +36,53 @@ export const ZCreateWorkOrderSchema = z.object({
 
 export type TCreateWorkOrderSchema = z.infer<typeof ZCreateWorkOrderSchema>;
 
-export const ZUpdateWorkOrderSchema = z
-  .object({
-    company_id: z.string().optional(),
-    created_at: z.string().optional(),
-    description: z.string().nullable().optional(),
-    ended_at: z.string().nullable().optional(),
-    id: z.string().optional(),
-    location_id: z.string().nullable().optional(),
-    name: z.string().optional(),
-    priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional(),
-    public_id: z.string().optional(),
-    requested_by_id: z.string().nullable().optional(),
-    sheduled_end: z.string().nullable().optional(),
-    sheduled_start: z.string().nullable().optional(),
-    source: z
-      .enum([
-        "MAINTENANCE_PLAN",
-        "AI_CHAT",
-        "AI_VOICE_ASSISTANT",
-        "MANUAL_ENTRY",
-        "OTHER",
-      ])
-      .nullable()
-      .optional(),
-    started_at: z.string().nullable().optional(),
-    status: z
-      .enum(["OPEN", "IN_PROGRESS", "COMPLETED", "ON_HOLD", "CANCELED"])
-      .optional(),
-    team_id: z.string().optional(),
-    type: z.enum(["INSPECTION", "MAINTENANCE", "OTHER"]).optional(),
-    updated_at: z.string().optional(),
-    work_plan_id: z.string().nullable().optional(),
-    workspace_id: z.string().optional(),
-  })
-  .merge(
-    z.object({
-      work_order_id: z.string(),
-    }),
-  );
+export const ZUpdateWorkOrderSchema = z.object({
+  company_id: z.string().optional(),
+  created_at: z.string().optional(),
+  description: z.string().nullable().optional(),
+  ended_at: z.string().nullable().optional(),
+  id: z.string().optional(),
+  location_id: z.string().nullable().optional(),
+  name: z.string().optional(),
+  priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional(),
+  public_id: z.string().optional(),
+  requested_by_id: z.string().nullable().optional(),
+  sheduled_end: z.string().nullable().optional(),
+  sheduled_start: z.string().nullable().optional(),
+  source: z
+    .enum([
+      "MAINTENANCE_PLAN",
+      "AI_CHAT",
+      "AI_VOICE_ASSISTANT",
+      "MANUAL_ENTRY",
+      "OTHER",
+    ])
+    .nullable()
+    .optional(),
+  started_at: z.string().nullable().optional(),
+  status: z
+    .enum(["OPEN", "IN_PROGRESS", "COMPLETED", "ON_HOLD", "CANCELED"])
+    .optional(),
+  team_id: z.string().optional(),
+  // type: z.enum(["INSPECTION", "MAINTENANCE", "OTHER"]).optional(),
+  updated_at: z.string().optional(),
+  work_plan_id: z.string().nullable().optional(),
+  workspace_id: z.string().optional(),
+});
 
 export type TUpdateWorkOrderSchema = z.infer<typeof ZUpdateWorkOrderSchema>;
+
+export const ZUpdateWorkOrderWithNoteSchema = ZUpdateWorkOrderSchema.merge(
+  z.object({
+    content: z.string().optional(),
+    text: z.string().optional(),
+    work_order_id: z.string(),
+  }),
+);
+
+export type TUpdateWorkOrderWithNoteSchema = z.infer<
+  typeof ZUpdateWorkOrderWithNoteSchema
+>;
 
 export const ZGetWorkOrderByIdSchema = z.object({
   id: z.string(),

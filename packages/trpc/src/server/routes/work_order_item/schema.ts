@@ -1,16 +1,8 @@
 import z from "zod";
 
-/*
-   asset_id?: string | null;
-    created_at?: string;
-    id?: string;
-    location_id?: string | null;
-    status?: Database["public"]["Enums"]["Status"];
-    updated_at?: string;
-    work_order_id: string;
-*/
-
 export const ZCreateWorkOrderItemSchema = z.object({
+  name: z.string().min(1).max(255),
+  description: z.string().min(1).max(255).optional(),
   asset_id: z.string().nullable().optional(),
   created_at: z.string().optional(),
   id: z.string().optional(),
@@ -26,17 +18,23 @@ export type TCreateWorkOrderItemSchema = z.infer<
   typeof ZCreateWorkOrderItemSchema
 >;
 
-/**
- *    asset_id?: string | null;
-    created_at?: string;
-    id?: string;
-    location_id?: string | null;
-    status?: Database["public"]["Enums"]["Status"];
-    updated_at?: string;
-    work_order_id?: string;
- */
+export const ZUpdateWorkOrderItemSchema = z.object({
+  asset_id: z.string().nullable().optional(),
+  created_at: z.string().optional(),
+  id: z.string().optional(),
+  location_id: z.string().nullable().optional(),
+  status: z
+    .enum(["OPEN", "IN_PROGRESS", "COMPLETED", "ON_HOLD", "CANCELED"])
+    .optional(),
+  updated_at: z.string().optional(),
+  work_order_id: z.string().optional(),
+});
 
-export const ZUpdateWorkOrderItemSchema = z
+export type TUpdateWorkOrderItemSchema = z.infer<
+  typeof ZUpdateWorkOrderItemSchema
+>;
+
+export const ZUpdateWorkOrderItemWithNoteSchema = z
   .object({
     asset_id: z.string().nullable().optional(),
     created_at: z.string().optional(),
@@ -51,11 +49,12 @@ export const ZUpdateWorkOrderItemSchema = z
   .merge(
     z.object({
       work_order_item_id: z.string(),
+      note: z.string().optional(),
     }),
   );
 
-export type TUpdateWorkOrderItemSchema = z.infer<
-  typeof ZUpdateWorkOrderItemSchema
+export type TUpdateWorkOrderItemWithNoteSchema = z.infer<
+  typeof ZUpdateWorkOrderItemWithNoteSchema
 >;
 
 export const ZGetWorkOrderItemByWorkOrderSchema = z.object({

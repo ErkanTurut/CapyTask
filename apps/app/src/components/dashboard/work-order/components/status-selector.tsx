@@ -1,25 +1,27 @@
 "use client";
-import { useState } from "react";
-import { Icons } from "@/components/icons";
 import { PopoverComboBox } from "@/components/popoverCombobox";
-import { StatusChangeModal } from "./status-change-modal";
-import { StatusConfig, statusConfig } from "./status-config";
-import { Database } from "@gembuddy/supabase/types";
-
+import type { RouterOutput } from "@gembuddy/trpc/client";
+import { Icons } from "@gembuddy/ui/icons";
+import { useState } from "react";
+import { type StatusConfig, statusConfig } from "../../../config/status.config";
+import { StatusChangeModal } from "../modals/work-order-status-update-modal";
 interface StatusSelectorProps {
-  status: Database["public"]["Enums"]["Status"];
+  workOrder: NonNullable<
+    RouterOutput["db"]["work_order"]["get"]["byId"]["data"]
+  >;
 }
 
-export function StatusSelector({ status }: StatusSelectorProps) {
+export function WorkOrderStatus({ workOrder }: StatusSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const initialStatus = statusConfig.find(
-    (_status) => _status.value === status,
+    (status) => status.value === workOrder.status,
   );
-  const [selectedStatus, setSelectedStatus] = useState<
-    StatusConfig | undefined
-  >(undefined);
+  if (!initialStatus) {
+    throw new Error("Invalid status");
+  }
 
-  if (!initialStatus) return null;
+  const [selectedStatus, setSelectedStatus] =
+    useState<StatusConfig>(initialStatus);
 
   const handleSelect = (status: StatusConfig) => {
     if (status.value === initialStatus.value) return;
@@ -32,10 +34,11 @@ export function StatusSelector({ status }: StatusSelectorProps) {
   return (
     <>
       <StatusChangeModal
-        prevStatus={initialStatus}
-        selectedStatus={selectedStatus}
         isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
+        initialStatus={initialStatus}
+        newStatus={selectedStatus}
+        onOpenChange={setIsOpen}
+        work_order_id={workOrder.id}
       />
       <PopoverComboBox
         className="w-[10rem]"

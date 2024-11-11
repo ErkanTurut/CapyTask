@@ -4,17 +4,18 @@ import { protectedProcedure, router } from "../../trpc";
 
 import {
   createWorkOrderItem,
-  getWorkOrderItemByWorkOrder,
-  updateWorkOrderItem,
   getWorkOrderItemById,
+  getWorkOrderItemByWorkOrder,
   searchWorkOrderItem,
+  updateWorkOrderItem,
 } from "@gembuddy/supabase/resources/work_order_item";
 import {
   ZCreateWorkOrderItemSchema,
-  ZGetWorkOrderItemByWorkOrderSchema,
   ZGetWorkOrderItemByIdSchema,
+  ZGetWorkOrderItemByWorkOrderSchema,
   ZSearchWorkOrderItemSchema,
   ZUpdateWorkOrderItemSchema,
+  ZUpdateWorkOrderItemWithNoteSchema,
 } from "./schema";
 
 export const work_order_item = router({
@@ -53,14 +54,16 @@ export const work_order_item = router({
       });
     }),
   update: {
-    byId: protectedProcedure
-      .input(ZUpdateWorkOrderItemSchema)
+    withNote: protectedProcedure
+      .input(ZUpdateWorkOrderItemWithNoteSchema)
       .mutation(async ({ ctx, input }) => {
-        return await updateWorkOrderItem({
+        const { data } = await updateWorkOrderItem({
           db: ctx.db,
-          input,
+          input: ZUpdateWorkOrderItemSchema.parse(input),
           id: input.work_order_item_id,
         });
+
+        return data;
       }),
   },
 });
