@@ -9,7 +9,8 @@ import {
   TabsContainer,
   TabsLink,
 } from "@/components/dashboard/navigation/tabs-link";
-import { type Page, workOrderPagesConfig } from "./config";
+import { Icons } from "@gembuddy/ui/icons";
+import { workOrderPagesConfig } from "../config";
 
 export function WorkOrderTabs({ className }: { className?: string }) {
   const params = useParams() as {
@@ -26,8 +27,9 @@ export function WorkOrderTabs({ className }: { className?: string }) {
 
   return (
     <TabsContainer className={className}>
-      {workOrderPagesConfig.map(({ title, segment, href, disabled }) => {
+      {workOrderPagesConfig.map(({ title, segment, href, disabled, icon }) => {
         const active = segment === selectedSegment;
+        const Icon = icon ? Icons[icon] : null;
         return (
           <TabsLink
             key={title}
@@ -36,6 +38,7 @@ export function WorkOrderTabs({ className }: { className?: string }) {
             prefetch={false}
             disabled={disabled}
           >
+            {Icon && <Icon className="mr-2 size-4" />}
             {title}
           </TabsLink>
         );

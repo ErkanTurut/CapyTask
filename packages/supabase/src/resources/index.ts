@@ -13,3 +13,5 @@ export * from "./work_plan";
 export * from "./work_step";
 export * from "./work_step_template";
 export * from "./workspace";
+export * from "./work_order_history";
+export * from "./note";

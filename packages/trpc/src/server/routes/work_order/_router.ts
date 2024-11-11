@@ -1,7 +1,8 @@
 import "server-only";
 
-import { protectedProcedure, router } from "../../trpc";
-
+import { openai } from "@ai-sdk/openai";
+import { createWorkOrderHistory } from "@gembuddy/supabase/resources";
+import { createNote } from "@gembuddy/supabase/resources/note";
 import {
   createWorkOrder,
   deleteWorkOrders,
@@ -10,6 +11,8 @@ import {
   searchWorkOrder,
   updateWorkOrder,
 } from "@gembuddy/supabase/resources/work_order";
+import { embed } from "ai";
+import { protectedProcedure, router } from "../../trpc";
 import {
   ZCreateWorkOrderSchema,
   ZDeleteWorkOrderManySchema,
@@ -17,6 +20,7 @@ import {
   ZGetWorkOrderByTeamSchema,
   ZSearchWorkOrderSchema,
   ZUpdateWorkOrderSchema,
+  ZUpdateWorkOrderWithNoteSchema,
 } from "./schema";
 export const work_order = router({
   get: {
@@ -57,14 +61,42 @@ export const work_order = router({
       }),
   },
   update: {
-    status: protectedProcedure
-      .input(ZUpdateWorkOrderSchema)
+    withNote: protectedProcedure
+      .input(ZUpdateWorkOrderWithNoteSchema)
       .mutation(async ({ ctx, input }) => {
-        return await updateWorkOrder({
+        const { data } = await updateWorkOrder({
           db: ctx.db,
-          input,
+          input: ZUpdateWorkOrderSchema.parse(input),
           id: input.work_order_id,
         });
+
+        const keys = Object.keys(ZUpdateWorkOrderSchema.parse(input));
+        console.log("keys ====>", keys);
+
+        // createWorkOrderHistory({
+        //   db: ctx.db,
+        //   input: {
+        //     field: typeof input,
+        //   },
+        // });
+
+        if (input.content) {
+          const { embedding } = await embed({
+            model: openai.embedding("text-embedding-3-small"),
+            value: input.text,
+          });
+          await createNote({
+            db: ctx.db,
+            input: {
+              // @ts-ignore
+              embedding: embedding,
+              content: JSON.parse(input.content),
+              created_by_id: ctx.session.user.id,
+              work_order_id: input.work_order_id,
+            },
+          });
+        }
+        return data;
       }),
   },
 

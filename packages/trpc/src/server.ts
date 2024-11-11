@@ -1,8 +1,8 @@
 import "server-only";
-// src/trpc/server.ts
-import { appRouter } from "./";
 import { loggerLink } from "@trpc/client";
 import { cookies } from "next/headers";
+// src/trpc/server.ts
+import { appRouter } from "./";
 
 import { createClient } from "@gembuddy/supabase/server";
 import { cache } from "react";

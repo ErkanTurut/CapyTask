@@ -23,6 +23,26 @@ export async function createWorkOrder({
   return { data };
 }
 
+export async function upsertWorkOrder({
+  db,
+  input,
+}: {
+  db: Client;
+  input: TablesInsert<"work_order">;
+}) {
+  const { data } = await db
+    .from("work_order")
+    .upsert(input, {
+      onConflict: "id",
+      ignoreDuplicates: true,
+    })
+    .select("*")
+    .single()
+    .throwOnError();
+
+  return { data };
+}
+
 export async function updateWorkOrder({
   db,
   input,
