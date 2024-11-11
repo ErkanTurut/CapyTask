@@ -1,27 +1,26 @@
 "use client";
-import { useRef, useState } from "react";
-import { useDebouncedCallback } from "use-debounce";
+import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import { api, RouterOutput } from "@gembuddy/trpc/client";
 import { Button } from "@gembuddy/ui/button";
-import { ScrollArea } from "@gembuddy/ui/scroll-area";
-import { Popover, PopoverContent, PopoverTrigger } from "@gembuddy/ui/popover";
 import {
   Command,
-  CommandInput,
-  CommandList,
-  CommandGroup,
-  CommandItem,
   CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
   CommandLoading,
 } from "@gembuddy/ui/command";
-import { Icons } from "@/components/icons";
+import { Popover, PopoverContent, PopoverTrigger } from "@gembuddy/ui/popover";
+import { useRef, useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
 
 interface ServiceResourceSelectorProps {
   onSelect: (
     location: NonNullable<
       RouterOutput["db"]["location"]["get"]["textSearch"]["data"]
-    >[number]
+    >[number],
   ) => void;
   selectedValue?: NonNullable<
     RouterOutput["db"]["location"]["get"]["textSearch"]["data"]
@@ -42,9 +41,9 @@ function LocationSelector({
       { search: searchValue },
       {
         refetchOnMount: false,
-        initialData: selectedValue && {data : [selectedValue]},
+        initialData: selectedValue && { data: [selectedValue] },
         enabled: Boolean(searchValue),
-      }
+      },
     );
 
   const handleOnSearchChange = useDebouncedCallback(async (e: string) => {

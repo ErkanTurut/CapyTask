@@ -38,7 +38,7 @@ export const ZUpdateWorkPlanTemplateSchema = z
   .merge(
     z.object({
       work_plan_template_id: z.string(),
-    })
+    }),
   );
 
 export type TUpdateWorkPlanTemplateSchema = z.infer<

@@ -51,9 +51,11 @@ export async function searchWorkOrderItem({
 }) {
   const { data } = await db
     .from("work_order_item")
-    .select()
+    .select("*, asset(*), location(*)")
     .textSearch("name", input.search.replace(/ /g, "%"), {
       type: "websearch",
     })
     .throwOnError();
+
+  return { data };
 }

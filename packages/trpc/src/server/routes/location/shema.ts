@@ -69,7 +69,7 @@ export const ZUpdateLocationSchema = z
   .merge(
     z.object({
       location_id: z.string(),
-    })
+    }),
   );
 
 export type TUpdateLocationSchema = z.infer<typeof ZUpdateLocationSchema>;

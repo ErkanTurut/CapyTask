@@ -63,7 +63,7 @@ export const ZAssetUpdateSchema = z
   .merge(
     z.object({
       asset_id: z.string(),
-    })
+    }),
   );
 
 export type TAssetUpdateSchema = z.infer<typeof ZAssetUpdateSchema>;
@@ -72,7 +72,7 @@ export const ZAssetDeleteSchema = z.object({
   assets: z.array(
     z.object({
       asset_id: z.string(),
-    })
+    }),
   ),
 });
 

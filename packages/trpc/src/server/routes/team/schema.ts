@@ -53,7 +53,7 @@ export const ZUpdateTeamSchema = z
   .merge(
     z.object({
       team_id: z.string(),
-    })
+    }),
   );
 
 export type TUpdateTeamSchema = z.infer<typeof ZUpdateTeamSchema>;

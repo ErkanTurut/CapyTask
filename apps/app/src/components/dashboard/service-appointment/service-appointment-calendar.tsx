@@ -24,7 +24,7 @@ import WeekCalendar from "@/components/calendar/week-calendar";
 import { api, RouterOutput } from "@gembuddy/trpc/client";
 import DateSelector from "./date-selector";
 import WeekNavigator from "@/components/calendar/week-navigation";
-import AppointmentDialog from "./appointment-dialog";
+import { AppointmentDialog } from "./appointment-dialog";
 import { notFound } from "next/navigation";
 import { Shift } from "@/lib/types";
 import { getWorkShiftsFromDateRange } from "@gembuddy/lib/utils";
@@ -61,7 +61,7 @@ export default function ServiceAppointmentCalendar({
     data: { data: service_appointment },
   } = api.db.service_appointment.get.byWorkOrder.useQuery(
     { work_order_id },
-    { initialData: use(initialData) }
+    { initialData: use(initialData) },
   );
 
   const serviceAppointmentEvents: Event[] =
@@ -84,7 +84,7 @@ export default function ServiceAppointmentCalendar({
       setSelectedDate(
         direction === "prev"
           ? subWeeks(selectedDate, 1)
-          : addWeeks(selectedDate, 1)
+          : addWeeks(selectedDate, 1),
       );
     }
   };
@@ -133,10 +133,10 @@ export default function ServiceAppointmentCalendar({
           const workShifts = getWorkShiftsFromDateRange(
             startOfWeek(selectedDate, { weekStartsOn: 1 }),
             endOfWeek(selectedDate, { weekStartsOn: 1 }),
-            shift
+            shift,
           );
           return !workShifts.some((shift) =>
-            isWithinInterval(date, { start: shift.start, end: shift.end })
+            isWithinInterval(date, { start: shift.start, end: shift.end }),
           );
         }}
       />

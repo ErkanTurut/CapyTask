@@ -29,7 +29,7 @@ export const ZUpdateWorkspaceSchema = z
   .merge(
     z.object({
       workspace_id: z.string(),
-    })
+    }),
   );
 
 export type TUpdateWorkspaceSchema = z.infer<typeof ZUpdateWorkspaceSchema>;

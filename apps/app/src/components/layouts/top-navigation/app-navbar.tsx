@@ -19,7 +19,7 @@ const NavBar: FC<NavbarProps> = () => {
   return (
     <header
       className={cn(
-        `sticky top-0 z-50 w-full border-b bg-background`
+        `sticky top-0 z-50 w-full border-b bg-background`,
         // {
         //   "translate-y-1 border border-border bg-background shadow-md  backdrop-blur-lg delay-100 ease-in-out":
         //     scrolled,

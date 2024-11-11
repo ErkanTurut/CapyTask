@@ -46,7 +46,7 @@ const UserAccountNav: FC<UserAccountNavProps> = ({ className, user }) => {
             "flex items-center justify-start gap-1",
             isCollapsed &&
               "flex h-8 w-8 items-center justify-center overflow-ellipsis [&>span]:w-auto [&>svg]:hidden",
-            className
+            className,
           )}
         >
           <Avatar className={cn("h-6 w-6")}>
@@ -59,7 +59,7 @@ const UserAccountNav: FC<UserAccountNavProps> = ({ className, user }) => {
           <span
             className={cn(
               "cursor-pointer overflow-x-auto overflow-ellipsis whitespace-nowrap",
-              isCollapsed && "hidden"
+              isCollapsed && "hidden",
             )}
           >
             {user.first_name || user.last_name

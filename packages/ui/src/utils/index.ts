@@ -72,7 +72,7 @@ export function generateAvatar({
     } else {
       // Multi-word name
       initials =
-      // @ts-ignore
+        // @ts-ignore
         `${nameParts[0].charAt(0) ?? ""}` +
         // @ts-ignore
         `${nameParts[1].charAt(0) ?? ""}`.toUpperCase();

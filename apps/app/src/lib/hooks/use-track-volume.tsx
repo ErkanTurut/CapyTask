@@ -64,7 +64,7 @@ export const useMultibandTrackVolume = (
   track?: Track,
   bands: number = 5,
   loPass: number = 100,
-  hiPass: number = 600
+  hiPass: number = 600,
 ) => {
   const [frequencyBands, setFrequencyBands] = useState<Float32Array[]>([]);
 
@@ -96,7 +96,7 @@ export const useMultibandTrackVolume = (
       const chunks: Float32Array[] = [];
       for (let i = 0; i < bands; i++) {
         chunks.push(
-          normalizedFrequencies.slice(i * chunkSize, (i + 1) * chunkSize)
+          normalizedFrequencies.slice(i * chunkSize, (i + 1) * chunkSize),
         );
       }
 

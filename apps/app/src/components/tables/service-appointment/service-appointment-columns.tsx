@@ -94,7 +94,7 @@ export function getColumns(): ColumnType<
       ),
       cell: ({ row }) => {
         const status = statuses.find(
-          (status) => status.value === row.getValue("status")
+          (status) => status.value === row.getValue("status"),
         );
 
         if (!status) {

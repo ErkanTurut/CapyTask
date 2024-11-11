@@ -60,8 +60,8 @@ const DayCalendar: React.FC<DayCalendarProps> = ({
     console.log(
       `Selected time range: ${format(slotDate, "PPpp")} - ${format(
         endDate,
-        "PPpp"
-      )}`
+        "PPpp",
+      )}`,
     );
   };
 
@@ -139,8 +139,8 @@ const DayCalendar: React.FC<DayCalendarProps> = ({
                   renderEvent(
                     event,
                     index,
-                    getEventsForDay(date, events).length
-                  )
+                    getEventsForDay(date, events).length,
+                  ),
                 )}
               <TooltipProvider>
                 <Tooltip>
@@ -152,7 +152,7 @@ const DayCalendar: React.FC<DayCalendarProps> = ({
                         isTimeDisabled(
                           addHours(startOfDay(date), hour),
                           disabledTimeRanges,
-                          disabledSlots
+                          disabledSlots,
                         )
                           ? "bg-border hover:cursor-not-allowed"
                           : "transition-shadow duration-700 hover:shadow-inner"
@@ -163,12 +163,12 @@ const DayCalendar: React.FC<DayCalendarProps> = ({
                       disabled={isTimeDisabled(
                         addHours(startOfDay(date), hour),
                         disabledTimeRanges,
-                        disabledSlots
+                        disabledSlots,
                       )}
                       aria-label={`Select time slot ${formatHour(
                         hour,
                         date,
-                        initialTimeFormat
+                        initialTimeFormat,
                       )}`}
                     />
                   </TooltipTrigger>
@@ -178,7 +178,7 @@ const DayCalendar: React.FC<DayCalendarProps> = ({
                   >
                     {formatDateRange(
                       addHours(startOfDay(date), hour),
-                      addHours(startOfDay(date), hour + 1)
+                      addHours(startOfDay(date), hour + 1),
                     )}
                   </TooltipContent>
                 </Tooltip>

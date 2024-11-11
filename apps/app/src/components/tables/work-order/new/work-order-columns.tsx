@@ -64,7 +64,7 @@ export function getColumns(): ColumnType<
               href={{ pathname: `work-orders/${row.original.id}` }}
               className={cn(
                 buttonVariants({ variant: "link", size: "sm" }),
-                "underline"
+                "underline",
               )}
             >
               {row.original.name}
@@ -84,7 +84,7 @@ export function getColumns(): ColumnType<
       ),
       cell: ({ row }) => {
         const status = statuses.find(
-          (status) => status.value === row.getValue("status")
+          (status) => status.value === row.getValue("status"),
         );
 
         if (!status) {

@@ -87,7 +87,7 @@ export function ServiceAppointmentTable({
     {
       work_order_id: params.work_order_id,
     },
-    { initialData: use(initialData) }
+    { initialData: use(initialData) },
   );
 
   if (!data) {
@@ -154,17 +154,17 @@ export function ServiceAppointmentTable({
 
       return newSearchParams.toString();
     },
-    [searchParams]
+    [searchParams],
   );
 
   const initialColumnFilters: ColumnFiltersState = React.useMemo(() => {
     return Array.from(searchParams.entries()).reduce<ColumnFiltersState>(
       (filters, [key, value]) => {
         const filterableColumn = filterableColumns.find(
-          (column) => column.value === key
+          (column) => column.value === key,
         );
         const searchableColumn = searchableColumns.find(
-          (column) => column.value === key
+          (column) => column.value === key,
         );
 
         if (filterableColumn) {
@@ -181,7 +181,7 @@ export function ServiceAppointmentTable({
 
         return filters;
       },
-      []
+      [],
     );
   }, [filterableColumns, searchableColumns, searchParams]);
 

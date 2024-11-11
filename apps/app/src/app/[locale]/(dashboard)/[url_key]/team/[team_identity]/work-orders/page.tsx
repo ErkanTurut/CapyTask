@@ -29,25 +29,20 @@ export default function Page({ searchParams, params }: PageProps) {
     ? parseInt(searchParams["limit"] as string)
     : 10;
   return (
-    <ScrollArea className="h-full">
-      <Shell>
-        <PageHeader
-          id="account-header"
-          aria-labelledby="account-header-heading"
-        >
-          <PageHeaderHeading size="sm" className="flex items-center gap-1">
-            Work Orders
-          </PageHeaderHeading>
-          <PageHeaderDescription size="sm">
-            View and manage your work orders
-          </PageHeaderDescription>
-        </PageHeader>
-        <Separator />
+    <Shell>
+      <PageHeader id="account-header" aria-labelledby="account-header-heading">
+        <PageHeaderHeading size="sm" className="flex items-center gap-1">
+          Work Orders
+        </PageHeaderHeading>
+        <PageHeaderDescription size="sm">
+          View and manage your work orders
+        </PageHeaderDescription>
+      </PageHeader>
+      <Separator />
 
-        <Suspense fallback={<TableSkeleton />}>
-          <TableContainer params={params} searchParams={searchParams} />
-        </Suspense>
-      </Shell>
-    </ScrollArea>
+      <Suspense fallback={<TableSkeleton />}>
+        <TableContainer params={params} searchParams={searchParams} />
+      </Suspense>
+    </Shell>
   );
 }

@@ -56,7 +56,7 @@ export function WorkPlanTemplateCreateForm({
         {
           workspace_id,
         },
-        { type: "all" }
+        { type: "all" },
       );
       form.reset();
     },

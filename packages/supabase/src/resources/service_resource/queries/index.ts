@@ -38,7 +38,9 @@ export async function searchServiceResource({
   const { data } = await db
     .from("service_resource")
     .select("*, assigned_resource(service_appointment(*))")
-    .textSearch("name", input.search.replace(/ /g, "%"))
+    .textSearch("full_name", input.search.replace(/ /g, "%"), {
+      type: "websearch",
+    })
     .throwOnError();
 
   return { data };
@@ -60,12 +62,12 @@ export async function getRecommendation({
   const { data, error } = await db
     .from("service_resource")
     .select(
-      "*,team!inner(identity), assigned_resource(service_appointment!inner(*))"
+      "*,team!inner(identity), assigned_resource(service_appointment!inner(*))",
     )
     .eq("team.identity", input.team_identity)
     .gte(
       "assigned_resource.service_appointment.start_date",
-      input.date_range.from
+      input.date_range.from,
     )
     .lte("assigned_resource.service_appointment.end_date", input.date_range.to);
   if (error) {
@@ -75,7 +77,7 @@ export async function getRecommendation({
 
   const result = data.map((resource) => {
     const appointments = resource.assigned_resource.map(
-      (assigned) => assigned.service_appointment
+      (assigned) => assigned.service_appointment,
     );
     return {
       ...resource,

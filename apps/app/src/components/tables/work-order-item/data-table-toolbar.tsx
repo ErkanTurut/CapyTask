@@ -4,7 +4,7 @@ import { CaretSortIcon, PlusIcon } from "@radix-ui/react-icons";
 import { Table } from "@tanstack/react-table";
 
 import { DataTableViewOptions } from "@/components/tables/data-table/data-table-view-options";
-import { Button } from "@gembuddy/ui/button";
+import { Button, buttonVariants } from "@gembuddy/ui/button";
 import { Input } from "@gembuddy/ui/input";
 
 import { DataTableFilterCombobox } from "@/components/tables/data-table/data-table-filter-combobox";
@@ -13,6 +13,8 @@ import { cn } from "@/lib/utils";
 import type { DataTableFilterField, DataTableFilterOption } from "../types";
 import { useSearchParams } from "next/navigation";
 import React from "react";
+import Link from "next/link";
+import { Icons } from "@gembuddy/ui/icons";
 
 interface DataTableToolbarProps<TData>
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -59,7 +61,7 @@ export function DataTableToolbar<TData>({
     DataTableFilterOption<TData>[]
   >(initialSelectedOptions);
   const [openFilterBuilder, setOpenFilterBuilder] = React.useState(
-    initialSelectedOptions.length > 0 || false
+    initialSelectedOptions.length > 0 || false,
   );
   const [openCombobox, setOpenCombobox] = React.useState(false);
 
@@ -72,7 +74,7 @@ export function DataTableToolbar<TData>({
     <div
       className={cn(
         "flex w-full flex-col space-y-2.5 overflow-auto",
-        className
+        className,
       )}
       {...props}
     >
@@ -108,8 +110,8 @@ export function DataTableToolbar<TData>({
             options={options.filter(
               (option) =>
                 !selectedOptions.some(
-                  (selectedOption) => selectedOption.value === option.value
-                )
+                  (selectedOption) => selectedOption.value === option.value,
+                ),
             )}
             selectedOptions={selectedOptions}
             setSelectedOptions={setSelectedOptions}
@@ -117,11 +119,22 @@ export function DataTableToolbar<TData>({
           />
         )}
         <DataTableViewOptions table={table} />
+        <Link
+          className={buttonVariants({ size: "sm" })}
+          href={{
+            query: {
+              create: true,
+            },
+          }}
+        >
+          <Icons.plusCircled className="mr-2 size-4" aria-hidden="true" />
+          Create
+        </Link>
       </div>
       <div
         className={cn(
           "flex items-center gap-2",
-          !openFilterBuilder && "hidden"
+          !openFilterBuilder && "hidden",
         )}
       >
         {selectedOptions

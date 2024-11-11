@@ -26,7 +26,7 @@ export function WorkOrderHeader({ initial_work_order }: WorkOrderHeaderProps) {
     },
     {
       initialData: initial_work_order,
-    }
+    },
   );
 
   if (!work_order) {

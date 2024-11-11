@@ -42,6 +42,20 @@ export type TCreateServiceAppointmentSchema = z.infer<
   typeof ZCreateServiceAppointmentSchema
 >;
 
+export const ZCreateServiceAppointmentWithItemsSchema =
+  ZCreateServiceAppointmentSchema.extend({
+    service_resources: z
+      .object({
+        service_resource_id: z.string().array(),
+      })
+      .optional(),
+    location_id: z.string().optional(),
+  });
+
+export type TCreateServiceAppointmentWithItemsSchema = z.infer<
+  typeof ZCreateServiceAppointmentWithItemsSchema
+>;
+
 export const ZUpdateServiceAppointmentSchema = z
   .object({
     created_at: z.string().optional(),
@@ -55,7 +69,7 @@ export const ZUpdateServiceAppointmentSchema = z
   .merge(
     z.object({
       service_appointment_id: z.string(),
-    })
+    }),
   );
 
 export type TUpdateServiceAppointmentSchema = z.infer<

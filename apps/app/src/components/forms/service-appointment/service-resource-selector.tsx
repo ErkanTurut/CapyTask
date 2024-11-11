@@ -1,10 +1,8 @@
-"use client";
 import { useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { cn } from "@/lib/utils";
 import { api, RouterOutput } from "@gembuddy/trpc/client";
 import { Button } from "@gembuddy/ui/button";
-import { ScrollArea } from "@gembuddy/ui/scroll-area";
 import { Popover, PopoverContent, PopoverTrigger } from "@gembuddy/ui/popover";
 import {
   Command,
@@ -15,14 +13,13 @@ import {
   CommandEmpty,
   CommandLoading,
 } from "@gembuddy/ui/command";
-import { Avatar, AvatarFallback, AvatarImage } from "@gembuddy/ui/avatar";
 import { Icons } from "@/components/icons";
 
 interface ServiceResourceSelectorProps {
   onSelect: (
     serviceResource: NonNullable<
       RouterOutput["db"]["service_resource"]["get"]["textSearch"]["data"]
-    >[number]
+    >[number],
   ) => void;
   selectedValues?: RouterOutput["db"]["service_resource"]["get"]["textSearch"];
 }
@@ -43,7 +40,7 @@ export default function ServiceResourceSelector({
         refetchOnMount: false,
         initialData: selectedValues,
         enabled: Boolean(searchValue),
-      }
+      },
     );
 
   const handleOnSearchChange = useDebouncedCallback(async (e: string) => {
@@ -108,7 +105,7 @@ export default function ServiceResourceSelector({
                           ?.map((sr) => sr.id)
                           .includes(service_resource.id)
                           ? "opacity-100"
-                          : "opacity-0"
+                          : "opacity-0",
                       )}
                     />
                     <span>

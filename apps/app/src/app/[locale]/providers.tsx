@@ -28,7 +28,7 @@ export function Providers({
             refetchOnWindowFocus: false,
           },
         },
-      })
+      }),
   );
 
   const [trpcClient] = useState(() =>
@@ -50,7 +50,7 @@ export function Providers({
           },
         }),
       ],
-    })
+    }),
   );
 
   const { isMobile } = useWindowSize();

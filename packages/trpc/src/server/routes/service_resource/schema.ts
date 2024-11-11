@@ -43,7 +43,7 @@ export const ZUpdateServiceResourceSchema = z
   .merge(
     z.object({
       service_resource_id: z.string(),
-    })
+    }),
   );
 
 export type TUpdateServiceResourceSchema = z.infer<

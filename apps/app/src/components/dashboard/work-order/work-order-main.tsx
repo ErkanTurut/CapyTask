@@ -1,17 +1,6 @@
-import { Copy } from "lucide-react";
-
-import { Button } from "@gembuddy/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@gembuddy/ui/card";
-import { Separator } from "@gembuddy/ui/separator";
 import { formatDate } from "@/lib/utils";
 import { RouterOutput } from "@gembuddy/trpc/client";
+import { Separator } from "@gembuddy/ui/separator";
 import Link from "next/link";
 
 interface WorkOrderMainProps {
