@@ -8,6 +8,14 @@ export type TGetServiceResourceByIdSchema = z.infer<
   typeof ZGetServiceResourceByIdSchema
 >;
 
+export const ZGetServiceResourceByUserSchema = z.object({
+  user_id: z.string(),
+});
+
+export type TGetServiceResourceByUserSchema = z.infer<
+  typeof ZGetServiceResourceByUserSchema
+>;
+
 export const ZGetServiceResourceRecommendationSchema = z.object({
   team_identity: z.string(),
   date_range: z.object({

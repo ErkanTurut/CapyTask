@@ -2,7 +2,7 @@ import {
   PageHeader,
   PageHeaderDescription,
   PageHeaderHeading,
-} from "@/components/page-header";
+} from "@gembuddy/ui/page-header";
 
 import type { RouterOutput } from "@gembuddy/trpc/client";
 import { WorkOrderTabs } from "./work-order-tabs";

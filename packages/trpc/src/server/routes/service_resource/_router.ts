@@ -1,6 +1,7 @@
 import "server-only";
 import { protectedProcedure, router } from "../../trpc";
 
+import { getServiceAppointmentByUser } from "@gembuddy/supabase/resources";
 import {
   createServiceResource,
   getRecommendation,
@@ -11,6 +12,7 @@ import {
 import {
   ZCreateServiceResourceSchema,
   ZGetServiceResourceByIdSchema,
+  ZGetServiceResourceByUserSchema,
   ZGetServiceResourceRecommendationSchema,
   ZSearchServiceResourceSchema,
   ZUpdateServiceResourceSchema,
@@ -22,6 +24,15 @@ export const service_resource = router({
       .input(ZGetServiceResourceByIdSchema)
       .query(async ({ ctx, input }) => {
         return await getServiceResourceById({
+          db: ctx.db,
+          input,
+        });
+      }),
+
+    byUser: protectedProcedure
+      .input(ZGetServiceResourceByUserSchema)
+      .query(async ({ ctx, input }) => {
+        return await getServiceAppointmentByUser({
           db: ctx.db,
           input,
         });

@@ -58,10 +58,28 @@ export async function getServiceAppointmentByServiceResources({
 }) {
   const { data } = await db
     .from("service_appointment")
-    .select()
+    .select("*, assigned_resource")
     .in("assigned_resource.service_resource_id", input.service_resource_id)
     .gte("start_date", input.date_range.from)
     .lte("end_date", input.date_range.to)
+    .throwOnError();
+
+  return { data };
+}
+
+export async function getServiceAppointmentByUser({
+  db,
+  input,
+}: {
+  db: Client;
+  input: {
+    user_id: string;
+  };
+}) {
+  const { data } = await db
+    .from("service_appointment")
+    .select("*, assigned_resource!inner(*, service_resource(*)) ")
+    .eq("assigned_resource.service_resource.user_id", input.user_id)
     .throwOnError();
 
   return { data };

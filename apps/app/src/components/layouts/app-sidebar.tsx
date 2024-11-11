@@ -14,7 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@gembuddy/ui/dropdown-menu";
-import { Icons, IconType } from "@gembuddy/ui/icons";
+import { type IconType, Icons } from "@gembuddy/ui/icons";
 import { Separator } from "@gembuddy/ui/separator";
 import {
   Sidebar,
@@ -42,7 +42,8 @@ import {
   Sparkles,
 } from "lucide-react";
 import Link from "next/link";
-import React, { Suspense } from "react";
+import type React from "react";
+import { Suspense } from "react";
 
 // Components
 const NavMenuItem: React.FC<NavItem> = ({
@@ -193,6 +194,8 @@ export async function AppSidebar({ params }: AppSidebarProps) {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
+      <Separator />
+
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu>
@@ -201,7 +204,6 @@ export async function AppSidebar({ params }: AppSidebarProps) {
             </Suspense>
           </SidebarMenu>
         </SidebarGroup>
-        <Separator />
         <SidebarGroup>
           <SidebarGroupLabel>Main Navigation</SidebarGroupLabel>
           <SidebarMenu>
@@ -373,7 +375,7 @@ function WorkspaceSelector({ params }: { params: { url_key: string } }) {
   // Implement the workspace selector here
   return (
     <SidebarMenuButton asChild>
-      <a href="#">
+      <Link href="#">
         <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
           <Command className="size-4" />
         </div>
@@ -381,7 +383,7 @@ function WorkspaceSelector({ params }: { params: { url_key: string } }) {
           <span className="truncate font-semibold">Workspace</span>
           <span className="truncate text-xs">{params.url_key}</span>
         </div>
-      </a>
+      </Link>
     </SidebarMenuButton>
   );
 }

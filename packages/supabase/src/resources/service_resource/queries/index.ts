@@ -26,6 +26,25 @@ export async function getServiceResourceById({
   return { data };
 }
 
+export async function getServiceResourceByUserId({
+  db,
+  input,
+}: {
+  db: Client;
+  input: {
+    user_id: string;
+  };
+}) {
+  const { data } = await db
+    .from("service_resource")
+    .select("*")
+    .eq("user_id", input.user_id)
+    .single()
+    .throwOnError();
+
+  return { data };
+}
+
 export async function searchServiceResource({
   db,
   input,

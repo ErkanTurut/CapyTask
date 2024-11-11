@@ -1,24 +1,26 @@
 import "server-only";
 
-import { protectedProcedure, router } from "../../trpc";
+import { createAssignedResourceMany } from "@gembuddy/supabase/resources";
 import {
-  getServiceAppointmentByWorkOrder,
   createServiceAppointment,
   deleteServiceAppointments,
   getServiceAppointmentById,
   getServiceAppointmentByServiceResources,
+  getServiceAppointmentByUser,
+  getServiceAppointmentByWorkOrder,
   updateServiceAppointment,
 } from "@gembuddy/supabase/resources/service_appointment";
+import { protectedProcedure, router } from "../../trpc";
 import {
   ZCreateServiceAppointmentSchema,
   ZCreateServiceAppointmentWithItemsSchema,
   ZDeleteServiceAppointmentSchema,
   ZGetServiceAppointmentByServiceResourcesSchema,
+  ZGetServiceAppointmentByUserSchema,
   ZGetServiceAppointmentByWorkOrderSchema,
   ZGetServiceAppointmentSchema,
   ZUpdateServiceAppointmentSchema,
 } from "./schema";
-import { createAssignedResourceMany } from "@gembuddy/supabase/resources";
 
 export const service_appointment = router({
   get: {
@@ -26,6 +28,14 @@ export const service_appointment = router({
       .input(ZGetServiceAppointmentSchema)
       .query(async ({ ctx, input }) => {
         return await getServiceAppointmentById({
+          db: ctx.db,
+          input,
+        });
+      }),
+    byUser: protectedProcedure
+      .input(ZGetServiceAppointmentByUserSchema)
+      .query(async ({ ctx, input }) => {
+        return await getServiceAppointmentByUser({
           db: ctx.db,
           input,
         });

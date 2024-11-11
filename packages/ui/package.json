@@ -69,7 +69,8 @@
     "./hooks": "./src/hooks/index.ts",
     "./sidebar": "./src/components/sidebar.tsx",
     "./collapsible": "./src/components/collapsible.tsx",
-    "./editor": "./src/components/editor/inline-editor/index.tsx"
+    "./editor": "./src/components/editor/inline-editor/index.tsx",
+    "./page-header": "./src/components/page-header.tsx"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.1.0",

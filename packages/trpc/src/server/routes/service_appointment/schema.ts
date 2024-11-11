@@ -8,6 +8,14 @@ export type TGetServiceAppointmentSchema = z.infer<
   typeof ZGetServiceAppointmentSchema
 >;
 
+export const ZGetServiceAppointmentByUserSchema = z.object({
+  user_id: z.string(),
+});
+
+export type TGetServiceAppointmentByUserSchema = z.infer<
+  typeof ZGetServiceAppointmentByUserSchema
+>;
+
 export const ZGetServiceAppointmentByWorkOrderSchema = z.object({
   work_order_id: z.string(),
 });
