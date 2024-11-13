@@ -1,5 +1,7 @@
 "use client";
 
+import { StatusConfig, statusConfig } from "@/components/config/status.config";
+import type { Enums } from "@gembuddy/supabase/types";
 import { Button } from "@gembuddy/ui/button";
 import {
   Card,
@@ -9,6 +11,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@gembuddy/ui/card";
+import { cn } from "@gembuddy/ui/cn";
+import { Icons } from "@gembuddy/ui/icons";
 import {
   Select,
   SelectContent,
@@ -40,7 +44,7 @@ export default function TechnicianDashboard() {
       location: "123 Main St",
       time: "09:00 AM",
       description: "HVAC Maintenance",
-      status: "Scheduled",
+      status: "OPEN" as Enums<"Status">,
     },
     {
       id: 2,
@@ -48,7 +52,7 @@ export default function TechnicianDashboard() {
       location: "456 Elm St",
       time: "11:30 AM",
       description: "Electrical Repair",
-      status: "In Progress",
+      status: "IN_PROGRESS" as Enums<"Status">,
     },
     {
       id: 3,
@@ -56,7 +60,7 @@ export default function TechnicianDashboard() {
       location: "789 Oak St",
       time: "02:00 PM",
       description: "Plumbing Inspection",
-      status: "Completed",
+      status: "COMPLETED" as Enums<"Status">,
     },
   ];
 
@@ -64,19 +68,6 @@ export default function TechnicianDashboard() {
     if (filter === "all") return true;
     return appointment.status.toLowerCase() === filter;
   });
-
-  const getStatusColor = (status) => {
-    switch (status.toLowerCase()) {
-      case "scheduled":
-        return "bg-blue-100 text-blue-800";
-      case "in progress":
-        return "bg-yellow-100 text-yellow-800";
-      case "completed":
-        return "bg-green-100 text-green-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
 
   return (
     <div>
@@ -101,56 +92,63 @@ export default function TechnicianDashboard() {
         </div>
         <TabsContent value="today" className="mt-4">
           <div className="space-y-4">
-            {filteredAppointments.map((appointment) => (
-              <Card key={appointment.id}>
-                <CardHeader>
-                  <CardTitle className="flex items-center justify-between">
-                    <span>{appointment.customer}</span>
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(appointment.status)}`}
-                    >
-                      {appointment.status}
-                    </span>
-                  </CardTitle>
-                  <CardDescription>{appointment.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center space-x-4 text-sm text-gray-500">
-                    <span className="flex items-center">
-                      <Clock className="mr-1 h-4 w-4" />
-                      {appointment.time}
-                    </span>
-                    <span className="flex items-center">
-                      <MapPin className="mr-1 h-4 w-4" />
-                      {appointment.location}
-                    </span>
-                  </div>
-                </CardContent>
-                <CardFooter className="flex justify-between">
-                  <Button variant="outline" size="sm">
-                    <Phone className="mr-2 h-4 w-4" />
-                    Contact
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    <MapPin className="mr-2 h-4 w-4" />
-                    Navigate
-                  </Button>
-                  <Button variant="default" size="sm">
-                    {appointment.status === "Scheduled" ? (
-                      <>
-                        <Play className="mr-2 h-4 w-4" />
-                        Start Job
-                      </>
-                    ) : (
-                      <>
-                        <CheckCircle className="mr-2 h-4 w-4" />
-                        Complete
-                      </>
-                    )}
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))}
+            {filteredAppointments.map((appointment) => {
+              const status = statusConfig[appointment.status];
+              const Icon = status.icon ? Icons[status.icon] : undefined;
+              return (
+                <Card key={appointment.id}>
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                      <span>{appointment.customer}</span>
+                      <span
+                        className={cn(
+                          `px-2 py-0.5 rounded-lg text-xs font-mono flex items-center gap-1 ${statusConfig[appointment.status].color} `,
+                        )}
+                      >
+                        {Icon && <Icon className="size-4" />}
+                        {statusConfig[appointment.status].label}
+                      </span>
+                    </CardTitle>
+                    <CardDescription>{appointment.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center space-x-4 text-sm text-gray-500">
+                      <span className="flex items-center">
+                        <Clock className="mr-1 h-4 w-4" />
+                        {appointment.time}
+                      </span>
+                      <span className="flex items-center">
+                        <MapPin className="mr-1 h-4 w-4" />
+                        {appointment.location}
+                      </span>
+                    </div>
+                  </CardContent>
+                  <CardFooter className="flex justify-between">
+                    <Button variant="outline" size="sm">
+                      <Phone className="mr-2 h-4 w-4" />
+                      Contact
+                    </Button>
+                    <Button variant="outline" size="sm">
+                      <MapPin className="mr-2 h-4 w-4" />
+                      Navigate
+                    </Button>
+                    <Button variant="default" size="sm">
+                      {appointment.status === "OPEN" ? (
+                        <>
+                          <Play className="mr-2 h-4 w-4" />
+                          Start Job
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircle className="mr-2 h-4 w-4" />
+                          Complete
+                        </>
+                      )}
+                    </Button>
+                  </CardFooter>
+                </Card>
+              );
+            })}
           </div>
         </TabsContent>
         <TabsContent value="tomorrow">

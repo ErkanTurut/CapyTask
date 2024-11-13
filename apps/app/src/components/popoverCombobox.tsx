@@ -10,13 +10,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "@gembuddy/ui/popover";
 
 import * as React from "react";
 
-import { Icons } from "./icons";
 import { cn } from "@/lib/utils";
+import type { IconType } from "@gembuddy/ui/icons";
 
 interface Option<T> {
   value: T;
   label: string;
-  icon?: keyof typeof Icons;
+  icon?: IconType;
 }
 
 interface ComboBoxProps<T> {

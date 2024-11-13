@@ -3,7 +3,12 @@ import { PopoverComboBox } from "@/components/popoverCombobox";
 import type { RouterOutput } from "@gembuddy/trpc/client";
 import { Icons } from "@gembuddy/ui/icons";
 import { useState } from "react";
-import { type StatusConfig, statusConfig } from "../../../config/status.config";
+import {
+  type StatusConfig,
+  type StatusConfigItem,
+  statusConfig,
+  statusConfigArray,
+} from "../../../config/status.config";
 import { StatusChangeModal } from "../modals/work-order-status-update-modal";
 interface StatusSelectorProps {
   workOrder: NonNullable<
@@ -13,17 +18,16 @@ interface StatusSelectorProps {
 
 export function WorkOrderStatus({ workOrder }: StatusSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const initialStatus = statusConfig.find(
-    (status) => status.value === workOrder.status,
-  );
+  const initialStatus = statusConfig[workOrder.status];
+
   if (!initialStatus) {
     throw new Error("Invalid status");
   }
 
   const [selectedStatus, setSelectedStatus] =
-    useState<StatusConfig>(initialStatus);
+    useState<StatusConfigItem>(initialStatus);
 
-  const handleSelect = (status: StatusConfig) => {
+  const handleSelect = (status: StatusConfigItem) => {
     if (status.value === initialStatus.value) return;
     setSelectedStatus(status);
     setIsOpen(true);
@@ -42,8 +46,8 @@ export function WorkOrderStatus({ workOrder }: StatusSelectorProps) {
       />
       <PopoverComboBox
         className="w-[10rem]"
-        options={statusConfig}
-        onSelect={handleSelect}
+        options={statusConfigArray}
+        onSelect={(value) => handleSelect(statusConfig[value.value])}
         selected={initialStatus}
       >
         <div className="inline-flex cursor-pointer items-center gap-2 rounded-full border bg-opacity-65 px-2.5 py-1 text-xs font-semibold transition-colors">

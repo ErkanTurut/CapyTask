@@ -21,20 +21,19 @@ import { Button } from "@gembuddy/ui/button";
 
 import { type Content, Editor } from "@gembuddy/ui/editor";
 
-import { type RouterOutput, api } from "@gembuddy/trpc/client";
+import { api } from "@gembuddy/trpc/client";
 
 import {
   type TUpdateWorkOrderWithNoteSchema,
   ZUpdateWorkOrderWithNoteSchema,
 } from "@gembuddy/trpc/schema/work_order";
 import { ScrollArea } from "@gembuddy/ui/scroll-area";
-import { Textarea } from "@gembuddy/ui/textarea";
-import type { StatusConfig } from "../../../config/status.config";
+import type { StatusConfigItem } from "../../../config/status.config";
 
 interface WorkOrderStatusUpdateFormProps
   extends React.HTMLAttributes<HTMLFormElement> {
-  initialStatus: StatusConfig;
-  newStatus: StatusConfig;
+  initialStatus: StatusConfigItem;
+  newStatus: StatusConfigItem;
   work_order_id: string;
   onFinish?: () => void;
 }

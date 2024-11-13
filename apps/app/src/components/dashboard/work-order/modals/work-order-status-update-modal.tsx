@@ -5,12 +5,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@gembuddy/ui/dialog";
-import type { StatusConfig } from "../../../config/status.config";
+import type { StatusConfigItem } from "../../../config/status.config";
 import { WorkOrderStatusUpdateForm } from "../forms/work-order-update-status-form";
 interface StatusChangeModalProps {
   isOpen?: boolean;
-  initialStatus: StatusConfig;
-  newStatus: StatusConfig;
+  initialStatus: StatusConfigItem;
+  newStatus: StatusConfigItem;
   onOpenChange: (value: boolean) => void;
   work_order_id: string;
 }
