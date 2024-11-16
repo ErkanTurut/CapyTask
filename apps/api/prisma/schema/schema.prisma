@@ -111,19 +111,23 @@ model location {
 }
 
 model note {
-    metadata      Json?
-    id            String                @id @default(dbgenerated("nanoid(17)"))
-    work_order_id String
-    created_by_id String                @db.Uuid
-    created_at    DateTime              @default(now()) @db.Timestamptz(6)
-    updated_at    DateTime              @default(now()) @db.Timestamptz(6)
-    content       Json
-    embedding     Unsupported("vector")
-    user          user                  @relation(fields: [created_by_id], references: [id])
-    work_order    work_order            @relation(fields: [work_order_id], references: [id])
+    id          String                 @id @default(dbgenerated("nanoid(17)"))
+    entity_type String
+    entity_id   String
+    content     String
+    embedding   Unsupported("vector")?
+    metadata    Json?
+    created_at  DateTime               @default(now()) @db.Timestamptz(6)
+    updated_at  DateTime               @default(now()) @db.Timestamptz(6)
+    created_by  String                 @db.Uuid
+    user        user?                  @relation(fields: [created_by], references: [id])
 
-    @@index([created_by_id])
-    @@index([work_order_id])
+    parent_note note?  @relation("noteTOnote", fields: [entity_id], references: [id], onDelete: Cascade)
+    note        note[] @relation("noteTOnote")
+
+    @@index([created_by])
+    @@index([entity_id])
+    @@index([entity_type])
 }
 
 model role_permission {
@@ -296,7 +300,6 @@ model work_order {
     workspace_id        String
     ended_at            DateTime?             @db.Timestamptz(6)
     started_at          DateTime?             @db.Timestamptz(6)
-    note                note[]
     service_appointment service_appointment[]
     company             company               @relation(fields: [company_id], references: [id])
     location            location?             @relation(fields: [location_id], references: [id])

@@ -70,16 +70,6 @@ export const work_order = router({
           id: input.work_order_id,
         });
 
-        const keys = Object.keys(ZUpdateWorkOrderSchema.parse(input));
-        console.log("keys ====>", keys);
-
-        // createWorkOrderHistory({
-        //   db: ctx.db,
-        //   input: {
-        //     field: typeof input,
-        //   },
-        // });
-
         if (input.content) {
           const { embedding } = await embed({
             model: openai.embedding("text-embedding-3-small"),

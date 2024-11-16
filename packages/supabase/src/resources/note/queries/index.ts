@@ -23,3 +23,23 @@ export async function getNotesByWorkOrder({
 
   return { data, count };
 }
+
+export async function getNotesByEntity({
+  db,
+  input,
+}: {
+  db: Client;
+  input: {
+    entity_id: string;
+    entity_type: keyof Database["public"]["Tables"];
+  };
+}) {
+  const { data, count } = await db
+    .from("note")
+    .select()
+    .eq("entity_id", input.entity_id)
+    .eq("entity_type", input.entity_type)
+    .throwOnError();
+
+  return { data, count };
+}

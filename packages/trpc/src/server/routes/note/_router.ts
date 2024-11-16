@@ -1,18 +1,33 @@
 import "server-only";
 
-import { getNotesByWorkOrder } from "@gembuddy/supabase/resources/note";
+import {
+  createNote,
+  getNotesByEntity,
+} from "@gembuddy/supabase/resources/note";
 import { protectedProcedure, router } from "../../trpc";
-import { ZGetNoteByWorkOrderSchema } from "./schema";
+import { ZCreateNoteSchema, ZGetNoteByEntitySchema } from "./schema";
 
 export const note = router({
   get: {
-    byWorkOrder: protectedProcedure
-      .input(ZGetNoteByWorkOrderSchema)
+    byEntity: protectedProcedure
+      .input(ZGetNoteByEntitySchema)
       .query(async ({ ctx, input }) => {
-        return await getNotesByWorkOrder({
+        return await getNotesByEntity({
           db: ctx.db,
           input,
         });
       }),
   },
+
+  create: protectedProcedure
+    .input(ZCreateNoteSchema)
+    .mutation(async ({ ctx, input }) => {
+      return await createNote({
+        db: ctx.db,
+        input: {
+          ...input,
+          metadata: input.metadata ? JSON.stringify(input.metadata) : null,
+        },
+      });
+    }),
 });

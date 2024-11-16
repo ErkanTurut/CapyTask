@@ -309,48 +309,51 @@ export type Database = {
       }
       note: {
         Row: {
-          content: Json
+          content: string
           created_at: string
-          created_by_id: string
-          embedding: string
+          created_by: string
+          embedding: string | null
+          entity_id: string
+          entity_type: string
           id: string
           metadata: Json | null
           updated_at: string
-          work_order_id: string
         }
         Insert: {
-          content: Json
+          content: string
           created_at?: string
-          created_by_id: string
-          embedding: string
+          created_by: string
+          embedding?: string | null
+          entity_id: string
+          entity_type: string
           id?: string
           metadata?: Json | null
           updated_at?: string
-          work_order_id: string
         }
         Update: {
-          content?: Json
+          content?: string
           created_at?: string
-          created_by_id?: string
-          embedding?: string
+          created_by?: string
+          embedding?: string | null
+          entity_id?: string
+          entity_type?: string
           id?: string
           metadata?: Json | null
           updated_at?: string
-          work_order_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "note_created_by_id_fkey"
-            columns: ["created_by_id"]
+            foreignKeyName: "note_created_by_fkey"
+            columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "user"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "note_work_order_id_fkey"
-            columns: ["work_order_id"]
+            foreignKeyName: "note_entity_id_fkey"
+            columns: ["entity_id"]
             isOneToOne: false
-            referencedRelation: "work_order"
+            referencedRelation: "note"
             referencedColumns: ["id"]
           },
         ]

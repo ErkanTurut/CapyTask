@@ -1,18 +1,18 @@
 "use client";
 
 import { TailwindIndicator } from "@/components/tailwind-indicator";
-import { Toaster } from "@gembuddy/ui/sonner";
 import useWindowSize from "@/lib/hooks/use-window-size";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { Toaster } from "@gembuddy/ui/sonner";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
 
-import { PropsWithChildren, useState } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { api } from "@gembuddy/trpc/client";
-import superjson from "superjson";
-import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
-import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
 import { TooltipProvider } from "@gembuddy/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
+import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
+import { type PropsWithChildren, useState } from "react";
+import superjson from "superjson";
 
 export function Providers({
   children,
