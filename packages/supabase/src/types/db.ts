@@ -317,6 +317,7 @@ export type Database = {
           entity_type: string
           id: string
           metadata: Json | null
+          parent_note_id: string | null
           updated_at: string
         }
         Insert: {
@@ -328,6 +329,7 @@ export type Database = {
           entity_type: string
           id?: string
           metadata?: Json | null
+          parent_note_id?: string | null
           updated_at?: string
         }
         Update: {
@@ -339,6 +341,7 @@ export type Database = {
           entity_type?: string
           id?: string
           metadata?: Json | null
+          parent_note_id?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -350,8 +353,8 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "note_entity_id_fkey"
-            columns: ["entity_id"]
+            foreignKeyName: "note_parent_note_id_fkey"
+            columns: ["parent_note_id"]
             isOneToOne: false
             referencedRelation: "note"
             referencedColumns: ["id"]

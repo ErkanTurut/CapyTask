@@ -111,18 +111,19 @@ model location {
 }
 
 model note {
-    id          String                 @id @default(dbgenerated("nanoid(17)"))
-    entity_type String
-    entity_id   String
-    content     String
-    embedding   Unsupported("vector")?
-    metadata    Json?
-    created_at  DateTime               @default(now()) @db.Timestamptz(6)
-    updated_at  DateTime               @default(now()) @db.Timestamptz(6)
-    created_by  String                 @db.Uuid
-    user        user?                  @relation(fields: [created_by], references: [id])
+    id             String                 @id @default(dbgenerated("nanoid(17)"))
+    entity_type    String
+    entity_id      String
+    content        String
+    embedding      Unsupported("vector")?
+    metadata       Json?
+    created_at     DateTime               @default(now()) @db.Timestamptz(6)
+    updated_at     DateTime               @default(now()) @db.Timestamptz(6)
+    created_by     String                 @db.Uuid
+    user           user?                  @relation(fields: [created_by], references: [id])
+    parent_note_id String?
 
-    parent_note note?  @relation("noteTOnote", fields: [entity_id], references: [id], onDelete: Cascade)
+    parent_note note?  @relation("noteTOnote", fields: [parent_note_id], references: [id], onDelete: Cascade)
     note        note[] @relation("noteTOnote")
 
     @@index([created_by])
